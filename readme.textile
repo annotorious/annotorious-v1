@@ -1,0 +1,81 @@
+This is an effort to port the "yuma.js":http://yuma-js.github.com image annotation toolkit to JavaScript, improving things as we go along. Any help appreciated! I'm putting up live demos of the intermediate state as we progress:
+
+http://rsimon.github.com/yuma2
+
+h2. Using
+
+To make images on your Website annotatable with this library, follow these steps:
+
+*Include the library JavaScript* file in the &lt;head&gt; of your HTML page
+
+<pre>
+<code>
+<head>
+  ...
+  <script type="text/javascript" src="yuma2.min.js"></script>
+  ...
+</head>
+</code>
+</pre>
+
+*Include the library CSS stylesheet* in the &lt;head&gt; of your HTML page
+
+<pre>
+<code>
+<head>
+   ...
+   <link rel="stylesheet" type="text/css" href="css/yuma2.css" />
+   <script type="text/javascript" src="yuma2.min.js"></script>
+   ...
+ </head>  
+</code>
+</pre>
+
+*Use the library JavaScript API* to attach annotation functionality to images on your page.
+
+<pre>
+<code>
+<head>
+  ...
+  <script type="text/javascript">
+    new ImageAnnotator('annotateme');
+  </script>
+</head>
+
+That's it. (Note: we might make this even easier in the future using CSS-class based selection...)
+
+<body>
+  ...
+  <img id="annotateme" src="myimage.jpg">
+  ...
+</body>
+</code>
+</pre>
+
+h2. License
+
+This work is licensed under the "GNU General Public License v3.0":http://www.gnu.org/licenses/gpl.html.
+
+h2. Developing
+
+We're using Google's "Closure Tools":http://developers.google.com/closure/. I recommend using the "plovr":http://plovr.com/ build tool to get started quickly.
+
+* Download "plovr":http://code.google.com/p/plovr
+* Run <code>java -jar plovr.jar serve annotator.json</code> in the working directory 
+* Open <code>index.html</code> in your browser - and code away
+* To build the minified JavaScript, run <code>java -jar plovr.jar build annotator.json > yuma2.min.js</code> (replacing 'yuma2.min.js' with a file name of your choice)
+
+h2. Upcoming Work/Todos
+
+* Clean up namespacing (it's a bit messy after the last refactoring) 
+* Real custom mouseover/mouseout events for annotations
+* Popup annotation edit form
+* Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
+* Optimization, optimization, optimization! (Code and runtime performance.)
+* Implement POINT and POLYGON shape geometries
+* Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
+* *Find a decent name for this tool!*
+
+
+
+

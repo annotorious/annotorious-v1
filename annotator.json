@@ -1,0 +1,27 @@
+{
+  "id": "canvas-based-image-annotation",
+  "define": {
+    "goog.DEBUG": false,
+    "goog.dom.ASSUME_STANDARDS_MODE": true
+  },
+  "inputs": [ 
+    "src/annotators/image_annotator.js",
+    "src/geometry/point.js",
+    "src/geometry/polygon.js",
+    "src/geometry/rectangle.js",
+    "src/selection/drag_selector.js",   
+    "src/annotation.js", 
+    "src/events.js",
+    "src/viewer.js",    
+
+    "templates/annotation_popup.soy"
+  ],
+  "paths": [
+    "."
+  ],
+  "externs": [
+    
+  ],
+  "mode": "ADVANCED",
+  "level": "DEFAULT" // "VERBOSE"
+}
