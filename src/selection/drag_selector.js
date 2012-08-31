@@ -42,7 +42,7 @@ yuma.selection.DragSelector = function(canvas) {
   goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, moveListener);  
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
-    self.dispatchEvent(yuma.selection.events.EventType.SELECT);
+    self.dispatchEvent(yuma.selection.events.EventType.SELECTION_CREATED);
     g2d.clearRect(0, 0, canvas.width, canvas.height);
   });
 }

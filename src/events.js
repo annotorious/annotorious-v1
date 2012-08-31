@@ -6,5 +6,12 @@ goog.require('goog.events');
  * @enum {string}
  */
 yuma.selection.events.EventType = {
-  SELECT: goog.events.getUniqueId('new_annotation_selection')
+  
+  SELECTION_CREATED: goog.events.getUniqueId('selection_created'),
+  
+  ANNOTATION_MOUSE_ENTER: goog.events.getUniqueId('annotation_mouse_enter'),
+
+  ANNOTATION_MOUSE_LEAVE: goog.events.getUniqueId('annotation_mouse_leave')
+
 };
+
