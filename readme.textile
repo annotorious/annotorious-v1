@@ -61,9 +61,9 @@ h2. Developing
 We're using Google's "Closure Tools":http://developers.google.com/closure/. I recommend using the "plovr":http://plovr.com/ build tool to get started quickly.
 
 * Download "plovr":http://code.google.com/p/plovr
-* Run <code>java -jar plovr.jar serve annotator.json</code> in the working directory 
+* Run <code>java -jar plovr/plovr.jar serve annotator.json</code> in the working directory 
 * Open <code>index.html</code> in your browser - and code away
-* To build the minified JavaScript, run <code>java -jar plovr.jar build annotator.json > yuma2.min.js</code> (replacing 'yuma2.min.js' with a file name of your choice)
+* To build the minified JavaScript, run <code>java -jar plovr/plovr.jar build annotator.json > yuma2.min.js</code> (replacing 'yuma2.min.js' with a file name of your choice)
 
 h2. Upcoming Work/Todos
 
