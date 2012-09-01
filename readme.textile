@@ -66,7 +66,7 @@ h2. Upcoming Work/Todos (almost in order of priority...)
 * Clean up namespacing (it's a bit messy after the last refactoring) 
 * Re-think the overall workflow/usability (I'm thinking about alignin with the OKFN Annotator workflow - any comments welcome!)
 * Custom mouseover/mouseout events for annotation shapes
-* Popup annotation bubble
+* Popup annotation text bubble
 * Popup annotation create/edit form
 * Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
 * OpenLayers and/or Seadragon AJAX support
@@ -74,6 +74,7 @@ h2. Upcoming Work/Todos (almost in order of priority...)
 * Implement POINT and POLYGON shape geometries
 * Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
 * *Find a decent name for this tool!*
+* Lots of TODOs in the code
 
 h2. License
 
