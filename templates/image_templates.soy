@@ -1,0 +1,33 @@
+{namespace yuma.templates}
+
+/**
+ * A dummy element to be used for annotation popups later on
+ */
+{template .popup}
+<div class="yuma-popup" style="position:absolute; pointer-events:none;">
+  An annotation!
+</div>
+{/template}
+
+
+
+/**
+ * The 'Click to Annotate' hint
+ * @param msg
+ */
+{template .hint}
+<div class="yuma-hint" style="white-space:nowrap; position:absolute; pointer-events:none; top:10px; left:10px;">
+  {$msg}
+</div>
+{/template}
+
+
+
+/**
+ * The image annotation canvas template
+ * @param width
+ * @param height
+ */
+{template .canvas}
+<canvas class="yuma-canvas" style="position:absolute; top:0px; left:0px; width={$width}px; height={$height}px;" width="{$width}" height="{$height}"></canvas>
+{/template}
