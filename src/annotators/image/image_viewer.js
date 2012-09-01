@@ -10,11 +10,6 @@ yuma.Viewer = function(canvas) {
   /** @private **/
   this._canvas = canvas;
 
-  var self = this;
-  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) { 
-    self._redraw(event.offsetX, event.offsetY);
-  });
-
   /** @private **/
   this._annotations = [];
 
@@ -23,10 +18,14 @@ yuma.Viewer = function(canvas) {
 
   /** @private **/
   this._popup;
+  
+  var self = this;
+  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) { 
+    self._redraw(event.offsetX, event.offsetY);
+  });
 }
 
 /**
- * TODO just a temporary hack - implement something decent!
  * @private
  */
 yuma.Viewer.prototype._draw = function(annotation, color, lineWidth) {
@@ -53,7 +52,7 @@ yuma.Viewer.prototype.addAnnotation = function(annotation) {
 }
 
 yuma.Viewer.prototype._redraw = function(px, py) {
-  // TODO optimize!
+  // TODO just a temporary hack - implement something decent!
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
   var self = this;
