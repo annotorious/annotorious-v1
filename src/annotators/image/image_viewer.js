@@ -78,7 +78,14 @@ yuma.Viewer.prototype._redraw = function(px, py) {
       this._popup = goog.soy.renderAsElement(yuma.templates.popup);
       goog.dom.appendChild(document.body, this._popup);   
     }
-    goog.style.setPosition(this._popup, new goog.math.Coordinate(px + 15, py + 20));
+    // TODO need to introduce a bbox property that's supported by every shape type
+    // Currently the shape.geometry will always be a yuma.geom.Rectangle
+    var bbox = intersectedAnnotations[0].shape.geometry;
+
+    // TODO unfortunately, position varies with the CSS padding settings - need to take this into account
+    goog.style.setPosition(this._popup, new goog.math.Coordinate(bbox.x + 7, bbox.y + bbox.height + 14));
+
+    // TODO Orientation check - what if the popup would be outside the viewport?
   } else {
     if (this._popup) {
       goog.dom.removeNode(this._popup);
