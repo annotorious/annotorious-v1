@@ -1,5 +1,6 @@
 goog.provide('yuma.ImageAnnotator');
 
+goog.require('goog.soy');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.math');
@@ -10,36 +11,21 @@ goog.require('yuma.selection.DragSelector');
 yuma.ImageAnnotator = function(id) {
   var image = goog.dom.getElement(id);
 
-  // TODO can we do this in a more compact/readable way with templates?
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'absolute');
   goog.style.setPosition(annotationLayer , goog.style.getPosition(image));
 
-  var hint = goog.dom.createDom('div', 'yuma-hint', 'Click and Drag to Annotate');
-  goog.style.setStyle(hint, 'white-space', 'nowrap');
-  goog.style.setStyle(hint, 'position', 'absolute');
-  goog.style.setStyle(hint, 'pointer-events', 'none'); 
+  var hint = goog.soy.renderAsElement(yuma.templates.hint, {msg:'Click and Drag to Annotate'});
   goog.style.setOpacity(hint, 0); 
-  goog.style.setPosition(hint, new goog.math.Coordinate(10,10));
   goog.dom.appendChild(annotationLayer, hint);
 
-  var viewCanvas = goog.dom.createDom('canvas', 'yuma-canvas');
-  goog.style.setStyle(viewCanvas, 'position', 'absolute');
-  goog.style.setPosition(viewCanvas, new goog.math.Coordinate(0, 0));
-  goog.style.setSize(viewCanvas, goog.style.getSize(image));
-  goog.dom.setProperties(viewCanvas, {'width':image.width, 'height':image.height});
-  goog.dom.appendChild(annotationLayer, viewCanvas);   
+  var viewCanvas = goog.soy.renderAsElement(yuma.templates.canvas, {width:image.width, height:image.height});
+  goog.dom.appendChild(annotationLayer, viewCanvas);
 
-  // TODO eliminate code duplication
-  // TODO Encapsulate this into a class
-  var editCanvas = goog.dom.createDom('canvas', 'yuma-canvas');
-  goog.style.setStyle(editCanvas, 'position', 'absolute');
+  var editCanvas = goog.soy.renderAsElement(yuma.templates.canvas, {width:image.width, height:image.height});
   goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
-  goog.style.setPosition(editCanvas, new goog.math.Coordinate(0, 0));
-  goog.style.setSize(editCanvas, goog.style.getSize(image));
-  goog.dom.setProperties(editCanvas, {'width':image.width, 'height':image.height});
   goog.dom.appendChild(annotationLayer, editCanvas);  
-
+  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function() { 
     goog.style.setOpacity(viewCanvas, 1.0); 
     goog.style.setOpacity(hint, 0.8); 

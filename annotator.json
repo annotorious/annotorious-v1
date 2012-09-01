@@ -14,7 +14,7 @@
     "src/annotation.js", 
     "src/events.js",
 
-    "templates/annotation_popup.soy"
+    "templates/image_templates.soy"
   ],
   "paths": [
     "."
