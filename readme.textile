@@ -42,8 +42,6 @@ To make images on your Website annotatable with this library, follow these steps
   </script>
 </head>
 
-That's it. (Note: we might make this even easier in the future using CSS-class based selection...)
-
 <body>
   ...
   <img id="annotateme" src="myimage.jpg">
@@ -51,6 +49,8 @@ That's it. (Note: we might make this even easier in the future using CSS-class b
 </body>
 </code>
 </pre>
+
+That's it. (Note: it's going to be even easier in the future as we're going to use CSS-class based selection...)
 
 h2. Developing
 
@@ -65,7 +65,7 @@ h2. Upcoming Work/Todos (almost in order of priority...)
 
 * Clean up namespacing (it's a bit messy after the last refactoring) 
 * Re-think the overall workflow/usability (I'm thinking about alignin with the OKFN Annotator workflow - any comments welcome!)
-* Change the way activation works: activation no longer via JavaScript ("new ImageAnnotator(id)") but via a CSS class ("<img class='annotatable' ... />")
+* Change the way activation works: activation no longer via JavaScript ("new ImageAnnotator(id)") but via a CSS class ("&lt;img class='annotatable' ... /&gt;")
 * Central event bus/event broker to keep code tidy
 * Custom mouseover/mouseout events for annotation shapes
 * Popup annotation text bubble
