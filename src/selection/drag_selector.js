@@ -6,7 +6,7 @@ goog.require('goog.events.EventTarget');
 goog.require('yuma.Annotation');
 goog.require('yuma.geom.Point');
 goog.require('yuma.geom.Rectangle');
-goog.require('yuma.selection.events');
+goog.require('yuma.events');
 
 /**
  * Simple click-and-drag-style selector
@@ -42,7 +42,7 @@ yuma.selection.DragSelector = function(canvas) {
   goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, moveListener);  
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
-    self.dispatchEvent(yuma.selection.events.EventType.SELECTION_CREATED);
+    self.dispatchEvent(yuma.events.EventType.SELECTION_CREATED);
     g2d.clearRect(0, 0, canvas.width, canvas.height);
   });
 }

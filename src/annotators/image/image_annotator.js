@@ -6,6 +6,7 @@ goog.require('goog.events');
 goog.require('goog.math');
 goog.require('goog.style');
 
+goog.require('yuma.events');
 goog.require('yuma.selection.DragSelector');
 
 yuma.ImageAnnotator = function(id) {
@@ -47,7 +48,7 @@ yuma.ImageAnnotator = function(id) {
   });
 
   var dummyCounter = 1;
-  goog.events.listen(selector, yuma.selection.events.EventType.SELECTION_CREATED, function(event) {
+  goog.events.listen(selector, yuma.events.EventType.SELECTION_CREATED, function(event) {
     viewer.addAnnotation(new yuma.Annotation('annotation #' + dummyCounter, event.target.getShape()));
     dummyCounter++;
     goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 

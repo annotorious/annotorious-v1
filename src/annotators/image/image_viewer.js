@@ -4,6 +4,7 @@ goog.require('goog.soy');
 
 /**
  * @constructor
+ * @extends {goog.events.EventTarget}
  */
 yuma.Viewer = function(canvas) {
 
@@ -27,6 +28,7 @@ yuma.Viewer = function(canvas) {
     self._redraw(event.offsetX, event.offsetY);
   });
 }
+goog.inherits(yuma.Viewer, goog.events.EventTarget);
 
 /**
  * @private
@@ -83,9 +85,8 @@ yuma.Viewer.prototype._redraw = function(px, py) {
 
   if (intersectedAnnotations.length > 0) {
     if (!this._selectedAnnotation || this._selectedAnnotation != intersectedAnnotations[0]) {
-        // TODO fire event
+        this.dispatchEvent(yuma.events.EventType.ANNOTATION_MOUSE_ENTER);
         this._selectedAnnotation = intersectedAnnotations[0];
-        console.log('EVENT: new annotation highlighted');
         this._clearPopup();
 
         this._popup = goog.soy.renderAsElement(yuma.templates.popup, {text: this._selectedAnnotation.text});
@@ -104,7 +105,7 @@ yuma.Viewer.prototype._redraw = function(px, py) {
     this._draw(intersectedAnnotations[0], '#fff000', 1.8);
   } else {
     if (this._selectedAnnotation) {
-      // TODO fire event
+      this.dispatchEvent(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE);
       delete this._selectedAnnotation;
       this._clearPopup();
     }
