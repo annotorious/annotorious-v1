@@ -45,8 +45,11 @@ yuma.ImageAnnotator = function(id) {
     selector.startSelection(event.offsetX, event.offsetY);
     goog.style.setStyle(editCanvas, 'pointer-events', 'auto'); 
   });
+
+  var dummyCounter = 1;
   goog.events.listen(selector, yuma.selection.events.EventType.SELECTION_CREATED, function(event) {
-    viewer.addAnnotation(new yuma.Annotation('', event.target.getShape()));
+    viewer.addAnnotation(new yuma.Annotation('annotation #' + dummyCounter, event.target.getShape()));
+    dummyCounter++;
     goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
   });
 }
