@@ -1,6 +1,6 @@
 body {
   /* TODO a hack - find a decent solution */
-  -webkit-user-select: none; 
+  -webkit-user-select: none;
 }
 
 .yuma-hint {

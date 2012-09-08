@@ -1,6 +1,7 @@
 goog.provide('yuma.Viewer');
 
 goog.require('goog.soy');
+goog.require('goog.editor.SeamlessField');
 
 /**
  * @constructor
@@ -104,8 +105,6 @@ yuma.Viewer.prototype._redraw = function(px, py) {
         var id = 'annotation' + Math.random();
         this._popup = goog.soy.renderAsElement(yuma.templates.popup, {id: id, text: this._currentAnnotation.text});
 
-        var editableField = new goog.editor.SeamlessField(id);
- 
         goog.dom.appendChild(document.body, this._popup);
 
         // TODO need to introduce a bbox property that's supported by every shape type
