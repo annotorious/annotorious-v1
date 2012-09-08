@@ -1,5 +1,6 @@
 goog.provide('yuma.events');
 
+goog.require('goog.array');
 goog.require('goog.events');
 
 /**

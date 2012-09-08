@@ -47,19 +47,22 @@ yuma.ImageAnnotator = function(id) {
     goog.style.setStyle(editCanvas, 'pointer-events', 'auto'); 
   });
 
+  // Listen to events
+  var eventBroker = yuma.events.EventBroker.getInstance();
+
   var dummyCounter = 1;
-  goog.events.listen(selector, yuma.events.EventType.SELECTION_CREATED, function(event) {
+  eventBroker.addHandler(yuma.events.EventType.SELECTION_CREATED, function(event) {
     viewer.addAnnotation(new yuma.Annotation('annotation #' + dummyCounter, event.target.getShape()));
     dummyCounter++;
     goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
   });
 
   // For testing purposes 
-  yuma.events.EventBroker.getInstance().addHandler(yuma.events.EventType.ANNOTATION_MOUSE_ENTER, function(event) {
+  eventBroker.addHandler(yuma.events.EventType.ANNOTATION_MOUSE_ENTER, function(event) {
     console.log('entering ' + event.target.getCurrentAnnotation().text);
   });
 
-  yuma.events.EventBroker.getInstance().addHandler(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE, function(event) {
+  eventBroker.addHandler(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE, function(event) {
     console.log('leaving ' + event.target.getCurrentAnnotation().text);
   });
 }

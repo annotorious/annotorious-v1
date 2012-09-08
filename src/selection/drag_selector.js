@@ -3,14 +3,15 @@ goog.provide('yuma.selection.DragSelector');
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 
+goog.require('yuma.events');
 goog.require('yuma.Annotation');
 goog.require('yuma.geom.Point');
 goog.require('yuma.geom.Rectangle');
-goog.require('yuma.events');
+
 
 /**
  * Simple click-and-drag-style selector
- * @param {!Element} canvas
+ * @param {Element} canvas
  * @constructor
  * @extends {goog.events.EventTarget}
  */
@@ -26,7 +27,6 @@ yuma.selection.DragSelector = function(canvas) {
   this.selection;
 
   var self = this;
-
   var moveListener = function(event) {
     self.selection = new yuma.geom.Rectangle(
       self.anchor.x, 
@@ -45,6 +45,10 @@ yuma.selection.DragSelector = function(canvas) {
     self.dispatchEvent(yuma.events.EventType.SELECTION_CREATED);
     g2d.clearRect(0, 0, canvas.width, canvas.height);
   });
+
+  yuma.events.EventBroker.getInstance().registerEventTarget(this, [
+    yuma.events.EventType.SELECTION_CREATED
+  ]);
 }
 goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);
 
