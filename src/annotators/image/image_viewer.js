@@ -93,7 +93,10 @@ yuma.Viewer.prototype._redraw = function(px, py) {
   });
 
   if (intersectedAnnotations.length > 0) {
-    if (!this._currentAnnotation || this._currentAnnotation != intersectedAnnotations[0]) {
+    if (this._currentAnnotation != intersectedAnnotations[0]) {
+        if (this._currentAnnotation)
+          this.dispatchEvent(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE);
+
         this._currentAnnotation = intersectedAnnotations[0];
         this.dispatchEvent(yuma.events.EventType.ANNOTATION_MOUSE_ENTER);
         this._clearPopup();
