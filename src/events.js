@@ -11,6 +11,7 @@ yuma.events.EventBroker = function() {
 }
 goog.addSingletonGetter(yuma.events.EventBroker);
 
+/*
 yuma.events.EventBroker.prototype.fireEvent = function(type, event) {
   var handlers = this._handlers[type];
   if (handlers) {
@@ -18,6 +19,21 @@ yuma.events.EventBroker.prototype.fireEvent = function(type, event) {
       handler(event);
     });
   }  
+}
+*/
+
+yuma.events.EventBroker.prototype.registerEventTarget = function(target, types) {
+  self = this;
+  goog.array.forEach(types, function(type, idx, array) {    
+    goog.events.listen(target, type, function(event) {
+      var handlers = self._handlers[type];
+      if (handlers) {
+        goog.array.forEach(handlers, function(handler, idx, array) {
+          handler(event);
+        });
+      }  
+    });
+  });
 }
 
 yuma.events.EventBroker.prototype.subscribe = function(type, handler) {

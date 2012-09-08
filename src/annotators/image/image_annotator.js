@@ -53,6 +53,15 @@ yuma.ImageAnnotator = function(id) {
     dummyCounter++;
     goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
   });
+
+  // For testing purposes 
+  yuma.events.EventBroker.getInstance().subscribe(yuma.events.EventType.ANNOTATION_MOUSE_ENTER, function(event) {
+    console.log('entering ' + event.target.getCurrentAnnotation().text);
+  });
+
+  yuma.events.EventBroker.getInstance().subscribe(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE, function(event) {
+    console.log('leaving ' + event.target.getCurrentAnnotation().text);
+  });
 }
 
 window['ImageAnnotator'] = yuma.ImageAnnotator;

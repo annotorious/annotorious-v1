@@ -18,7 +18,7 @@ yuma.Viewer = function(canvas) {
   this._g2d = canvas.getContext('2d');
 
   /** @private **/
-  this._selectedAnnotation;
+  this._currentAnnotation;
 
   /** @private **/
   this._popup;
@@ -27,8 +27,17 @@ yuma.Viewer = function(canvas) {
   goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) { 
     self._redraw(event.offsetX, event.offsetY);
   });
+
+  yuma.events.EventBroker.getInstance().registerEventTarget(this, [
+    yuma.events.EventType.ANNOTATION_MOUSE_ENTER,
+    yuma.events.EventType.ANNOTATION_MOUSE_LEAVE
+  ]);
 }
 goog.inherits(yuma.Viewer, goog.events.EventTarget);
+
+yuma.Viewer.prototype.getCurrentAnnotation = function() {
+  return this._currentAnnotation;
+}
 
 /**
  * @private
@@ -84,12 +93,12 @@ yuma.Viewer.prototype._redraw = function(px, py) {
   });
 
   if (intersectedAnnotations.length > 0) {
-    if (!this._selectedAnnotation || this._selectedAnnotation != intersectedAnnotations[0]) {
+    if (!this._currentAnnotation || this._currentAnnotation != intersectedAnnotations[0]) {
+        this._currentAnnotation = intersectedAnnotations[0];
         this.dispatchEvent(yuma.events.EventType.ANNOTATION_MOUSE_ENTER);
-        this._selectedAnnotation = intersectedAnnotations[0];
         this._clearPopup();
 
-        this._popup = goog.soy.renderAsElement(yuma.templates.popup, {text: this._selectedAnnotation.text});
+        this._popup = goog.soy.renderAsElement(yuma.templates.popup, {text: this._currentAnnotation.text});
         goog.dom.appendChild(document.body, this._popup);
 
         // TODO need to introduce a bbox property that's supported by every shape type
@@ -104,9 +113,9 @@ yuma.Viewer.prototype._redraw = function(px, py) {
 
     this._draw(intersectedAnnotations[0], '#fff000', 1.8);
   } else {
-    if (this._selectedAnnotation) {
+    if (this._currentAnnotation) {
       this.dispatchEvent(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE);
-      delete this._selectedAnnotation;
+      delete this._currentAnnotation;
       this._clearPopup();
     }
   }
