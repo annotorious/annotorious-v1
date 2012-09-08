@@ -21,25 +21,23 @@ yuma.selection.DragSelector = function(canvas) {
   g2d.strokeStyle = '#ffffff';
  
   /** @private **/
-  this.anchor; 
+  this._anchor; 
 
   /** @private **/
-  this.selection;
+  this._selection;
 
   var self = this;
-  var moveListener = function(event) {
-    self.selection = new yuma.geom.Rectangle(
-      self.anchor.x, 
-      self.anchor.y,
-      event.offsetX - self.anchor.x,
-      event.offsetY - self.anchor.y
+  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
+    self._selection = new yuma.geom.Rectangle(
+      self._anchor.x, 
+      self._anchor.y,
+      event.offsetX - self._anchor.x,
+      event.offsetY - self._anchor.y
     );
 
     g2d.clearRect(0, 0, canvas.width, canvas.height);
-    g2d.strokeRect(self.selection.x + 0.5, self.selection.y + 0.5, self.selection.width, self.selection.height);
-  }
-
-  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, moveListener);  
+    g2d.strokeRect(self._selection.x + 0.5, self._selection.y + 0.5, self._selection.width, self._selection.height);
+  });
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
     self.dispatchEvent(yuma.events.EventType.SELECTION_CREATED);
@@ -52,17 +50,25 @@ yuma.selection.DragSelector = function(canvas) {
 }
 goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);
 
-yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
-  this.anchor = new yuma.geom.Point(x, y);
-}
 
 /**
- * @returns {yuma.Annotation.Shape}
+ * Starts the selection at the specified coordinates.
+ * @param {number} x the X coordinate
+ * @param {number} y the Y coordinate
+ */
+yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
+  this._anchor = new yuma.geom.Point(x, y);
+}
+
+
+/**
+ * Returns the currently selected shape
+ * @returns {yuma.Annotation.Shape} the shape
  */
 yuma.selection.DragSelector.prototype.getShape = function() {
   return new yuma.Annotation.Shape(
     yuma.Annotation.ShapeType.RECTANGLE,
-    this.selection
+    this._selection
   );
 }
 
