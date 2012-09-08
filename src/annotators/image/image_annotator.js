@@ -55,11 +55,11 @@ yuma.ImageAnnotator = function(id) {
   });
 
   // For testing purposes 
-  yuma.events.EventBroker.getInstance().subscribe(yuma.events.EventType.ANNOTATION_MOUSE_ENTER, function(event) {
+  yuma.events.EventBroker.getInstance().addHandler(yuma.events.EventType.ANNOTATION_MOUSE_ENTER, function(event) {
     console.log('entering ' + event.target.getCurrentAnnotation().text);
   });
 
-  yuma.events.EventBroker.getInstance().subscribe(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE, function(event) {
+  yuma.events.EventBroker.getInstance().addHandler(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE, function(event) {
     console.log('leaving ' + event.target.getCurrentAnnotation().text);
   });
 }
