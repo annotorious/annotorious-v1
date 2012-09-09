@@ -2,11 +2,10 @@
 
 /**
  * A dummy element to be used for annotation popups later on
- * @param id
  * @param text
  */
 {template .popup}
-<div class="yuma-popup" id="{$id}" style="position:absolute;">
+<div class="yuma-popup" style="position:absolute;">
   {$text}
 </div>
 {/template}
@@ -23,6 +22,15 @@
 </div>
 {/template}
 
+
+/**
+ * A basic annotation edit text form
+ */
+{template .editform}
+<div style="position:absolute;">
+  <textarea style="width:300px; height:200px;"></textarea>
+</div>
+{/template}
 
 
 /**

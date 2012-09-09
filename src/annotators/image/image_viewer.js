@@ -102,8 +102,7 @@ yuma.Viewer.prototype._redraw = function(px, py) {
         this.dispatchEvent(yuma.events.EventType.ANNOTATION_MOUSE_ENTER);
         this._clearPopup();
 
-        var id = 'annotation' + Math.random();
-        this._popup = goog.soy.renderAsElement(yuma.templates.popup, {id: id, text: this._currentAnnotation.text});
+        this._popup = goog.soy.renderAsElement(yuma.templates.popup, {text: this._currentAnnotation.text});
 
         goog.dom.appendChild(document.body, this._popup);
 

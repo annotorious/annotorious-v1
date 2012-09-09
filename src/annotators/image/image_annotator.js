@@ -47,12 +47,16 @@ yuma.ImageAnnotator = function(id) {
     goog.style.setStyle(editCanvas, 'pointer-events', 'auto'); 
   });
 
-  // Listen to events
+  // Lifecycle control
   var eventBroker = yuma.events.EventBroker.getInstance();
-
   var dummyCounter = 1;
   eventBroker.addHandler(yuma.events.EventType.SELECTION_CREATED, function(event) {
     viewer.addAnnotation(new yuma.Annotation('annotation #' + dummyCounter, event.target.getShape()));
+    
+    // var editForm = goog.soy.renderAsElement(yuma.templates.editform);
+    // goog.dom.appendChild(annotationLayer, editForm);
+    // goog.style.setPosition(editForm, 120, 120);
+
     dummyCounter++;
     goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
   });
