@@ -2,6 +2,7 @@ goog.provide('yuma.ImageAnnotator');
 
 goog.require('goog.soy');
 goog.require('goog.dom');
+goog.require('goog.dom.query');
 goog.require('goog.events');
 goog.require('goog.math');
 goog.require('goog.style');
@@ -53,9 +54,17 @@ yuma.ImageAnnotator = function(id) {
   eventBroker.addHandler(yuma.events.EventType.SELECTION_CREATED, function(event) {
     viewer.addAnnotation(new yuma.Annotation('annotation #' + dummyCounter, event.target.getShape()));
     
-    // var editForm = goog.soy.renderAsElement(yuma.templates.editform);
-    // goog.dom.appendChild(annotationLayer, editForm);
-    // goog.style.setPosition(editForm, 120, 120);
+    /*
+    var editForm = goog.soy.renderAsElement(yuma.templates.editform);
+    goog.dom.appendChild(annotationLayer, editForm);
+
+    var btnSave = goog.dom.query('.annotation-save', editForm)[0];
+    goog.events.listen(btnSave, goog.events.EventType.CLICK, function(event) {
+      console.log('mouseover');
+      goog.events.Event.stopPropagation(event);
+    });
+    goog.style.setPosition(editForm, 120, 120);
+    */
 
     dummyCounter++;
     goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
