@@ -28,6 +28,7 @@ yuma.ImageAnnotator = function(id) {
   goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
   
+  // TODO move this into the viewer class and trigger ANNOTATION_AREA_MOUSE_ENTER/LEAVE events
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function() { 
     goog.style.setOpacity(viewCanvas, 1.0); 
     goog.style.setOpacity(hint, 0.8); 
@@ -54,17 +55,14 @@ yuma.ImageAnnotator = function(id) {
   eventBroker.addHandler(yuma.events.EventType.SELECTION_CREATED, function(event) {
     viewer.addAnnotation(new yuma.Annotation('annotation #' + dummyCounter, event.target.getShape()));
     
-    /*
     var editForm = goog.soy.renderAsElement(yuma.templates.editform);
-    goog.dom.appendChild(annotationLayer, editForm);
-
-    var btnSave = goog.dom.query('.annotation-save', editForm)[0];
-    goog.events.listen(btnSave, goog.events.EventType.CLICK, function(event) {
-      console.log('mouseover');
-      goog.events.Event.stopPropagation(event);
-    });
     goog.style.setPosition(editForm, 120, 120);
-    */
+    goog.dom.appendChild(document.body, editForm);
+
+    var btnCancel = goog.dom.query('.annotation-cancel', editForm)[0];
+    goog.events.listen(btnCancel, goog.events.EventType.CLICK, function(event) {
+      goog.dom.removeNode(editForm);
+    });
 
     dummyCounter++;
     goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
