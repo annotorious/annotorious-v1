@@ -61,7 +61,7 @@ yuma.ImageAnnotator = function(id) {
     // TODO this will get cleaner once we got a decent custom event object!
     goog.style.setPosition(editForm, 
       shape.geometry.x + image.offsetLeft, 
-      shape.geometry.y + shape.geometry.height + 5 + image.offsetTop);
+      shape.geometry.y + shape.geometry.height + 4 + image.offsetTop);
     goog.dom.appendChild(document.body, editForm);
 
     var btnCancel = goog.dom.query('.annotation-cancel', editForm)[0];
