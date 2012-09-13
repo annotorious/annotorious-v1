@@ -49,22 +49,36 @@ yuma.ImageAnnotator = function(id) {
     goog.style.setStyle(editCanvas, 'pointer-events', 'auto'); 
   });
 
-  // Lifecycle control
+
   var eventBroker = yuma.events.EventBroker.getInstance();
-  var dummyCounter = 1;
-  eventBroker.addHandler(yuma.events.EventType.SELECTION_CREATED, function(event) {
-    viewer.addAnnotation(new yuma.Annotation('annotation #' + dummyCounter, event.target.getShape()));
-    
+
+  // TODO need to customize the event object to contain shape and mouse event
+  eventBroker.addHandler(yuma.events.EventType.SELECTION_CREATED, function(event) {  
+    var shape = event.target.getShape();
+
     var editForm = goog.soy.renderAsElement(yuma.templates.editform);
-    goog.style.setPosition(editForm, 120, 120);
+
+    // TODO this will get cleaner once we got a decent custom event object!
+    goog.style.setPosition(editForm, 
+      shape.geometry.x + image.offsetLeft, 
+      shape.geometry.y + shape.geometry.height + 5 + image.offsetTop);
     goog.dom.appendChild(document.body, editForm);
 
     var btnCancel = goog.dom.query('.annotation-cancel', editForm)[0];
     goog.events.listen(btnCancel, goog.events.EventType.CLICK, function(event) {
       goog.dom.removeNode(editForm);
+      selector.stopSelection();
     });
 
-    dummyCounter++;
+    var outer = event;
+    var btnSave = goog.dom.query('.annotation-save', editForm)[0];
+    goog.events.listen(btnSave, goog.events.EventType.CLICK, function(event) {
+      var textarea = goog.dom.query('.annotation-text', editForm)[0];
+      viewer.addAnnotation(new yuma.Annotation(textarea.value, shape));
+      goog.dom.removeNode(editForm);
+      selector.stopSelection();
+    });
+
     goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
   });
 

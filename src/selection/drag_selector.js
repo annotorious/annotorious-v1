@@ -16,9 +16,13 @@ goog.require('yuma.geom.Rectangle');
  * @extends {goog.events.EventTarget}
  */
 yuma.selection.DragSelector = function(canvas) {
-  var g2d = canvas.getContext('2d');
-  g2d.lineWidth = 1;
-  g2d.strokeStyle = '#ffffff';
+  /** @private **/
+  this._canvas = canvas;
+
+  /** @private **/
+  this._g2d = canvas.getContext('2d');
+  this._g2d.lineWidth = 1;
+  this._g2d.strokeStyle = '#ffffff';
  
   /** @private **/
   this._anchor; 
@@ -35,13 +39,12 @@ yuma.selection.DragSelector = function(canvas) {
       event.offsetY - self._anchor.y
     );
 
-    g2d.clearRect(0, 0, canvas.width, canvas.height);
-    g2d.strokeRect(self._selection.x + 0.5, self._selection.y + 0.5, self._selection.width, self._selection.height);
+    self._g2d.clearRect(0, 0, canvas.width, canvas.height);
+    self._g2d.strokeRect(self._selection.x + 0.5, self._selection.y + 0.5, self._selection.width, self._selection.height);
   });
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
     self.dispatchEvent(yuma.events.EventType.SELECTION_CREATED);
-    g2d.clearRect(0, 0, canvas.width, canvas.height);
   });
 
   yuma.events.EventBroker.getInstance().registerEventTarget(this, [
@@ -58,6 +61,10 @@ goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);
  */
 yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
   this._anchor = new yuma.geom.Point(x, y);
+}
+
+yuma.selection.DragSelector.prototype.stopSelection = function() {
+  this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 }
 
 
