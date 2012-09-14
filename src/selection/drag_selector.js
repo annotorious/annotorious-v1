@@ -59,14 +59,17 @@ yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
   this._anchor = new yuma.model.geom.Point(x, y);
 }
 
+/**
+ * Stops the selection.
+ */
 yuma.selection.DragSelector.prototype.stopSelection = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 }
 
 
 /**
- * Returns the currently selected shape
- * @returns {yuma.Annotation.Shape} the shape
+ * Returns the currently selected shape.
+ * @return {yuma.model.Shape} the shape
  */
 yuma.selection.DragSelector.prototype.getShape = function() {
   return new yuma.model.Shape(

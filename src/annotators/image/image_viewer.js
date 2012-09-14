@@ -4,6 +4,8 @@ goog.require('goog.soy');
 goog.require('goog.events.EventTarget');
 
 /**
+ * The image viewer - the central entity that manages annotations 
+ * displayed for one image.
  * @constructor
  * @extends {goog.events.EventTarget}
  */
@@ -36,8 +38,22 @@ yuma.annotators.image.ImageViewer = function(canvas) {
 }
 goog.inherits(yuma.annotators.image.ImageViewer, goog.events.EventTarget);
 
+
+/**
+ * Returns the currently highlighted annotation (if any).
+ * @return {yuma.model.Annotation | undefined}
+ */
 yuma.annotators.image.ImageViewer.prototype.getCurrentAnnotation = function() {
   return this._currentAnnotation;
+}
+
+/**
+ * Adds an annotation to the viewer.
+ * @param {yuma.model.Annotation} annotation
+ */
+yuma.annotators.image.ImageViewer.prototype.addAnnotation = function(annotation) {
+  this._annotations.push(annotation);  
+  this._draw(annotation, '#ffffff', 1);
 }
 
 /**
@@ -59,13 +75,8 @@ yuma.annotators.image.ImageViewer.prototype._draw = function(annotation, color, 
 }
 
 /**
- * @param {yuma.model.Annotation} annotation
+ * @private
  */
-yuma.annotators.image.ImageViewer.prototype.addAnnotation = function(annotation) {
-  this._annotations.push(annotation);  
-  this._draw(annotation, '#ffffff', 1);
-}
-
 yuma.annotators.image.ImageViewer.prototype._clearPopup = function(annotation) {
   if (this._popup) {
     goog.dom.removeNode(this._popup);
@@ -73,6 +84,9 @@ yuma.annotators.image.ImageViewer.prototype._clearPopup = function(annotation) {
   }
 }
 
+/**
+ * @private
+ */
 yuma.annotators.image.ImageViewer.prototype._redraw = function(px, py) {
   // TODO just a temporary hack - implement something decent!
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);

@@ -19,7 +19,6 @@ goog.addSingletonGetter(yuma.events.EventBroker);
 /**
  * Registers an EventTarget with the EventBroker. NOTE: according to Google
  * Closure convention, an EventTarget is a *source* of events!
- *
  * @param {goog.events.EventTarget} target the event target 
  * @param {Array.<yuma.events.EventType>} types the event types to listen for 
  */

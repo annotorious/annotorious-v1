@@ -1,9 +1,9 @@
 goog.provide('yuma.model');
 
 /**
- * An annotation
+ * An annotation.
  * @param {string} text the annotation text
- * @param {yuma.Annotation.Shape} shape the shape defining the annotated fragment
+ * @param {yuma.model.Shape} shape the shape defining the annotated fragment
  * @constructor
  */
 yuma.model.Annotation = function(text, shape) {
@@ -12,8 +12,9 @@ yuma.model.Annotation = function(text, shape) {
 }
 
 /**
- * @param {yuma.Annotation.ShapeType} type the shape type
- * @param {yuma.geom.Point | yuma.geom.Rectangle | yuma.geom.Polygon} geometry the geometry
+ * A shape, defining a 2D annotated area.
+ * @param {yuma.model.ShapeType} type the shape type
+ * @param {yuma.model.geom.Point | yuma.model.geom.Rectangle | yuma.model.geom.Polygon} geometry the geometry
  * @constructor
  */
 yuma.model.Shape = function(type, geometry) {
@@ -22,6 +23,7 @@ yuma.model.Shape = function(type, geometry) {
 }
 
 /**
+ * Possible shape types
  * @enum {string}
  */
 yuma.model.ShapeType = {

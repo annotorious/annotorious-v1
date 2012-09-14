@@ -54,12 +54,14 @@ yuma.annotators.image.ImageAnnotator = function(id) {
     var shape = event.target.getShape();
 
     var editForm = goog.soy.renderAsElement(yuma.templates.editform);
+    var textarea = goog.dom.query('.annotation-text', editForm)[0];
 
     // TODO this will get cleaner once we got a decent custom event object!
     goog.style.setPosition(editForm, 
       shape.geometry.x + image.offsetLeft, 
       shape.geometry.y + shape.geometry.height + 4 + image.offsetTop);
     goog.dom.appendChild(document.body, editForm);
+    textarea.focus();
 
     var btnCancel = goog.dom.query('.annotation-cancel', editForm)[0];
     goog.events.listen(btnCancel, goog.events.EventType.CLICK, function(event) {
@@ -70,7 +72,6 @@ yuma.annotators.image.ImageAnnotator = function(id) {
     var outer = event;
     var btnSave = goog.dom.query('.annotation-save', editForm)[0];
     goog.events.listen(btnSave, goog.events.EventType.CLICK, function(event) {
-      var textarea = goog.dom.query('.annotation-text', editForm)[0];
       viewer.addAnnotation(new yuma.model.Annotation(textarea.value, shape));
       goog.dom.removeNode(editForm);
       selector.stopSelection();
