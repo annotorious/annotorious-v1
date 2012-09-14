@@ -61,22 +61,22 @@ We're using Google's "Closure Tools":http://developers.google.com/closure/. I re
 * To build the minified JavaScript, run <code>java -jar plovr/plovr.jar build annotator.json > yuma2.min.js</code> (replacing 'yuma2.min.js' with a file name of your choice)
 * Note: the version of plovr I included in this repository is the February 2012 release ("plovr-4b3caf2b7d84.jar":http://code.google.com/p/plovr/downloads/detail?name=plovr-4b3caf2b7d84.jar&can=2).
 
-h2. Upcoming Work/Todos (almost in order of priority...)
+h2. Todos (almost in order of priority...)
 
 * Clean up namespacing (it's a bit messy after the last refactoring) 
 * Re-think the overall workflow/usability (I'm thinking about alignin with the OKFN Annotator workflow - any comments welcome!)
 * Change the way activation works: activation no longer via JavaScript ("new ImageAnnotator(id)") but via a CSS class ("&lt;img class='annotatable' ... /&gt;")
-* Central event bus/event broker to keep code tidy
-* Custom mouseover/mouseout events for annotation shapes
-* Popup annotation text bubble
-* Popup annotation create/edit form
+* Make selection move/resizable after it is created
+* -Central event bus/event broker to keep code tidy- *DONE*
+* -Custom mouseover/mouseout events for annotation shapes- *DONE*
+* -Popup annotation text bubble- *DONE* (but needs some style)
+* -Popup annotation create/edit form- *DONE* (but needs some style)
 * Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
 * OpenLayers and/or Seadragon AJAX support
 * Optimization, optimization, optimization! (Code and runtime performance.)
 * Implement POINT and POLYGON shape geometries
 * Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
 * *Find a decent name for this tool!*
-* Lots of TODOs in the code
 
 h2. License
 
