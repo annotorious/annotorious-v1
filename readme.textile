@@ -63,22 +63,22 @@ We're using Google's "Closure Tools":http://developers.google.com/closure/. I re
 
 h2. Todos (almost in order of priority...)
 
-* Clean up namespacing (it's a bit messy after the last refactoring) 
 * Re-think the overall workflow/usability (I'm thinking about alignin with the OKFN Annotator workflow - any comments welcome!)
 * Delete/edit of annotations
 * Change the way activation works: activation no longer via JavaScript ("new ImageAnnotator(id)") but via a CSS class ("&lt;img class='annotatable' ... /&gt;")
 * Create an OKFN Annotator Plugin wrapper (plus a custom JS build for the plugin)
 * Make selection move/resizable after it is created
-* -Central event bus/event broker to keep code tidy- *DONE*
-* -Custom mouseover/mouseout events for annotation shapes- *DONE*
-* -Popup annotation text bubble- *DONE* (but needs some style)
-* -Popup annotation create/edit form- *DONE* (but needs some style)
 * Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
 * OpenLayers and/or Seadragon AJAX support
 * Optimization, optimization, optimization! (Code and runtime performance.)
 * Implement POINT and POLYGON shape geometries
 * Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
 * *Find a decent name for this tool!*
+* -Clean up namespacing (it's a bit messy after the last refactoring)- *DONE*
+* -Central event bus/event broker to keep code tidy- *DONE*
+* -Custom mouseover/mouseout events for annotation shapes- *DONE*
+* -Popup annotation text bubble- *DONE* (but needs some style)
+* -Popup annotation create/edit form- *DONE* (but needs some style)
 
 h2. License
 
