@@ -4,10 +4,6 @@ goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 
 goog.require('yuma.events');
-goog.require('yuma.Annotation');
-goog.require('yuma.geom.Point');
-goog.require('yuma.geom.Rectangle');
-
 
 /**
  * Simple click-and-drag-style selector
@@ -32,7 +28,7 @@ yuma.selection.DragSelector = function(canvas) {
 
   var self = this;
   goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
-    self._selection = new yuma.geom.Rectangle(
+    self._selection = new yuma.model.geom.Rectangle(
       self._anchor.x, 
       self._anchor.y,
       event.offsetX - self._anchor.x,
@@ -60,7 +56,7 @@ goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);
  * @param {number} y the Y coordinate
  */
 yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
-  this._anchor = new yuma.geom.Point(x, y);
+  this._anchor = new yuma.model.geom.Point(x, y);
 }
 
 yuma.selection.DragSelector.prototype.stopSelection = function() {
@@ -73,8 +69,8 @@ yuma.selection.DragSelector.prototype.stopSelection = function() {
  * @returns {yuma.Annotation.Shape} the shape
  */
 yuma.selection.DragSelector.prototype.getShape = function() {
-  return new yuma.Annotation.Shape(
-    yuma.Annotation.ShapeType.RECTANGLE,
+  return new yuma.model.Shape(
+    yuma.model.ShapeType.RECTANGLE,
     this._selection
   );
 }

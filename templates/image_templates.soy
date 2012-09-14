@@ -1,15 +1,4 @@
-{namespace yuma.templates}
-
-/**
- * A dummy element to be used for annotation popups later on
- * @param text
- */
-{template .popup}
-<div class="yuma-popup" style="position:absolute;">
-  {$text}
-</div>
-{/template}
-
+{namespace yuma.templates.image}
 
 /**
  * The 'Click to Annotate' hint
@@ -18,22 +7,6 @@
 {template .hint}
 <div class="yuma-hint" style="white-space:nowrap; position:absolute; pointer-events:none; top:10px; left:10px;">
   {$msg}
-</div>
-{/template}
-
-
-/**
- * A basic annotation edit text form
- */
-{template .editform}
-<div class="yuma-editform" style="position:absolute;">
-  <form>
-    <textarea class="annotation-text"></textarea>
-    <div style="margin-top:-2px;">
-      <a class="yuma-button annotation-cancel" href="#cancel">Cancel</a>
-      <a class="yuma-button annotation-save" href="#save">Save</a>
-    </div>
-  </form>
 </div>
 {/template}
 

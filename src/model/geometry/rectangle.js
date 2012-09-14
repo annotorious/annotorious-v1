@@ -1,9 +1,9 @@
-goog.provide('yuma.geom.Rectangle');
+goog.provide('yuma.model.geom.Rectangle');
 
 /**
  * @constructor
  */
-yuma.geom.Rectangle = function(x, y, width, height) {
+yuma.model.geom.Rectangle = function(x, y, width, height) {
   // Normalize to positive width and height
   if (width > 0) {
     this.x = x;
@@ -22,7 +22,7 @@ yuma.geom.Rectangle = function(x, y, width, height) {
   }
 }
 
-yuma.geom.Rectangle.prototype.intersects = function(px, py) {
+yuma.model.geom.Rectangle.prototype.intersects = function(px, py) {
   if (px < this.x)
     return false;
 
@@ -38,7 +38,7 @@ yuma.geom.Rectangle.prototype.intersects = function(px, py) {
   return true;
 }
 
-yuma.geom.Rectangle.prototype.size = function() {
+yuma.model.geom.Rectangle.prototype.size = function() {
   return this.width * this.height;
 }
 

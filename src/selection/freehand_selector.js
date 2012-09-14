@@ -1,8 +1,8 @@
-goog.provide('yuma.selector');
+goog.provide('yuma.selection.FreehandSelector');
 
 goog.require('goog.events');
 
-yuma.selector.DragSelector = function(canvas) {
+yuma.selector.FreehandSelector = function(canvas) {
   paper.setup(canvas);
  
   var path = new paper.Path();

@@ -1,4 +1,4 @@
-goog.provide('yuma.ImageAnnotator');
+goog.provide('yuma.annotators.image.ImageAnnotator');
 
 goog.require('goog.soy');
 goog.require('goog.dom');
@@ -7,24 +7,21 @@ goog.require('goog.events');
 goog.require('goog.math');
 goog.require('goog.style');
 
-goog.require('yuma.events');
-goog.require('yuma.selection.DragSelector');
-
-yuma.ImageAnnotator = function(id) {
+yuma.annotators.image.ImageAnnotator = function(id) {
   var image = goog.dom.getElement(id);
 
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'absolute');
   goog.style.setPosition(annotationLayer , goog.style.getPosition(image));
 
-  var hint = goog.soy.renderAsElement(yuma.templates.hint, {msg:'Click and Drag to Annotate'});
+  var hint = goog.soy.renderAsElement(yuma.templates.image.hint, {msg:'Click and Drag to Annotate'});
   goog.style.setOpacity(hint, 0); 
   goog.dom.appendChild(annotationLayer, hint);
 
-  var viewCanvas = goog.soy.renderAsElement(yuma.templates.canvas, {width:image.width, height:image.height});
+  var viewCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas, {width:image.width, height:image.height});
   goog.dom.appendChild(annotationLayer, viewCanvas);
 
-  var editCanvas = goog.soy.renderAsElement(yuma.templates.canvas, {width:image.width, height:image.height});
+  var editCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas, {width:image.width, height:image.height});
   goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
   
@@ -41,7 +38,7 @@ yuma.ImageAnnotator = function(id) {
 
   goog.dom.appendChild(document.body, annotationLayer);
 
-  var viewer = new yuma.Viewer(viewCanvas);
+  var viewer = new yuma.annotators.image.ImageViewer(viewCanvas);
 
   var selector = new yuma.selection.DragSelector(editCanvas);
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEDOWN, function(event) { 
@@ -74,7 +71,7 @@ yuma.ImageAnnotator = function(id) {
     var btnSave = goog.dom.query('.annotation-save', editForm)[0];
     goog.events.listen(btnSave, goog.events.EventType.CLICK, function(event) {
       var textarea = goog.dom.query('.annotation-text', editForm)[0];
-      viewer.addAnnotation(new yuma.Annotation(textarea.value, shape));
+      viewer.addAnnotation(new yuma.model.Annotation(textarea.value, shape));
       goog.dom.removeNode(editForm);
       selector.stopSelection();
     });
@@ -92,4 +89,4 @@ yuma.ImageAnnotator = function(id) {
   });
 }
 
-window['ImageAnnotator'] = yuma.ImageAnnotator;
+window['ImageAnnotator'] = yuma.annotators.image.ImageAnnotator;

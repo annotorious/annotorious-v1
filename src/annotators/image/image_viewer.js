@@ -1,14 +1,13 @@
-goog.provide('yuma.Viewer');
+goog.provide('yuma.annotators.image.ImageViewer');
 
 goog.require('goog.soy');
-goog.require('goog.editor.SeamlessField');
+goog.require('goog.events.EventTarget');
 
 /**
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-yuma.Viewer = function(canvas) {
-
+yuma.annotators.image.ImageViewer = function(canvas) {
   /** @private **/
   this._canvas = canvas;
 
@@ -25,6 +24,7 @@ yuma.Viewer = function(canvas) {
   this._popup;
   
   var self = this;
+
   goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) { 
     self._redraw(event.offsetX, event.offsetY);
   });
@@ -34,46 +34,46 @@ yuma.Viewer = function(canvas) {
     yuma.events.EventType.ANNOTATION_MOUSE_LEAVE
   ]);
 }
-goog.inherits(yuma.Viewer, goog.events.EventTarget);
+goog.inherits(yuma.annotators.image.ImageViewer, goog.events.EventTarget);
 
-yuma.Viewer.prototype.getCurrentAnnotation = function() {
+yuma.annotators.image.ImageViewer.prototype.getCurrentAnnotation = function() {
   return this._currentAnnotation;
 }
 
 /**
  * @private
  */
-yuma.Viewer.prototype._draw = function(annotation, color, lineWidth) {
+yuma.annotators.image.ImageViewer.prototype._draw = function(annotation, color, lineWidth) {
   this._g2d.strokeStyle = color;
   this._g2d.lineWidth = lineWidth;
 
   var shape = annotation.shape;
-  if (shape.type == yuma.Annotation.ShapeType.POINT) {
+  if (shape.type == yuma.model.ShapeType.POINT) {
     // TODO implement
-  } else if (shape.type == yuma.Annotation.ShapeType.POLYGON) {
+  } else if (shape.type == yuma.model.ShapeType.POLYGON) {
     // TODO implement
-  } else if (shape.type == yuma.Annotation.ShapeType.RECTANGLE) {
+  } else if (shape.type == yuma.model.ShapeType.RECTANGLE) {
     var rect = shape.geometry;
     this._g2d.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height); 
   }  
 }
 
 /**
- * @param {yuma.Annotation} annotation
+ * @param {yuma.model.Annotation} annotation
  */
-yuma.Viewer.prototype.addAnnotation = function(annotation) {
+yuma.annotators.image.ImageViewer.prototype.addAnnotation = function(annotation) {
   this._annotations.push(annotation);  
   this._draw(annotation, '#ffffff', 1);
 }
 
-yuma.Viewer.prototype._clearPopup = function(annotation) {
+yuma.annotators.image.ImageViewer.prototype._clearPopup = function(annotation) {
   if (this._popup) {
     goog.dom.removeNode(this._popup);
     delete this._popup;
   }
 }
 
-yuma.Viewer.prototype._redraw = function(px, py) {
+yuma.annotators.image.ImageViewer.prototype._redraw = function(px, py) {
   // TODO just a temporary hack - implement something decent!
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 

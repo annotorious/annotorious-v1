@@ -7,13 +7,14 @@
   "inputs": [ 
     "src/annotators/image/image_annotator.js",
     "src/annotators/image/image_viewer.js",
-    "src/geometry/point.js",
-    "src/geometry/polygon.js",
-    "src/geometry/rectangle.js",
+    "src/model/model.js", 
+    "src/model/geometry/point.js",
+    "src/model/geometry/polygon.js",
+    "src/model/geometry/rectangle.js",
     "src/selection/drag_selector.js",   
-    "src/annotation.js", 
     "src/events.js",
 
+    "templates/annotator_templates.soy",
     "templates/image_templates.soy"
   ],
   "paths": [
@@ -22,6 +23,6 @@
   "externs": [
     
   ],
-  "mode": "ADVANCED",
+  "mode": "ADVANCED", // "RAW"
   "level": "DEFAULT" // "VERBOSE"
 }
