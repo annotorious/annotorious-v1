@@ -32,8 +32,8 @@ yuma.annotators.image.ImageViewer = function(canvas) {
   });
 
   yuma.events.EventBroker.getInstance().registerEventTarget(this, [
-    yuma.events.EventType.ANNOTATION_MOUSE_ENTER,
-    yuma.events.EventType.ANNOTATION_MOUSE_LEAVE
+    yuma.events.EventType.MOUSE_OVER_ANNOTATION,
+    yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION
   ]);
 }
 goog.inherits(yuma.annotators.image.ImageViewer, goog.events.EventTarget);
@@ -100,12 +100,12 @@ yuma.annotators.image.ImageViewer.prototype._redraw = function(mouseEvent) {
   if (intersectedAnnotations.length > 0) {
     if (this._currentAnnotation != intersectedAnnotations[0]) {
         if (this._currentAnnotation)
-          goog.events.dispatchEvent(this, {type: yuma.events.EventType.ANNOTATION_MOUSE_LEAVE,
+          goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
             annotation: this._currentAnnotation, mouseEvent: mouseEvent});
 
         this._currentAnnotation = intersectedAnnotations[0];
 
-        goog.events.dispatchEvent(this, {type: yuma.events.EventType.ANNOTATION_MOUSE_ENTER, 
+        goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OVER_ANNOTATION, 
            annotation: this._currentAnnotation, mouseEvent: mouseEvent});
 
         this._clearPopup();
@@ -127,7 +127,7 @@ yuma.annotators.image.ImageViewer.prototype._redraw = function(mouseEvent) {
     this._draw(intersectedAnnotations[0], '#fff000', 1.8);
   } else {
     if (this._currentAnnotation) {
-      goog.events.dispatchEvent(this, {type: yuma.events.EventType.ANNOTATION_MOUSE_LEAVE,
+      goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
         annotation: this._currentAnnotation, mouseEvent: mouseEvent});
       delete this._currentAnnotation;
       this._clearPopup();

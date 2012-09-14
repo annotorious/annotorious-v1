@@ -8,10 +8,8 @@ goog.require('goog.events');
  * @constructor
  */
 yuma.events.EventBroker = function() {
-
   /** @private **/
   this._handlers = [];
-
 }
 goog.addSingletonGetter(yuma.events.EventBroker);
 
@@ -67,33 +65,40 @@ yuma.events.EventBroker.prototype.removeHandler = function(type, handler) {
  * @enum {string}
  */
 yuma.events.EventType = {
-  
-  /** 
-   * A new selection was created on the annotatable object. The
-   * event.target is a selector object.
+
+  /**
+   * A new selection was started.
    */
-  SELECTION_CREATED: goog.events.getUniqueId('selection_created'),
+  SELECTION_STARTED: goog.events.getUniqueId('selection_started'),
   
   /** 
-   * An existing selection was changed (moved, resized, etc.).
-   * The event.target is a selector object. 
+   * The current selection was completed.
+   */
+  SELECTION_COMPLETED: goog.events.getUniqueId('selection_completed'),
+  
+  /** 
+   * The current selection was changed. 
    */
   SELECTION_CHANGED: goog.events.getUniqueId('selection_changed'),
 
   /** 
-   * The mouse entered an annotation shape. The event.target
-   * is a viewer object.
+   * The mouse entered an annotation.
    */ 
-  ANNOTATION_MOUSE_ENTER: goog.events.getUniqueId('annotation_mouse_enter'),
+  MOUSE_OVER_ANNOTATION: goog.events.getUniqueId('mouse_over_annotation'),
 
   /** 
-   * The mouse left an annotation shape. The event.target
-   * is a viewer object.
+   * The mouse moved out of an annotation shape.
    */ 
-  ANNOTATION_MOUSE_LEAVE: goog.events.getUniqueId('annotation_mouse_leave'),
+  MOUSE_OUT_OF_ANNOTATION: goog.events.getUniqueId('mouse_out_of_annotation'),
 
-  ANNOTATION_AREA_MOUSE_ENTER: goog.events.getUniqueId('annotation_area_mouse_enter'),
+  /**
+   * The mouse entered the annotatable media
+   */
+  MOUSE_OVER_ANNOTATABLE_MEDIA: goog.events.getUniqueId('mouse_over_media'),
 
-  ANNOTATION_AREA_MOUSE_LEAVE: goog.events.getUniqueId('annotation_area_mouse_leave')
+  /**
+   * The mouse moved out of the annotatable media
+   */
+  MOUSE_OUT_OF_ANNOTATABLE_MEDIA: goog.events.getUniqueId('mouse_out_of_media')
 
 };

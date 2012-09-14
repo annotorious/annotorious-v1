@@ -40,11 +40,11 @@ yuma.selection.DragSelector = function(canvas) {
   });
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
-    self.dispatchEvent(yuma.events.EventType.SELECTION_CREATED);
+    self.dispatchEvent(yuma.events.EventType.SELECTION_COMPLETED);
   });
 
   yuma.events.EventBroker.getInstance().registerEventTarget(this, [
-    yuma.events.EventType.SELECTION_CREATED
+    yuma.events.EventType.SELECTION_COMPLETED
   ]);
 }
 goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);

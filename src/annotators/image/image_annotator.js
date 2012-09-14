@@ -50,7 +50,7 @@ yuma.annotators.image.ImageAnnotator = function(id) {
   var eventBroker = yuma.events.EventBroker.getInstance();
 
   // TODO need to customize the event object to contain shape and mouse event
-  eventBroker.addHandler(yuma.events.EventType.SELECTION_CREATED, function(event) {  
+  eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {  
     var shape = event.target.getShape();
 
     var editForm = goog.soy.renderAsElement(yuma.templates.editform);
@@ -80,11 +80,11 @@ yuma.annotators.image.ImageAnnotator = function(id) {
   });
 
   // For testing purposes 
-  eventBroker.addHandler(yuma.events.EventType.ANNOTATION_MOUSE_ENTER, function(event) {
+  eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
     console.log(event.annotation);
   });
 
-  eventBroker.addHandler(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE, function(event) {
+  eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {
     console.log(event.annotation);
   });
 }
