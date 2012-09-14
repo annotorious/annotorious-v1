@@ -28,7 +28,7 @@ yuma.annotators.image.ImageViewer = function(canvas) {
   var self = this;
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) { 
-    self._redraw(event.offsetX, event.offsetY);
+    self._redraw(event);
   });
 
   yuma.events.EventBroker.getInstance().registerEventTarget(this, [
@@ -37,15 +37,6 @@ yuma.annotators.image.ImageViewer = function(canvas) {
   ]);
 }
 goog.inherits(yuma.annotators.image.ImageViewer, goog.events.EventTarget);
-
-
-/**
- * Returns the currently highlighted annotation (if any).
- * @return {yuma.model.Annotation | undefined}
- */
-yuma.annotators.image.ImageViewer.prototype.getCurrentAnnotation = function() {
-  return this._currentAnnotation;
-}
 
 /**
  * Adds an annotation to the viewer.
@@ -87,8 +78,7 @@ yuma.annotators.image.ImageViewer.prototype._clearPopup = function(annotation) {
 /**
  * @private
  */
-yuma.annotators.image.ImageViewer.prototype._redraw = function(px, py) {
-  // TODO just a temporary hack - implement something decent!
+yuma.annotators.image.ImageViewer.prototype._redraw = function(mouseEvent) {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
   var self = this;
@@ -98,7 +88,7 @@ yuma.annotators.image.ImageViewer.prototype._redraw = function(px, py) {
 
   var intersectedAnnotations = [];
   goog.array.forEach(this._annotations, function(annotation, idx, array) {
-    if (annotation.shape.geometry.intersects(px, py)) {
+    if (annotation.shape.geometry.intersects(mouseEvent.offsetX, mouseEvent.offsetY)) {
       intersectedAnnotations.push(annotation);
     }
   });
@@ -110,10 +100,14 @@ yuma.annotators.image.ImageViewer.prototype._redraw = function(px, py) {
   if (intersectedAnnotations.length > 0) {
     if (this._currentAnnotation != intersectedAnnotations[0]) {
         if (this._currentAnnotation)
-          this.dispatchEvent(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE);
+          goog.events.dispatchEvent(this, {type: yuma.events.EventType.ANNOTATION_MOUSE_LEAVE,
+            annotation: this._currentAnnotation, mouseEvent: mouseEvent});
 
         this._currentAnnotation = intersectedAnnotations[0];
-        this.dispatchEvent(yuma.events.EventType.ANNOTATION_MOUSE_ENTER);
+
+        goog.events.dispatchEvent(this, {type: yuma.events.EventType.ANNOTATION_MOUSE_ENTER, 
+           annotation: this._currentAnnotation, mouseEvent: mouseEvent});
+
         this._clearPopup();
 
         this._popup = goog.soy.renderAsElement(yuma.templates.popup, {text: this._currentAnnotation.text});
@@ -133,7 +127,8 @@ yuma.annotators.image.ImageViewer.prototype._redraw = function(px, py) {
     this._draw(intersectedAnnotations[0], '#fff000', 1.8);
   } else {
     if (this._currentAnnotation) {
-      this.dispatchEvent(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE);
+      goog.events.dispatchEvent(this, {type: yuma.events.EventType.ANNOTATION_MOUSE_LEAVE,
+        annotation: this._currentAnnotation, mouseEvent: mouseEvent});
       delete this._currentAnnotation;
       this._clearPopup();
     }

@@ -56,8 +56,7 @@ yuma.annotators.image.ImageAnnotator = function(id) {
     var editForm = goog.soy.renderAsElement(yuma.templates.editform);
     var textarea = goog.dom.query('.annotation-text', editForm)[0];
 
-    // TODO this will get cleaner once we got a decent custom event object!
-    goog.style.setPosition(editForm, 
+    goog.style.setPosition(editForm,
       shape.geometry.x + image.offsetLeft, 
       shape.geometry.y + shape.geometry.height + 4 + image.offsetTop);
     goog.dom.appendChild(document.body, editForm);
@@ -82,11 +81,11 @@ yuma.annotators.image.ImageAnnotator = function(id) {
 
   // For testing purposes 
   eventBroker.addHandler(yuma.events.EventType.ANNOTATION_MOUSE_ENTER, function(event) {
-    console.log('entering ' + event.target.getCurrentAnnotation().text);
+    console.log(event.annotation);
   });
 
   eventBroker.addHandler(yuma.events.EventType.ANNOTATION_MOUSE_LEAVE, function(event) {
-    console.log('leaving ' + event.target.getCurrentAnnotation().text);
+    console.log(event.annotation);
   });
 }
 
