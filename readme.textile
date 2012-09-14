@@ -54,7 +54,7 @@ That's it. (Note: it's going to be even easier in the future as we're going to u
 
 h2. Developing
 
-We're using Google's "Closure Tools":http://developers.google.com/closure/. I recommend using the "plovr":http://plovr.com/ build tool to get started quickly.
+We're using Google's "Closure Tools":http://developers.google.com/closure/. I recommend using the "plovr":http://plovr.com/ build tool to get started quickly. (Plovr requires Java to be installed on your system.)
 
 * Run <code>java -jar plovr/plovr.jar serve annotator.json</code> in the working directory 
 * Open <code>index.html</code> in your browser - and code away
@@ -74,11 +74,11 @@ h2. Todos (almost in order of priority...)
 * Implement POINT and POLYGON shape geometries
 * Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
 * *Find a decent name for this tool!*
+* -Popup annotation text bubble- *DONE* (but needs some style)
+* -Popup annotation create/edit form- *DONE* (but needs some style)
 * -Clean up namespacing (it's a bit messy after the last refactoring)- *DONE*
 * -Central event bus/event broker to keep code tidy- *DONE*
 * -Custom mouseover/mouseout events for annotation shapes- *DONE*
-* -Popup annotation text bubble- *DONE* (but needs some style)
-* -Popup annotation create/edit form- *DONE* (but needs some style)
 
 h2. License
 
