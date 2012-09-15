@@ -61,44 +61,59 @@ yuma.events.EventBroker.prototype.removeHandler = function(type, handler) {
 
 
 /**
- * The 'macroscopic' events used in the annotation lifecycle
+ * Annotation lifecycle events
  * @enum {string}
  */
 yuma.events.EventType = {
 
   /**
-   * A new selection was started.
-   */
-  SELECTION_STARTED: goog.events.getUniqueId('selection_started'),
-  
-  /** 
-   * The current selection was completed.
-   */
-  SELECTION_COMPLETED: goog.events.getUniqueId('selection_completed'),
-  
-  /** 
-   * The current selection was changed. 
-   */
-  SELECTION_CHANGED: goog.events.getUniqueId('selection_changed'),
-
-  /** 
-   * The mouse entered an annotation.
-   */ 
-  MOUSE_OVER_ANNOTATION: goog.events.getUniqueId('mouse_over_annotation'),
-
-  /** 
-   * The mouse moved out of an annotation shape.
-   */ 
-  MOUSE_OUT_OF_ANNOTATION: goog.events.getUniqueId('mouse_out_of_annotation'),
-
-  /**
-   * The mouse entered the annotatable media
+   * The mouse entered the annotatable media area
    */
   MOUSE_OVER_ANNOTATABLE_MEDIA: goog.events.getUniqueId('mouse_over_media'),
 
   /**
-   * The mouse moved out of the annotatable media
+   * The mouse moved out of the annotatable media area
    */
   MOUSE_OUT_OF_ANNOTATABLE_MEDIA: goog.events.getUniqueId('mouse_out_of_media')
+
+  /** 
+   * The mouse entered an annotation
+   */ 
+  MOUSE_OVER_ANNOTATION: goog.events.getUniqueId('mouse_over_annotation'),
+
+  /** 
+   * The mouse moved out of an annotation
+   */ 
+  MOUSE_OUT_OF_ANNOTATION: goog.events.getUniqueId('mouse_out_of_annotation'),
+
+  /**
+   * A new selection was started
+   */
+  SELECTION_STARTED: goog.events.getUniqueId('selection_started'),
+  
+  /** 
+   * The current selection was completed
+   */
+  SELECTION_COMPLETED: goog.events.getUniqueId('selection_completed'),
+  
+  /** 
+   * The current selection was changed
+   */
+  SELECTION_CHANGED: goog.events.getUniqueId('selection_changed'),
+
+  /**
+   * An annotation is in edit mode - the edit form is open
+   */
+  ANNOTATION_EDIT: goog.events.getUniqueId('annotation_edit'),
+
+  /**
+   * Annotation editing was canceled
+   */
+  ANNOTATION_EDIT_CANCEL: goog.events.getUniqueId('annotation_edit_cancel'),
+
+  /**
+   * Annotation editing was completed - annotation saved
+   */
+  ANNOTATION_EDIT_SAVE: goog.events.getUniqueId('annotation_edit_save')
 
 };
