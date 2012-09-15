@@ -40,15 +40,18 @@ yuma.selection.DragSelector = function(canvas) {
   });
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
-    self.dispatchEvent(yuma.events.EventType.SELECTION_COMPLETED);
+    goog.events.dispatchEvent(self, {type: yuma.events.EventType.SELECTION_COMPLETED, 
+      mouseEvent: event,
+      shape: new yuma.model.Shape(yuma.model.ShapeType.RECTANGLE, self._selection)});
   });
 
   yuma.events.EventBroker.getInstance().registerEventTarget(this, [
-    yuma.events.EventType.SELECTION_COMPLETED
+    yuma.events.EventType.SELECTION_STARTED,
+    yuma.events.EventType.SELECTION_COMPLETED,
+    yuma.events.EventType.SELECTION_CHANGED
   ]);
 }
 goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);
-
 
 /**
  * Starts the selection at the specified coordinates.
@@ -57,6 +60,8 @@ goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);
  */
 yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
   this._anchor = new yuma.model.geom.Point(x, y);
+  goog.events.dispatchEvent(this, {type: yuma.events.EventType.SELECTION_STARTED,
+    offsetX: x, offsetY: y});
 }
 
 /**
@@ -65,16 +70,3 @@ yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
 yuma.selection.DragSelector.prototype.stopSelection = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 }
-
-
-/**
- * Returns the currently selected shape.
- * @return {yuma.model.Shape} the shape
- */
-yuma.selection.DragSelector.prototype.getShape = function() {
-  return new yuma.model.Shape(
-    yuma.model.ShapeType.RECTANGLE,
-    this._selection
-  );
-}
-

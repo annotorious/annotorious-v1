@@ -46,12 +46,10 @@ yuma.annotators.image.ImageAnnotator = function(id) {
     goog.style.setStyle(editCanvas, 'pointer-events', 'auto'); 
   });
 
-
   var eventBroker = yuma.events.EventBroker.getInstance();
 
-  // TODO need to customize the event object to contain shape and mouse event
   eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {  
-    var shape = event.target.getShape();
+    var shape = event.shape;
 
     var editForm = goog.soy.renderAsElement(yuma.templates.editform);
     var textarea = goog.dom.query('.annotation-text', editForm)[0];
@@ -68,7 +66,6 @@ yuma.annotators.image.ImageAnnotator = function(id) {
       selector.stopSelection();
     });
 
-    var outer = event;
     var btnSave = goog.dom.query('.annotation-save', editForm)[0];
     goog.events.listen(btnSave, goog.events.EventType.CLICK, function(event) {
       viewer.addAnnotation(new yuma.model.Annotation(textarea.value, shape));
@@ -77,15 +74,6 @@ yuma.annotators.image.ImageAnnotator = function(id) {
     });
 
     goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
-  });
-
-  // For testing purposes 
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
-    console.log(event.annotation);
-  });
-
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {
-    console.log(event.annotation);
   });
 }
 
