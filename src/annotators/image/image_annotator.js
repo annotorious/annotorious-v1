@@ -48,6 +48,7 @@ yuma.annotators.image.ImageAnnotator = function(id) {
 
   var eventBroker = yuma.events.EventBroker.getInstance();
 
+  // TODO refactor - editor goes into a separate class
   eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {  
     var shape = event.shape;
 
@@ -63,6 +64,8 @@ yuma.annotators.image.ImageAnnotator = function(id) {
     var btnCancel = goog.dom.query('.annotation-cancel', editForm)[0];
     goog.events.listen(btnCancel, goog.events.EventType.CLICK, function(event) {
       goog.dom.removeNode(editForm);
+  
+      // TODO bad! handle via events (as soon as editor is a separate class)
       selector.stopSelection();
     });
 
@@ -70,6 +73,8 @@ yuma.annotators.image.ImageAnnotator = function(id) {
     goog.events.listen(btnSave, goog.events.EventType.CLICK, function(event) {
       viewer.addAnnotation(new yuma.model.Annotation(textarea.value, shape));
       goog.dom.removeNode(editForm);
+
+      // TODO bad! handle via events (as soon as editor is a separate class)
       selector.stopSelection();
     });
 

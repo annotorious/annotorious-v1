@@ -74,7 +74,7 @@ yuma.events.EventType = {
   /**
    * The mouse moved out of the annotatable media area
    */
-  MOUSE_OUT_OF_ANNOTATABLE_MEDIA: goog.events.getUniqueId('mouse_out_of_media')
+  MOUSE_OUT_OF_ANNOTATABLE_MEDIA: goog.events.getUniqueId('mouse_out_of_media'),
 
   /** 
    * The mouse entered an annotation

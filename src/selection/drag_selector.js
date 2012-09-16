@@ -66,6 +66,7 @@ yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
 
 /**
  * Stops the selection.
+ * TODO remove this method - handle via events instead
  */
 yuma.selection.DragSelector.prototype.stopSelection = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
