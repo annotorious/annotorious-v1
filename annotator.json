@@ -13,6 +13,7 @@
     "src/model/geometry/rectangle.js",
     "src/selection/drag_selector.js",   
     "src/events.js",
+    "src/editor.js",
 
     "templates/annotator_templates.soy",
     "templates/image_templates.soy"

@@ -38,9 +38,9 @@ yuma.editor.Editor = function(annotation) {
   });
 
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function(event) {
-    // TODO event object needs to contain the text/tags/etc.
+    // TODO event object needs a more generic container to transport text/tags/etc. payload
     goog.events.dispatchEvent(self, 
-      {type: yuma.events.EventType.ANNOTATION_EDIT_SAVE, mouseEvent: event});
+      {type: yuma.events.EventType.ANNOTATION_EDIT_SAVE, mouseEvent: event, text: self._textarea.value});
     self.close();
   });
  

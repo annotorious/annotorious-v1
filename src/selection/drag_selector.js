@@ -67,8 +67,15 @@ yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
 
 /**
  * Stops the selection.
- * TODO remove this method - handle via events instead
  */
 yuma.selection.DragSelector.prototype.stopSelection = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
+}
+
+/**
+ * Returns the currently selected shape
+ * @return {yuma.model.Shape} the shape
+ */
+yuma.selection.DragSelector.prototype.getShape = function() {
+  return new yuma.model.Shape(yuma.model.ShapeType.RECTANGLE, this._selection)
 }

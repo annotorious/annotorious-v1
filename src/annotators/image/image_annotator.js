@@ -10,6 +10,7 @@ goog.require('goog.style');
 yuma.annotators.image.ImageAnnotator = function(id) {
   var image = goog.dom.getElement(id);
 
+  // Instantiate DOM elements
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'absolute');
   goog.style.setPosition(annotationLayer , goog.style.getPosition(image));
@@ -18,10 +19,12 @@ yuma.annotators.image.ImageAnnotator = function(id) {
   goog.style.setOpacity(hint, 0); 
   goog.dom.appendChild(annotationLayer, hint);
 
-  var viewCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas, {width:image.width, height:image.height});
+  var viewCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas,
+   {width:image.width, height:image.height});
   goog.dom.appendChild(annotationLayer, viewCanvas);
 
-  var editCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas, {width:image.width, height:image.height});
+  var editCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas, 
+    {width:image.width, height:image.height});
   goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
   
@@ -30,14 +33,13 @@ yuma.annotators.image.ImageAnnotator = function(id) {
     goog.style.setOpacity(viewCanvas, 1.0); 
     goog.style.setOpacity(hint, 0.8); 
   });
-
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function() { 
     goog.style.setOpacity(viewCanvas, 0.4); 
     goog.style.setOpacity(hint, 0);
   });
-
   goog.dom.appendChild(document.body, annotationLayer);
 
+  // Instantiate worker objects
   var viewer = new yuma.annotators.image.ImageViewer(viewCanvas);
 
   var selector = new yuma.selection.DragSelector(editCanvas);
@@ -46,39 +48,26 @@ yuma.annotators.image.ImageAnnotator = function(id) {
     goog.style.setStyle(editCanvas, 'pointer-events', 'auto'); 
   });
 
+  // Set up lifecycle event handling
   var eventBroker = yuma.events.EventBroker.getInstance();
 
-  // TODO refactor - editor goes into a separate class
   eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {  
     var shape = event.shape;
+    var editor = new yuma.editor.Editor();
+    editor.setPosition(shape.geometry.x + image.offsetLeft,
+                       shape.geometry.y + shape.geometry.height + 4 + image.offsetTop);
 
-    var editForm = goog.soy.renderAsElement(yuma.templates.editform);
-    var textarea = goog.dom.query('.annotation-text', editForm)[0];
-
-    goog.style.setPosition(editForm,
-      shape.geometry.x + image.offsetLeft, 
-      shape.geometry.y + shape.geometry.height + 4 + image.offsetTop);
-    goog.dom.appendChild(document.body, editForm);
-    textarea.focus();
-
-    var btnCancel = goog.dom.query('.annotation-cancel', editForm)[0];
-    goog.events.listen(btnCancel, goog.events.EventType.CLICK, function(event) {
-      goog.dom.removeNode(editForm);
-  
-      // TODO bad! handle via events (as soon as editor is a separate class)
-      selector.stopSelection();
-    });
-
-    var btnSave = goog.dom.query('.annotation-save', editForm)[0];
-    goog.events.listen(btnSave, goog.events.EventType.CLICK, function(event) {
-      viewer.addAnnotation(new yuma.model.Annotation(textarea.value, shape));
-      goog.dom.removeNode(editForm);
-
-      // TODO bad! handle via events (as soon as editor is a separate class)
-      selector.stopSelection();
-    });
-
+    // TODO this CSS property doesn't seem to work on IE - need to handle this via JavaScript
     goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
+  });
+
+  eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_CANCEL, function(event) {
+    selector.stopSelection();  
+  });
+
+  eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
+    viewer.addAnnotation(new yuma.model.Annotation(event.text, selector.getShape()));
+    selector.stopSelection();  
   });
 }
 
