@@ -7,11 +7,16 @@ goog.require('goog.style');
 
 /**
  * Base annotation edit form.
+ * TODO there is no common Selector base class yet
+ * @param {yuma.selection.Selector} selection 
  * @param {yuma.model.Annotation | undefined} annotation
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-yuma.editor.Editor = function(annotation) {
+yuma.editor.Editor = function(selection, annotation) {
+  /** @private **/
+  this._selection = selection;
+
   /** @private **/
   this._div = goog.soy.renderAsElement(yuma.templates.editform);
 
@@ -32,15 +37,14 @@ yuma.editor.Editor = function(annotation) {
 
   var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function(event) {
-    goog.events.dispatchEvent(self, 
-      {type: yuma.events.EventType.ANNOTATION_EDIT_CANCEL, mouseEvent: event});
+    goog.events.dispatchEvent(self, {type: yuma.events.EventType.ANNOTATION_EDIT_CANCEL, 
+      mouseEvent: event, annotation: annotation});
     self.close();
   });
 
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function(event) {
-    // TODO event object needs a more generic container to transport text/tags/etc. payload
-    goog.events.dispatchEvent(self, 
-      {type: yuma.events.EventType.ANNOTATION_EDIT_SAVE, mouseEvent: event, text: self._textarea.value});
+    goog.events.dispatchEvent(self, {type: yuma.events.EventType.ANNOTATION_EDIT_SAVE, 
+      mouseEvent: event, annotation: self.getAnnotation()});
     self.close();
   });
  
@@ -52,7 +56,7 @@ yuma.editor.Editor = function(annotation) {
 goog.inherits(yuma.editor.Editor, goog.events.EventTarget);
 
 /**
- * Sets the position.
+ * Sets the position (i.e. CSS left/top value)
  * @param {number} x the X coordinate
  * @param {number} y the Y coordinate
  */
@@ -61,8 +65,16 @@ yuma.editor.Editor.prototype.setPosition = function(x, y) {
 }
 
 /**
- * Closes the editor.
+ * Closes the editor
  */
 yuma.editor.Editor.prototype.close = function() {
   goog.dom.removeNode(this._div);
+}
+
+/**
+ * Returns the current annotation that is the current state of the editor
+ * @return {yuma.model.Annotation} the annotation
+ */
+yuma.editor.Editor.prototype.getAnnotation = function() {
+  return new yuma.model.Annotation(this._textarea.value, this._selection.getShape()); 
 }

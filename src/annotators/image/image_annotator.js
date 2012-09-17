@@ -25,7 +25,7 @@ yuma.annotators.image.ImageAnnotator = function(id) {
 
   var editCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas, 
     {width:image.width, height:image.height});
-  goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
+  goog.style.showElement(editCanvas, false); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
   
   // TODO move this into the viewer class and trigger ANNOTATION_AREA_MOUSE_ENTER/LEAVE events
@@ -44,8 +44,8 @@ yuma.annotators.image.ImageAnnotator = function(id) {
 
   var selector = new yuma.selection.DragSelector(editCanvas);
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEDOWN, function(event) { 
+    goog.style.showElement(editCanvas, true);
     selector.startSelection(event.offsetX, event.offsetY);
-    goog.style.setStyle(editCanvas, 'pointer-events', 'auto'); 
   });
 
   // Set up lifecycle event handling
@@ -53,20 +53,22 @@ yuma.annotators.image.ImageAnnotator = function(id) {
 
   eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {  
     var shape = event.shape;
-    var editor = new yuma.editor.Editor();
+    var editor = new yuma.editor.Editor(selector);
     editor.setPosition(shape.geometry.x + image.offsetLeft,
                        shape.geometry.y + shape.geometry.height + 4 + image.offsetTop);
 
     // TODO this CSS property doesn't seem to work on IE - need to handle this via JavaScript
-    goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
+    // goog.style.setStyle(editCanvas, 'pointer-events', 'none'); 
   });
 
   eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_CANCEL, function(event) {
+    goog.style.showElement(editCanvas, false);
     selector.stopSelection();  
   });
 
   eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
-    viewer.addAnnotation(new yuma.model.Annotation(event.text, selector.getShape()));
+    goog.style.showElement(editCanvas, false);
+    viewer.addAnnotation(event.annotation);
     selector.stopSelection();  
   });
 }

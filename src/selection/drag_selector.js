@@ -5,6 +5,8 @@ goog.require('goog.events.EventTarget');
 
 goog.require('yuma.events');
 
+// TODO we need to define a common base class for all selectors
+
 /**
  * Simple click-and-drag-style selector
  * @param {Element} canvas
@@ -26,21 +28,27 @@ yuma.selection.DragSelector = function(canvas) {
   /** @private **/
   this._selection;
 
-  var self = this;
-  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
-    self._selection = new yuma.model.geom.Rectangle(
-      self._anchor.x, 
-      self._anchor.y,
-      event.offsetX - self._anchor.x,
-      event.offsetY - self._anchor.y
-    );
+  // TODO handle this with listener (de)registration rather than a flag
+  this._enabled = false;
 
-    self._g2d.clearRect(0, 0, canvas.width, canvas.height);
-    self._g2d.strokeRect(self._selection.x + 0.5, self._selection.y + 0.5,
-                         self._selection.width, self._selection.height);
+  var self = this;  
+  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
+    if (self._enabled) {
+      self._selection = new yuma.model.geom.Rectangle(
+        self._anchor.x, 
+        self._anchor.y,
+        event.offsetX - self._anchor.x,
+        event.offsetY - self._anchor.y
+      );
+
+      self._g2d.clearRect(0, 0, canvas.width, canvas.height);
+      self._g2d.strokeRect(self._selection.x + 0.5, self._selection.y + 0.5,
+                           self._selection.width, self._selection.height);
+    }
   });
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
+    self._enabled = false;
     goog.events.dispatchEvent(self, {type: yuma.events.EventType.SELECTION_COMPLETED, 
       mouseEvent: event,
       shape: new yuma.model.Shape(yuma.model.ShapeType.RECTANGLE, self._selection)});
@@ -60,6 +68,7 @@ goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);
  * @param {number} y the Y coordinate
  */
 yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
+  this._enabled = true;
   this._anchor = new yuma.model.geom.Point(x, y);
   goog.events.dispatchEvent(this, {type: yuma.events.EventType.SELECTION_STARTED,
     offsetX: x, offsetY: y});
