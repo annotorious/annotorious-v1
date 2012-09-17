@@ -32,19 +32,22 @@ yuma.editor.Editor = function(annotation) {
 
   var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function(event) {
-    // TODO dispatch ANNOTATION_EDIT_CANCEL event
+    goog.events.dispatchEvent(self, 
+      {type: yuma.events.EventType.ANNOTATION_EDIT_CANCEL, mouseEvent: event});
     self.close();
   });
 
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function(event) {
-    // TODO dispatch ANNOTATION_EDIT_SAVE event
+    // TODO event object needs to contain the text/tags/etc.
+    goog.events.dispatchEvent(self, 
+      {type: yuma.events.EventType.ANNOTATION_EDIT_SAVE, mouseEvent: event});
     self.close();
   });
  
   goog.dom.appendChild(document.body, this._div);
   this._textarea.focus();
 
-  // TODO dispatch ANNOTATION_EDIT event
+  goog.events.dispatchEvent(self, {type: yuma.events.EventType.ANNOTATION_EDIT, annotation: annotation});
 }
 goog.inherits(yuma.editor.Editor, goog.events.EventTarget);
 
