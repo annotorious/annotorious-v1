@@ -2,9 +2,12 @@
 <html>
   <head>
 	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js'></script>
+	
+    <link rel="stylesheet" href="css/main.css" type="text/css" />
+	<link rel='stylesheet' href='http://assets.annotateit.org/annotator/v1.2.5/annotator.min.css'>
 
-	<script src='http://assets.annotateit.org/annotator/v1.2.2/annotator-full.min.js'></script>
-	<link rel='stylesheet' href='http://assets.annotateit.org/annotator/v1.2.2/annotator.min.css'>
+	<script src='http://assets.annotateit.org/annotator/v1.2.5/annotator.min.js'></script>
+	<script src='http://assets.annotateit.org/annotator/v1.2.5/annotator.store.min.js'></script>
 	
     <script src="http://localhost:9810/compile?id=canvas-based-image-annotation"></script>
 	<script>
@@ -44,8 +47,8 @@
     </p>
 	<script>
 	  $(document.body).annotator()
-					  .annotator('addPlugin', 'ImageAnnotator')
 					  //.annotator('addPlugin', 'Store')
+					  .annotator('addPlugin', 'ImageAnnotator')
 	</script>
   </body>
 </html>
