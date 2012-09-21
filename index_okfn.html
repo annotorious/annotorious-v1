@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js'></script>
+
+	<script src='http://assets.annotateit.org/annotator/v1.2.2/annotator-full.min.js'></script>
+	<link rel='stylesheet' href='http://assets.annotateit.org/annotator/v1.2.2/annotator.min.css'>
+	
+    <script src="http://localhost:9810/compile?id=canvas-based-image-annotation"></script>
+	<script>
+		Annotator.Plugin.ImageAnnotator = (function() {
+			  var mainElement;
+
+			  function ImageAnnotator(element, options) {
+				mainElement = element;
+			  }
+
+			  ImageAnnotator.prototype.pluginInit = function() {
+				var images = mainElement.getElementsByTagName("img");
+				
+				for(var i = 0; i < images.length; i++) {
+					var iAnnotator = new ImageAnnotatorPlugin(images[i], this.annotator);
+					//TODO: annotation edit save event => annotator
+				}
+			  };
+
+			  return ImageAnnotator;
+		})();
+	</script>
+  </head>
+
+  <body>
+	<p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+    </p>
+    <img src="640px-Hallstatt_300.jpg" id="annotateme"/>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+      diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+      vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+      velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+      rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean in odio enim.
+    </p>
+	<script>
+	  $(document.body).annotator()
+					  .annotator('addPlugin', 'ImageAnnotator')
+					  //.annotator('addPlugin', 'Store')
+	</script>
+  </body>
+</html>
