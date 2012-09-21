@@ -1,0 +1,30 @@
+{
+  "id": "yuma2",
+  "define": {
+    "goog.DEBUG": false,
+    "goog.dom.ASSUME_STANDARDS_MODE": true
+  },
+  "inputs": [ 
+    "src/annotators/image/image_annotator.js",
+    "src/annotators/image/image_viewer.js",
+    "src/model/model.js", 
+    "src/model/geometry/point.js",
+    "src/model/geometry/polygon.js",
+    "src/model/geometry/rectangle.js",
+    "src/selection/drag_selector.js",   
+    "src/events.js",
+    "src/editor.js",
+    "src/okfn_plugin.js",
+
+    "templates/annotator_templates.soy",
+    "templates/image_templates.soy"
+  ],
+  "paths": [
+    "."
+  ],
+  "externs": [
+    
+  ],
+  "mode": "RAW", // "ADVANCED"
+  "level": "DEFAULT" // "VERBOSE"
+}

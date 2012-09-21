@@ -1,5 +1,5 @@
 {
-  "id": "canvas-based-image-annotation",
+  "id": "yuma2",
   "define": {
     "goog.DEBUG": false,
     "goog.dom.ASSUME_STANDARDS_MODE": true
@@ -7,7 +7,6 @@
   "inputs": [ 
     "src/annotators/image/image_annotator.js",
     "src/annotators/image/image_viewer.js",
-    "src/annotators/image/image_annotator_plugin.js",
     "src/model/model.js", 
     "src/model/geometry/point.js",
     "src/model/geometry/polygon.js",

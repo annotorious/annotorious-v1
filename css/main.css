@@ -1,6 +1,5 @@
 body {
-  /* TODO a hack - find a decent solution */
-  -webkit-user-select: none;
+  /* -webkit-user-select: none; */
 }
 
 .yuma-hint {
@@ -8,6 +7,8 @@ body {
   font-size:11px;
   color:#000;
   background-color:#fff;
+  margin-top:10px;
+  margin-left:2px;
   padding:5px;
   border-radius: 5px;
   -moz-border-radius: 5px;
