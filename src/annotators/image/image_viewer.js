@@ -1,6 +1,7 @@
 goog.provide('yuma.annotators.image.ImageViewer');
 
 goog.require('goog.soy');
+goog.require('goog.dom.classes');
 goog.require('goog.events.EventTarget');
 
 /**
@@ -27,7 +28,7 @@ yuma.annotators.image.ImageViewer = function(canvas) {
   
   var self = this;
 
-  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) { 
+  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     self._redraw(event);
   });
 
@@ -68,7 +69,29 @@ yuma.annotators.image.ImageViewer.prototype._draw = function(annotation, color, 
 /**
  * @private
  */
-yuma.annotators.image.ImageViewer.prototype._clearPopup = function(annotation) {
+yuma.annotators.image.ImageViewer.prototype._newPopup = function(payload) {
+  this._clearPopup();          
+  this._popup = goog.soy.renderAsElement(yuma.templates.popup, payload);
+  
+  var p = this._popup;
+  goog.events.listen(p, goog.events.EventType.MOUSEOVER, function(event) {
+    goog.dom.classes.add(p, 'hover');
+  });
+  
+  goog.events.listen(p, goog.events.EventType.MOUSEOUT, function(event) {
+    goog.dom.classes.remove(p, 'hover');
+  });
+  
+  goog.dom.appendChild(goog.dom.getParentElement(this._canvas), this._popup);
+  // goog.dom.appendChild(document.body, this._popup);
+}
+
+/**
+ * @private
+ */
+yuma.annotators.image.ImageViewer.prototype._clearPopup = function() {
+  // TODO I don't know whether the MOUSEOVER/MOUSEOUT listeners get properly
+  // destroyed when deleting the DOM element!
   if (this._popup) {
     goog.dom.removeNode(this._popup);
     delete this._popup;
@@ -108,18 +131,14 @@ yuma.annotators.image.ImageViewer.prototype._redraw = function(mouseEvent) {
         goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OVER_ANNOTATION, 
            annotation: this._currentAnnotation, mouseEvent: mouseEvent});
 
-        this._clearPopup();
-
-        this._popup = goog.soy.renderAsElement(yuma.templates.popup, {text: this._currentAnnotation.text});
-
-        goog.dom.appendChild(document.body, this._popup);
-
+        this._newPopup({text: this._currentAnnotation.text});
+        
         // TODO need to introduce a bbox property that's supported by every shape type
         // Currently the shape.geometry will always be a yuma.geom.Rectangle
         var bbox = intersectedAnnotations[0].shape.geometry;
 
         // TODO unfortunately, position varies with the CSS padding settings - need to take this into account
-        goog.style.setPosition(this._popup, new goog.math.Coordinate(bbox.x + 7, bbox.y + bbox.height + 14));
+        goog.style.setPosition(this._popup, new goog.math.Coordinate(bbox.x, bbox.y + bbox.height + 1));
 
        // TODO Orientation check - what if the popup would be outside the viewport?
     }
