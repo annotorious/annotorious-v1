@@ -55,12 +55,12 @@ yuma.okfn.plugin.ImageAnnotator = function(image, mainAnnotator) {
 	// as the adder is not used, beforeAnnotationCreated event has to be fired manually
     mainAnnotator.publish('beforeAnnotationCreated', annotation);
 	
-	annotation.url = image.src;
-	annotation.shape = shape;
-	
     var shape = event.shape;
 	var x = shape.geometry.x + image.offsetLeft;
 	var y = shape.geometry.y + shape.geometry.height + image.offsetTop;
+	
+	annotation.url = image.src;
+	annotation.shape = shape;
 	
 	mainAnnotator.showEditor(annotation, {top: 0, left: 0});
 	$(mainAnnotator.editor.element).css({top: y, left: x});
