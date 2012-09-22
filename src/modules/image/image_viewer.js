@@ -1,4 +1,4 @@
-goog.provide('yuma.modules.image.ImageViewer');
+goog.provide('yuma.modules.image.AnnotationViewer');
 
 goog.require('goog.soy');
 goog.require('goog.dom.classes');
@@ -10,7 +10,7 @@ goog.require('goog.events.EventTarget');
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-yuma.modules.image.ImageViewer = function(canvas) {
+yuma.modules.image.AnnotationViewer = function(canvas) {
   /** @private **/
   this._canvas = canvas;
 
@@ -37,13 +37,13 @@ yuma.modules.image.ImageViewer = function(canvas) {
     yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION
   ]);
 }
-goog.inherits(yuma.modules.image.ImageViewer, goog.events.EventTarget);
+goog.inherits(yuma.modules.image.AnnotationViewer, goog.events.EventTarget);
 
 /**
  * Adds an annotation to the viewer.
  * @param {yuma.model.Annotation} annotation
  */
-yuma.modules.image.ImageViewer.prototype.addAnnotation = function(annotation) {
+yuma.modules.image.AnnotationViewer.prototype.addAnnotation = function(annotation) {
   this._annotations.push(annotation);  
   this._draw(annotation, '#ffffff', 1);
 }
@@ -51,7 +51,7 @@ yuma.modules.image.ImageViewer.prototype.addAnnotation = function(annotation) {
 /**
  * @private
  */
-yuma.modules.image.ImageViewer.prototype._draw = function(annotation, color, lineWidth) {
+yuma.modules.image.AnnotationViewer.prototype._draw = function(annotation, color, lineWidth) {
   this._g2d.strokeStyle = color;
   this._g2d.lineWidth = lineWidth;
 
@@ -69,7 +69,7 @@ yuma.modules.image.ImageViewer.prototype._draw = function(annotation, color, lin
 /**
  * @private
  */
-yuma.modules.image.ImageViewer.prototype._newPopup = function(payload) {
+yuma.modules.image.AnnotationViewer.prototype._newPopup = function(payload) {
   this._clearPopup();          
   this._popup = goog.soy.renderAsElement(yuma.templates.popup, payload);
   
@@ -89,7 +89,7 @@ yuma.modules.image.ImageViewer.prototype._newPopup = function(payload) {
 /**
  * @private
  */
-yuma.modules.image.ImageViewer.prototype._clearPopup = function() {
+yuma.modules.image.AnnotationViewer.prototype._clearPopup = function() {
   // TODO I don't know whether the MOUSEOVER/MOUSEOUT listeners get properly
   // destroyed when deleting the DOM element!
   if (this._popup) {
@@ -101,7 +101,7 @@ yuma.modules.image.ImageViewer.prototype._clearPopup = function() {
 /**
  * @private
  */
-yuma.modules.image.ImageViewer.prototype._redraw = function(mouseEvent) {
+yuma.modules.image.AnnotationViewer.prototype._redraw = function(mouseEvent) {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
   var self = this;
