@@ -5,13 +5,13 @@
     "goog.dom.ASSUME_STANDARDS_MODE": true
   },
   "inputs": [ 
-    "src/annotators/image/image_annotator.js",
-    "src/annotators/image/image_viewer.js",
-    "src/model/model.js", 
-    "src/model/geometry/point.js",
-    "src/model/geometry/polygon.js",
-    "src/model/geometry/rectangle.js",
+    "src/geometry/point.js",
+    "src/geometry/polygon.js",
+    "src/geometry/rectangle.js",
+    "src/modules/image/image_annotator.js",
+    "src/modules/image/image_viewer.js",
     "src/selection/drag_selector.js",   
+    "src/annotation.js",    
     "src/events.js",
     "src/editor.js",
 

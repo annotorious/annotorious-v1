@@ -34,7 +34,7 @@ yuma.selection.DragSelector = function(canvas) {
   var self = this;  
   goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._enabled) {
-      self._selection = new yuma.model.geom.Rectangle(
+      self._selection = new yuma.geom.Rectangle(
         self._anchor.x, 
         self._anchor.y,
         event.offsetX - self._anchor.x,
@@ -51,7 +51,7 @@ yuma.selection.DragSelector = function(canvas) {
     self._enabled = false;
     goog.events.dispatchEvent(self, {type: yuma.events.EventType.SELECTION_COMPLETED, 
       mouseEvent: event,
-      shape: new yuma.model.Shape(yuma.model.ShapeType.RECTANGLE, self._selection)});
+      shape: new yuma.annotation.Shape(yuma.annotation.ShapeType.RECTANGLE, self._selection)});
   });
 
   yuma.events.EventBroker.getInstance().registerEventTarget(this, [
@@ -69,7 +69,7 @@ goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);
  */
 yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
   this._enabled = true;
-  this._anchor = new yuma.model.geom.Point(x, y);
+  this._anchor = new yuma.geom.Point(x, y);
   goog.events.dispatchEvent(this, {type: yuma.events.EventType.SELECTION_STARTED,
     offsetX: x, offsetY: y});
 }
@@ -83,8 +83,8 @@ yuma.selection.DragSelector.prototype.stopSelection = function() {
 
 /**
  * Returns the currently selected shape
- * @return {yuma.model.Shape} the shape
+ * @return {yuma.annotation.Shape} the shape
  */
 yuma.selection.DragSelector.prototype.getShape = function() {
-  return new yuma.model.Shape(yuma.model.ShapeType.RECTANGLE, this._selection)
+  return new yuma.annotation.Shape(yuma.annotation.ShapeType.RECTANGLE, this._selection)
 }

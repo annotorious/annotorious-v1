@@ -1,4 +1,4 @@
-goog.provide('yuma.model.geom.Point');
+goog.provide('yuma.geom.Point');
 
 /**
  * A point geometry primitive.
@@ -6,7 +6,7 @@ goog.provide('yuma.model.geom.Point');
  * @param {number} y the y coordinate
  * @constructor
  */
-yuma.model.geom.Point = function(x, y) {
+yuma.geom.Point = function(x, y) {
   this.x = x;
   this.y = y;
 }

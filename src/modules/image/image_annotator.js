@@ -1,4 +1,4 @@
-goog.provide('yuma.annotators.image.ImageAnnotator');
+goog.provide('yuma.modules.image.ImageAnnotator');
 
 goog.require('goog.soy');
 goog.require('goog.dom');
@@ -8,7 +8,7 @@ goog.require('goog.math');
 goog.require('goog.style');
 
 // TODO make this work for MULTIPLE images on one page!
-yuma.annotators.image.ImageAnnotator = function() {
+yuma.modules.image.ImageAnnotator = function() {
   var images = goog.dom.query('.annotatable', document);
   for (var i=images.length - 1; i > -1; i--) {
     var image = images[i];
@@ -43,7 +43,7 @@ yuma.annotators.image.ImageAnnotator = function() {
     goog.dom.appendChild(document.body, annotationLayer);
   
     // Instantiate worker objects
-    var viewer = new yuma.annotators.image.ImageViewer(viewCanvas);
+    var viewer = new yuma.modules.image.ImageViewer(viewCanvas);
   
     var selector = new yuma.selection.DragSelector(editCanvas);
     goog.events.listen(annotationLayer, goog.events.EventType.MOUSEDOWN, function(event) { 
@@ -79,14 +79,14 @@ yuma.annotators.image.ImageAnnotator = function() {
 
 if (typeof window.onload != 'function') {
   window.onload = function() {
-    new yuma.annotators.image.ImageAnnotator();
+    new yuma.modules.image.ImageAnnotator();
   }
 } else {
   var current = window.onload;
   window.onload = function() {
     current();
-    new yuma.annotators.image.ImageAnnotator();
+    new yuma.modules.image.ImageAnnotator();
   }
 }
 
-window['ImageAnnotator'] = yuma.annotators.image.ImageAnnotator;
+window['ImageAnnotator'] = yuma.modules.image.ImageAnnotator;

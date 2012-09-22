@@ -1,4 +1,4 @@
-goog.provide('yuma.model.geom.Rectangle');
+goog.provide('yuma.geom.Rectangle');
 
 /**
  * A rectangle geometry primitive.
@@ -8,7 +8,7 @@ goog.provide('yuma.model.geom.Rectangle');
  * @param {number} height the rectangle height
  * @constructor
  */
-yuma.model.geom.Rectangle = function(x, y, width, height) {
+yuma.geom.Rectangle = function(x, y, width, height) {
   // Normalize to positive width and height
   if (width > 0) {
     this.x = x;
@@ -33,7 +33,7 @@ yuma.model.geom.Rectangle = function(x, y, width, height) {
  * @param {number} py the y coordinate of the point to test for intersection
  * @return {boolean} true if the point intersects the rectangle
  */
-yuma.model.geom.Rectangle.prototype.intersects = function(px, py) {
+yuma.geom.Rectangle.prototype.intersects = function(px, py) {
   if (px < this.x)
     return false;
 
@@ -53,7 +53,7 @@ yuma.model.geom.Rectangle.prototype.intersects = function(px, py) {
  * Computes the size of the rectangle.
  * @return {number} the size
  */
-yuma.model.geom.Rectangle.prototype.size = function() {
+yuma.geom.Rectangle.prototype.size = function() {
   return this.width * this.height;
 }
 
