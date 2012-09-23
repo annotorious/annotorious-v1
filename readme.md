@@ -48,13 +48,14 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 * OpenLayers and/or Seadragon AJAX support
 * Implement POINT and POLYGON shape geometries
 * Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
+* Support lazy loading of image annotation overlays
 * __Find a decent name for this tool!__
 * ~~Create an OKFN Annotator Plugin wrapper~~ __DONE__ (but very alpha)
 * ~~Change the way activation works: activation no longer via JavaScript but via a CSS class~~ __DONE__
 * ~~Popup annotation text bubble~~ __DONE__ (but needs some style)
 * ~~Popup annotation create/edit form~~ __DONE__ (but needs some style)
 * ~~Clean up namespacing (it's a bit messy after the last refactoring)~~ __DONE__
-* ~~Central event bus/event broker to keep code tidy~~ __DONE__
+* ~~Central event bus/event broker to keep code tidy~~ __DONE__ (but needs fix to work with multiple annotatable images!)
 * ~~Custom mouseover/mouseout events for annotation shapes~~ __DONE__
 
 ## License
