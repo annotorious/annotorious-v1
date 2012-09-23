@@ -35,8 +35,8 @@ __Mark the images to be annotatable__ using the 'annotatable' CSS class.
 
 We're using Google's [Closure Tools](http://developers.google.com/closure/). I recommend using the [plovr](http://plovr.com/) build tool to get started quickly. (Plovr requires Java to be installed on your system.)
 
-* Run ``java -jar plovr/plovr.jar serve standalone.json`` in the working directory 
-* Open ``index.html`` in your browser - and code away
+* Run ``java -jar plovr/plovr.jar serve standalone.json`` and open ``index_standalone.html`` to run the Yuma2 standalone version
+* Run ``java -jar plovr/plovr.jar serve okfn_plugin.json`` and open ``index_okfn.html`` to run Yuma2 as an OKFN Annotator plugin
 * To build the minified JavaScript, run ``java -jar plovr/plovr.jar build standalone.json > yuma2.min.js`` (replacing 'yuma2.min.js' with a file name of your choice)
 * Note: the version of plovr I included in this repository is the February 2012 release ([plovr-4b3caf2b7d84.jar](http://code.google.com/p/plovr/downloads/detail?name=plovr-4b3caf2b7d84.jar&can=2)).
 
