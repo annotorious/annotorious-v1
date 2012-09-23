@@ -4,17 +4,18 @@
     "goog.DEBUG": false,
     "goog.dom.ASSUME_STANDARDS_MODE": true
   },
-  "inputs": [ 
-    "src/annotators/image/image_annotator.js",
-    "src/annotators/image/image_viewer.js",
-    "src/model/model.js", 
-    "src/model/geometry/point.js",
-    "src/model/geometry/polygon.js",
-    "src/model/geometry/rectangle.js",
-    "src/selection/drag_selector.js",   
-    "src/events.js",
+  "inputs": [
+    "src/geometry/point.js",
+    "src/geometry/polygon.js",
+    "src/geometry/rectangle.js",
+    "src/modules/image/im_annotator.js",
+    "src/modules/image/im_viewer.js",
+    "src/modules/image/okfn_im_plugin.js",
+
+    "src/selection/drag_selector.js",
+    "src/annotation.js",
     "src/editor.js",
-    "src/okfn_plugin.js",
+    "src/events.js",
 
     "templates/annotator_templates.soy",
     "templates/image_templates.soy"

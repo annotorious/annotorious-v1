@@ -1,22 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js'></script>
-	
     <link rel="stylesheet" href="css/main.css" type="text/css" />
-	<link rel='stylesheet' href='http://assets.annotateit.org/annotator/v1.2.5/annotator.min.css'>
-
-	<script src='http://assets.annotateit.org/annotator/v1.2.5/annotator.min.js'></script>
-	<script src='http://assets.annotateit.org/annotator/v1.2.5/annotator.store.min.js'></script>
-	
-    <script src="http://localhost:9810/compile?id=canvas-based-image-annotation"></script>
-
+    <link rel='stylesheet' href='http://assets.annotateit.org/annotator/v1.2.5/annotator.min.css'>
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js'></script>
+    <script src='http://assets.annotateit.org/annotator/v1.2.5/annotator.min.js'></script>	
+    <script src="http://localhost:9810/compile?id=yuma2"></script>
   </head>
 
   <body>
-	<p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
-    </p>
     <img src="640px-Hallstatt_300.jpg" id="annotateme"/>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
@@ -26,32 +18,27 @@
       rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean in odio enim.
     </p>
-	<script>
+    
+    <script>
+      Annotator.Plugin.ImageAnnotator = (function() {
+	var mainElement;
 
+	function ImageAnnotator(element, options) {
+	  mainElement = element;
+	}
 
-		Annotator.Plugin.ImageAnnotator = (function() {
-			  var mainElement;
+	ImageAnnotator.prototype.pluginInit = function() {
+	  var images = mainElement.getElementsByTagName("img");
+	  for(var i = 0; i < images.length; i++) {
+	    var iAnnotator = new ImageAnnotatorPlugin(images[i], this.annotator);
+	    // TODO annotation edit save event => annotator
+	  }
+	}
 
-			  function ImageAnnotator(element, options) {
-				mainElement = element;
-			  }
+	return ImageAnnotator;
+      })();
 
-			  ImageAnnotator.prototype.pluginInit = function() {
-				var images = mainElement.getElementsByTagName("img");
-                     console.log(images[0].width);
-				
-				for(var i = 0; i < images.length; i++) {
-					var iAnnotator = new ImageAnnotatorPlugin(images[i], this.annotator);
-					//TODO: annotation edit save event => annotator
-				}
-			  };
-
-			  return ImageAnnotator;
-		})();
-
-	  $(document.body).annotator()
-					  //.annotator('addPlugin', 'Store')
-					  .annotator('addPlugin', 'ImageAnnotator')
-	</script>
+      $(document.body).annotator().annotator('addPlugin', 'ImageAnnotator')
+    </script>
   </body>
 </html>

@@ -4,7 +4,11 @@ goog.require('goog.array');
 goog.require('goog.events');
 
 /**
- * A central, singleton 'event bus' to distribute the 'macroscopic' Yuma events. 
+ * A central, singleton 'event bus' to distribute the 'macroscopic' Yuma events.
+ * 
+ * TODO what happens with the EventBroker if we have multiple annotated images?!
+ * Likely things will break if we stick with the current implementation.
+ *
  * @constructor
  */
 yuma.events.EventBroker = function() {

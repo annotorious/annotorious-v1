@@ -8,7 +8,6 @@ goog.require('goog.math');
 goog.require('goog.style');
 
 yuma.okfn.plugin.ImageAnnotator = function(image, mainAnnotator) {
-
   // Instantiate DOM elements
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'absolute');
@@ -39,7 +38,7 @@ yuma.okfn.plugin.ImageAnnotator = function(image, mainAnnotator) {
   goog.dom.appendChild(document.body, annotationLayer);
 
   // Instantiate worker objects
-  var viewer = new yuma.annotators.image.ImageViewer(viewCanvas);
+  var viewer = new yuma.modules.image.Viewer(viewCanvas, false);
 
   var selector = new yuma.selection.DragSelector(editCanvas);
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEDOWN, function(event) { 
@@ -71,7 +70,7 @@ yuma.okfn.plugin.ImageAnnotator = function(image, mainAnnotator) {
 	var x = shape.geometry.x + image.offsetLeft;
 	var y = shape.geometry.y + shape.geometry.height + image.offsetTop;
 	mainAnnotator.showViewer([event.annotation], {top: 0, left: 0});
-	$(mainAnnotator.viewer.element).css({top: y, left: x});
+	$(mainAnnotator.viewer.element).css({top: y - 5, left: x + 5});
 	
 	mainAnnotator.clearViewerHideTimer();
   });
