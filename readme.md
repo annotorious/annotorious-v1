@@ -23,22 +23,13 @@ __Include the library CSS stylesheet__ in the &lt;head&gt; of your HTML page
       ...
     </head>  
 
-__Use the library JavaScript API__ to attach annotation functionality to images on your page.
-
-    <head>
-      ...
-      <script type="text/javascript">
-        new ImageAnnotator('annotateme');
-      </script>
-    </head>
+__Mark the images to be annotatable__ using the 'annotatable' CSS class.
 
     <body>
       ...
-      <img id="annotateme" src="myimage.jpg">
+      <img class="annotatable" src="myimage.jpg">
       ...
     </body>
-
-That's it. (Note: it's going to be even easier in the future as we're going to use CSS-class based selection...)
 
 ## Developing
 
@@ -51,20 +42,20 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 
 ## Todos (almost in order of priority...)
 
-* Delete/edit of annotations
-* Change the way activation works: activation no longer via JavaScript ("new ImageAnnotator(id)") but via a CSS class ("&lt;img class='annotatable' ... /&gt;")
 * Create an OKFN Annotator Plugin wrapper (plus a custom JS build for the plugin)
+* Delete/edit of annotations
 * Make selection move/resizable after it is created
 * Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
 * OpenLayers and/or Seadragon AJAX support
 * Implement POINT and POLYGON shape geometries
 * Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
-* *Find a decent name for this tool!*
-* ~~Popup annotation text bubble~~ *DONE* (but needs some style)
-* ~~Popup annotation create/edit form~~ *DONE* (but needs some style)
-* ~~Clean up namespacing (it's a bit messy after the last refactoring)~~ *DONE*
-* ~~Central event bus/event broker to keep code tidy~~ *DONE*
-* ~~Custom mouseover/mouseout events for annotation shapes~~ *DONE*
+* __Find a decent name for this tool!__
+* ~~Change the way activation works: activation no longer via JavaScript but via a CSS class~~ __DONE__
+* ~~Popup annotation text bubble~~ __DONE__ (but needs some style)
+* ~~Popup annotation create/edit form~~ __DONE__ (but needs some style)
+* ~~Clean up namespacing (it's a bit messy after the last refactoring)~~ __DONE__
+* ~~Central event bus/event broker to keep code tidy~~ __DONE__
+* ~~Custom mouseover/mouseout events for annotation shapes~~ __DONE__
 
 ## License
 
