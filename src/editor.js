@@ -13,7 +13,7 @@ goog.require('goog.style');
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-yuma.editor.Editor = function(selection, annotation) {
+yuma.editor.Editor = function(selection, opt_annotation) {
   /** @private **/
   this._selection = selection;
 
@@ -38,7 +38,7 @@ yuma.editor.Editor = function(selection, annotation) {
   var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function(event) {
     goog.events.dispatchEvent(self, {type: yuma.events.EventType.ANNOTATION_EDIT_CANCEL, 
-      mouseEvent: event, annotation: annotation});
+      mouseEvent: event, annotation: opt_annotation});
     self.close();
   });
 
@@ -51,7 +51,7 @@ yuma.editor.Editor = function(selection, annotation) {
   goog.dom.appendChild(document.body, this._div);
   this._textarea.focus();
 
-  goog.events.dispatchEvent(self, {type: yuma.events.EventType.ANNOTATION_EDIT, annotation: annotation});
+  goog.events.dispatchEvent(self, {type: yuma.events.EventType.ANNOTATION_EDIT, annotation: opt_annotation});
 }
 goog.inherits(yuma.editor.Editor, goog.events.EventTarget);
 

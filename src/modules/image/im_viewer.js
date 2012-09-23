@@ -1,4 +1,4 @@
-goog.provide('yuma.modules.image.AnnotationViewer');
+goog.provide('yuma.modules.image.Viewer');
 
 goog.require('goog.soy');
 goog.require('goog.dom.classes');
@@ -10,25 +10,32 @@ goog.require('goog.events.EventTarget');
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-yuma.modules.image.AnnotationViewer = function(canvas) {
+yuma.modules.image.Viewer = function(canvas, opt_show_popups) {
   /** @private **/
   this._canvas = canvas;
-
+  
+  /** @private **/
+  this._showPopups;
+  if (opt_show_popups) {
+    this._showPopups = opt_show_popups;
+  } else {
+    this._showPopups = true;
+  }
+ 
   /** @private **/
   this._annotations = [];
 
   /** @private **/
-  this._g2d = canvas.getContext('2d');
+  this._g2d = this._canvas.getContext('2d');
 
   /** @private **/
   this._currentAnnotation;
 
   /** @private **/
   this._popup;
-  
-  var self = this;
 
-  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
+  var self = this; 
+  goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     self._redraw(event);
   });
 
@@ -37,13 +44,13 @@ yuma.modules.image.AnnotationViewer = function(canvas) {
     yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION
   ]);
 }
-goog.inherits(yuma.modules.image.AnnotationViewer, goog.events.EventTarget);
+goog.inherits(yuma.modules.image.Viewer, goog.events.EventTarget);
 
 /**
  * Adds an annotation to the viewer.
  * @param {yuma.model.Annotation} annotation
  */
-yuma.modules.image.AnnotationViewer.prototype.addAnnotation = function(annotation) {
+yuma.modules.image.Viewer.prototype.addAnnotation = function(annotation) {
   this._annotations.push(annotation);  
   this._draw(annotation, '#ffffff', 1);
 }
@@ -51,7 +58,7 @@ yuma.modules.image.AnnotationViewer.prototype.addAnnotation = function(annotatio
 /**
  * @private
  */
-yuma.modules.image.AnnotationViewer.prototype._draw = function(annotation, color, lineWidth) {
+yuma.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidth) {
   this._g2d.strokeStyle = color;
   this._g2d.lineWidth = lineWidth;
 
@@ -69,7 +76,7 @@ yuma.modules.image.AnnotationViewer.prototype._draw = function(annotation, color
 /**
  * @private
  */
-yuma.modules.image.AnnotationViewer.prototype._newPopup = function(payload) {
+yuma.modules.image.Viewer.prototype._newPopup = function(payload) {
   this._clearPopup();          
   this._popup = goog.soy.renderAsElement(yuma.templates.popup, payload);
   
@@ -89,7 +96,7 @@ yuma.modules.image.AnnotationViewer.prototype._newPopup = function(payload) {
 /**
  * @private
  */
-yuma.modules.image.AnnotationViewer.prototype._clearPopup = function() {
+yuma.modules.image.Viewer.prototype._clearPopup = function() {
   // TODO I don't know whether the MOUSEOVER/MOUSEOUT listeners get properly
   // destroyed when deleting the DOM element!
   if (this._popup) {
@@ -101,7 +108,7 @@ yuma.modules.image.AnnotationViewer.prototype._clearPopup = function() {
 /**
  * @private
  */
-yuma.modules.image.AnnotationViewer.prototype._redraw = function(mouseEvent) {
+yuma.modules.image.Viewer.prototype._redraw = function(mouseEvent) {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
   var self = this;
@@ -122,34 +129,36 @@ yuma.modules.image.AnnotationViewer.prototype._redraw = function(mouseEvent) {
 
   if (intersectedAnnotations.length > 0) {
     if (this._currentAnnotation != intersectedAnnotations[0]) {
-        if (this._currentAnnotation)
-          goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
-            annotation: this._currentAnnotation, mouseEvent: mouseEvent});
+      if (this._currentAnnotation)
+        goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
+          annotation: this._currentAnnotation, mouseEvent: mouseEvent});
 
-        this._currentAnnotation = intersectedAnnotations[0];
+      this._currentAnnotation = intersectedAnnotations[0];
 
-        goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OVER_ANNOTATION, 
-           annotation: this._currentAnnotation, mouseEvent: mouseEvent});
+      goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OVER_ANNOTATION, 
+        annotation: this._currentAnnotation, mouseEvent: mouseEvent});
 
+      if (this._showPopups) {
         this._newPopup({text: this._currentAnnotation.text});
         
         // TODO need to introduce a bbox property that's supported by every shape type
         // Currently the shape.geometry will always be a yuma.geom.Rectangle
         var bbox = intersectedAnnotations[0].shape.geometry;
 
-        // TODO unfortunately, position varies with the CSS padding settings - need to take this into account
         goog.style.setPosition(this._popup, new goog.math.Coordinate(bbox.x, bbox.y + bbox.height + 1));
 
-       // TODO Orientation check - what if the popup would be outside the viewport?
+        // TODO Orientation check - what if the popup would be outside the viewport?
+      } 
     }
-
     this._draw(intersectedAnnotations[0], '#fff000', 1.8);
   } else {
     if (this._currentAnnotation) {
       goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
         annotation: this._currentAnnotation, mouseEvent: mouseEvent});
       delete this._currentAnnotation;
-      this._clearPopup();
+      
+      if (this._showPopups)
+        this._clearPopup();
     }
   }
 
