@@ -1,4 +1,4 @@
-This is an effort to port the "yuma.js":http://yuma-js.github.com image annotation toolkit to JavaScript, improving things as we go along. Any help appreciated! I'm putting up live demos of the intermediate state as we progress:
+This is an effort to port the [yuma.js](http://yuma-js.github.com) image annotation toolkit to JavaScript, improving things as we go along. Any help appreciated! I'm putting up live demos of the intermediate state as we progress:
 
 http://rsimon.github.com/yuma2
 
