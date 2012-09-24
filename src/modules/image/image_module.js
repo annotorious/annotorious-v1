@@ -6,7 +6,7 @@ goog.provide('yuma.modules.image.ImageModule');
  * each one.
  */
 yuma.modules.image.ImageModule = function() {
-  var images = goog.dom.query('.annotatable', document);
+  var images = goog.dom.query('img.annotatable', document);
   
   // TODO implement lazy loading
   for (var i=images.length - 1; i>-1; i--) {
