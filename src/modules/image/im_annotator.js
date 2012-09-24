@@ -66,6 +66,14 @@ yuma.modules.image.ImageAnnotator = function(image) {
                        shape.geometry.y + shape.geometry.height + 4 + image.offsetTop);
   });
 
+  eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
+    console.log('mouseover');
+  });
+
+  eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {
+    console.log('mouseoutof');
+  });
+  
   eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_CANCEL, function(event) {
     goog.style.showElement(editCanvas, false);
     selector.stopSelection();  
