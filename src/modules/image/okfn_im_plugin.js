@@ -96,6 +96,15 @@ yuma.okfn.plugin.ImageAnnotator = function(image, mainAnnotator) {
 		viewer.addAnnotation(annotation);
 	}
   });
+  
+  mainAnnotator.subscribe("annotationsLoaded", function(annotations) {
+	for(var i in annotations) {
+		var annotation = annotations[i];
+		if(annotation.url == image.src) {
+			viewer.addAnnotation(annotation);
+		}
+	}
+  });
 
   //mainAnnotator.subscribe("annotationUpdated", function(annotation) {
   //});

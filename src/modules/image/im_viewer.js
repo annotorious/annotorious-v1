@@ -197,6 +197,7 @@ yuma.modules.image.Viewer.prototype._redraw = function() {
     this._draw(this._currentAnnotation, '#fff000', 1.8);
     if (this._showPopups) {
       this._newPopup({text: this._currentAnnotation.text});
+
         
       // TODO need to introduce a bbox property that's supported by every shape type
       // Currently the shape.geometry will always be a yuma.geom.Rectangle
