@@ -118,13 +118,13 @@ yuma.modules.image.Viewer.prototype._redraw = function(mouseEvent) {
 
   var intersectedAnnotations = [];
   goog.array.forEach(this._annotations, function(annotation, idx, array) {
-    if (annotation.shape.geometry.intersects(mouseEvent.offsetX, mouseEvent.offsetY)) {
+    if (yuma.geom.Rectangle.intersects(annotation.shape.geometry, mouseEvent.offsetX, mouseEvent.offsetY)) {
       intersectedAnnotations.push(annotation);
     }
   });
 
   goog.array.sort(intersectedAnnotations, function(a, b) {
-    return a.shape.geometry.size() > b.shape.geometry.size();
+    return yuma.geom.Rectangle.size(a.shape.geometry) > yuma.geom.Rectangle.size(b.shape.geometry);
   });
 
   if (intersectedAnnotations.length > 0) {

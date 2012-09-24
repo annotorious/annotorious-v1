@@ -93,7 +93,17 @@ yuma.okfn.plugin.ImageAnnotator = function(image, mainAnnotator) {
   
   mainAnnotator.subscribe("annotationCreated", function(annotation) {
 	if(annotation.url == image.src) {
+		console.log("create", annotation);
 		viewer.addAnnotation(annotation);
+	}
+  });
+  
+  mainAnnotator.subscribe("annotationsLoaded", function(annotations) {
+	for(var i in annotations) {
+		var annotation = annotations[i];
+		if(annotation.url == image.src) {
+			viewer.addAnnotation(annotation);
+		}
 	}
   });
 

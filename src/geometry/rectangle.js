@@ -33,17 +33,17 @@ yuma.geom.Rectangle = function(x, y, width, height) {
  * @param {number} py the y coordinate of the point to test for intersection
  * @return {boolean} true if the point intersects the rectangle
  */
-yuma.geom.Rectangle.prototype.intersects = function(px, py) {
-  if (px < this.x)
+yuma.geom.Rectangle.intersects = function(rect, px, py) {
+  if (px < rect.x)
     return false;
 
-  if (py < this.y)
+  if (py < rect.y)
     return false;
 
-  if (px > this.x + this.width)
+  if (px > rect.x + rect.width)
     return false;
 
-  if (py > this.y + this.height)
+  if (py > rect.y + rect.height)
     return false;
 
   return true;
@@ -53,7 +53,7 @@ yuma.geom.Rectangle.prototype.intersects = function(px, py) {
  * Computes the size of the rectangle.
  * @return {number} the size
  */
-yuma.geom.Rectangle.prototype.size = function() {
-  return this.width * this.height;
+yuma.geom.Rectangle.size = function(rect) {
+  return rect.width * rect.height;
 }
 
