@@ -19,26 +19,30 @@
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean in odio enim.
     </p>
     
+  </body>
+  
     <script>
       Annotator.Plugin.ImageAnnotator = (function() {
-	var mainElement;
+		var mainElement;
 
-	function ImageAnnotator(element, options) {
-	  mainElement = element;
-	}
+		function ImageAnnotator(element, options) {
+		  mainElement = element;
+		}
 
-	ImageAnnotator.prototype.pluginInit = function() {
-	  var images = mainElement.getElementsByTagName("img");
-	  for(var i = 0; i < images.length; i++) {
-	    var iAnnotator = new ImageAnnotatorPlugin(images[i], this.annotator);
-	    // TODO annotation edit save event => annotator
-	  }
-	}
+		ImageAnnotator.prototype.pluginInit = function() {
+		  var images = mainElement.getElementsByTagName("img");
+		  for(var i = 0; i < images.length; i++) {
+			var iAnnotator = new ImageAnnotatorPlugin(images[i], this.annotator);
+			// TODO annotation edit save event => annotator
+		  }
+		}
 
-	return ImageAnnotator;
+		return ImageAnnotator;
       })();
 
-      $(document.body).annotator().annotator('addPlugin', 'ImageAnnotator')
+      $(document.body).annotator()
+		.annotator('addPlugin', 'ImageAnnotator')
+      //$(document.body).annotator()
+		.annotator('addPlugin', 'Store');
     </script>
-  </body>
 </html>
