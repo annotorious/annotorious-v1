@@ -100,13 +100,13 @@ yuma.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
   // using a tree- or grid-like data structure instead of a list
   var intersectedAnnotations = [];
   goog.array.forEach(this._annotations, function(annotation, idx, array) {
-    if (annotation.shape.geometry.intersects(px, py)) {
+    if (yuma.geom.intersects(annotation.shape.geometry, px, py)) {
       intersectedAnnotations.push(annotation);
     }
   });
 
   goog.array.sort(intersectedAnnotations, function(a, b) {
-    return a.shape.geometry.size() > b.shape.geometry.size();
+    return yuma.geom.size(a.shape.geometry) > yuma.geom.size(b.shape.geometry);
   });
   
   return intersectedAnnotations;

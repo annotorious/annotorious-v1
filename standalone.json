@@ -4,7 +4,8 @@
     "goog.DEBUG": false,
     "goog.dom.ASSUME_STANDARDS_MODE": true
   },
-  "inputs": [ 
+  "inputs": [
+    "src/geometry/geom.js",
     "src/geometry/point.js",
     "src/geometry/polygon.js",
     "src/geometry/rectangle.js",

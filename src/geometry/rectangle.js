@@ -27,33 +27,3 @@ yuma.geom.Rectangle = function(x, y, width, height) {
   }
 }
 
-/**
- * Tests if the rectangle intersects with the specified point.
- * @param {number} px the x coordinate of the point to test for intersection
- * @param {number} py the y coordinate of the point to test for intersection
- * @return {boolean} true if the point intersects the rectangle
- */
-yuma.geom.Rectangle.prototype.intersects = function(px, py) {
-  if (px < this.x)
-    return false;
-
-  if (py < this.y)
-    return false;
-
-  if (px > this.x + this.width)
-    return false;
-
-  if (py > this.y + this.height)
-    return false;
-
-  return true;
-}
-
-/**
- * Computes the size of the rectangle.
- * @return {number} the size
- */
-yuma.geom.Rectangle.prototype.size = function() {
-  return this.width * this.height;
-}
-
