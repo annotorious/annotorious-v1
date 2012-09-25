@@ -22,7 +22,7 @@ yuma.modules.image.ImageAnnotator = function(image) {
   goog.dom.appendChild(document.body, annotationLayer);
     
   var hint = goog.soy.renderAsElement(yuma.templates.image.hint, {msg:'Click and Drag to Annotate'});
-  goog.style.setOpacity(hint, 0.8); 
+  goog.style.setOpacity(hint, 0); 
   goog.dom.appendChild(annotationLayer, hint);
   
   var viewCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas,

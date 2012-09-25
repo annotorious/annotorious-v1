@@ -208,7 +208,7 @@ yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
       // Mouse moved out of an annotation, into empty space      
       self._eventsEnabled = false;
       window.setTimeout(function() {
-        if (!goog.dom.classes.has(self._popup, 'hover')) {
+        if (!self._popup || !goog.dom.classes.has(self._popup, 'hover')) {
           var mouseX = self._cachedMouseEvent.offsetX;
           var mouseY = self._cachedMouseEvent.offsetY;
           
