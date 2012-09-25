@@ -39,10 +39,16 @@ yuma.modules.image.Viewer = function(canvas, opt_show_popups) {
   /** @private **/
   this._eventsEnabled = true;
   
+  /** @private **/
+  this._cachedMouseEvent;
+  
   var self = this; 
   goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
-    if (self._eventsEnabled)
+    if (self._eventsEnabled) {
       self._onMouseMove(event);
+    } else {
+      self._cachedMouseEvent = event; 
+    }
   });
 
   yuma.events.EventBroker.getInstance().registerEventTarget(this, [
@@ -70,12 +76,26 @@ yuma.modules.image.Viewer.prototype.removeAnnotation = function(annotation) {
 }
 
 /**
+ * Convenience method returing only the top-most annotation at the specified coordinates.
+ * @param {number} px the X coordinate
+ * @param {number} py the Y coordinates
+ */
+yuma.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
+  var annotationsAt = this.annotationsAt(px, py);
+  if (annotationsAt.length > 0) {
+    return annotationsAt[0];
+  } else {
+    return undefined;
+  }
+}
+
+/**
  * Returns the annotations at the specified X/Y coordinates.
  * @param {number} px the X coordinate
  * @param {number} py the Y coordinate
  * @return {Array.<yuma.annotation.Annotation>} the annotations sorted by size, smallest first
  */
-yuma.modules.image.Viewer.prototype.getAnnotationsAt = function(px, py) { 
+yuma.modules.image.Viewer.prototype.annotationsAt = function(px, py) { 
   // TODO for large numbers of annotations, we can optimize this
   // using a tree- or grid-like data structure instead of a list
   var intersectedAnnotations = [];
@@ -146,22 +166,26 @@ yuma.modules.image.Viewer.prototype._clearPopup = function() {
  * @private
  */
 yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
-  var intersectedAnnotations = this.getAnnotationsAt(event.offsetX, event.offsetY);
+  var topAnnotation = this.topAnnotationAt(event.offsetX, event.offsetY);
   
   // TODO re-enable dispatching of MOUSE_OVER_ANNOTATION and MOUSE_OUT_OF_ANNOTATION events
   
+  // TODO remove code duplication
+  
   var self = this;
-  if (intersectedAnnotations.length > 0) {
+  if (topAnnotation) {
     if (!this._currentAnnotation) {
       // Mouse moved into annotation from empty space - highlight immediately
-      this._currentAnnotation = intersectedAnnotations[0];
+      this._currentAnnotation = topAnnotation;
       this._redraw();
-    } else if (this._currentAnnotation != intersectedAnnotations[0]) {
+    } else if (this._currentAnnotation != topAnnotation) {
       // Mouse changed from one annotation to another one
       self._eventsEnabled = false;
       window.setTimeout(function() {
         if (!self._popup || !goog.dom.classes.has(self._popup, 'hover')) {
-          self._currentAnnotation = intersectedAnnotations[0];
+          var mouseX = self._cachedMouseEvent.offsetX;
+          var mouseY = self._cachedMouseEvent.offsetY;
+          self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
           self._redraw();
           self._eventsEnabled = true;
         }
@@ -173,7 +197,9 @@ yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
       self._eventsEnabled = false;
       window.setTimeout(function() {
         if (!goog.dom.classes.has(self._popup, 'hover')) {
-          delete self._currentAnnotation;
+          var mouseX = self._cachedMouseEvent.offsetX;
+          var mouseY = self._cachedMouseEvent.offsetY;
+          self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
           self._redraw();
           self._eventsEnabled = true;
         }
