@@ -167,9 +167,7 @@ yuma.modules.image.Viewer.prototype._clearPopup = function() {
  */
 yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
   var topAnnotation = this.topAnnotationAt(event.offsetX, event.offsetY);
-  
-  // TODO re-enable dispatching of MOUSE_OVER_ANNOTATION and MOUSE_OUT_OF_ANNOTATION events
-  
+    
   // TODO remove code duplication
   
   var self = this;
@@ -178,6 +176,10 @@ yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
       // Mouse moved into annotation from empty space - highlight immediately
       this._currentAnnotation = topAnnotation;
       this._redraw();
+      
+      goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OVER_ANNOTATION,
+        annotation: this._currentAnnotation, mouseEvent: event});
+    
     } else if (this._currentAnnotation != topAnnotation) {
       // Mouse changed from one annotation to another one
       self._eventsEnabled = false;
@@ -185,23 +187,40 @@ yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
         if (!self._popup || !goog.dom.classes.has(self._popup, 'hover')) {
           var mouseX = self._cachedMouseEvent.offsetX;
           var mouseY = self._cachedMouseEvent.offsetY;
+          
+          var previousAnnotation = self._currentAnnotation;
           self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
           self._redraw();
           self._eventsEnabled = true;
+          
+          if (previousAnnotation != self._currentAnnotation) {
+            goog.events.dispatchEvent(self, {type: yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
+              annotation: previousAnnotation, mouseEvent: event});
+
+            goog.events.dispatchEvent(self, {type: yuma.events.EventType.MOUSE_OVER_ANNOTATION,
+              annotation: self._currentAnnotation, mouseEvent: event});
+          }
         }
       }, 300);
     }
   } else {
     if (this._currentAnnotation) {
-      // Mouse moved out of an annotation, into empty space
+      // Mouse moved out of an annotation, into empty space      
       self._eventsEnabled = false;
       window.setTimeout(function() {
         if (!goog.dom.classes.has(self._popup, 'hover')) {
           var mouseX = self._cachedMouseEvent.offsetX;
           var mouseY = self._cachedMouseEvent.offsetY;
+          
+          var previousAnnotation = self._currentAnnotation;
           self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
           self._redraw();
           self._eventsEnabled = true;
+          
+          // If we're still over empty space after timeout - throw event
+          if (!self._currentAnnotation)
+            goog.events.dispatchEvent(self, {type: yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
+              annotation: previousAnnotation, mouseEvent: event});
         }
       }, 300);
     }

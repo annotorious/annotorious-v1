@@ -26,7 +26,7 @@ goog.addSingletonGetter(yuma.events.EventBroker);
  */
 yuma.events.EventBroker.prototype.registerEventTarget = function(target, types) {
   self = this;
-  goog.array.forEach(types, function(type, idx, array) {    
+  goog.array.forEach(types, function(type, idx, array) {      
     goog.events.listen(target, type, function(event) {
       var handlers = self._handlers[type];
       if (handlers) {
