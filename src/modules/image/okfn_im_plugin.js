@@ -111,8 +111,7 @@ yuma.okfn.plugin.ImageAnnotator = function(image, mainAnnotator) {
   
   mainAnnotator.subscribe("annotationDeleted", function(annotation) {
 	if(annotation.url == image.src) {
-		//TODO: uncomment the following line, when the method is implemented
-		//viewer.removeAnnotation(annotation);
+		viewer.removeAnnotation(annotation);
 	}
   });
   

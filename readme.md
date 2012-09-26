@@ -42,16 +42,23 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 * To build the minified JavaScript, run ``java -jar plovr/plovr.jar build standalone.json > yuma2.min.js`` (or ``java -jar plovr/plovr.jar build okfn_plugin.json > yuma2.min.js``), replacing 'yuma2.min.js' with a file name of your choice
 * Note: the version of plovr I included in this repository is the February 2012 release ([plovr-4b3caf2b7d84.jar](http://code.google.com/p/plovr/downloads/detail?name=plovr-4b3caf2b7d84.jar&can=2)).
 
-## Todos (almost in order of priority...)
+## TODOs (almost in order of priority...)
 
-* Delete/edit of annotations
-* Make selection move/resizable after it is created
+* Refactor 'Popup' into separate class (easier code readability/better compatibility with OKFN architecture)
 * Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
-* OpenLayers and/or Seadragon AJAX support
-* Implement POINT and POLYGON shape geometries
-* Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
 * Support lazy loading of image annotation overlays
+* Make Yuma2 work on pages with dynamically loaded images (e.g. image carousels)
+* Editing existing annotations
+* Make selection move/resizable after it is created
+* OpenLayers and/or Seadragon AJAX support
+* Make soft fade effects work on Internet Explorer
+* Implement Point and Polygon shape selection
+* Implement freehand draw selection
+* Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
 * __Find a decent name for this tool!__
+* ~~Make Yuma2 work on pages with multiple images~~ __DONE__
+* ~~Make Yuma2 work on pages with floating/flexible layouts~~ __DONE__
+* ~~Deleting existing annotations~~ __DONE__
 * ~~Create an OKFN Annotator Plugin wrapper~~ __DONE__ (but very alpha)
 * ~~Change the way activation works: activation no longer via JavaScript but via a CSS class~~ __DONE__
 * ~~Popup annotation text bubble~~ __DONE__ (but needs some style)
