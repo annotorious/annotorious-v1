@@ -91,6 +91,11 @@ yuma.events.EventType = {
   SELECTION_CHANGED: goog.events.getUniqueId('selection_changed'),
 
   /**
+   * An annotation was removed
+   */
+  ANNOTATION_REMOVED: goog.events.getUniqueId('annotation_removed'),
+  
+  /**
    * An annotation is in edit mode - the edit form is open
    */
   ANNOTATION_EDIT: goog.events.getUniqueId('annotation_edit'),

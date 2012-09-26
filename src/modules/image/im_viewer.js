@@ -70,8 +70,14 @@ yuma.modules.image.Viewer.prototype.addAnnotation = function(annotation) {
  * @param {yuma.annotation.Annotation} the annotation
  */
 yuma.modules.image.Viewer.prototype.removeAnnotation = function(annotation) {
-  // TODO implement
-  console.log('removing: ' + annotation.text);
+  if (annotation == this._currentAnnotation)
+    delete this._currentAnnotation;
+    
+  goog.array.remove(this._annotations, annotation);
+  this._redraw();
+  
+  this._annotator.fireEvent(yuma.events.EventType.ANNOTATION_REMOVED,
+    { annotation: annotation });
 }
 
 /**
