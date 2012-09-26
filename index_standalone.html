@@ -3,33 +3,118 @@
   <head>
     <link rel="stylesheet" href="css/main.css" type="text/css" />
     <script src="http://localhost:9810/compile?id=yuma2"></script>
+    <style>
+      html, body {
+        background-color: #ededed;
+        padding:0px;
+        margin:0px;
+        font-family: sans-serif;
+        line-height: 160%;
+      }
+      
+      h2 {
+        margin-top:40px;
+      }
+      
+      #content {
+        max-width: 980px;
+        margin:0px auto;
+        padding:10px 30px;
+        background-color: #fff;
+      }
+      
+      .image-caption {
+        line-height: normal;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+      }
+    </style>
   </head>
 
   <body>
-    <h1>Annotation Test Page</h1>
-    <p>
-      This page is used as a development environment for the Yuma2 (working title) JavaScript
-      image annotation toolkit. Hover over one of the annotatable images to get started.
-      <strong>NOTE:</strong> make sure plovr is running! Use <code>java -jar plovr/plovr.jar
-      serve standalone.json</code> to start plovr.
-    </p>
-    <img src="640px-Hallstatt.jpg" class="annotatable"/>
-    <img src="630px-Ptolemaic-Map.jpg" class="annotatable"/>
-    <p>Ptolemaic map, 16th century. Public Domain. Source: <a href="http://commons.wikimedia.org/wiki/File:PtolemaicMap.jpg">Wikimedia Commons</p>
-    <p>Hallstatt, Austria. By Nick Csakany, 2007. Public Domain. Source: <a href="http://commons.wikimedia.org/wiki/File:Hallstatt_300.jpg">Wikimedia Commons</a></p>
-    <img src="371px-Claudius-Ptolemaeus.jpg">
-    <p>
-      <strong>This image is not supposed to be annotatable!</strong>
-      medival ideal portrait of Ptolemy. Public Domain.
-      Source: <a href="http://commons.wikimedia.org/wiki/File:Claudius_Ptolemaeus.jpg">Wikimedia Commons</a>
-    </p>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
-      diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
-      vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
-      velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
-      rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean in odio enim.
-    </p>
+    <div id="content">
+      <h1>Annotation Test Page</h1>
+      <p>
+        This page serves as a development environment for the Yuma2 (working title) JavaScript
+        image annotation library. Hover over one of the annotatable images to get started.
+        <strong>NOTE:</strong> make sure the plovr build tool is running! Use
+      </p>
+      <p>
+        <code>java -jar plovr/plovr.jar serve standalone.json</code>
+      </p>
+        to start plovr.
+      </p>
+      
+      <h2>Test Images</h2>
+      <div style="float:right; margin:0px 0px 10px 20px;">
+        <img src="640px-Hallstatt.jpg" class="annotatable">
+        <p class="image-caption">
+          Hallstatt, Austria. By Nick Csakany, 2007. Public Domain. Source:
+          <a href="http://commons.wikimedia.org/wiki/File:Hallstatt_300.jpg">Wikimedia
+          Commons</a>          
+        </p>
+      </div>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      </p>
+      <div style="float:left; width:371px; margin:0px 20px 10px 0px;">
+        <img class="annotatable" src="371px-Claudius-Ptolemaeus.jpg">
+        <p class="image-caption">
+          Medival Ideal Portrait of Ptolemy. Public Domain. Source:
+          <a href="http://commons.wikimedia.org/wiki/File:Claudius_Ptolemaeus.jpg">Wikimedia
+          Commons</a>
+        </p>
+      </div>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      </p>
+      <p style="clear:both;"></p>
+      <div style="float:left; clear:both; text-align:center; margin:0px 20px 10px 0px;">
+        <img src="630px-Ptolemaic-Map.jpg"/>
+        <p class="image-caption">
+          Ptolemaic Map, 16th century. Public Domain. Source:
+          <a href="http://commons.wikimedia.org/wiki/File:PtolemaicMap.jpg">Wikimedia
+          Commons</a>
+        </p>
+      </div>
+      <p>
+        <strong>This image is not supposed to be annotatable!</strong>
+      </p>
+      <p style="clear:both;"></p>
+    </div>
   </body>
 </html>
