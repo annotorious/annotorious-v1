@@ -143,6 +143,12 @@ yuma.modules.image.Viewer.prototype._newPopup = function(payload) {
   this._popup = goog.soy.renderAsElement(yuma.templates.popup, payload);
 
   var btnDelete = goog.dom.query('.yuma-popup-action-delete', this._popup)[0];
+  /*
+  goog.style.setOpacity(btnDelete, 0.5);
+  window.setTimeout(function() {
+    goog.style.setOpacity(btnDelete, 0);
+  }, 300);
+  */
 
   var self = this;
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
@@ -151,10 +157,12 @@ yuma.modules.image.Viewer.prototype._newPopup = function(payload) {
   
   goog.events.listen(this._popup, goog.events.EventType.MOUSEOVER, function(event) {
     goog.dom.classes.add(self._popup, 'hover');
+    // goog.style.setOpacity(btnDelete, 0.5);
   });
   
   goog.events.listen(this._popup, goog.events.EventType.MOUSEOUT, function(event) {
     goog.dom.classes.remove(self._popup, 'hover');
+    // goog.style.setOpacity(btnDelete, 0);
     self._eventsEnabled = true;
   });
   

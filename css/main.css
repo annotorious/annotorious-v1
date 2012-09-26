@@ -69,7 +69,6 @@
   color:#000;
   font-weight:bold;
   margin:0px 0px 0px 10px;
-  opacity:0;
   
   /* Firefox */
   -moz-transition-property: opacity;
@@ -87,10 +86,6 @@
   transition-property: opacity;
   transition-duration: 0.5s;
   transition-delay: 0s;
-}
-
-.hover .yuma-popup-action {
-  opacity:1;
 }
 
 .yuma-editform {
