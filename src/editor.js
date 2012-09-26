@@ -45,7 +45,7 @@ yuma.editor.Editor = function(selection, annotator, px, py, opt_annotation) {
   });
  
   this.setPosition(px, py);
-  goog.dom.appendChild(document.body, this._div);
+  annotator.appendChild(this._div);
   this._textarea.focus();
 
   annotator.fireEvent(yuma.events.EventType.ANNOTATION_EDIT, { annotation: opt_annotation });
