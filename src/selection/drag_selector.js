@@ -1,7 +1,6 @@
 goog.provide('yuma.selection.DragSelector');
 
 goog.require('goog.events');
-goog.require('goog.events.EventTarget');
 
 goog.require('yuma.events');
 
@@ -9,13 +8,16 @@ goog.require('yuma.events');
 
 /**
  * Simple click-and-drag-style selector
- * @param {Element} canvas
+ * @param {Element} canvas the canvas to draw on
+ * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
- * @extends {goog.events.EventTarget}
  */
-yuma.selection.DragSelector = function(canvas) {
+yuma.selection.DragSelector = function(canvas, annotator) {
   /** @private **/
   this._canvas = canvas;
+  
+  /** @private **/
+  this._annotator = annotator;
 
   /** @private **/
   this._g2d = canvas.getContext('2d');
@@ -48,19 +50,11 @@ yuma.selection.DragSelector = function(canvas) {
   });
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
-    self._enabled = false;
-    goog.events.dispatchEvent(self, {type: yuma.events.EventType.SELECTION_COMPLETED, 
-      mouseEvent: event,
-      shape: new yuma.annotation.Shape(yuma.annotation.ShapeType.RECTANGLE, self._selection)});
+    self._enabled = false;    
+    self._annotator.fireEvent(yuma.events.EventType.SELECTION_COMPLETED,
+      { mouseEvent: event, shape: new yuma.annotation.Shape(yuma.annotation.ShapeType.RECTANGLE, self._selection) });
   });
-
-  yuma.events.EventBroker.getInstance().registerEventTarget(this, [
-    yuma.events.EventType.SELECTION_STARTED,
-    yuma.events.EventType.SELECTION_COMPLETED,
-    yuma.events.EventType.SELECTION_CHANGED
-  ]);
 }
-goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);
 
 /**
  * Starts the selection at the specified coordinates.
@@ -70,7 +64,7 @@ goog.inherits(yuma.selection.DragSelector, goog.events.EventTarget);
 yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
   this._enabled = true;
   this._anchor = new yuma.geom.Point(x, y);
-  goog.events.dispatchEvent(this, {type: yuma.events.EventType.SELECTION_STARTED,
+  this._annotator.fireEvent(yuma.events.EventType.SELECTION_STARTED, {
     offsetX: x, offsetY: y});
 }
 

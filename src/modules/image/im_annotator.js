@@ -11,9 +11,14 @@ goog.require('goog.style');
  * The ImageAnnotator is responsible for handling annotation functionality on
  * one image in the page.
  * @param {element} image the image DOM element
+ * @constructor
  */
 yuma.modules.image.ImageAnnotator = function(image) {
-  // TODO check if image is really an IMG
+  /** @private **/
+  this._image = image;
+  
+  /** @private **/
+  this._eventBroker = new yuma.events.EventBroker(this);
   
   // Instantiate DOM elements
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
@@ -48,40 +53,51 @@ yuma.modules.image.ImageAnnotator = function(image) {
   //  yuma.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA,
  
   // Instantiate worker objects
-  var viewer = new yuma.modules.image.Viewer(viewCanvas);
+  var viewer = new yuma.modules.image.Viewer(viewCanvas, this);
   
-  var selector = new yuma.selection.DragSelector(editCanvas);
+  var selector = new yuma.selection.DragSelector(editCanvas, this);
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEDOWN, function(event) { 
     goog.style.showElement(editCanvas, true);
     selector.startSelection(event.offsetX, event.offsetY);
   });
 
   // Set up lifecycle event handling
-  var eventBroker = yuma.events.EventBroker.getInstance();
-
-  eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {  
+  var self = this;
+  this._eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {
     var shape = event.shape;
-    var editor = new yuma.editor.Editor(selector);
-    editor.setPosition(shape.geometry.x + image.offsetLeft,
-                       shape.geometry.y + shape.geometry.height + 4 + image.offsetTop);
+    var editor = new yuma.editor.Editor(selector, self,
+                                        shape.geometry.x + self._image.offsetLeft,
+                                        shape.geometry.y + shape.geometry.height + 4 + self._image.offsetTop);
   });
 
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
+  this._eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
     console.log('mouseover');
   });
 
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {
+  this._eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {
     console.log('mouseoutof');
   });
   
-  eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_CANCEL, function(event) {
+  this._eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_CANCEL, function(event) {
     goog.style.showElement(editCanvas, false);
     selector.stopSelection();  
   });
 
-  eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
+  this._eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
     goog.style.showElement(editCanvas, false);
     viewer.addAnnotation(event.annotation);
     selector.stopSelection();  
   });
+}
+
+yuma.modules.image.ImageAnnotator.prototype.addHandler = function(type, handler) {
+  this._eventBroker.addHandler(type, handler);  
+}
+
+yuma.modules.image.ImageAnnotator.prototype.fireEvent = function(type, event) {
+  this._eventBroker.fireEvent(type, event);
+}
+
+yuma.modules.image.ImageAnnotator.prototype.getImage = function() {
+  return this._image;
 }

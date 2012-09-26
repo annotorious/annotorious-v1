@@ -4,65 +4,35 @@ goog.require('goog.array');
 goog.require('goog.events');
 
 /**
- * A central, singleton 'event bus' to distribute the 'macroscopic' Yuma events.
- * 
- * TODO what happens with the EventBroker if we have multiple annotated images?!
- * Likely things will break if we stick with the current implementation.
- *
+ * A central 'event bus' to distribute the annotation lifecycle events.
  * @constructor
  */
 yuma.events.EventBroker = function() {
   /** @private **/
   this._handlers = [];
 }
-goog.addSingletonGetter(yuma.events.EventBroker);
 
-
-/**
- * Registers an EventTarget with the EventBroker. NOTE: according to Google
- * Closure convention, an EventTarget is a *source* of events!
- * @param {goog.events.EventTarget} target the event target 
- * @param {Array.<yuma.events.EventType>} types the event types to listen for 
- */
-yuma.events.EventBroker.prototype.registerEventTarget = function(target, types) {
-  self = this;
-  goog.array.forEach(types, function(type, idx, array) {      
-    goog.events.listen(target, type, function(event) {
-      var handlers = self._handlers[type];
-      if (handlers) {
-        goog.array.forEach(handlers, function(handler, idx, array) {
-          handler(event);
-        });
-      }  
-    });
-  });
-}
-
-
-/**
- * Adds an event listener.
- * @param {yuma.events.EventType} type the event type to listen to
- * @param {function(Object)} handler the handler function
- */
 yuma.events.EventBroker.prototype.addHandler = function(type, handler) {
   if (!this._handlers[type]) 
     this._handlers[type] = [];
 
-  this._handlers[type].push(handler);
+  this._handlers[type].push(handler);  
 }
 
-
-/**
- * Removes a listener.
- * @param {yuma.events.EventType} type the event type
- * @param {function(Object)} handler the handler function
- */
 yuma.events.EventBroker.prototype.removeHandler = function(type, handler) {
   var handlers = this._handlers[type];
   if (handlers)
-    goog.array.remove(handlers, handler);
+    goog.array.remove(handlers, handler);  
 }
 
+yuma.events.EventBroker.prototype.fireEvent = function(type, event) {
+  var handlers = this._handlers[type];
+  if (handlers) {
+    goog.array.forEach(handlers, function(handler, idx, array) {
+      handler(event);
+    });
+  }    
+}
 
 /**
  * Annotation lifecycle events

@@ -1,5 +1,7 @@
 goog.provide('yuma.modules.image.ImageModule');
 
+goog.require('goog.array');
+
 /**
  * The Image Module scans the page for images marked with the
  * 'annotatable' CSS class, and attaches an ImageAnnotator to
@@ -7,11 +9,11 @@ goog.provide('yuma.modules.image.ImageModule');
  */
 yuma.modules.image.ImageModule = function() {
   var images = goog.dom.query('img.annotatable', document);
-  
+    
   // TODO implement lazy loading
-  for (var i=images.length - 1; i>-1; i--) {
-    new yuma.modules.image.ImageAnnotator(images[i]);
-  }
+  goog.array.forEach(images, function(image, idx, array) {
+    var annotator = new yuma.modules.image.ImageAnnotator(image);
+  });
 }
 
 if (typeof window.onload != 'function') {

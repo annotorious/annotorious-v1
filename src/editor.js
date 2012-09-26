@@ -8,12 +8,14 @@ goog.require('goog.style');
 /**
  * Base annotation edit form.
  * TODO there is no common Selector base class yet
- * @param {yuma.selection.Selector} selection 
- * @param {yuma.model.Annotation | undefined} annotation
+ * @param {yuma.selection.Selector} selection
+ * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
+ * @param {number} px the X offset of the editor position
+ * @param {number} py the Y offset of the editor position
+ * @param {yuma.model.Annotation=} annotation
  * @constructor
- * @extends {goog.events.EventTarget}
  */
-yuma.editor.Editor = function(selection, opt_annotation) {
+yuma.editor.Editor = function(selection, annotator, px, py, opt_annotation) {
   /** @private **/
   this._selection = selection;
 
@@ -29,31 +31,25 @@ yuma.editor.Editor = function(selection, opt_annotation) {
   /** @private **/
   this._btnSave = goog.dom.query('.annotation-save', this._div)[0];
 
-  yuma.events.EventBroker.getInstance().registerEventTarget(this, [
-    yuma.events.EventType.ANNOTATION_EDIT,
-    yuma.events.EventType.ANNOTATION_EDIT_CANCEL,
-    yuma.events.EventType.ANNOTATION_EDIT_SAVE
-  ]);
-
   var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function(event) {
-    goog.events.dispatchEvent(self, {type: yuma.events.EventType.ANNOTATION_EDIT_CANCEL, 
-      mouseEvent: event, annotation: opt_annotation});
+    annotator.fireEvent(yuma.events.EventType.ANNOTATION_EDIT_CANCEL, 
+      { mouseEvent: event, annotation: opt_annotation });
     self.close();
   });
 
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function(event) {
-    goog.events.dispatchEvent(self, {type: yuma.events.EventType.ANNOTATION_EDIT_SAVE, 
-      mouseEvent: event, annotation: self.getAnnotation()});
+    annotator.fireEvent(yuma.events.EventType.ANNOTATION_EDIT_SAVE, 
+      { mouseEvent: event, annotation: self.getAnnotation() });
     self.close();
   });
  
+  this.setPosition(px, py);
   goog.dom.appendChild(document.body, this._div);
   this._textarea.focus();
 
-  goog.events.dispatchEvent(self, {type: yuma.events.EventType.ANNOTATION_EDIT, annotation: opt_annotation});
+  annotator.fireEvent(yuma.events.EventType.ANNOTATION_EDIT, { annotation: opt_annotation });
 }
-goog.inherits(yuma.editor.Editor, goog.events.EventTarget);
 
 /**
  * Sets the position (i.e. CSS left/top value)

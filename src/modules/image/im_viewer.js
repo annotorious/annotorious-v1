@@ -2,19 +2,21 @@ goog.provide('yuma.modules.image.Viewer');
 
 goog.require('goog.soy');
 goog.require('goog.dom.classes');
-goog.require('goog.events.EventTarget');
 
 /**
  * The image viewer - the central entity that manages annotations 
  * displayed for one image.
- * @param {element} the canvas element
- * @param {boolean=} boolean flag to enable/disable hover popups (default true)
+ * @param {element} canvas the canvas element 
+ * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
+ * @param {boolean=} opt_show_popups boolean flag to enable/disable hover popups (default=true)
  * @constructor
- * @extends {goog.events.EventTarget}
  */
-yuma.modules.image.Viewer = function(canvas, opt_show_popups) {
+yuma.modules.image.Viewer = function(canvas, annotator, opt_show_popups) {
   /** @private **/
   this._canvas = canvas;
+  
+  /** @private **/
+  this._annotator = annotator;
   
   /** @private **/
   this._showPopups;
@@ -50,13 +52,7 @@ yuma.modules.image.Viewer = function(canvas, opt_show_popups) {
       self._cachedMouseEvent = event; 
     }
   });
-
-  yuma.events.EventBroker.getInstance().registerEventTarget(this, [
-    yuma.events.EventType.MOUSE_OVER_ANNOTATION,
-    yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION
-  ]);
 }
-goog.inherits(yuma.modules.image.Viewer, goog.events.EventTarget);
 
 /**
  * Adds an annotation to the viewer.
@@ -177,8 +173,8 @@ yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
       this._currentAnnotation = topAnnotation;
       this._redraw();
       
-      goog.events.dispatchEvent(this, {type: yuma.events.EventType.MOUSE_OVER_ANNOTATION,
-        annotation: this._currentAnnotation, mouseEvent: event});
+      this._annotator.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATION,
+        { annotation: this._currentAnnotation, mouseEvent: event });
     
     } else if (this._currentAnnotation != topAnnotation) {
       // Mouse changed from one annotation to another one
@@ -194,11 +190,11 @@ yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
           self._eventsEnabled = true;
           
           if (previousAnnotation != self._currentAnnotation) {
-            goog.events.dispatchEvent(self, {type: yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
-              annotation: previousAnnotation, mouseEvent: event});
+            self._annotator.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
+              { annotation: previousAnnotation, mouseEvent: event });
 
-            goog.events.dispatchEvent(self, {type: yuma.events.EventType.MOUSE_OVER_ANNOTATION,
-              annotation: self._currentAnnotation, mouseEvent: event});
+            self._annotator.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATION,
+              { annotation: self._currentAnnotation, mouseEvent: event });
           }
         }
       }, 300);
@@ -219,8 +215,8 @@ yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
           
           // If we're still over empty space after timeout - throw event
           if (!self._currentAnnotation)
-            goog.events.dispatchEvent(self, {type: yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
-              annotation: previousAnnotation, mouseEvent: event});
+            self._annotator.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
+              { annotation: previousAnnotation, mouseEvent: event });
         }
       }, 300);
     }
