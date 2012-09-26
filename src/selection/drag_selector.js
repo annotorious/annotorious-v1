@@ -66,6 +66,8 @@ yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
   this._anchor = new yuma.geom.Point(x, y);
   this._annotator.fireEvent(yuma.events.EventType.SELECTION_STARTED, {
     offsetX: x, offsetY: y});
+  
+  goog.style.setStyle(document.body, '-webkit-user-select', 'none');
 }
 
 /**
@@ -73,6 +75,7 @@ yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
  */
 yuma.selection.DragSelector.prototype.stopSelection = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
+  goog.style.setStyle(document.body, '-webkit-user-select', 'auto');
 }
 
 /**
