@@ -12,6 +12,11 @@ yuma.events.EventBroker = function() {
   this._handlers = [];
 }
 
+/**
+ * Adds an event handler.
+ * @param {yuma.events.EventType} type the event type
+ * @param {function} the handler function to add
+ */
 yuma.events.EventBroker.prototype.addHandler = function(type, handler) {
   if (!this._handlers[type]) 
     this._handlers[type] = [];
@@ -19,12 +24,22 @@ yuma.events.EventBroker.prototype.addHandler = function(type, handler) {
   this._handlers[type].push(handler);  
 }
 
+/**
+ * Removes an event handler.
+ * @param {yuma.events.EventType} type the event type
+ * @param {function} the handler function to remove
+ */
 yuma.events.EventBroker.prototype.removeHandler = function(type, handler) {
   var handlers = this._handlers[type];
   if (handlers)
     goog.array.remove(handlers, handler);  
 }
 
+/**
+ * Fires an event, triggering execution of all registered handlers.
+ * @param {yuma.events.EventType} type the event type
+ * @param {Object} the event object
+ */
 yuma.events.EventBroker.prototype.fireEvent = function(type, event) {
   var handlers = this._handlers[type];
   if (handlers) {

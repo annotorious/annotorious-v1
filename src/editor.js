@@ -7,15 +7,18 @@ goog.require('goog.style');
 
 /**
  * Base annotation edit form.
+ * 
  * TODO there is no common Selector base class yet
+ *
  * @param {yuma.selection.Selector} selection
  * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
+ * @param {element} parentEl the parent DOM element to append to
  * @param {number} px the X offset of the editor position
  * @param {number} py the Y offset of the editor position
- * @param {yuma.model.Annotation=} annotation
+ * @param {yuma.model.Annotation=} opt_annotation the annotation to edit or undefined, if new
  * @constructor
  */
-yuma.editor.Editor = function(selection, annotator, px, py, opt_annotation) {
+yuma.editor.Editor = function(selection, annotator, parentEl, px, py, opt_annotation) {
   /** @private **/
   this._selection = selection;
 
@@ -45,14 +48,14 @@ yuma.editor.Editor = function(selection, annotator, px, py, opt_annotation) {
   });
  
   this.setPosition(px, py);
-  annotator.appendChild(this._div);
+  goog.dom.appendChild(parentEl, this._div);
   this._textarea.focus();
 
   annotator.fireEvent(yuma.events.EventType.ANNOTATION_EDIT, { annotation: opt_annotation });
 }
 
 /**
- * Sets the position (i.e. CSS left/top value)
+ * Sets the position (i.e. CSS left/top value).
  * @param {number} x the X coordinate
  * @param {number} y the Y coordinate
  */
@@ -61,14 +64,14 @@ yuma.editor.Editor.prototype.setPosition = function(x, y) {
 }
 
 /**
- * Closes the editor
+ * Close the editor.
  */
 yuma.editor.Editor.prototype.close = function() {
   goog.dom.removeNode(this._div);
 }
 
 /**
- * Returns the current annotation that is the current state of the editor
+ * Get the annotation that is the current state of the editor.
  * @return {yuma.model.Annotation} the annotation
  */
 yuma.editor.Editor.prototype.getAnnotation = function() {

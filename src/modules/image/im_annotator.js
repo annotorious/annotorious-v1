@@ -8,8 +8,8 @@ goog.require('goog.math');
 goog.require('goog.style');
 
 /**
- * The ImageAnnotator is responsible for handling annotation functionality on
- * one image in the page.
+ * The ImageAnnotator is responsible for handling annotation functionality
+ * on one image in the page.
  * @param {element} image the image DOM element
  * @constructor
  */
@@ -21,35 +21,35 @@ yuma.modules.image.ImageAnnotator = function(image) {
   this._eventBroker = new yuma.events.EventBroker(this);
   
   /** @private **/
-  this._annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
-  goog.style.setStyle(this._annotationLayer, 'position', 'relative');
-  goog.style.setSize(this._annotationLayer, image.width, image.height);
-  
-  goog.dom.replaceNode(this._annotationLayer, image);
-  goog.dom.appendChild(this._annotationLayer, image);
+  var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
+  goog.style.setStyle(annotationLayer, 'position', 'relative');
+  goog.style.setSize(annotationLayer, image.width, image.height); 
+  goog.dom.replaceNode(annotationLayer, image);
+  goog.dom.appendChild(annotationLayer, image);
     
   var hint = goog.soy.renderAsElement(yuma.templates.image.hint, {msg:'Click and Drag to Annotate'});
   goog.style.setOpacity(hint, 0); 
-  goog.dom.appendChild(this._annotationLayer, hint);
+  goog.dom.appendChild(annotationLayer, hint);
   
   var viewCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas,
-    {width:image.width, height:image.height});
-  goog.dom.appendChild(this._annotationLayer, viewCanvas);   
+    { width:image.width, height:image.height });
+  goog.dom.appendChild(annotationLayer, viewCanvas);   
 
   var editCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas, 
-    {width:image.width, height:image.height});
+    { width:image.width, height:image.height });
   goog.style.showElement(editCanvas, false); 
-  goog.dom.appendChild(this._annotationLayer, editCanvas);  
+  goog.dom.appendChild(annotationLayer, editCanvas);  
  
   // TODO correctly fire
   //  yuma.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA,
   //  yuma.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA,
   
-  goog.events.listen(this._annotationLayer, goog.events.EventType.MOUSEOVER, function() { 
+  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function() { 
     goog.style.setOpacity(viewCanvas, 1.0); 
     goog.style.setOpacity(hint, 0.8); 
   });
-  goog.events.listen(this._annotationLayer, goog.events.EventType.MOUSEOUT, function() { 
+  
+  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function() { 
     goog.style.setOpacity(viewCanvas, 0.4); 
     goog.style.setOpacity(hint, 0);
   });
@@ -58,7 +58,7 @@ yuma.modules.image.ImageAnnotator = function(image) {
   var viewer = new yuma.modules.image.Viewer(viewCanvas, this);
   
   var selector = new yuma.selection.DragSelector(editCanvas, this);
-  goog.events.listen(this._annotationLayer, goog.events.EventType.MOUSEDOWN, function(event) { 
+  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEDOWN, function(event) { 
     goog.style.showElement(editCanvas, true);
     selector.startSelection(event.offsetX, event.offsetY);
   });
@@ -67,11 +67,12 @@ yuma.modules.image.ImageAnnotator = function(image) {
   var self = this;
   this._eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {
     var shape = event.shape;
-    var editor = new yuma.editor.Editor(selector, self,
+    var editor = new yuma.editor.Editor(selector, self, annotationLayer,
                                         shape.geometry.x + self._image.offsetLeft,
                                         shape.geometry.y + shape.geometry.height + 4 + self._image.offsetTop);
   });
 
+  /* For testing only!
   this._eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
     console.log('mouseover');
   });
@@ -79,6 +80,7 @@ yuma.modules.image.ImageAnnotator = function(image) {
   this._eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {
     console.log('mouseoutof');
   });
+  */
   
   this._eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_CANCEL, function(event) {
     goog.style.showElement(editCanvas, false);
@@ -92,18 +94,28 @@ yuma.modules.image.ImageAnnotator = function(image) {
   });
 }
 
+/**
+ * Returns the image that this annotator is responsible for.
+ * @returns {element} the image
+ */
 yuma.modules.image.ImageAnnotator.prototype.getImage = function() {
   return this._image;
 }
 
-yuma.modules.image.ImageAnnotator.prototype.appendChild = function(element) {
-  goog.dom.appendChild(this._annotationLayer, element);
-}
-
+/**
+ * Adds a lifecycle event handler to this annotator's Event Broker.
+ * @param {yuma.events.EventType} type the event type
+ * @param {function} the handler function
+ */
 yuma.modules.image.ImageAnnotator.prototype.addHandler = function(type, handler) {
   this._eventBroker.addHandler(type, handler);  
 }
 
+/**
+ * Fire an event on this annotator's Event Broker.
+ * @param {yuma.events.EventType} type the event type
+ * @param {Object} the event object
+ */
 yuma.modules.image.ImageAnnotator.prototype.fireEvent = function(type, event) {
   this._eventBroker.fireEvent(type, event);
 }
