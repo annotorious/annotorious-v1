@@ -58,7 +58,7 @@ yuma.modules.image.ImageAnnotator = function(image) {
   var viewer = new yuma.modules.image.Viewer(viewCanvas, this);
   
   var selector = new yuma.selection.DragSelector(editCanvas, this);
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEDOWN, function(event) { 
+  goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
     goog.style.showElement(editCanvas, true);
     selector.startSelection(event.offsetX, event.offsetY);
   });

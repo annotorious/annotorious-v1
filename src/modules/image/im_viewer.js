@@ -1,7 +1,9 @@
 goog.provide('yuma.modules.image.Viewer');
 
 goog.require('goog.soy');
+goog.require('goog.events');
 goog.require('goog.dom.classes');
+goog.require('goog.dom.query');
 
 /**
  * The image viewer - the central entity that manages annotations 
@@ -69,6 +71,7 @@ yuma.modules.image.Viewer.prototype.addAnnotation = function(annotation) {
  */
 yuma.modules.image.Viewer.prototype.removeAnnotation = function(annotation) {
   // TODO implement
+  console.log('removing: ' + annotation.text);
 }
 
 /**
@@ -132,8 +135,14 @@ yuma.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidt
 yuma.modules.image.Viewer.prototype._newPopup = function(payload) {
   this._clearPopup();          
   this._popup = goog.soy.renderAsElement(yuma.templates.popup, payload);
-  
+
+  var btnDelete = goog.dom.query('.yuma-popup-action-delete', this._popup)[0];
+
   var self = this;
+  goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
+    self.removeAnnotation(self._currentAnnotation);
+  });
+  
   goog.events.listen(this._popup, goog.events.EventType.MOUSEOVER, function(event) {
     goog.dom.classes.add(self._popup, 'hover');
   });
