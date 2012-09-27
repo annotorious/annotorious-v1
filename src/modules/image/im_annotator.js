@@ -119,10 +119,18 @@ yuma.modules.image.ImageAnnotator.prototype.fireEvent = function(type, event) {
   this._eventBroker.fireEvent(type, event);
 }
 
+/**
+ * Adds annotation to this annotator's viewer.
+ * @param {yuma.annotation.Annotation} annotation the annotation
+ */
 yuma.modules.image.ImageAnnotator.prototype.addAnnotation = function(annotation) {
   this._viewer.addAnnotation(annotation);
 }
 
+/**
+ * Removes an annotation from this annotator's viewer.
+ * @param {yuma.annotation.Annotation} annotation the annotation
+ */
 yuma.modules.image.ImageAnnotator.prototype.removeAnnotation = function(annotation) {
   this._viewer.removeAnnotation(annotation);
 }
