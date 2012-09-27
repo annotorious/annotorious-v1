@@ -45,6 +45,7 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 ## TODOs (almost in order of priority...)
 
 * __Find a decent name for this tool!__
+* Clean up the OKFN Annotator plugin implementation
 * Refactor 'Popup' into separate class (easier code readability/better compatibility with OKFN architecture)
 * Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
 * Expose the most relevant JS methods to the outside world: addAnnotation, removeAnnotation, addHandler, new ImageAnnotator(image)
