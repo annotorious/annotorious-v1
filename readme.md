@@ -47,7 +47,7 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 * __Find a decent name for this tool!__
 * Refactor 'Popup' into separate class (easier code readability/better compatibility with OKFN architecture)
 * Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
-* Expose the most relevant JS methods to the outside world: addAnnotation, removeAnnotation, addHandler
+* Expose the most relevant JS methods to the outside world: addAnnotation, removeAnnotation, addHandler, new ImageAnnotator(image)
 * Should we add the stylesheet via JS? Would make Yuma integration a 1-liner!
 * Make Yuma2 work on pages with dynamically loaded images (e.g. image carousels)
 * Editing existing annotations
