@@ -16,6 +16,7 @@
     "src/annotation.js",    
     "src/events.js",
     "src/editor.js",
+    "src/storage.js",
 
     "templates/annotator_templates.soy",
     "templates/image_templates.soy"

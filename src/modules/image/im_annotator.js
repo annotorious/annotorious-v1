@@ -20,7 +20,6 @@ yuma.modules.image.ImageAnnotator = function(image) {
   /** @private **/
   this._eventBroker = new yuma.events.EventBroker(this);
   
-  /** @private **/
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setSize(annotationLayer, image.width, image.height); 
@@ -55,7 +54,7 @@ yuma.modules.image.ImageAnnotator = function(image) {
   });
  
   // Instantiate worker objects
-  var viewer = new yuma.modules.image.Viewer(viewCanvas, this);
+  this._viewer = new yuma.modules.image.Viewer(viewCanvas, this);
   
   var selector = new yuma.selection.DragSelector(editCanvas, this);
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
@@ -89,7 +88,7 @@ yuma.modules.image.ImageAnnotator = function(image) {
 
   this._eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
     goog.style.showElement(editCanvas, false);
-    viewer.addAnnotation(event.annotation);
+    self._viewer.addAnnotation(event.annotation);
     selector.stopSelection();  
   });
 }
@@ -118,4 +117,12 @@ yuma.modules.image.ImageAnnotator.prototype.addHandler = function(type, handler)
  */
 yuma.modules.image.ImageAnnotator.prototype.fireEvent = function(type, event) {
   this._eventBroker.fireEvent(type, event);
+}
+
+yuma.modules.image.ImageAnnotator.prototype.addAnnotation = function(annotation) {
+  this._viewer.addAnnotation(annotation);
+}
+
+yuma.modules.image.ImageAnnotator.prototype.removeAnnotation = function(annotation) {
+  this._viewer.removeAnnotation(annotation);
 }

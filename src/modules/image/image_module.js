@@ -19,6 +19,9 @@ yuma.modules.image.ImageModule = function() {
   /** @private **/
   this._annotators = [];
   
+  /** @private **/
+  this._eventHandlers = [];
+  
   // Make images in viewport annotatable
   this._lazyLoad();
   
@@ -30,6 +33,10 @@ yuma.modules.image.ImageModule = function() {
     else
       goog.events.unlistenByKey(key);
   });
+  
+  // Instantiate the storage connector
+  // TODO make this a plugin, rather than a hardcoded dependency
+  new yuma.storage.YumaStorage(this);
 }
 
 /**
@@ -37,9 +44,16 @@ yuma.modules.image.ImageModule = function() {
  */
 yuma.modules.image.ImageModule.prototype._lazyLoad = function() {
   var self = this;
-  goog.array.forEach(this._imagesToLoad, function(image, idx, array) {
+  goog.array.forEach(this._imagesToLoad, function(image) {
     if (yuma.modules.image.isInViewport(image)) {
-      self._annotators.push(new yuma.modules.image.ImageAnnotator(image));
+      var annotator = new yuma.modules.image.ImageAnnotator(image);
+      
+      // Attach handlers that are already registered
+      goog.array.forEach(self._eventHandlers, function(eventHandler) {
+        annotator.addHandler(eventHandler.type, eventHandler.handler);
+      });
+      
+      self._annotators.push(annotator);
       goog.array.remove(self._imagesToLoad, image);
     }
   });  
@@ -54,6 +68,8 @@ yuma.modules.image.ImageModule.prototype.addHandler = function(type, handler) {
   goog.array.forEach(this._annotators, function(annotator, idx, array) {
     annotator.addHandler(type, handler);
   });
+  
+  this._eventHandlers.push({ type: type, handler: handler });
 }
 
 if (typeof window.onload != 'function') {
