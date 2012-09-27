@@ -46,7 +46,6 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 
 * Refactor 'Popup' into separate class (easier code readability/better compatibility with OKFN architecture)
 * Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
-* Support lazy loading of image annotation overlays
 * Make Yuma2 work on pages with dynamically loaded images (e.g. image carousels)
 * Editing existing annotations
 * Make selection move/resizable after it is created
@@ -56,6 +55,7 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 * Implement freehand draw selection
 * Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
 * __Find a decent name for this tool!__
+* ~~Support lazy loading of image annotation overlays~~ __DONE__
 * ~~Make Yuma2 work on pages with multiple images~~ __DONE__
 * ~~Make Yuma2 work on pages with floating/flexible layouts~~ __DONE__
 * ~~Deleting existing annotations~~ __DONE__
