@@ -2,12 +2,8 @@ goog.provide('yuma.selection.DragSelector');
 
 goog.require('goog.events');
 
-goog.require('yuma.events');
-
-// TODO we need to define a common base class for all selectors
-
 /**
- * Simple click-and-drag-style selector
+ * Click-and-drag-style selector.
  * @param {Element} canvas the canvas to draw on
  * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor

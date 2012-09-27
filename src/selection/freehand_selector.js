@@ -2,7 +2,8 @@ goog.provide('yuma.selection.FreehandSelector');
 
 goog.require('goog.events');
 
-yuma.selector.FreehandSelector = function(canvas) {
+yuma.selector.FreehandSelector = function(canvas, annotator) {
+  // TODO get rid of paper.js dependency (shouldn't really be a problem in this case)
   paper.setup(canvas);
  
   var path = new paper.Path();
@@ -26,4 +27,13 @@ yuma.selector.FreehandSelector = function(canvas) {
     goog.events.unlisten(canvas, goog.events.EventType.MOUSEMOVE, moveListener);
   });
 
+}
+
+
+yuma.selector.FreehandSelector.prototype.startSelection = function(x, y) {
+  
+}
+
+yuma.selector.FreehandSelector.prototype.stopSelection = function() {
+  
 }

@@ -72,6 +72,24 @@ yuma.modules.image.ImageModule.prototype.addHandler = function(type, handler) {
   this._eventHandlers.push({ type: type, handler: handler });
 }
 
+/**
+ * Adds an annotation to the image with the specified src URL.
+ * @param {yuma.annotation.Annotation} the annotation
+ * @param {string} src the src URL of the image
+ */
+yuma.modules.image.ImageModule.prototype.addAnnotation = function(annotation, src) {
+  // TODO implement
+}
+
+/**
+ * Removes an annotation from the image with the specified src URL.
+ * @param {yuma.annotation.Annotation} annotation the annotation
+ * @param {string} src the src URL of the image
+ */
+yuma.modules.image.ImageModule.prototype.removeAnnotation = function(annotation, src) {
+  // TODO implement
+}
+
 if (typeof window.onload != 'function') {
   window.onload = function() {
     new yuma.modules.image.ImageModule();
