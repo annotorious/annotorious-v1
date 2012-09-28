@@ -74,12 +74,14 @@ yuma.modules.image.ImageAnnotator = function(image) {
   });
   
   this._eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_CANCEL, function(event) {
-    self.clearSelection();
+    goog.style.showElement(self._editCanvas, false);
+    self._selector.stopSelection();
   });
 
   this._eventBroker.addHandler(yuma.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
-    self.clearSelection();  
-    self._viewer.addAnnotation(event.annotation);
+   goog.style.showElement(self._editCanvas, false);
+   self._selector.stopSelection();
+   self._viewer.addAnnotation(event.annotation);
   });
 }
 
@@ -123,12 +125,4 @@ yuma.modules.image.ImageAnnotator.prototype.addAnnotation = function(annotation)
  */
 yuma.modules.image.ImageAnnotator.prototype.removeAnnotation = function(annotation) {
   this._viewer.removeAnnotation(annotation);
-}
-
-/**
- * Clears the selection (if any)
- */
-yuma.modules.image.ImageAnnotator.prototype.clearSelection = function() {
-   goog.style.showElement(this._editCanvas, false);
-   this._selector.stopSelection();
 }
