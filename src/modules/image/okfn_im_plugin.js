@@ -1,4 +1,4 @@
-goog.provide('yuma.okfn.plugin.ImageAnnotator');
+goog.provide('yuma.okfn.ImagePlugin');
 
 goog.require('goog.soy');
 goog.require('goog.dom');
@@ -7,118 +7,115 @@ goog.require('goog.events');
 goog.require('goog.math');
 goog.require('goog.style');
 
-yuma.okfn.plugin.ImageAnnotator = function(image, mainAnnotator) {
-  // Instantiate DOM elements
-  var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
-  goog.style.setStyle(annotationLayer, 'position', 'absolute');
-  goog.style.setPosition(annotationLayer , goog.style.getPosition(image));
-
-  var hint = goog.soy.renderAsElement(yuma.templates.image.hint, {msg:'Click and Drag to Annotate'});
-  goog.style.setOpacity(hint, 0); 
-  goog.dom.appendChild(annotationLayer, hint);
-
-  var viewCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas,
-   {width:image.width, height:image.height});
-  goog.dom.appendChild(annotationLayer, viewCanvas);
-
-  var editCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas, 
-    {width:image.width, height:image.height});
-  goog.style.showElement(editCanvas, false); 
-  goog.dom.appendChild(annotationLayer, editCanvas);  
+/**
+ * Implementation of the Yuma image plugin for OKFN Annotator.
+ * @param {element} image the image to be annotated
+ * @param {Object} okfnAnnotator reference to the OKFN Annotator instance
+ */
+yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
+  var imageAnnotator = yuma.modules.image.ImageAnnotator (image);
   
-  // TODO move this into the viewer class and trigger ANNOTATION_AREA_MOUSE_ENTER/LEAVE events
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function() { 
-    goog.style.setOpacity(viewCanvas, 1.0); 
-    goog.style.setOpacity(hint, 0.8); 
-  });
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function() { 
-    goog.style.setOpacity(viewCanvas, 0.4); 
-    goog.style.setOpacity(hint, 0);
-  });
-  goog.dom.appendChild(document.body, annotationLayer);
-
-  // Instantiate worker objects
-  var viewer = new yuma.modules.image.Viewer(viewCanvas, false);
-
-  var selector = new yuma.selection.DragSelector(editCanvas);
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEDOWN, function(event) { 
-    goog.style.showElement(editCanvas, true);
-    selector.startSelection(event.offsetX, event.offsetY);
-  });
+  /** Communication yuma -> okfn **/
   
-  var eventBroker = yuma.events.EventBroker.getInstance();
+  imageAnnotator.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {	
+    // TODO once we have aligned our datamodels, this conversion won't be necessary any more
+    var annotation = {};
 
-  eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {
-	var annotation = {};
-	
-	// as the adder is not used, beforeAnnotationCreated event has to be fired manually
-    mainAnnotator.publish('beforeAnnotationCreated', annotation);
+    okfnAnnotator.publish('beforeAnnotationCreated', annotation);
 	
     var shape = event.shape;
-	var x = shape.geometry.x + image.offsetLeft;
-	var y = shape.geometry.y + shape.geometry.height + image.offsetTop;
-	
-	annotation.url = image.src;
-	annotation.shape = shape;
-	
-	mainAnnotator.showEditor(annotation, {top: 0, left: 0});
-	$(mainAnnotator.editor.element).css({top: y, left: x});
-  });
-  
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
-    var shape = event.annotation.shape;
-	var x = shape.geometry.x + image.offsetLeft;
-	var y = shape.geometry.y + shape.geometry.height + image.offsetTop;
-	mainAnnotator.showViewer([event.annotation], {top: 0, left: 0});
-	$(mainAnnotator.viewer.element).css({top: y - 5, left: x + 5});
-	
-	mainAnnotator.clearViewerHideTimer();
-  });
-  
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {  
-	mainAnnotator.startViewerHideTimer();
-  });
-  
-  mainAnnotator.viewer.on("edit", function(annotation) {
-    var shape = annotation.shape;
-	var x = shape.geometry.x + image.offsetLeft;
-	var y = shape.geometry.y + shape.geometry.height + image.offsetTop;
-	
-	// Reset orientation of the editor
-	// Use editor.show instead of showEditor to prevent a second annotationEditorShown event
-	$(mainAnnotator.editor.element).css({top: 0, left: 0});
-	mainAnnotator.editor.show();
-	$(mainAnnotator.editor.element).css({top: y, left: x});
-  });
-  
-  mainAnnotator.subscribe("annotationCreated", function(annotation) {
-	if(annotation.url == image.src) {
-		viewer.addAnnotation(annotation);
-	}
-  });
-  
-  mainAnnotator.subscribe("annotationsLoaded", function(annotations) {
-	for(var i in annotations) {
-		var annotation = annotations[i];
-		if(annotation.url == image.src) {
-			viewer.addAnnotation(annotation);
-		}
-	}
-  });
+    var x = shape.geometry.x + image.offsetLeft;
+    var y = shape.geometry.y + shape.geometry.height + image.offsetTop;	
 
-  //mainAnnotator.subscribe("annotationUpdated", function(annotation) {
-  //});
-  
-  mainAnnotator.subscribe("annotationDeleted", function(annotation) {
-	if(annotation.url == image.src) {
-		viewer.removeAnnotation(annotation);
-	}
+    // TODO can we move that before okfnAnnotator.publish?
+    annotation.url = image.src;
+    annotation.shape = shape;
+	
+    okfnAnnotator.showEditor(annotation, {top: 0, left: 0});
+    
+    // TODO get rid of jQuery dependency
+    $(okfnAnnotator.editor.element).css({top: y, left: x});
   });
   
-  mainAnnotator.subscribe("annotationEditorHidden", function(editor) {
-	goog.style.showElement(editCanvas, false);
-    selector.stopSelection(); 
+  imageAnnotator.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
+    var shape = event.annotation.shape;
+    var x = shape.geometry.x + image.offsetLeft;
+    var y = shape.geometry.y + shape.geometry.height + image.offsetTop;
+	
+    okfnAnnotator.showViewer([event.annotation], {top: 0, left: 0});
+    
+    // TODO get rid of jQuery dependency
+    $(okfnAnnotator.viewer.element).css({top: y - 5, left: x + 5});
+    okfnAnnotator.clearViewerHideTimer();
+  });
+  
+  imageAnnotator.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {  
+    okfnAnnotator.startViewerHideTimer();
+  });
+  
+  /** Communication okfn -> yuma **/
+  
+  okfnAnnotator.viewer.on("edit", function(annotation) {
+    // TODO code duplication -> move into a function
+    var shape = annotation.shape;
+    var x = shape.geometry.x + image.offsetLeft;
+    var y = shape.geometry.y + shape.geometry.height + image.offsetTop;
+	
+    // Use editor.show instead of showEditor to prevent a second annotationEditorShown event
+    // TODO get rid of jQuery dependency
+    $(okfnAnnotator.editor.element).css({top: 0, left: 0});
+    okfnAnnotator.editor.show();
+    $(okfnAnnotator.editor.element).css({top: y, left: x});
+  });
+  
+  okfnAnnotator.subscribe("annotationCreated", function(annotation) {
+    if(annotation.url == image.src) {
+      imageAnnotator.addAnnotation(annotation);
+    }
+  });
+  
+  okfnAnnotator.subscribe("annotationsLoaded", function(annotations) {
+    // Use Google's forEach utility instead!
+    for(var i in annotations) {
+      var annotation = annotations[i];
+      if(annotation.url == image.src) {
+	imageAnnotator.addAnnotation(annotation);
+      }
+    }
+  });
+  
+  okfnAnnotator.subscribe("annotationDeleted", function(annotation) {
+    if(annotation.url == image.src) {
+      imageAnnotator.removeAnnotation(annotation);
+    }
+  });
+  
+  okfnAnnotator.subscribe("annotationEditorHidden", function(editor) {
+    imageAnnotator.clearSelection();
   });
 }
 
-window['ImageAnnotatorPlugin'] = yuma.okfn.plugin.ImageAnnotator;
+/**
+ * OKFN plugin interface.
+ */
+Annotator.Plugin.YumaImagePlugin = (function() {
+  var annotatableElement;
+
+  function YumaImagePlugin(element, options) {
+    annotatableElement = element;
+  }
+
+  YumaImagePlugin.prototype.pluginInit = function() {
+    var images = annotatableElement.getElementsByTagName('img');
+    
+    // TODO use Google collection iterator util
+    for (var i=0; i<images.length; i++) {
+      new yuma.okfn.ImagePlugin(images[i], this.annotator);
+      // TODO annotation edit save event => annotator
+    }
+  }
+
+  return ImageAnnotator;
+})();
+
+window['Annotator.Plugin.YumaImagePlugin'] = Annotator.Plugin.YumaImagePlugin;

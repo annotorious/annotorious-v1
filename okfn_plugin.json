@@ -1,5 +1,5 @@
 {
-  "id": "yuma2",
+  "id": "yuma2-okfn-plugin",
   "define": {
     "goog.DEBUG": false,
     "goog.dom.ASSUME_STANDARDS_MODE": true
@@ -27,6 +27,6 @@
   "externs": [
     
   ],
-  "mode": "RAW", // "ADVANCED"
+  "mode": "ADVANCED", // "ADVANCED"
   "level": "DEFAULT" // "VERBOSE"
 }
