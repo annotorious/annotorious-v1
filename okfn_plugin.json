@@ -9,7 +9,6 @@
     "src/geometry/point.js",
     "src/geometry/polygon.js",
     "src/geometry/rectangle.js",
-    "src/modules/image/im_annotator.js",
     "src/modules/image/im_viewer.js",
     "src/modules/image/okfn_im_plugin.js",
 
