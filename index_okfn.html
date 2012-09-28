@@ -6,24 +6,111 @@
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js'></script>
     <script src='http://assets.annotateit.org/annotator/v1.2.5/annotator.min.js'></script>	
     <script src="http://localhost:9810/compile?id=yuma2-okfn-plugin"></script>
-  </head>
-
-  <body>
-    <img src="640px-Hallstatt.jpg" id="annotateme"/>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
-      diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
-      vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
-      velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
-      rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean in odio enim.
-    </p>
-    
-  </body>
-  
+    <style>
+      html, body {
+        background-color: #ededed;
+        padding:0px;
+        margin:0px;
+        font-family: sans-serif;
+        line-height: 160%;
+      }
+      
+      h2 {
+        margin-top:40px;
+      }
+      
+      #content {
+        max-width: 980px;
+        margin:0px auto;
+        padding:10px 30px;
+        background-color: #fff;
+      }
+      
+      .image-caption {
+        line-height: normal;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+      }
+    </style>
     <script>
       $(document.body).annotator()
 	.annotator('addPlugin', 'ImageAnnotator')
 	// .annotator('addPlugin', 'Store');
     </script>
+  </head>
+
+  <body>
+    <div id="content">
+      <h1>Annotation Test Page</h1>
+      <p>
+        This page serves as a development environment for the Yuma2 (working title) OKFN
+	Annotator plugin. Hover over one of the images to get started.
+        <strong>NOTE:</strong> make sure the plovr build tool is running! Use
+      </p>
+      <p>
+        <code>java -jar plovr/plovr.jar serve okfn_plugin.json</code>
+      </p>
+        to start plovr.
+      </p>
+      
+      <h2>Test Images</h2>
+      <div style="float:right; margin:0px 0px 10px 20px;">
+        <img src="640px-Hallstatt.jpg">
+        <p class="image-caption">
+          Hallstatt, Austria. By Nick Csakany, 2007. Public Domain. Source:
+          <a href="http://commons.wikimedia.org/wiki/File:Hallstatt_300.jpg">Wikimedia
+          Commons</a>          
+        </p>
+      </div>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      </p>
+      <div style="float:left; width:371px; margin:0px 20px 10px 0px;">
+        <img src="371px-Claudius-Ptolemaeus.jpg">
+        <p class="image-caption">
+          Medival Ideal Portrait of Ptolemy. Public Domain. Source:
+          <a href="http://commons.wikimedia.org/wiki/File:Claudius_Ptolemaeus.jpg">Wikimedia
+          Commons</a>
+        </p>
+      </div>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      </p>
+      <p style="clear:both;"></p>
+    </div>
+  </body>  
 </html>
