@@ -51,10 +51,10 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
  
   /** @private **/
-  var viewer = new yuma.modules.image.Viewer(viewCanvas, this, false);
+  var viewer = new yuma.modules.image.Viewer(viewCanvas, eventBroker, false);
   
   /** @private **/
-  var selector = new yuma.selection.DragSelector(editCanvas, this);
+  var selector = new yuma.selection.DragSelector(editCanvas, eventBroker);
 
   var self = this;
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
@@ -119,6 +119,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     if(annotation.url == image.src) {
       viewer.addAnnotation(annotation);
     }
+    selector.stopSelection();
   });
   
   okfnAnnotator.subscribe('annotationsLoaded', function(annotations) {
