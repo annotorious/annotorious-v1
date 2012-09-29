@@ -13,7 +13,7 @@ goog.require('goog.style');
  * @param {Object} okfnAnnotator reference to the OKFN Annotator instance
  * @constructor
  */
-yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {  
+yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var eventBroker = new yuma.events.EventBroker(this);
   
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
@@ -107,7 +107,6 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   okfnAnnotator.viewer.on('edit', function(annotation) {
     // TODO code duplication -> move into a function
     var shape = annotation.shape;
-    var imagePosition = goog.dom.getPosition(image);
     var x = shape.geometry.x + imagePosition.x;
     var y = shape.geometry.y + shape.geometry.height + imagePosition.y;
 	
@@ -118,10 +117,9 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     $(okfnAnnotator.editor.element).css({top: y, left: x});
   });
   
+  
   okfnAnnotator.subscribe('annotationCreated', function(annotation) {
     selector.stopSelection();
-    console.log('OKFN: annotationCreated');
-    console.log(annotation.url);
     if(annotation.url == image.src) {
       viewer.addAnnotation(annotation);
     }
@@ -162,29 +160,26 @@ yuma.getOffset = function(el) {
   return { top: _y, left: _x };
 }
 
-
 /**
  * OKFN plugin interface.
  */
-Annotator.Plugin.YumaImagePlugin = (function() {
+window['Annotator']['Plugin']['YumaImagePlugin'] = (function() {
   var annotatableElement;
 
   function YumaImagePlugin(element, options) {
     annotatableElement = element;
   }
 
-  YumaImagePlugin.prototype.pluginInit = function() {
+  YumaImagePlugin.prototype['pluginInit'] = function() {
     var images = annotatableElement.getElementsByTagName('img');
-    
+  
     // TODO use Google collection iterator util
     for (var i=0; i<images.length; i++) {
-      new yuma.okfn.ImagePlugin(images[i], this.annotator);
+      new yuma.okfn.ImagePlugin(images[i], this['annotator']);
       // TODO annotation edit save event => annotator
     }
   }
-
+  
   return YumaImagePlugin;
 })();
 
-window['Annotator.Plugin.YumaImagePlugin'] = Annotator.Plugin.YumaImagePlugin;
-window['Annotator.Plugin.YumaImagePlugin.prototype.pluginInit'] = Annotator.Plugin.YumaImagePlugin.prototype.pluginInit
