@@ -26,6 +26,6 @@
   "externs": [
     
   ],
-  "mode": "ADVANCED", // "ADVANCED"
+  "mode": "RAW", // "ADVANCED"
   "level": "DEFAULT" // "VERBOSE"
 }

@@ -33,11 +33,6 @@
         text-align: center;
       }
     </style>
-    <script>
-      $(document.body).annotator()
-	.annotator('addPlugin', 'ImageAnnotator')
-	// .annotator('addPlugin', 'Store');
-    </script>
   </head>
 
   <body>
@@ -112,5 +107,10 @@
       </p>
       <p style="clear:both;"></p>
     </div>
+    <script>
+      $(document.body).annotator()
+	.annotator('addPlugin', 'YumaImagePlugin')
+	// .annotator('addPlugin', 'Store');
+    </script>
   </body>  
 </html>

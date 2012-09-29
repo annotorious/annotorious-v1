@@ -54,7 +54,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var viewer = new yuma.modules.image.Viewer(viewCanvas, this, false);
   
   /** @private **/
-  var selector = new yuma.selection.DragSelector(this._editCanvas, this);
+  var selector = new yuma.selection.DragSelector(editCanvas, this);
 
   var self = this;
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
@@ -167,5 +167,4 @@ Annotator.Plugin.YumaImagePlugin = (function() {
 })();
 
 window['Annotator.Plugin.YumaImagePlugin'] = Annotator.Plugin.YumaImagePlugin;
-window['YumaImagePlugin'] = YumaImagePlugin;
-window['YumaImagePlugin.prototype.pluginInit'] = YumaImagePlugin.prototype.pluginInit
+window['Annotator.Plugin.YumaImagePlugin.prototype.pluginInit'] = Annotator.Plugin.YumaImagePlugin.prototype.pluginInit
