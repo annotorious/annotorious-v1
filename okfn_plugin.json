@@ -24,7 +24,7 @@
     "."
   ],
   "externs": [
-    
+    "externs/okfn_annotator.js"
   ],
   "mode": "ADVANCED", // "ADVANCED"
   "level": "DEFAULT" // "VERBOSE"

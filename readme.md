@@ -45,7 +45,6 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 ## TODOs (almost in order of priority...)
 
 * __Find a decent name for this tool!__
-* Clean up the OKFN Annotator plugin implementation
 * Refactor 'Popup' into separate class (easier code readability/better compatibility with OKFN architecture)
 * Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
 * Expose the most relevant JS methods to the outside world: addAnnotation, removeAnnotation, addHandler, new ImageAnnotator(image)
@@ -59,6 +58,7 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 * Implement freehand draw selection
 * Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
 * And can someone please make sure the MOUSE_OVER/OUT_OF_ANNOTATABLE_MEDIA events fire properly?
+* ~~Clean up the OKFN Annotator plugin implementation (needs to work in ADVANCED COMPILATION mode~~ __DONE__
 * ~~Support lazy loading of image annotation overlays~~ __DONE__
 * ~~Make Yuma2 work on pages with multiple images~~ __DONE__
 * ~~Make Yuma2 work on pages with floating/flexible layouts~~ __DONE__

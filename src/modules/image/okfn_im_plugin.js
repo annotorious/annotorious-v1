@@ -78,23 +78,19 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     // TODO can we move that before okfnAnnotator.publish?
     annotation.url = image.src;
     annotation.shape = event.shape;
-	
-    okfnAnnotator.showEditor(annotation, {top: 0, left: 0});
     
-    // TODO get rid of jQuery dependency
-    $(okfnAnnotator.editor.element).css({top: y, left: x});
+    okfnAnnotator.showEditor(annotation, {top: 0, left: 0});
+    goog.style.setPosition(okfnAnnotator.editor.element[0], x, y);	
   });
   
   eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
     var shape = event.annotation.shape;
     var offset = yuma.getOffset(image);
-    var x = shape.geometry.x + offset.left;
-    var y = shape.geometry.y + shape.geometry.height + offset.top;
-	
-    okfnAnnotator.showViewer([event.annotation], {top: 0, left: 0});
-    
-    // TODO get rid of jQuery dependency
-    $(okfnAnnotator.viewer.element).css({top: y + 5, left: x + 16});
+    var x = shape.geometry.x + offset.left + 16;
+    var y = shape.geometry.y + shape.geometry.height + offset.top + 5;
+
+    okfnAnnotator.showViewer([event.annotation], {top: 0, left: 0});    	
+    goog.style.setPosition(okfnAnnotator.viewer.element[0], x, y);
     okfnAnnotator.clearViewerHideTimer();
   });
   
@@ -111,10 +107,9 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     var y = shape.geometry.y + shape.geometry.height + imagePosition.y;
 	
     // Use editor.show instead of showEditor to prevent a second annotationEditorShown event
-    // TODO get rid of jQuery dependency
-    $(okfnAnnotator.editor.element).css({top: 0, left: 0});
+    goog.style.setPosition(okfnAnnotator.editor.element[0], 0, 0);
     okfnAnnotator.editor.show();
-    $(okfnAnnotator.editor.element).css({top: y, left: x});
+    goog.style.setPosition(okfnAnnotator.editor.element[0], x, y);
   });
   
   
