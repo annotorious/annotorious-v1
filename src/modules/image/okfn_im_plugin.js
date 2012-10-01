@@ -79,8 +79,8 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     annotation.url = image.src;
     annotation.shape = event.shape;
     
-    okfnAnnotator.showEditor(annotation, {top: 0, left: 0});
-    goog.style.setPosition(okfnAnnotator.editor.element[0], x, y);	
+    okfnAnnotator.showEditor(annotation, {top: window.pageYOffset, left: 0});
+    goog.style.setPosition(okfnAnnotator.editor.element[0], x, y + window.pageYOffset);	
   });
   
   eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
@@ -89,8 +89,8 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     var x = shape.geometry.x + offset.left + 16;
     var y = shape.geometry.y + shape.geometry.height + offset.top + 5;
 
-    okfnAnnotator.showViewer([event.annotation], {top: 0, left: 0});    	
-    goog.style.setPosition(okfnAnnotator.viewer.element[0], x, y);
+    okfnAnnotator.showViewer([event.annotation], {top: window.pageYOffset, left: 0});    	
+    goog.style.setPosition(okfnAnnotator.viewer.element[0], x, y + window.pageYOffset);
     okfnAnnotator.clearViewerHideTimer();
   });
   
@@ -107,7 +107,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     var y = shape.geometry.y + shape.geometry.height + imagePosition.y;
 	
     // Use editor.show instead of showEditor to prevent a second annotationEditorShown event
-    goog.style.setPosition(okfnAnnotator.editor.element[0], 0, 0);
+    goog.style.setPosition(okfnAnnotator.editor.element[0], 0, window.pageYOffset);
     okfnAnnotator.editor.show();
     goog.style.setPosition(okfnAnnotator.editor.element[0], x, y);
   });
@@ -168,10 +168,25 @@ window['Annotator']['Plugin']['YumaImagePlugin'] = (function() {
   YumaImagePlugin.prototype['pluginInit'] = function() {
     var images = annotatableElement.getElementsByTagName('img');
   
-    // TODO use Google collection iterator util
-    for (var i=0; i<images.length; i++) {
-      new yuma.okfn.ImagePlugin(images[i], this['annotator']);
-      // TODO annotation edit save event => annotator
+    var self = this;
+    if (typeof window.onload != 'function') {
+      window.onload = function() {
+        // TODO use Google collection iterator util
+        for (var i=0; i<images.length; i++) {
+          new yuma.okfn.ImagePlugin(images[i], self['annotator']);
+          // TODO annotation edit save event => annotator
+        }
+      }
+    } else {
+      var current = window.onload;
+      window.onload = function() {
+        current();
+        // TODO use Google collection iterator util
+        for (var i=0; i<images.length; i++) {
+          new yuma.okfn.ImagePlugin(images[i], self['annotator']);
+          // TODO annotation edit save event => annotator
+        }
+      }
     }
   }
   
