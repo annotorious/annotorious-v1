@@ -66,7 +66,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {	
     // TODO once we have aligned our datamodels, this conversion won't be necessary any more
-    var annotation = {};
+    var annotation = { url: image.src, shape: event.shape };
 
     okfnAnnotator.publish('beforeAnnotationCreated', annotation);
 	
@@ -74,10 +74,6 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     var offset = yuma.modules.getOffset(image);
     var x = geometry.x + offset.left + 16;
     var y = geometry.y + geometry.height + offset.top + 5;	
-
-    // TODO can we move that before okfnAnnotator.publish?
-    annotation.url = image.src;
-    annotation.shape = event.shape;
     
     okfnAnnotator.showEditor(annotation, {top: window.pageYOffset, left: 0});
     goog.style.setPosition(okfnAnnotator.editor.element[0], x, y + window.pageYOffset);	
@@ -94,22 +90,28 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     okfnAnnotator.clearViewerHideTimer();
   });
   
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {  
+  eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {
     okfnAnnotator.startViewerHideTimer();
   });
   
   /** Communication okfn -> yuma **/
   
   okfnAnnotator.viewer.on('edit', function(annotation) {
-    // TODO code duplication -> move into a function
-    var shape = annotation.shape;
-    var x = shape.geometry.x + imagePosition.x;
-    var y = shape.geometry.y + shape.geometry.height + imagePosition.y;
-	
-    // Use editor.show instead of showEditor to prevent a second annotationEditorShown event
-    goog.style.setPosition(okfnAnnotator.editor.element[0], 0, window.pageYOffset);
-    okfnAnnotator.editor.show();
-    goog.style.setPosition(okfnAnnotator.editor.element[0], x, y);
+    // Problem: We have N yuma.okfn.ImagePlugin instances for N images, hence this
+    // event handler is called N times & we need to check against the image SRC.
+    // TODO find a better solution
+    if (annotation.url == image.src) {
+      // TODO code duplication -> move into a function
+      var shape = annotation.shape;
+      var offset = yuma.modules.getOffset(image);
+      var x = shape.geometry.x + offset.left + 16;
+      var y = shape.geometry.y + shape.geometry.height + offset.top + 5;
+
+      // Use editor.show instead of showEditor to prevent a second annotationEditorShown event
+      goog.style.setPosition(okfnAnnotator.editor.element[0], 0, window.pageYOffset);
+      okfnAnnotator.editor.show();
+      goog.style.setPosition(okfnAnnotator.editor.element[0], x, y + window.pageYOffset);
+    }
   });
   
   
