@@ -11,6 +11,7 @@
     "src/geometry/rectangle.js",
     "src/modules/image/im_viewer.js",
     "src/modules/image/okfn_im_plugin.js",
+    "src/modules/modules.js",
 
     "src/selection/drag_selector.js",
     "src/annotation.js",

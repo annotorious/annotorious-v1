@@ -71,7 +71,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     okfnAnnotator.publish('beforeAnnotationCreated', annotation);
 	
     var geometry = event.shape.geometry;
-    var offset = yuma.getOffset(image);
+    var offset = yuma.modules.getOffset(image);
     var x = geometry.x + offset.left + 16;
     var y = geometry.y + geometry.height + offset.top + 5;	
 
@@ -85,7 +85,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
     var shape = event.annotation.shape;
-    var offset = yuma.getOffset(image);
+    var offset = yuma.modules.getOffset(image);
     var x = shape.geometry.x + offset.left + 16;
     var y = shape.geometry.y + shape.geometry.height + offset.top + 5;
 
@@ -142,19 +142,6 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
 }
 
-// TODO move this function into a central location somewhere!
-yuma.getOffset = function(el) {
-  var _x = 0;
-  var _y = 0;
-  
-  while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
-    _x += el.offsetLeft - el.scrollLeft;
-    _y += el.offsetTop - el.scrollTop;
-    el = el.offsetParent;
-  }
-  return { top: _y, left: _x };
-}
-
 /**
  * OKFN plugin interface.
  */
@@ -167,27 +154,15 @@ window['Annotator']['Plugin']['YumaImagePlugin'] = (function() {
 
   YumaImagePlugin.prototype['pluginInit'] = function() {
     var images = annotatableElement.getElementsByTagName('img');
-  
+    
     var self = this;
-    if (typeof window.onload != 'function') {
-      window.onload = function() {
-        // TODO use Google collection iterator util
-        for (var i=0; i<images.length; i++) {
-          new yuma.okfn.ImagePlugin(images[i], self['annotator']);
-          // TODO annotation edit save event => annotator
-        }
+    yuma.modules.addOnLoadHandler(function() {
+      // TODO use Google collection iterator util
+      for (var i=0; i<images.length; i++) {
+        new yuma.okfn.ImagePlugin(images[i], self['annotator']);
+        // TODO annotation edit save event => annotator
       }
-    } else {
-      var current = window.onload;
-      window.onload = function() {
-        current();
-        // TODO use Google collection iterator util
-        for (var i=0; i<images.length; i++) {
-          new yuma.okfn.ImagePlugin(images[i], self['annotator']);
-          // TODO annotation edit save event => annotator
-        }
-      }
-    }
+    });
   }
   
   return YumaImagePlugin;
