@@ -115,6 +115,10 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
       goog.style.setPosition(okfnAnnotator.editor.element[0], x, y + window.pageYOffset);
     }
   });
+
+  okfnAnnotator.viewer.on('hide', function() {
+    eventBroker.fireEvent(yuma.events.EventType.POPUP_HIDDEN);
+  });
   
   okfnAnnotator.subscribe('annotationCreated', function(annotation) {
     selector.stopSelection();
@@ -162,13 +166,6 @@ yuma.okfn.Popup = function(image, eventBroker, okfnAnnotator) {
 
 yuma.okfn.Popup.prototype.startHideTimer = function() {
   this._okfnAnnotator.startViewerHideTimer();
-  
-  // Somewhat ugly - but there seems no other way to get an event
-  // after the OKFN viewer popup has hidden
-  var self = this;
-  window.setTimeout(function() {
-    self._eventBroker.fireEvent(yuma.events.EventType.POPUP_HIDDEN);
-  }, 300);
 }
 
 yuma.okfn.Popup.prototype.clearHideTimer = function() {
