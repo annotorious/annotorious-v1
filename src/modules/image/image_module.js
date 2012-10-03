@@ -2,6 +2,7 @@ goog.provide('yuma.modules.image.ImageModule');
 
 goog.require('goog.array');
 goog.require('goog.events');
+goog.require('yuma.modules');
 
 /**
  * The Image Module scans the page for images marked with the

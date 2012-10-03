@@ -55,7 +55,7 @@ yuma.modules.image.ImageAnnotator = function(image) {
   });
  
   /** @private **/
-  this._viewer = new yuma.modules.image.Viewer(viewCanvas, this);
+  this._viewer = new yuma.modules.image.Viewer(viewCanvas, new yuma.viewer.Popup(annotationLayer, this), this);
   
   /** @private **/
   this._selector = new yuma.selection.DragSelector(this._editCanvas, this);

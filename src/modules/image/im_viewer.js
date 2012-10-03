@@ -9,25 +9,20 @@ goog.require('goog.dom.query');
  * The image viewer - the central entity that manages annotations 
  * displayed for one image.
  * @param {element} canvas the canvas element 
+ * @param {yuma.viewer.Popup} the popup to use in this viewer
  * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
- * @param {boolean=} opt_show_popups boolean flag to enable/disable hover popups (default=true)
  * @constructor
  */
-yuma.modules.image.Viewer = function(canvas, annotator, opt_show_popups) {
+yuma.modules.image.Viewer = function(canvas, popup, annotator) {
   /** @private **/
   this._canvas = canvas;
+
+  /** @private **/
+  this._popup = popup;
   
   /** @private **/
   this._annotator = annotator;
-  
-  /** @private **/
-  this._showPopups;
-  if (opt_show_popups != undefined) {
-    this._showPopups = opt_show_popups;
-  } else {
-    this._showPopups = true;
-  }
- 
+
   /** @private **/
   this._annotations = [];
 
@@ -38,20 +33,35 @@ yuma.modules.image.Viewer = function(canvas, annotator, opt_show_popups) {
   this._currentAnnotation;
 
   /** @private **/
-  this._popup;
-  
-  /** @private **/
   this._eventsEnabled = true;
-  
+
   /** @private **/
   this._cachedMouseEvent;
-  
+
   var self = this; 
   goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._eventsEnabled) {
       self._onMouseMove(event);
     } else {
-      self._cachedMouseEvent = event; 
+      self._cachedMouseEvent = event;
+    }
+  });
+
+  annotator.addHandler(yuma.events.EventType.POPUP_HIDDEN, function() {
+    var mouseX = self._cachedMouseEvent.offsetX;
+    var mouseY = self._cachedMouseEvent.offsetY;
+          
+    var previousAnnotation = self._currentAnnotation;
+    self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
+    self._redraw();
+    self._eventsEnabled = true;
+          
+    if (previousAnnotation != self._currentAnnotation) {
+      self._annotator.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
+        { annotation: previousAnnotation, mouseEvent: event });
+
+      self._annotator.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATION,
+        { annotation: self._currentAnnotation, mouseEvent: event });
     }
   });
 }
@@ -120,6 +130,43 @@ yuma.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
 /**
  * @private
  */
+yuma.modules.image.Viewer.prototype._resetPopup = function(data, x, y) {
+  this._popup.show(data, x, y);
+}
+
+/**
+ * @private
+ */
+yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
+  var topAnnotation = this.topAnnotationAt(event.offsetX, event.offsetY);
+    
+  // TODO remove code duplication
+  
+  var self = this;
+  if (topAnnotation) {
+    if (!this._currentAnnotation) {
+      // Mouse moved into annotation from empty space - highlight immediately
+      this._currentAnnotation = topAnnotation;
+      this._redraw();
+      this._annotator.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATION,
+        { annotation: this._currentAnnotation, mouseEvent: event });   
+    } else if (this._currentAnnotation != topAnnotation) {
+      // Mouse changed from one annotation to another one
+      this._eventsEnabled = false;
+      this._popup.startHideTimer();
+    }
+  } else {
+    if (this._currentAnnotation) {
+      // Mouse moved out of an annotation, into empty space      
+      this._eventsEnabled = false;
+      this._popup.startHideTimer();
+    }
+  }
+}
+
+/**
+ * @private
+ */
 yuma.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidth) {
   this._g2d.strokeStyle = color;
   this._g2d.lineWidth = lineWidth;
@@ -138,116 +185,6 @@ yuma.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidt
 /**
  * @private
  */
-yuma.modules.image.Viewer.prototype._newPopup = function(payload) {
-  this._clearPopup();          
-  this._popup = goog.soy.renderAsElement(yuma.templates.popup, payload);
-
-  var btnDelete = goog.dom.query('.yuma-popup-action-delete', this._popup)[0];
-  /*
-  goog.style.setOpacity(btnDelete, 0.5);
-  window.setTimeout(function() {
-    goog.style.setOpacity(btnDelete, 0);
-  }, 300);
-  */
-
-  var self = this;
-  goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
-    self.removeAnnotation(self._currentAnnotation);
-  });
-  
-  goog.events.listen(this._popup, goog.events.EventType.MOUSEOVER, function(event) {
-    goog.dom.classes.add(self._popup, 'hover');
-    // goog.style.setOpacity(btnDelete, 0.5);
-  });
-  
-  goog.events.listen(this._popup, goog.events.EventType.MOUSEOUT, function(event) {
-    goog.dom.classes.remove(self._popup, 'hover');
-    // goog.style.setOpacity(btnDelete, 0);
-    self._eventsEnabled = true;
-  });
-  
-  goog.dom.appendChild(goog.dom.getParentElement(this._canvas), this._popup);
-}
-
-/**
- * @private
- */
-yuma.modules.image.Viewer.prototype._clearPopup = function() {
-  // TODO I don't know whether the MOUSEOVER/MOUSEOUT listeners get properly
-  // destroyed when deleting the DOM element!
-  if (this._popup) {
-    goog.dom.removeNode(this._popup);
-    delete this._popup;
-  }
-}
-
-/**
- * @private
- */
-yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
-  var topAnnotation = this.topAnnotationAt(event.offsetX, event.offsetY);
-    
-  // TODO remove code duplication
-  
-  var self = this;
-  if (topAnnotation) {
-    if (!this._currentAnnotation) {
-      // Mouse moved into annotation from empty space - highlight immediately
-      this._currentAnnotation = topAnnotation;
-      this._redraw();
-      this._annotator.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATION,
-        { annotation: this._currentAnnotation, mouseEvent: event });
-    
-    } else if (this._currentAnnotation != topAnnotation) {
-      // Mouse changed from one annotation to another one
-      self._eventsEnabled = false;
-      window.setTimeout(function() {
-        if (!self._popup || !goog.dom.classes.has(self._popup, 'hover')) {
-          var mouseX = self._cachedMouseEvent.offsetX;
-          var mouseY = self._cachedMouseEvent.offsetY;
-          
-          var previousAnnotation = self._currentAnnotation;
-          self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
-          self._redraw();
-          self._eventsEnabled = true;
-          
-          if (previousAnnotation != self._currentAnnotation) {
-            self._annotator.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
-              { annotation: previousAnnotation, mouseEvent: event });
-
-            self._annotator.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATION,
-              { annotation: self._currentAnnotation, mouseEvent: event });
-          }
-        }
-      }, 300);
-    }
-  } else {
-    if (this._currentAnnotation) {
-      // Mouse moved out of an annotation, into empty space      
-      self._eventsEnabled = false;
-      window.setTimeout(function() {
-        if (!self._popup || !goog.dom.classes.has(self._popup, 'hover')) {
-          var mouseX = self._cachedMouseEvent.offsetX;
-          var mouseY = self._cachedMouseEvent.offsetY;
-          
-          var previousAnnotation = self._currentAnnotation;
-          self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
-          self._redraw();
-          self._eventsEnabled = true;
-          
-          // If we're still over empty space after timeout - throw event
-          if (!self._currentAnnotation)
-            self._annotator.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
-              { annotation: previousAnnotation, mouseEvent: event });
-        }
-      }, 300);
-    }
-  }
-}
-
-/**
- * @private
- */
 yuma.modules.image.Viewer.prototype._redraw = function() {  
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
   
@@ -258,18 +195,13 @@ yuma.modules.image.Viewer.prototype._redraw = function() {
     
   if (this._currentAnnotation) {
     this._draw(this._currentAnnotation, '#fff000', 1.8);
-    if (this._showPopups) {
-      this._newPopup({text: this._currentAnnotation.text});
-
         
-      // TODO need to introduce a bbox property that's supported by every shape type
-      // Currently the shape.geometry will always be a yuma.geom.Rectangle
-      var bbox = this._currentAnnotation.shape.geometry;
+    // TODO need to introduce a bbox property that's supported by every shape type
+    // Currently the shape.geometry will always be a yuma.geom.Rectangle
+    var bbox = this._currentAnnotation.shape.geometry;
+    this._resetPopup({text: this._currentAnnotation.text}, bbox.x, bbox.y + bbox.height + 5);
 
-      goog.style.setPosition(this._popup, new goog.math.Coordinate(bbox.x, bbox.y + bbox.height + 5));
-
-      // TODO Orientation check - what if the popup would be outside the viewport?
-    }
+    // TODO Orientation check - what if the popup would be outside the viewport?
   } else {
     if (this._showPopups)
       this._clearPopup();    

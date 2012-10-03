@@ -91,6 +91,21 @@ yuma.events.EventType = {
   SELECTION_CHANGED: goog.events.getUniqueId('selection_changed'),
 
   /**
+   * The annotation popup widget was hidden
+   */
+  POPUP_HIDDEN: goog.events.getUniqueId('popup_hidden'),
+
+  /**
+   * The 'delete annotation' button was pressed in the popup
+   */
+  POPUP_BTN_DELETE: goog.events.getUniqueId('popup_btn_delete'),
+
+  /**
+   * The 'edit annotation' button was pressed in the popup
+   */
+  POPUP_BTN_EDIT: goog.events.getUniqueId('popup_btn_edit'),
+
+  /**
    * An annotation was removed
    */
   ANNOTATION_REMOVED: goog.events.getUniqueId('annotation_removed'),
@@ -98,7 +113,7 @@ yuma.events.EventType = {
   /**
    * An annotation is in edit mode - the edit form is open
    */
-  ANNOTATION_EDIT: goog.events.getUniqueId('annotation_edit'),
+  // ANNOTATION_EDIT: goog.events.getUniqueId('annotation_edit'),
 
   /**
    * Annotation editing was canceled

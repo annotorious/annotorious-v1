@@ -18,6 +18,7 @@
     "src/events.js",
     "src/editor.js",
     "src/storage.js",
+    "src/popup.js",
 
     "templates/annotator_templates.soy",
     "templates/image_templates.soy"
@@ -28,6 +29,6 @@
   "externs": [
     
   ],
-  "mode": "ADVANCED", // "RAW" or "ADVANCED"
+  "mode": "RAW", // "RAW" or "ADVANCED"
   "level": "DEFAULT" // "DEFAULT" or "VERBOSE"
 }
