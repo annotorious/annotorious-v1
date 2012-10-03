@@ -42,9 +42,8 @@ yuma.modules.image.Viewer = function(canvas, popup, annotator) {
   goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._eventsEnabled) {
       self._onMouseMove(event);
-    } else {
-      self._cachedMouseEvent = event;
     }
+    self._cachedMouseEvent = event;
   });
 
   annotator.addHandler(yuma.events.EventType.POPUP_HIDDEN, function() {
@@ -130,8 +129,8 @@ yuma.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
 /**
  * @private
  */
-yuma.modules.image.Viewer.prototype._resetPopup = function(data, x, y) {
-  this._popup.show(data, x, y);
+yuma.modules.image.Viewer.prototype._resetPopup = function(annotation, x, y) {
+  this._popup.show(annotation, x, y);
 }
 
 /**
@@ -199,7 +198,7 @@ yuma.modules.image.Viewer.prototype._redraw = function() {
     // TODO need to introduce a bbox property that's supported by every shape type
     // Currently the shape.geometry will always be a yuma.geom.Rectangle
     var bbox = this._currentAnnotation.shape.geometry;
-    this._resetPopup({text: this._currentAnnotation.text}, bbox.x, bbox.y + bbox.height + 5);
+    this._resetPopup(this._currentAnnotation, bbox.x, bbox.y + bbox.height + 5);
 
     // TODO Orientation check - what if the popup would be outside the viewport?
   } else {

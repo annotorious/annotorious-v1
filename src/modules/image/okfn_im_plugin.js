@@ -51,7 +51,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
  
   /** @private **/
-  var viewer = new yuma.modules.image.Viewer(viewCanvas, eventBroker, false);
+  var viewer = new yuma.modules.image.Viewer(viewCanvas, new yuma.okfn.Popup(image, eventBroker, okfnAnnotator), eventBroker);
   
   /** @private **/
   var selector = new yuma.selection.DragSelector(editCanvas, eventBroker);
@@ -79,6 +79,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     goog.style.setPosition(okfnAnnotator.editor.element[0], x, y + window.pageYOffset);	
   });
   
+  /*
   eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
     var shape = event.annotation.shape;
     var offset = yuma.modules.getOffset(image);
@@ -93,6 +94,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {
     okfnAnnotator.startViewerHideTimer();
   });
+  */
   
   /** Communication okfn -> yuma **/
   
@@ -113,7 +115,6 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
       goog.style.setPosition(okfnAnnotator.editor.element[0], x, y + window.pageYOffset);
     }
   });
-  
   
   okfnAnnotator.subscribe('annotationCreated', function(annotation) {
     selector.stopSelection();
@@ -142,6 +143,47 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     goog.style.showElement(editCanvas, false);
     selector.stopSelection();
   });
+}
+
+/**
+ * A wrapper around the OKFN 'viewer', which corresponds to Yuma's Popup.
+ * @constructor
+ */
+yuma.okfn.Popup = function(image, eventBroker, okfnAnnotator) {
+  /** @private **/
+  this._image = image;
+  
+  /** @private **/
+  this._eventBroker = eventBroker;
+  
+  /** @private **/ 
+  this._okfnAnnotator = okfnAnnotator;
+}
+
+yuma.okfn.Popup.prototype.startHideTimer = function() {
+  this._okfnAnnotator.startViewerHideTimer();
+  
+  // Somewhat ugly - but there seems no other way to get an event
+  // after the OKFN viewer popup has hidden
+  var self = this;
+  window.setTimeout(function() {
+    self._eventBroker.fireEvent(yuma.events.EventType.POPUP_HIDDEN);
+  }, 300);
+}
+
+yuma.okfn.Popup.prototype.clearHideTimer = function() {
+  this._okfnAnnotator.clearViewerHideTimer();
+}
+
+yuma.okfn.Popup.prototype.show = function(annotation, x, y) {
+  var offset = yuma.modules.getOffset(this._image);
+  this._okfnAnnotator.showViewer([annotation], {top: window.pageYOffset, left: 0});   
+  goog.style.setPosition(this._okfnAnnotator.viewer.element[0], offset.left + 16 + x, offset.top + 5 + y + window.pageYOffset);
+  this._okfnAnnotator.clearViewerHideTimer();
+}
+
+yuma.okfn.Popup.prototype.setPosition = function(x, y) {
+  goog.style.setPosition(this._okfnAnnotator.viewer.element[0], x, y);  
 }
 
 /**

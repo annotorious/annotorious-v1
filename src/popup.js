@@ -42,8 +42,8 @@ yuma.viewer.Popup = function(parentEl, annotator) {
   goog.dom.appendChild(parentEl, this._element);
 }
 
-yuma.viewer.Popup.prototype.show = function(data, x, y) {
-  this._text.innerHTML = data.text;
+yuma.viewer.Popup.prototype.show = function(annotation, x, y) {
+  this._text.innerHTML = annotation.text;
   this.setPosition(x, y);
   goog.style.setOpacity(this._element, 1.0); 
 }
@@ -68,8 +68,4 @@ yuma.viewer.Popup.prototype.clearHideTimer = function() {
     window.clearTimeout(this._timer);
     delete this._timer;
   }
-}
-
-yuma.viewer.Popup.prototype.isVisible = function() {
-  return (this._element);
 }
