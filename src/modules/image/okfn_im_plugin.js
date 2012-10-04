@@ -13,7 +13,9 @@ goog.require('goog.style');
  * @param {Object} okfnAnnotator reference to the OKFN Annotator instance
  * @constructor
  */
-yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
+yuma.okfn.ImagePlugin = function(image, annotatableElement, okfnAnnotator) {
+  var staticOffset = yuma.modules.getOffset(annotatableElement); 
+  
   var eventBroker = new yuma.events.EventBroker(this);
   
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
@@ -51,7 +53,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
  
   /** @private **/
-  var viewer = new yuma.modules.image.Viewer(viewCanvas, new yuma.okfn.Popup(image, eventBroker, okfnAnnotator), eventBroker);
+  var viewer = new yuma.modules.image.Viewer(viewCanvas, new yuma.okfn.Popup(image, eventBroker, okfnAnnotator, staticOffset), eventBroker);
   
   /** @private **/
   var selector = new yuma.selection.DragSelector(editCanvas, eventBroker);
@@ -67,34 +69,16 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {	
     // TODO once we have aligned our datamodels, this conversion won't be necessary any more
     var annotation = { url: image.src, shape: event.shape };
-
     okfnAnnotator.publish('beforeAnnotationCreated', annotation);
 	
     var geometry = event.shape.geometry;
-    var offset = yuma.modules.getOffset(image);
+    var offset = yuma.modules.getOffset(image);    
     var x = geometry.x + offset.left + 16;
-    var y = geometry.y + geometry.height + offset.top + 5;	
+    var y = geometry.y + geometry.height + offset.top + 5;
     
-    okfnAnnotator.showEditor(annotation, {top: window.pageYOffset, left: 0});
-    goog.style.setPosition(okfnAnnotator.editor.element[0], x, y + window.pageYOffset);	
+    okfnAnnotator.showEditor(annotation, {top: window.pageYOffset - staticOffset.top, left: 0});
+    goog.style.setPosition(okfnAnnotator.editor.element[0], x - staticOffset.left, y + window.pageYOffset - staticOffset.top);	
   });
-  
-  /*
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATION, function(event) {
-    var shape = event.annotation.shape;
-    var offset = yuma.modules.getOffset(image);
-    var x = shape.geometry.x + offset.left + 16;
-    var y = shape.geometry.y + shape.geometry.height + offset.top + 5;
-
-    okfnAnnotator.showViewer([event.annotation], {top: window.pageYOffset, left: 0});    	
-    goog.style.setPosition(okfnAnnotator.viewer.element[0], x, y + window.pageYOffset);
-    okfnAnnotator.clearViewerHideTimer();
-  });
-  
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION, function(event) {
-    okfnAnnotator.startViewerHideTimer();
-  });
-  */
   
   /** Communication okfn -> yuma **/
   
@@ -110,9 +94,9 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
       var y = shape.geometry.y + shape.geometry.height + offset.top + 5;
 
       // Use editor.show instead of showEditor to prevent a second annotationEditorShown event
-      goog.style.setPosition(okfnAnnotator.editor.element[0], 0, window.pageYOffset);
+      goog.style.setPosition(okfnAnnotator.editor.element[0], 0, window.pageYOffset - staticOffset.top);
       okfnAnnotator.editor.show();
-      goog.style.setPosition(okfnAnnotator.editor.element[0], x, y + window.pageYOffset);
+      goog.style.setPosition(okfnAnnotator.editor.element[0], x - staticOffset.left, y + window.pageYOffset - staticOffset.top);
     }
   });
 
@@ -153,7 +137,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
  * A wrapper around the OKFN 'viewer', which corresponds to Yuma's Popup.
  * @constructor
  */
-yuma.okfn.Popup = function(image, eventBroker, okfnAnnotator) {
+yuma.okfn.Popup = function(image, eventBroker, okfnAnnotator, staticOffset) {
   /** @private **/
   this._image = image;
   
@@ -162,6 +146,10 @@ yuma.okfn.Popup = function(image, eventBroker, okfnAnnotator) {
   
   /** @private **/ 
   this._okfnAnnotator = okfnAnnotator;
+  
+  /** @private **/
+  // TODO is the anntotableElement accessible via okfnAnnotator?
+  this._staticOffset = staticOffset;
 }
 
 yuma.okfn.Popup.prototype.startHideTimer = function() {
@@ -174,8 +162,10 @@ yuma.okfn.Popup.prototype.clearHideTimer = function() {
 
 yuma.okfn.Popup.prototype.show = function(annotation, x, y) {
   var offset = yuma.modules.getOffset(this._image);
-  this._okfnAnnotator.showViewer([annotation], {top: window.pageYOffset, left: 0});   
-  goog.style.setPosition(this._okfnAnnotator.viewer.element[0], offset.left + 16 + x, offset.top + 5 + y + window.pageYOffset);
+  this._okfnAnnotator.showViewer([annotation], {top: window.pageYOffset - this._staticOffset.top , left: 0});   
+  goog.style.setPosition(this._okfnAnnotator.viewer.element[0],
+			 offset.left + 16 + x - this._staticOffset.left,
+			 offset.top + y + window.pageYOffset - this._staticOffset.top);
   this._okfnAnnotator.clearViewerHideTimer();
 }
 
@@ -200,7 +190,7 @@ window['Annotator']['Plugin']['YumaImagePlugin'] = (function() {
     yuma.modules.addOnLoadHandler(function() {
       // TODO use Google collection iterator util
       for (var i=0; i<images.length; i++) {
-        new yuma.okfn.ImagePlugin(images[i], self['annotator']);
+        new yuma.okfn.ImagePlugin(images[i], annotatableElement, self['annotator']);
         // TODO annotation edit save event => annotator
       }
     });

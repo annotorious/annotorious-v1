@@ -48,20 +48,22 @@ yuma.modules.image.Viewer = function(canvas, popup, annotator) {
   });
 
   annotator.addHandler(yuma.events.EventType.POPUP_HIDDEN, function() {
-    var mouseX = self._cachedMouseEvent.offsetX;
-    var mouseY = self._cachedMouseEvent.offsetY;
-          
-    var previousAnnotation = self._currentAnnotation;
-    self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
-    self._redraw();
-    self._eventsEnabled = true;
-          
-    if (previousAnnotation != self._currentAnnotation) {
-      self._annotator.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
-        { annotation: previousAnnotation, mouseEvent: event });
-
-      self._annotator.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATION,
-        { annotation: self._currentAnnotation, mouseEvent: event });
+    if (self._cachedMouseEvent) {
+      var mouseX = self._cachedMouseEvent.offsetX;
+      var mouseY = self._cachedMouseEvent.offsetY;
+            
+      var previousAnnotation = self._currentAnnotation;
+      self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
+      self._redraw();
+      self._eventsEnabled = true;
+            
+      if (previousAnnotation != self._currentAnnotation) {
+        self._annotator.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
+          { annotation: previousAnnotation, mouseEvent: event });
+  
+        self._annotator.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATION,
+          { annotation: self._currentAnnotation, mouseEvent: event });
+      }
     }
   });
 }
