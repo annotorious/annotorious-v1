@@ -16,6 +16,9 @@ yuma.viewer.Popup = function(parentEl, annotator) {
 
   /** @private **/
   this._element = goog.soy.renderAsElement(yuma.templates.popup);
+  
+  /** @private **/
+  this._currentAnnotation;
 
   /** @private **/
   this._text = goog.dom.query('.yuma-popup-text', this._element)[0];
@@ -27,7 +30,9 @@ yuma.viewer.Popup = function(parentEl, annotator) {
 
   var self = this;
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
-    // Throw event
+    goog.style.setOpacity(self._element, 0.0); 
+    annotator.fireEvent(yuma.events.EventType.POPUP_BTN_DELETE,
+      { annotation: self._currentAnnotation, mouseEvent: event });
   });
   
   goog.events.listen(this._element, goog.events.EventType.MOUSEOVER, function(event) {
@@ -43,6 +48,7 @@ yuma.viewer.Popup = function(parentEl, annotator) {
 }
 
 yuma.viewer.Popup.prototype.show = function(annotation, x, y) {
+  this._currentAnnotation = annotation;
   this._text.innerHTML = annotation.text;
   this.setPosition(x, y);
   goog.style.setOpacity(this._element, 1.0); 

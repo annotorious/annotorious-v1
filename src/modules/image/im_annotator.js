@@ -83,6 +83,10 @@ yuma.modules.image.ImageAnnotator = function(image) {
    self._selector.stopSelection();
    self._viewer.addAnnotation(event.annotation);
   });
+  
+  this._eventBroker.addHandler(yuma.events.EventType.POPUP_BTN_DELETE, function(event) {
+    self._viewer.removeAnnotation(event.annotation);
+  });
 }
 
 /**
