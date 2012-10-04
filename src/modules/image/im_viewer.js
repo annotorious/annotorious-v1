@@ -168,7 +168,6 @@ yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
  * @private
  */
 yuma.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidth) {
-  this._g2d.strokeStyle = color;
   this._g2d.lineWidth = lineWidth;
 
   var shape = annotation.shape;
@@ -178,7 +177,10 @@ yuma.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidt
     // TODO implement
   } else if (shape.type == yuma.annotation.ShapeType.RECTANGLE) {
     var rect = shape.geometry;
-    this._g2d.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height); 
+    this._g2d.strokeStyle = '#000000';
+    this._g2d.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
+    this._g2d.strokeStyle = color;
+    this._g2d.strokeRect(rect.x + 1.5, rect.y + 1.5, rect.width - 2, rect.height - 2);
   }  
 }
 
@@ -194,7 +196,7 @@ yuma.modules.image.Viewer.prototype._redraw = function() {
   });
     
   if (this._currentAnnotation) {
-    this._draw(this._currentAnnotation, '#fff000', 1.8);
+    this._draw(this._currentAnnotation, '#fff000', 1.2);
         
     // TODO need to introduce a bbox property that's supported by every shape type
     // Currently the shape.geometry will always be a yuma.geom.Rectangle

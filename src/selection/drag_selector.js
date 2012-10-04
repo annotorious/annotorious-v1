@@ -18,7 +18,6 @@ yuma.selection.DragSelector = function(canvas, annotator) {
   /** @private **/
   this._g2d = canvas.getContext('2d');
   this._g2d.lineWidth = 1;
-  this._g2d.strokeStyle = '#ffffff';
  
   /** @private **/
   this._anchor; 
@@ -40,8 +39,13 @@ yuma.selection.DragSelector = function(canvas, annotator) {
       );
 
       self._g2d.clearRect(0, 0, canvas.width, canvas.height);
+      
+      self._g2d.strokeStyle = '#000000';
       self._g2d.strokeRect(self._selection.x + 0.5, self._selection.y + 0.5,
                            self._selection.width, self._selection.height);
+      self._g2d.strokeStyle = '#ffffff';
+      self._g2d.strokeRect(self._selection.x + 1.5, self._selection.y + 1.5,
+                           self._selection.width - 2, self._selection.height - 2);
     }
   });
 
