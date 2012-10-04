@@ -47,17 +47,9 @@ yuma.viewer.Popup = function(parentEl, annotator) {
   goog.dom.appendChild(parentEl, this._element);
 }
 
-yuma.viewer.Popup.prototype.show = function(annotation, x, y) {
-  this._currentAnnotation = annotation;
-  this._text.innerHTML = annotation.text;
-  this.setPosition(x, y);
-  goog.style.setOpacity(this._element, 1.0); 
-}
-
-yuma.viewer.Popup.prototype.setPosition = function(x, y) {
-  goog.style.setPosition(this._element, new goog.math.Coordinate(x, y));
-}
-
+/**
+ * Start the popup hide timer.
+ */
 yuma.viewer.Popup.prototype.startHideTimer = function() {
   if (!this._timer) {
     var self = this;
@@ -69,9 +61,35 @@ yuma.viewer.Popup.prototype.startHideTimer = function() {
   }
 }
 
+/**
+ * Clear the popup hide timer.
+ */
 yuma.viewer.Popup.prototype.clearHideTimer = function() {
   if (this._timer) {
     window.clearTimeout(this._timer);
     delete this._timer;
   }
 }
+
+/**
+ * Show the popup, loaded with the specified annotation, at the specified coordinates.
+ * @param {Object} annotation the annotation
+ * @param {number} x coordinate (relative to the image)
+ * @param {number} y coordiante (relative to the image)
+ */
+yuma.viewer.Popup.prototype.show = function(annotation, x, y) {
+  this._currentAnnotation = annotation;
+  this._text.innerHTML = annotation.text;
+  this.setPosition(x, y);
+  goog.style.setOpacity(this._element, 1.0); 
+}
+
+/**
+ * Set the position of the popup.
+ * @param {number} x coordinate (relative to the image)
+ * @param {number} y coordinate (realtive to the image)
+ */
+yuma.viewer.Popup.prototype.setPosition = function(x, y) {
+  goog.style.setPosition(this._element, new goog.math.Coordinate(x, y));
+}
+
