@@ -42,8 +42,9 @@ yuma.modules.image.Viewer = function(canvas, popup, annotator) {
   goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._eventsEnabled) {
       self._onMouseMove(event);
+    } else {
+      self._cachedMouseEvent = event;
     }
-    self._cachedMouseEvent = event;
   });
 
   annotator.addHandler(yuma.events.EventType.POPUP_HIDDEN, function() {
