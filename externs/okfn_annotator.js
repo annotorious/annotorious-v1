@@ -12,6 +12,8 @@ Annotator.viewer.element = {};
 
 Annotator.viewer.on = function(type, handler){};
 
+Annotator.viewer.isShown = function(){};
+
 Annotator.showViewer = function(annotation, position){};
 
 Annotator.clearViewerHideTimer = function(){};

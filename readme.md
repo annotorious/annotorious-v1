@@ -56,7 +56,7 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 * Implement Point and Polygon shape selection
 * Implement freehand draw selection
 * Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
-* And can someone please make sure the MOUSE_OVER/OUT_OF_ANNOTATABLE_MEDIA events fire properly?
+* ~~Make MOUSE_OVER/OUT_OF_ANNOTATABLE_MEDIA events fire properly~~ __DONE__
 * ~~Refactor 'Popup' into separate class~~ __DONE__
 * ~~Clean up the OKFN Annotator plugin implementation (needs to work in ADVANCED COMPILATION mode~~ __DONE__
 * ~~Support lazy loading of image annotation overlays~~ __DONE__

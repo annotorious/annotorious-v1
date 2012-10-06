@@ -39,17 +39,16 @@ yuma.modules.image.ImageAnnotator = function(image) {
     { width:image.width, height:image.height });
   goog.style.showElement(this._editCanvas, false); 
   goog.dom.appendChild(annotationLayer, this._editCanvas);  
- 
-  // TODO correctly fire
-  //  yuma.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA,
-  //  yuma.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA,
-  
+
+  var self = this;  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function() { 
+    self._eventBroker.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
     goog.style.setOpacity(viewCanvas, 1.0); 
     goog.style.setOpacity(hint, 0.8); 
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function() { 
+    self._eventBroker.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
     goog.style.setOpacity(viewCanvas, 0.4); 
     goog.style.setOpacity(hint, 0);
   });
@@ -60,7 +59,6 @@ yuma.modules.image.ImageAnnotator = function(image) {
   /** @private **/
   this._selector = new yuma.selection.DragSelector(this._editCanvas, this);
 
-  var self = this;
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
     goog.style.showElement(self._editCanvas, true);
     self._selector.startSelection(event.offsetX, event.offsetY);
