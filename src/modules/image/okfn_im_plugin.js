@@ -16,9 +16,8 @@ goog.require('goog.style');
  * @constructor
  */
 yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
-  /** Base left/top offset of the annotatable DOM element **/
-  var baseOffset = yuma.modules.getOffset(okfnAnnotator.element); 
-
+  var baseOffset = yuma.modules.getOffset(okfnAnnotator.element[0]);
+    
   var eventBroker = new yuma.events.EventBroker(this);
   
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
@@ -81,10 +80,10 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
 
     okfnAnnotator.publish('beforeAnnotationCreated', annotation);
 	
+    var imgOffset = yuma.modules.getOffset(image);
     var geometry = event.shape.geometry; 
-    var imgOffset = yuma.modules.getOffset(image);  
     var x = geometry.x + imgOffset.left - baseOffset.left + 16;
-    var y = geometry.y + geometry.height + imgOffset.top - baseOffset.top + window.pageYOffset + 5;
+    var y = geometry.y + geometry.height + imgOffset.top + window.pageYOffset - baseOffset.top + 5;
     
     okfnAnnotator.showEditor(annotation, {top: window.pageYOffset - baseOffset.top, left: 0});
     goog.style.setPosition(okfnAnnotator.editor.element[0], x, y);	
@@ -189,6 +188,7 @@ yuma.okfn.Popup.prototype.clearHideTimer = function() {
  * @param {number} y coordiante (relative to the image)
  */
 yuma.okfn.Popup.prototype.show = function(annotation, x, y) {
+  var baseOffset = yuma.modules.getOffset(this._okfnAnnotator.element); 
   var imgOffset = yuma.modules.getOffset(this._image); 
 
   this._okfnAnnotator.showViewer([annotation], {top: window.pageYOffset - this._baseOffset.top , left: 0});   
