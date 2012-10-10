@@ -16,7 +16,7 @@ goog.require('goog.style');
  * @constructor
  */
 yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
-  var baseOffset = yuma.modules.getOffset(okfnAnnotator.element[0]);
+  var baseOffset = yuma.modules.getOffset(okfnAnnotator.element[0].firstChild);
     
   var eventBroker = new yuma.events.EventBroker(this);
   
