@@ -14,7 +14,7 @@ Want to help out? There are many ways you can contribute!
 * __Found a bug?__ [Drop us a line](http://groups.google.com/group/yuma-annotation) or post an issue on our [issue tracker](image-annotation-js/issues).
 * __Want to improve our documentation?__ We'd really appreciate an extra hand [on our Wiki](image-annotation-js/wiki)!
 * __Design-minded?__ Our tool could use some style and CSS-wizardry. [Get in touch](http://groups.google.com/group/yuma-annotation)!
-* __JavaScript-savvy?__ We're always looking for a code contributions! Check the [developer section on our Wiki](image-annotation-js/wiki/Developers).
+* __JavaScript-savvy?__ We're always looking for fellow coders! Check the [developer section on our Wiki](image-annotation-js/wiki/Developers).
 * __Last but not least:__ we're still looking for a good name for this tool. Ideas welcome :-)
 
 ## License
