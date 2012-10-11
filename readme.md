@@ -6,7 +6,7 @@ http://rsimon.github.com/yuma2/index_okfn.html (Annotator plugin)
 
 ## Getting Started
 
-Instructions on getting started using this tool in your own Web pages are [on the Wiki](wiki/Getting-Started).
+Instructions on getting started using this tool in your own Web pages are [on the Wiki](image-annotation-js/wiki/Getting-Started).
 
 ## Developing
 
