@@ -1,3 +1,5 @@
+# image-annotation-js
+
 This is an effort to port the [yuma.js](http://yuma-js.github.com) image annotation toolkit to JavaScript, improving things as we go along. Any help appreciated! I'm putting up live demos of the intermediate state as we progress:
 
 http://rsimon.github.com/yuma2
@@ -7,6 +9,17 @@ http://rsimon.github.com/yuma2/index_okfn.html (Annotator plugin)
 ## Getting Started
 
 Instructions on getting started using this tool in your own Web pages are [on the Wiki](image-annotation-js/wiki/Getting-Started).
+
+## Getting Involved
+
+Want to help out? There are many ways you can contribute!
+
+* Using our tool somewhere? Give us a shout and let us know your feedback via [our Google Group](http://groups.google.com/group/yuma-annotation).
+* Found a bug? [Drop us a line](http://groups.google.com/group/yuma-annotation) or post an issue on our [issue tracker](issues).
+* Unsatisfied with our documentation? 
+* Design-minded? Our tool could really use some style and CSS-wizardry. [Get in touch](http://groups.google.com/group/yuma-annotation)!
+* JavaScript-savvy? We're always looking for a co-developers! Check the [developer section on our Wiki](wiki/Developers).
+* Last but not least: we're still looking for a good name for our tool. Ideas welcome :-)
 
 ## Developing
 
@@ -20,7 +33,7 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 ## TODOs (almost in order of priority...)
 
 * __Find a decent name for this tool!__
-* Attach storage according to "OKFN Annotator Store":http://github.com/okfn/annotator/wiki/Storage protocol
+* Attach storage according to [OKFN Annotator Store](http://github.com/okfn/annotator/wiki/Storage protocol)
 * Expose the most relevant JS methods to the outside world: addAnnotation, removeAnnotation, addHandler, new ImageAnnotator(image)
 * Should we add the stylesheet via JS? Would make Yuma integration a 1-liner!
 * Make Yuma2 work on pages with dynamically loaded images (e.g. image carousels)
@@ -30,7 +43,7 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 * Make soft fade effects work on Internet Explorer
 * Implement Point and Polygon shape selection
 * Implement freehand draw selection
-* Add support for the "toponym selection tool":http://github.com/rsimon/toponymotator
+* Add support for the [toponym selection tool](http://github.com/rsimon/toponymotator)
 * ~~Make MOUSE_OVER/OUT_OF_ANNOTATABLE_MEDIA events fire properly~~ __DONE__
 * ~~Refactor 'Popup' into separate class~~ __DONE__
 * ~~Clean up the OKFN Annotator plugin implementation (needs to work in ADVANCED COMPILATION mode~~ __DONE__
