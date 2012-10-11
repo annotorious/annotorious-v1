@@ -4,34 +4,9 @@ http://rsimon.github.com/yuma2
 
 http://rsimon.github.com/yuma2/index_okfn.html (Annotator plugin)
 
-## Using
+## Getting Started
 
-To make images on your Website annotatable with this library, follow these steps:
-
-__Include the library JavaScript__ file in the &lt;head&gt; of your HTML page
-
-    <head>
-      ...
-      <script type="text/javascript" src="yuma2.min.js"></script>
-      ...
-    </head>
-
-__Include the library CSS stylesheet__ in the &lt;head&gt; of your HTML page
-
-    <head>
-      ...
-      <link rel="stylesheet" type="text/css" href="css/yuma2.css" />
-      <script type="text/javascript" src="yuma2.min.js"></script>
-      ...
-    </head>  
-
-__Mark the images to be annotatable__ using the 'annotatable' CSS class.
-
-    <body>
-      ...
-      <img class="annotatable" src="myimage.jpg">
-      ...
-    </body>
+Instructions on getting started using this tool in your own Web pages are [on the Wiki](wiki/Getting-Started).
 
 ## Developing
 
