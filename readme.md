@@ -10,12 +10,12 @@ Instructions on getting started using this tool on your own Web pages are [on th
 
 Want to help out? There are many ways you can contribute!
 
-* __Using our tool somewhere?__ Give us a shout and let us know your feedback via [our Google Group](http://groups.google.com/group/yuma-annotation).
-* __Found a bug?__ [Drop us a line](http://groups.google.com/group/yuma-annotation) or post an issue on our [issue tracker](image-annotation-js/issues).
-* __Want to improve our documentation?__ We'd really appreciate an extra hand [on our Wiki](image-annotation-js/wiki)!
-* __Design-minded?__ Our tool could use some style and CSS-wizardry. [Get in touch](http://groups.google.com/group/yuma-annotation)!
-* __JavaScript-savvy?__ We're always looking for fellow coders! Check the [developer section on our Wiki](image-annotation-js/wiki/Developers).
-* __Last but not least:__ we're still looking for a good name for this tool. Ideas welcome :-)
+* Using our tool? Give us a shout and let us know your feedback via [our Google Group](http://groups.google.com/group/yuma-annotation).
+* Found a bug? [Drop us a line](http://groups.google.com/group/yuma-annotation) or post an issue on our [issue tracker](image-annotation-js/issues).
+* Want to improve our documentation? We'd really appreciate an extra hand [on our Wiki](image-annotation-js/wiki)!
+* Design-minded? Our tool could use some style and CSS-wizardry. [Get in touch](http://groups.google.com/group/yuma-annotation)!
+* JavaScript-savvy? We're always looking for fellow coders! Check the [developer section on our Wiki](image-annotation-js/wiki/Developers).
+* Last but not least: we're still looking for a good name for this tool. Ideas welcome :-)
 
 ## License
 
