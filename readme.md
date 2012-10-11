@@ -4,7 +4,7 @@ This is an effort to port the [yuma.js](http://yuma-js.github.com) image annotat
 
 ## Getting Started
 
-Instructions on getting started using this tool on your own Web pages are [on the Wiki](image-annotation-js/wiki/Getting-Started). Instructions on using the tool as a plugin to the [Annotator](http://okfnlabs.org/annotator/) Web annotation system are [here](image-annotation-js/wiki/Getting-Started-OKFN).
+Instructions on getting started using this tool on your own Web pages are [on the Wiki](image-annotation-js/wiki/Getting-Started). Instructions on using the tool as a plugin to the [Annotator](http://okfnlabs.org/annotator/) Web annotation system are [here](image-annotation-js/wiki/Annotator-Plugin).
 
 ## Getting Involved
 
