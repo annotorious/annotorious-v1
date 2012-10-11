@@ -101,6 +101,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     // TODO find a better solution
     if (annotation.url == image.src) {
       // TODO code duplication -> move into a function
+      var imgOffset = yuma.modules.getOffset(image);
       var geometry = annotation.shape.geometry;
       var x = geometry.x + imgOffset.left - baseOffset.left + 16;
       var y = geometry.y + geometry.height + imgOffset.top - baseOffset.top + window.pageYOffset + 5;
