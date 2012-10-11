@@ -19,5 +19,5 @@ Want to help out? There are many ways you can contribute!
 
 ## License
 
-This tool is licensed under the terms of the [GNU Lesser General Public License (LGPL)](image-annotation-js/blob/master/lgpl-3.0.txt). In plain English, this means you can grab, use and re-distribute our tool for free, for commercial or non-commercial purposes, with no restrictions whatsoever. __However__: should you modify the code of the tool itself, these __modifications__ need to be Open Source, too. In short: feel free to use this tool wherever or however you like without restrictions. But if you fix a bug, or add a cool feature, be sure to give back to the community.
+This tool is licensed under the terms of the [GNU Lesser General Public License (LGPL)](image-annotation-js/blob/master/lgpl-3.0.txt). In plain English, this means you can grab, use and re-distribute our tool for free, for commercial or non-commercial purposes, with no restrictions whatsoever. __However__: should you modify the code of the tool itself, these __modifications__ need to be under the same license. In short: feel free to use this tool wherever or however you like without restrictions. But if you fix a bug, or add a cool feature, be sure to give back to the community.
 
