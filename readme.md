@@ -1,11 +1,10 @@
 # image-annotation-js
 
-This is an effort to port the [yuma.js](http://yuma-js.github.com) image annotation toolkit to JavaScript, improving things as we go along. Live demos of the current state of our tool are available [here](http://yuma-js.github.com/yuma2.html) and [here](http://yuma-js.github.com/okfn_plugin.html)
+This is an effort to port the [yuma.js](http://yuma-js.github.com) image annotation toolkit to JavaScript, improving things as we go along. Online __demos__ are available __[here](http://yuma-js.github.com/yuma2.html)__ and __[here](http://yuma-js.github.com/okfn_plugin.html)__.
 
 ## Getting Started
 
-Instructions on getting started using this tool in your own Web pages are [on the Wiki](image-annotation-js/wiki/Getting-Started). Instructions on using the tool as a plugin to the [Annotator](http://okfnlabs.org/annotator/) Web annotation system are [here](image-annotation-js/wiki/Getting-Started-OKFN).
-
+Instructions on getting started using this tool on your own Web pages are [on the Wiki](image-annotation-js/wiki/Getting-Started). Instructions on using the tool as a plugin to the [Annotator](http://okfnlabs.org/annotator/) Web annotation system are [here](image-annotation-js/wiki/Getting-Started-OKFN).
 
 ## Getting Involved
 
