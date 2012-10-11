@@ -39,15 +39,19 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.style.showElement(editCanvas, false); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
   
+  var editorIsShown = function() {
+    return !goog.dom.classes.has(okfnAnnotator.editor.element[0], 'annotator-hide');  
+  }
+  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function() {
     goog.dom.classes.add(annotationLayer, 'hover');
-    if (!popup.isShown())
+    if (!(popup.isShown() || editorIsShown()))
       eventBroker.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function() {
     goog.dom.classes.remove(annotationLayer, 'hover'); 
-    if (!popup.isShown())
+    if (!(popup.isShown() || editorIsShown()))
       eventBroker.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
   });
  
