@@ -73,7 +73,5 @@ We're using Google's [Closure Tools](http://developers.google.com/closure/). I r
 
 ## Licensing
 
-This tool is licensed under the terms of the __GNU Lesser General Public License (LGPL)__. In plain English,
-this means you can use and re-distribute our tool for free, in non-commercial as well commercial products, with
-no restrictions or implications on the license of your own software. __However__: should you modify the code of the tool itself, these __modifications__ need to be Open Source, too. In short: feel free to use this tool wherever or however you want without restrictions. But if you fix a bug, add a cool feature, etc. be sure to give back to the community.
+This tool is licensed under the terms of the __GNU Lesser General Public License (LGPL)__. In plain English, this means you can grab, use and re-distribute our tool for free, for commercial or non-commercial purposes, with no restrictions whatsoever. __However__: should you modify the code of the tool itself, these __modifications__ need to be Open Source, too. In short: feel free to use this tool wherever or however you like without restrictions. But if you fix a bug, or add a cool feature, be sure to give back to the community.
 
