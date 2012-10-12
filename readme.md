@@ -1,6 +1,6 @@
 # image-annotation-js
 
-This is an effort to port the [yuma.js](http://yuma-js.github.com) image annotation toolkit to JavaScript, improving things as we go along. Online demos are available [here (for the standalone version)](http://yuma-js.github.com/yuma2.html) and [here (for the Annotator plugin)](http://yuma-js.github.com/okfn_plugin.html).
+This is an Open Source effort to port the [yuma.js](http://yuma-js.github.com) image annotation toolkit to JavaScript, improving things as we go along. Online demos are available [here (for the standalone version)](http://yuma-js.github.com/yuma2.html) and [here (for the Annotator plugin)](http://yuma-js.github.com/okfn_plugin.html).
 
 ## Getting Started
 
