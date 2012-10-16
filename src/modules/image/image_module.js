@@ -34,10 +34,6 @@ yuma.modules.image.ImageModule = function() {
     else
       goog.events.unlistenByKey(key);
   });
-  
-  // Instantiate the storage connector
-  // TODO make this a plugin, rather than a hardcoded dependency
-  new yuma.storage.YumaStorage(this);
 }
 
 /**
@@ -78,8 +74,12 @@ yuma.modules.image.ImageModule.prototype.addHandler = function(type, handler) {
  * @param {yuma.annotation.Annotation} the annotation
  * @param {string} src the src URL of the image
  */
-yuma.modules.image.ImageModule.prototype.addAnnotation = function(annotation, src) {
-  // TODO implement
+yuma.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
+  // TODO make this more efficient!
+  goog.array.forEach(this._annotators, function(annotator) {
+    if (annotator.getImage().src == annotation.src)
+      annotator.addAnnotation(annotation);
+  });
 }
 
 /**

@@ -27,3 +27,4 @@ Annotator.editor.show = function(){};
 Annotator.showEditor = function(annotation, position){};
 
 
+

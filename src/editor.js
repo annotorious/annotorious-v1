@@ -21,6 +21,9 @@ goog.require('goog.style');
 yuma.editor.Editor = function(selection, annotator, parentEl, px, py, opt_annotation) {
   /** @private **/
   this._selection = selection;
+  
+  /** @private **/
+  this._imgSrc = annotator.getImage().src;
 
   /** @private **/
   this._div = goog.soy.renderAsElement(yuma.templates.editform);
@@ -36,12 +39,14 @@ yuma.editor.Editor = function(selection, annotator, parentEl, px, py, opt_annota
 
   var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function(event) {
+    event.preventDefault();
     annotator.fireEvent(yuma.events.EventType.ANNOTATION_EDIT_CANCEL, 
       { mouseEvent: event, annotation: opt_annotation });
     self.close();
   });
 
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function(event) {
+    event.preventDefault();
     annotator.fireEvent(yuma.events.EventType.ANNOTATION_EDIT_SAVE, 
       { mouseEvent: event, annotation: self.getAnnotation() });
     self.close();
@@ -75,5 +80,5 @@ yuma.editor.Editor.prototype.close = function() {
  * @return {yuma.model.Annotation} the annotation
  */
 yuma.editor.Editor.prototype.getAnnotation = function() {
-  return new yuma.annotation.Annotation(this._textarea.value, this._selection.getShape()); 
+  return new yuma.annotation.Annotation(this._imgSrc, this._textarea.value, this._selection.getShape()); 
 }

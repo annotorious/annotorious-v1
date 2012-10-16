@@ -27,7 +27,7 @@
     "."
   ],
   "externs": [
-    
+    "externs/annotation.js"
   ],
   "mode": "ADVANCED", // "RAW" or "ADVANCED"
   "level": "DEFAULT" // "DEFAULT" or "VERBOSE"
