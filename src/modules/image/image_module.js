@@ -11,6 +11,14 @@ goog.require('yuma.modules');
  * @constructor
  */
 yuma.modules.image.ImageModule = function() {
+  var self = this;
+  yuma.modules.addOnLoadHandler(function() { self._init(); });
+  
+  /** @private **/
+  this._plugins = [];
+}
+  
+yuma.modules.image.ImageModule.prototype._init = function() {
   /** @private **/
   this._allImages = goog.dom.query('img.annotatable', document);
   
@@ -33,6 +41,11 @@ yuma.modules.image.ImageModule = function() {
       self._lazyLoad();
     else
       goog.events.unlistenByKey(key);
+  });
+  
+  // Initialize plugins
+  goog.array.forEach(this._plugins, function(plugin) {
+    plugin.initPlugin(self);
   });
 }
 
@@ -91,7 +104,10 @@ yuma.modules.image.ImageModule.prototype.removeAnnotation = function(annotation,
   // TODO implement
 }
 
-yuma.modules.addOnLoadHandler(function() {
-  new yuma.modules.image.ImageModule();
-});
+// TODO these need to go into the base class
+yuma.modules.image.ImageModule.prototype['addPlugin'] = function(pluginName, opt_config_options) {
+  this._plugins.push(new yuma.plugin[pluginName](opt_config_options));
+}
+
+window['YUMA'] = new yuma.modules.image.ImageModule();
 
