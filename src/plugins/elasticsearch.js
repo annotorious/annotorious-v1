@@ -1,15 +1,13 @@
 goog.provide('yuma.plugin');
 
 goog.require('goog.array');
-goog.require('goog.json');
 goog.require('goog.net.XhrIo');
 
 /**
  * A simple storage connector to the ElasticSearch REST interface.
- *
- * TODO do we need a common yuma.modules.Module base class?
+ * Note: work in progress!
  * 
- * @param {yuma.modules.image.ImageModule} module the module
+ * @param {yuma.modules.Module} module the module
  * @constructor
  */
 yuma.plugin['ElasticSearchStorage'] = function(opt_config_options) {
@@ -20,10 +18,10 @@ yuma.plugin['ElasticSearchStorage'] = function(opt_config_options) {
 yuma.plugin['ElasticSearchStorage'].prototype.initPlugin = function(module) {
   var self = this;
   module.addHandler(yuma.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
-    self.create(event.annotation);
+    self._create(event.annotation);
   });
   
-  this.loadAnnotations(module);  
+  this._loadAnnotations(module);  
 }
 
 /**
@@ -35,7 +33,10 @@ yuma.plugin['ElasticSearchStorage'].prototype._showError = function(error) {
   console.log(error);
 }
 
-yuma.plugin['ElasticSearchStorage'].prototype.loadAnnotations = function(module) {
+/**
+ * @private
+ */
+yuma.plugin['ElasticSearchStorage'].prototype._loadAnnotations = function(module) {
   // TODO need to restrict search to the URL of the annotated
   
   var self = this;
@@ -51,9 +52,13 @@ yuma.plugin['ElasticSearchStorage'].prototype.loadAnnotations = function(module)
   });
 }
 
-yuma.plugin['ElasticSearchStorage'].prototype.create = function(annotation) {
+/**
+ * @private
+ */
+yuma.plugin['ElasticSearchStorage'].prototype._create = function(annotation) {
+  console.log(annotation);
   var self = this;
   goog.net.XhrIo.send(this._STORE_URI + 'annotation/', function(response){
-    
+    // TODO error handling if response status != 201 (CREATED)
   }, 'POST', goog.json.serialize(annotation));
 }

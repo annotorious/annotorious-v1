@@ -1,30 +1,41 @@
 /**
- * Externs definition for the OKFN Annotator class
+ * Externs definition for the OKFN Annotator class.
  */
+var Annotator = {
+  /** Publish an event **/
+  publish : function(type, event) {},
+    
+  /** Subscribe to an event **/
+  subscribe : function(type, handler) {},
+    
+  /** Show the viewer popup **/
+  showViewer : function(annotation, position) {},
 
-var Annotator = {}
+  /** Start the viewer hide timer **/
+  startViewerHideTimer : function() {},
+    
+  /** Clear/stop the viewer hide timer **/
+  clearViewerHideTimer : function() {},
 
-Annotator.publish = function(type, event){};
+  /** Viewer object **/   
+  viewer : {
+    element : {},
+    isShown : function() {},
+    on : function(type, handler) {}
+  },
+  
+  /** Show the editor widget **/  
+  showEditor : function(annotation, position) {},
+  
+  /** Editor object **/  
+  editor : {
+    element : {},
+    show : function() {}
+  }
+}
 
-Annotator.subscribe = function(type, handler){};
 
-Annotator.viewer.element = {};
 
-Annotator.viewer.on = function(type, handler){};
-
-Annotator.viewer.isShown = function(){};
-
-Annotator.showViewer = function(annotation, position){};
-
-Annotator.clearViewerHideTimer = function(){};
-
-Annotator.startViewerHideTimer = function(){};
-
-Annotator.editor.element = {};
-
-Annotator.editor.show = function(){};
-
-Annotator.showEditor = function(annotation, position){};
 
 
 

@@ -13,7 +13,6 @@
     "src/modules/image/im_viewer.js",
     "src/modules/image/image_module.js",
     "src/modules/modules.js",
-    "src/plugins/elasticsearch.js",
     "src/selection/drag_selector.js",   
     "src/annotation.js",    
     "src/events.js",
@@ -21,7 +20,9 @@
     "src/popup.js",
 
     "templates/annotator_templates.soy",
-    "templates/image_templates.soy"
+    "templates/image_templates.soy",
+    
+    "src/plugins/elasticsearch.js" // Note: plugin produces approx. 12kB extra!
   ],
   "paths": [
     "."

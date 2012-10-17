@@ -10,16 +10,11 @@ goog.provide('yuma.annotation');
  */
 yuma.annotation.Annotation = function(src, text, shape) {
   this.src = src;
-  
-  // TODO it seems that dead-code removal kills this property!
-  this.context = document.URL;
-
   this.text = text;
   this.shape = shape;
+  // Note: we're useing this notation this time in order to avoid dead code removal!
+  this['context'] = document.URL;
 }
-
-// TODO find a cleaner way to cheat dead-code-removal
-yuma.annotation.Annotation.prototype.getContext = function() { return this.context }
 
 /**
  * A shape, defining a 2D annotated area.
