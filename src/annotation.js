@@ -12,7 +12,7 @@ yuma.annotation.Annotation = function(src, text, shape) {
   this.src = src;
   this.text = text;
   this.shape = shape;
-  // Note: we're useing this notation this time in order to avoid dead code removal!
+  // Note: we're using this notation this time in order to avoid dead code removal!
   this['context'] = document.URL;
 }
 
