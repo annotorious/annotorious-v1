@@ -1,4 +1,4 @@
-goog.provide('yuma.storage');
+goog.provide('yuma.plugin');
 
 goog.require('goog.array');
 goog.require('goog.json');
@@ -12,7 +12,7 @@ goog.require('goog.net.XhrIo');
  * @param {yuma.modules.image.ImageModule} module the module
  * @constructor
  */
-yuma.storage.ElasticSearchStorage = function(module) {
+yuma.plugin.ElasticSearchStorage = function(module) {
   /** @private **/
   this._STORE_URI = 'http://localhost:9200/annotations/';
   
@@ -23,17 +23,18 @@ yuma.storage.ElasticSearchStorage = function(module) {
   
   this.loadAnnotations(module);  
 }
+yuma.plugin['ElasticSearchStorage'] = yuma.plugin.ElasticSearchStorage;
 
 /**
  * @private
  */
-yuma.storage.ElasticSearchStorage.prototype._showError = function(error) {
+yuma.plugin.ElasticSearchStorage.prototype._showError = function(error) {
   // TODO proper error handling
   window.alert('ERROR');
   console.log(error);
 }
 
-yuma.storage.ElasticSearchStorage.prototype.loadAnnotations = function(module) {
+yuma.plugin.ElasticSearchStorage.prototype.loadAnnotations = function(module) {
   // TODO need to restrict search to the URL of the annotated
   
   var self = this;
@@ -49,7 +50,7 @@ yuma.storage.ElasticSearchStorage.prototype.loadAnnotations = function(module) {
   });
 }
 
-yuma.storage.ElasticSearchStorage.prototype.create = function(annotation) {
+yuma.plugin.ElasticSearchStorage.prototype.create = function(annotation) {
   var self = this;
   goog.net.XhrIo.send(this._STORE_URI + 'annotation/', function(response){
     

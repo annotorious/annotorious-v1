@@ -17,6 +17,7 @@
     "src/selection/drag_selector.js",   
     "src/annotation.js",    
     "src/events.js",
+    "src/js_api.js",
     "src/editor.js",
     "src/popup.js",
 
@@ -29,6 +30,6 @@
   "externs": [
     "externs/annotation.js"
   ],
-  "mode": "ADVANCED", // "RAW" or "ADVANCED"
+  "mode": "RAW", // "RAW" or "ADVANCED"
   "level": "DEFAULT" // "DEFAULT" or "VERBOSE"
 }
