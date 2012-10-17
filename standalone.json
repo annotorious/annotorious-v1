@@ -13,11 +13,11 @@
     "src/modules/image/im_viewer.js",
     "src/modules/image/image_module.js",
     "src/modules/modules.js",
+    "src/plugins/elasticsearch.js",
     "src/selection/drag_selector.js",   
     "src/annotation.js",    
     "src/events.js",
     "src/editor.js",
-    "src/storage.js",
     "src/popup.js",
 
     "templates/annotator_templates.soy",
