@@ -13,7 +13,7 @@ Want to help out? There are many ways you can contribute!
 * Using our tool? Give us a shout and let us know your feedback via [our Google Group](http://groups.google.com/group/annotorious).
 * Found a bug? [Drop us a line](http://groups.google.com/group/annotorious) or post an issue on our [issue tracker](image-annotation-js/issues).
 * Want to improve our documentation? We'd really appreciate an extra hand [on our Wiki](image-annotation-js/wiki)!
-* Design-minded? Our tool (as well as [our Website](http://yuma-js.github.com)) could use some style and CSS-wizardry. [Get in touch](http://groups.google.com/group/yuma-annotation)!
+* Design-minded? Our tool (as well as [our Website](http://yuma-js.github.com)) could use some style and CSS-wizardry. [Get in touch](http://groups.google.com/group/annotorious)!
 * JavaScript-savvy? We're always looking for fellow coders! Check the [developer section on our Wiki](image-annotation-js/wiki/Developers).
 * Last but not least: we're looking for a Logo! Ideas welcome :-)
 
