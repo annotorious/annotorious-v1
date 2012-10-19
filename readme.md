@@ -15,7 +15,7 @@ Want to help out? There are many ways you can contribute!
 * Want to improve our documentation? We'd really appreciate an extra hand [on our Wiki](image-annotation-js/wiki)!
 * Design-minded? Our tool (as well as [our Website](http://yuma-js.github.com)) could use some style and CSS-wizardry. [Get in touch](http://groups.google.com/group/yuma-annotation)!
 * JavaScript-savvy? We're always looking for fellow coders! Check the [developer section on our Wiki](image-annotation-js/wiki/Developers).
-* Last but not least: we're still looking for a good name for this tool. Ideas welcome :-)
+* Last but not least: we're looking for a Logo. Ideas welcome :-)
 
 ## License
 
