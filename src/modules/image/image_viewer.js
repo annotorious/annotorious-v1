@@ -173,11 +173,11 @@ yuma.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidt
   this._g2d.lineWidth = lineWidth;
 
   var shape = annotation.shape;
-  if (shape.type == yuma.annotation.ShapeType.POINT) {
+  if (shape.type == annotorious.annotation.ShapeType.POINT) {
     // TODO implement
-  } else if (shape.type == yuma.annotation.ShapeType.POLYGON) {
+  } else if (shape.type == annotorious.annotation.ShapeType.POLYGON) {
     // TODO implement
-  } else if (shape.type == yuma.annotation.ShapeType.RECTANGLE) {
+  } else if (shape.type == annotorious.annotation.ShapeType.RECTANGLE) {
     var rect = shape.geometry;
     this._g2d.strokeStyle = '#000000';
     this._g2d.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);

@@ -52,7 +52,7 @@ yuma.selection.DragSelector = function(canvas, annotator) {
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
     self._enabled = false;    
     self._annotator.fireEvent(yuma.events.EventType.SELECTION_COMPLETED,
-      { mouseEvent: event, shape: new yuma.annotation.Shape(yuma.annotation.ShapeType.RECTANGLE, self._selection) });
+      { mouseEvent: event, shape: new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, self._selection) });
   });
 }
 
@@ -83,5 +83,5 @@ yuma.selection.DragSelector.prototype.stopSelection = function() {
  * @return {yuma.annotation.Shape} the shape
  */
 yuma.selection.DragSelector.prototype.getShape = function() {
-  return new yuma.annotation.Shape(yuma.annotation.ShapeType.RECTANGLE, this._selection)
+  return new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, this._selection)
 }

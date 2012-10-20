@@ -1,4 +1,4 @@
-goog.provide('yuma.annotation');
+goog.provide('annotorious.annotation');
 
 /**
  * A 'domain class' implementation of the annotation interface (as defined in the externs).
@@ -8,7 +8,7 @@ goog.provide('yuma.annotation');
  * @implements {Annotation}
  * @constructor
  */
-yuma.annotation.Annotation = function(src, text, shape) {
+annotorious.annotation.Annotation = function(src, text, shape) {
   this.src = src;
   this.text = text;
   this.shape = shape;
@@ -22,7 +22,7 @@ yuma.annotation.Annotation = function(src, text, shape) {
  * @param {yuma.model.geom.Point | yuma.model.geom.Rectangle | yuma.model.geom.Polygon} geometry the geometry
  * @constructor
  */
-yuma.annotation.Shape = function(type, geometry) {
+annotorious.annotation.Shape = function(type, geometry) {
   this.type = type
   this.geometry = geometry;
 }
@@ -31,7 +31,7 @@ yuma.annotation.Shape = function(type, geometry) {
  * Possible shape types
  * @enum {string}
  */
-yuma.annotation.ShapeType = {
+annotorious.annotation.ShapeType = {
   POINT: "Point",
   RECTANGLE: "Rectangle",
   POLYGON: "Polygon"

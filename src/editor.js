@@ -80,5 +80,5 @@ yuma.editor.Editor.prototype.close = function() {
  * @return {yuma.model.Annotation} the annotation
  */
 yuma.editor.Editor.prototype.getAnnotation = function() {
-  return new yuma.annotation.Annotation(this._imgSrc, this._textarea.value, this._selection.getShape()); 
+  return new annotorious.annotation.Annotation(this._imgSrc, this._textarea.value, this._selection.getShape()); 
 }

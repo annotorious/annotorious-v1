@@ -1,4 +1,4 @@
-goog.provide('yuma.plugin');
+goog.provide('annotorious.plugin');
 
 goog.require('goog.array');
 goog.require('goog.net.XhrIo');
@@ -10,12 +10,12 @@ goog.require('goog.net.XhrIo');
  * @param {yuma.modules.Module} module the module
  * @constructor
  */
-yuma.plugin['ElasticSearchStorage'] = function(opt_config_options) {
+annotorious.plugin['ElasticSearchStorage'] = function(opt_config_options) {
   /** @private **/
   this._STORE_URI = opt_config_options['base_url'];
 }
 
-yuma.plugin['ElasticSearchStorage'].prototype.initPlugin = function(module) {
+annotorious.plugin['ElasticSearchStorage'].prototype.initPlugin = function(module) {
   var self = this;
   module.addHandler(yuma.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
     self._create(event.annotation);
@@ -31,7 +31,7 @@ yuma.plugin['ElasticSearchStorage'].prototype.initPlugin = function(module) {
 /**
  * @private
  */
-yuma.plugin['ElasticSearchStorage'].prototype._showError = function(error) {
+annotorious.plugin['ElasticSearchStorage'].prototype._showError = function(error) {
   // TODO proper error handling
   window.alert('ERROR');
   console.log(error);
@@ -40,7 +40,7 @@ yuma.plugin['ElasticSearchStorage'].prototype._showError = function(error) {
 /**
  * @private
  */
-yuma.plugin['ElasticSearchStorage'].prototype._loadAnnotations = function(module) {
+annotorious.plugin['ElasticSearchStorage'].prototype._loadAnnotations = function(module) {
   // TODO need to restrict search to the URL of the annotated
   
   var self = this;
@@ -61,7 +61,7 @@ yuma.plugin['ElasticSearchStorage'].prototype._loadAnnotations = function(module
 /**
  * @private
  */
-yuma.plugin['ElasticSearchStorage'].prototype._create = function(annotation) {
+annotorious.plugin['ElasticSearchStorage'].prototype._create = function(annotation) {
   var self = this;
   goog.net.XhrIo.send(this._STORE_URI + 'annotation/', function(response) {
     // TODO error handling if response status != 201 (CREATED)
@@ -74,7 +74,7 @@ yuma.plugin['ElasticSearchStorage'].prototype._create = function(annotation) {
 /**
  * @private
  */
-yuma.plugin['ElasticSearchStorage'].prototype._delete = function(annotation) {
+annotorious.plugin['ElasticSearchStorage'].prototype._delete = function(annotation) {
   goog.net.XhrIo.send(this._STORE_URI + 'annotation/' + annotation.id, function(response) {
     // TODO error handling
   }, 'DELETE');  

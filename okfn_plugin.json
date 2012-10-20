@@ -9,16 +9,12 @@
     "src/geometry/point.js",
     "src/geometry/polygon.js",
     "src/geometry/rectangle.js",
-    "src/modules/image/im_viewer.js",
-    "src/modules/image/okfn_im_plugin.js",
-    "src/modules/modules.js",
-
+    "src/modules/image/image_viewer.js",
+    "src/okfn/okfn_im_plugin.js",
     "src/selection/drag_selector.js",
-    "src/annotation.js",
-    "src/editor.js",
+    "src/dom.js",
     "src/events.js",
 
-    "templates/annotator_templates.soy",
     "templates/image_templates.soy"
   ],
   "paths": [

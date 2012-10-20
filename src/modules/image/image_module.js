@@ -1,8 +1,7 @@
-goog.provide('yuma.modules.image.ImageModule');
+goog.provide('annotorious.modules.image.ImageModule');
 
 goog.require('goog.array');
 goog.require('goog.events');
-goog.require('yuma.modules');
 
 /**
  * The Image Module scans the page for images marked with the
@@ -10,15 +9,9 @@ goog.require('yuma.modules');
  * each one.
  * @constructor
  */
-yuma.modules.image.ImageModule = function() {
-  var self = this;
-  yuma.modules.addOnLoadHandler(function() { self._init(); });
+annotorious.modules.image.ImageModule = function() { }
   
-  /** @private **/
-  this._plugins = [];
-}
-  
-yuma.modules.image.ImageModule.prototype._init = function() {
+annotorious.modules.image.ImageModule.prototype.init = function() {
   /** @private **/
   this._allImages = goog.dom.query('img.annotatable', document);
   
@@ -42,20 +35,15 @@ yuma.modules.image.ImageModule.prototype._init = function() {
     else
       goog.events.unlistenByKey(key);
   });
-  
-  // Initialize plugins
-  goog.array.forEach(this._plugins, function(plugin) {
-    plugin.initPlugin(self);
-  });
 }
 
 /**
  * @private
  */
-yuma.modules.image.ImageModule.prototype._lazyLoad = function() {
+annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
   var self = this;
   goog.array.forEach(this._imagesToLoad, function(image) {
-    if (yuma.modules.isInViewport(image)) {
+    if (annotorious.dom.isInViewport(image)) {
       var annotator = new yuma.modules.image.ImageAnnotator(image);
       
       // Attach handlers that are already registered
@@ -74,7 +62,7 @@ yuma.modules.image.ImageModule.prototype._lazyLoad = function() {
  * @param {yuma.events.EventType} type the event type
  * @param {function} handler the handler function
  */
-yuma.modules.image.ImageModule.prototype.addHandler = function(type, handler) {
+annotorious.modules.image.ImageModule.prototype.addHandler = function(type, handler) {
   goog.array.forEach(this._annotators, function(annotator, idx, array) {
     annotator.addHandler(type, handler);
   });
@@ -87,7 +75,7 @@ yuma.modules.image.ImageModule.prototype.addHandler = function(type, handler) {
  * @param {yuma.annotation.Annotation} the annotation
  * @param {string} src the src URL of the image
  */
-yuma.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
+annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
   // TODO make this more efficient!
   goog.array.forEach(this._annotators, function(annotator) {
     if (annotator.getImage().src == annotation.src)
@@ -100,14 +88,6 @@ yuma.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
  * @param {yuma.annotation.Annotation} annotation the annotation
  * @param {string} src the src URL of the image
  */
-yuma.modules.image.ImageModule.prototype.removeAnnotation = function(annotation, src) {
+annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(annotation, src) {
   // TODO implement
 }
-
-// TODO these need to go into the base class
-yuma.modules.image.ImageModule.prototype['addPlugin'] = function(pluginName, opt_config_options) {
-  this._plugins.push(new yuma.plugin[pluginName](opt_config_options));
-}
-
-window['YUMA'] = new yuma.modules.image.ImageModule();
-

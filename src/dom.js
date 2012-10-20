@@ -1,11 +1,11 @@
-goog.provide('yuma.modules');
+goog.provide('annotorious.dom');
 
 /**
  * Utility function that computes the absolute offset
  * of a DOM element relative to the document.
  * @param {element} el the DOM element
  */
-yuma.modules.getOffset = function(el) {
+annotorious.dom.getOffset = function(el) {
   var _x = 0;
   var _y = 0;
   
@@ -23,7 +23,7 @@ yuma.modules.getOffset = function(el) {
  * Cf. http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
  * @param {element} element the DOM element to check for visibility
  */
-yuma.modules.isInViewport = function(element) {
+annotorious.dom.isInViewport = function(element) {
   var top = element.offsetTop;
   var left = element.offsetLeft;
   var width = element.offsetWidth;
@@ -48,7 +48,7 @@ yuma.modules.isInViewport = function(element) {
  * to window.onload, without overwriting existing ones.
  * @param {function} fn the handler function to add
  */
-yuma.modules.addOnLoadHandler = function(fn) {
+annotorious.dom.addOnLoadHandler = function(fn) {
   if (typeof window.onload == 'function') {
     var current = window.onload;
     window.onload = function() {
@@ -59,3 +59,4 @@ yuma.modules.addOnLoadHandler = function(fn) {
     window.onload = fn;
   }   
 }
+
