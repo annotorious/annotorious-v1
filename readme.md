@@ -10,7 +10,7 @@ Instructions on getting started using Annotorious on your own Web pages are [on 
 
 Want to help out? There are many ways you can contribute!
 
-* Using Annotorious? Be sure to give us a shout and let us know your feedback via [our Google Group](http://groups.google.com/group/annotorious) or [in private](mailto:rainer.simon@ait.ac.at).
+* Using Annotorious? Be sure to give us a shout and let us know your feedback via [our Google Group](http://groups.google.com/group/annotorious) or [personally](mailto:rainer.simon@ait.ac.at).
 * Found a bug? [Drop us a line](http://groups.google.com/group/annotorious) or post an issue on our [issue tracker](image-annotation-js/issues).
 * Want to improve our documentation? We'd really appreciate an extra hand [on our Wiki](image-annotation-js/wiki)!
 * Design-minded? Annotorious could use some style and CSS-wizardry. [Get in touch](http://groups.google.com/group/annotorious)!
