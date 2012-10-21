@@ -15,10 +15,10 @@ goog.require('goog.style');
  * @param {Object} okfnAnnotator reference to the OKFN Annotator instance
  * @constructor
  */
-yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
-  var baseOffset = yuma.modules.getOffset(okfnAnnotator.element[0].firstChild);
+annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
+  var baseOffset = annotorious.dom.getOffset(okfnAnnotator.element[0].firstChild);
     
-  var eventBroker = new yuma.events.EventBroker(this);
+  var eventBroker = new annotorious.events.EventBroker(this);
   
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
@@ -26,15 +26,15 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.dom.replaceNode(annotationLayer, image);
   goog.dom.appendChild(annotationLayer, image);
     
-  var hint = goog.soy.renderAsElement(yuma.templates.image.hint, {msg:'Click and Drag to Annotate'});
+  var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
   goog.style.setOpacity(hint, 0); 
   goog.dom.appendChild(annotationLayer, hint);
   
-  var viewCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas,
+  var viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:image.width, height:image.height });
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
-  var editCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas, 
+  var editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:image.width, height:image.height });
   goog.style.showElement(editCanvas, false); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
@@ -46,20 +46,20 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function() {
     goog.dom.classes.add(annotationLayer, 'hover');
     if (!(popup.isShown() || editorIsShown()))
-      eventBroker.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function() {
     goog.dom.classes.remove(annotationLayer, 'hover'); 
     if (!(popup.isShown() || editorIsShown()))
-      eventBroker.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
   });
  
-  var popup = new yuma.okfn.Popup(image, eventBroker, okfnAnnotator, baseOffset);
+  var popup = new annotorious.okfn.Popup(image, eventBroker, okfnAnnotator, baseOffset);
 
-  var viewer = new yuma.modules.image.Viewer(viewCanvas, popup, eventBroker);
+  var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, eventBroker);
   
-  var selector = new yuma.selection.DragSelector(editCanvas, eventBroker);
+  var selector = new annotorious.selection.DragSelector(editCanvas, eventBroker);
 
   var self = this;
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
@@ -67,24 +67,24 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     selector.startSelection(event.offsetX, event.offsetY);
   });
 
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA, function() {
+  eventBroker.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA, function() {
     goog.style.setOpacity(viewCanvas, 1.0); 
     goog.style.setOpacity(hint, 0.8); 
   });
   
-  eventBroker.addHandler(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function() {
+  eventBroker.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function() {
     goog.style.setOpacity(viewCanvas, 0.4); 
     goog.style.setOpacity(hint, 0);
   });
 
   /** Communication yuma -> okfn **/
   
-  eventBroker.addHandler(yuma.events.EventType.SELECTION_COMPLETED, function(event) {	
+  eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {	
     var annotation = { url: image.src, shape: event.shape };
 
     okfnAnnotator.publish('beforeAnnotationCreated', annotation);
 	
-    var imgOffset = yuma.modules.getOffset(image);
+    var imgOffset = annotorious.dom.getOffset(image);
     var geometry = event.shape.geometry; 
     var x = geometry.x + imgOffset.left - baseOffset.left + 16;
     var y = geometry.y + geometry.height + imgOffset.top + window.pageYOffset - baseOffset.top + 5;
@@ -101,7 +101,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
     // TODO find a better solution
     if (annotation.url == image.src) {
       // TODO code duplication -> move into a function
-      var imgOffset = yuma.modules.getOffset(image);
+      var imgOffset = annotorious.dom.getOffset(image);
       var geometry = annotation.shape.geometry;
       var x = geometry.x + imgOffset.left - baseOffset.left + 16;
       var y = geometry.y + geometry.height + imgOffset.top - baseOffset.top + window.pageYOffset + 5;
@@ -114,9 +114,9 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
 
   okfnAnnotator.viewer.on('hide', function() {
-    eventBroker.fireEvent(yuma.events.EventType.POPUP_HIDDEN);
+    eventBroker.fireEvent(annotorious.events.EventType.POPUP_HIDDEN);
     if (!goog.dom.classes.has(annotationLayer, 'hover'))
-      eventBroker.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
   });
   
   okfnAnnotator.subscribe('annotationCreated', function(annotation) {
@@ -158,7 +158,7 @@ yuma.okfn.ImagePlugin = function(image, okfnAnnotator) {
  * @param {Object} the base offset of the annotatable DOM element
  * @constructor
  */
-yuma.okfn.Popup = function(image, eventBroker, okfnAnnotator, baseOffset) {  
+annotorious.okfn.Popup = function(image, eventBroker, okfnAnnotator, baseOffset) {  
   /** @private **/
   this._image = image;
 
@@ -175,14 +175,14 @@ yuma.okfn.Popup = function(image, eventBroker, okfnAnnotator, baseOffset) {
 /**
  * Start the popup hide timer.
  */
-yuma.okfn.Popup.prototype.startHideTimer = function() {
+annotorious.okfn.Popup.prototype.startHideTimer = function() {
   this._okfnAnnotator.startViewerHideTimer();
 }
 
 /**
  * Clear the popup hide timer.
  */
-yuma.okfn.Popup.prototype.clearHideTimer = function() {
+annotorious.okfn.Popup.prototype.clearHideTimer = function() {
   this._okfnAnnotator.clearViewerHideTimer();
 }
 
@@ -192,9 +192,9 @@ yuma.okfn.Popup.prototype.clearHideTimer = function() {
  * @param {number} x coordinate (relative to the image)
  * @param {number} y coordiante (relative to the image)
  */
-yuma.okfn.Popup.prototype.show = function(annotation, x, y) {
-  var baseOffset = yuma.modules.getOffset(this._okfnAnnotator.element); 
-  var imgOffset = yuma.modules.getOffset(this._image); 
+annotorious.okfn.Popup.prototype.show = function(annotation, x, y) {
+  var baseOffset = annotorious.dom.getOffset(this._okfnAnnotator.element); 
+  var imgOffset = annotorious.dom.getOffset(this._image); 
 
   this._okfnAnnotator.showViewer([annotation], {top: window.pageYOffset - this._baseOffset.top , left: 0});   
   goog.style.setPosition(this._okfnAnnotator.viewer.element[0],
@@ -208,11 +208,11 @@ yuma.okfn.Popup.prototype.show = function(annotation, x, y) {
  * @param {number} x coordinate (relative to the image)
  * @param {number} y coordinate (realtive to the image)
  */
-yuma.okfn.Popup.prototype.setPosition = function(x, y) {
+annotorious.okfn.Popup.prototype.setPosition = function(x, y) {
   goog.style.setPosition(this._okfnAnnotator.viewer.element[0], x, y);  
 }
 
-yuma.okfn.Popup.prototype.isShown = function() {
+annotorious.okfn.Popup.prototype.isShown = function() {
   return this._okfnAnnotator.viewer.isShown();
 }
 
@@ -230,9 +230,9 @@ window['Annotator']['Plugin']['YumaImagePlugin'] = (function() {
     var images = this._el.getElementsByTagName('img');
     
     var self = this;
-    yuma.modules.addOnLoadHandler(function() {
+    annotorious.dom.addOnLoadHandler(function() {
       goog.array.forEach(images, function(img, idx, array) {
-        new yuma.okfn.ImagePlugin(img, self['annotator']);
+        new annotorious.okfn.ImagePlugin(img, self['annotator']);
       });
     });
   }
