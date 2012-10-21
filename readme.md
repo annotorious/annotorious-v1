@@ -4,7 +4,7 @@ This is an Open Source effort to port the [yuma.js](http://yuma-js.github.com) i
 
 ## Getting Started
 
-Instructions on getting started using Annotorious on your own Web pages are [on the Wiki](image-annotation-js/wiki/Getting-Started). Instructions on using it as a plugin to the [Annotator](http://okfnlabs.org/annotator/) Web annotation system are [here](image-annotation-js/wiki/Annotator-Plugin). If you require professional support, or have special integration or feature requirements, feel free to [contact us directly](mailto:rainer.simon@ait.ac.at).
+Instructions on getting started using Annotorious on your own Web pages are [on the Wiki](image-annotation-js/wiki/Getting-Started). Instructions on using it as a plugin to the [Annotator](http://okfnlabs.org/annotator/) Web annotation system are [here](image-annotation-js/wiki/Annotator-Plugin). If you require professional support, or have special integration or feature requirements, you are welcome to [contact us directly](mailto:rainer.simon@ait.ac.at).
 
 ## Getting Involved
 
