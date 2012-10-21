@@ -15,7 +15,7 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   this._annotator = annotator;
 
   /** @private **/
-  this._element = goog.soy.renderAsElement(yuma.templates.popup);
+  this._element = goog.soy.renderAsElement(annotorious.templates.popup);
   
   /** @private **/
   this._currentAnnotation;

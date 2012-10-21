@@ -1,4 +1,4 @@
-goog.provide('yuma.okfn.ImagePlugin');
+goog.provide('annotorious.okfn.ImagePlugin');
 
 goog.require('goog.array');
 goog.require('goog.soy');

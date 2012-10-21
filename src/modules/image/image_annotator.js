@@ -26,16 +26,16 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   goog.dom.replaceNode(annotationLayer, image);
   goog.dom.appendChild(annotationLayer, image);
     
-  var hint = goog.soy.renderAsElement(yuma.templates.image.hint, {msg:'Click and Drag to Annotate'});
+  var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
   goog.style.setOpacity(hint, 0); 
   goog.dom.appendChild(annotationLayer, hint);
   
-  var viewCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas,
+  var viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:image.width, height:image.height });
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
   /** @private **/
-  this._editCanvas = goog.soy.renderAsElement(yuma.templates.image.canvas, 
+  this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:image.width, height:image.height });
   goog.style.showElement(this._editCanvas, false); 
   goog.dom.appendChild(annotationLayer, this._editCanvas);  

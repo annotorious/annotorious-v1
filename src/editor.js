@@ -23,7 +23,7 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, px, py, opt
   this._imgSrc = annotator.getImage().src;
 
   /** @private **/
-  this._div = goog.soy.renderAsElement(yuma.templates.editform);
+  this._div = goog.soy.renderAsElement(annotorious.templates.editform);
 
   /** @private **/
   this._textarea = goog.dom.query('.annotation-text', this._div)[0];
