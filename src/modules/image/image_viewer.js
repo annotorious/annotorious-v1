@@ -9,8 +9,8 @@ goog.require('goog.dom.query');
  * The image viewer - the central entity that manages annotations 
  * displayed for one image.
  * @param {element} canvas the canvas element 
- * @param {yuma.viewer.Popup} the popup to use in this viewer
- * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
+ * @param {annotorious.viewer.Popup} the popup to use in this viewer
+ * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
 annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
@@ -70,7 +70,7 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
 
 /**
  * Adds an annotation to the viewer.
- * @param {yuma.annotation.Annotation} the annotation
+ * @param {annotorious.annotation.Annotation} the annotation
  */
 annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation) {
   this._annotations.push(annotation);  
@@ -79,7 +79,7 @@ annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation) 
 
 /**
  * Removes an annotation from the viewer.
- * @param {yuma.annotation.Annotation} the annotation
+ * @param {annotorious.annotation.Annotation} the annotation
  */
 annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotation) {
   if (annotation == this._currentAnnotation)
@@ -110,7 +110,7 @@ annotorious.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
  * Returns the annotations at the specified X/Y coordinates.
  * @param {number} px the X coordinate
  * @param {number} py the Y coordinate
- * @return {Array.<yuma.annotation.Annotation>} the annotations sorted by size, smallest first
+ * @return {Array.<annotorious.annotation.Annotation>} the annotations sorted by size, smallest first
  */
 annotorious.modules.image.Viewer.prototype.annotationsAt = function(px, py) { 
   // TODO for large numbers of annotations, we can optimize this
@@ -130,6 +130,8 @@ annotorious.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
 }
 
 /**
+ * TODO has turned into a one-line method -> remove
+ *
  * @private
  */
 annotorious.modules.image.Viewer.prototype._resetPopup = function(annotation, x, y) {

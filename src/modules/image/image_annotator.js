@@ -97,7 +97,7 @@ annotorious.modules.image.ImageAnnotator.prototype.getImage = function() {
 
 /**
  * Adds a lifecycle event handler to this annotator's Event Broker.
- * @param {yuma.events.EventType} type the event type
+ * @param {annotorious.events.EventType} type the event type
  * @param {function} the handler function
  */
 annotorious.modules.image.ImageAnnotator.prototype.addHandler = function(type, handler) {
@@ -106,8 +106,8 @@ annotorious.modules.image.ImageAnnotator.prototype.addHandler = function(type, h
 
 /**
  * Fire an event on this annotator's Event Broker.
- * @param {yuma.events.EventType} type the event type
- * @param {Object} the event object
+ * @param {annotorious.events.EventType} type the event type
+ * @param {object} the event object
  */
 annotorious.modules.image.ImageAnnotator.prototype.fireEvent = function(type, event) {
   this._eventBroker.fireEvent(type, event);
@@ -115,7 +115,7 @@ annotorious.modules.image.ImageAnnotator.prototype.fireEvent = function(type, ev
 
 /**
  * Adds annotation to this annotator's viewer.
- * @param {yuma.annotation.Annotation} annotation the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(annotation) {
   this._viewer.addAnnotation(annotation);
@@ -123,7 +123,7 @@ annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(anno
 
 /**
  * Removes an annotation from this annotator's viewer.
- * @param {yuma.annotation.Annotation} annotation the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.image.ImageAnnotator.prototype.removeAnnotation = function(annotation) {
   this._viewer.removeAnnotation(annotation);
