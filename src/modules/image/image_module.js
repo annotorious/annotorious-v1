@@ -44,7 +44,7 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
   var self = this;
   goog.array.forEach(this._imagesToLoad, function(image) {
     if (annotorious.dom.isInViewport(image)) {
-      var annotator = new yuma.modules.image.ImageAnnotator(image);
+      var annotator = new annotorious.modules.image.ImageAnnotator(image);
       
       // Attach handlers that are already registered
       goog.array.forEach(self._eventHandlers, function(eventHandler) {

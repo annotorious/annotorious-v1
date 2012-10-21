@@ -1,10 +1,10 @@
 goog.provide('annotorious.annotation');
 
 /**
- * A 'domain class' implementation of the annotation interface (as defined in the externs).
+ * A 'domain class' implementation of the external annotation interface.
  * @param {string} src the source URL of the annotated object
  * @param {string} text the annotation text
- * @param {yuma.model.Shape} shape the shape defining the annotated fragment
+ * @param {annotorious.annotation.Shape} shape the annotated fragment shape
  * @implements {Annotation}
  * @constructor
  */
@@ -12,14 +12,13 @@ annotorious.annotation.Annotation = function(src, text, shape) {
   this.src = src;
   this.text = text;
   this.shape = shape;
-  // Note: we're using this notation this time in order to avoid dead code removal!
-  this['context'] = document.URL;
+  this['context'] = document.URL; // Prevents dead code removal
 }
 
 /**
- * A shape, defining a 2D annotated area.
- * @param {yuma.model.ShapeType} type the shape type
- * @param {yuma.model.geom.Point | yuma.model.geom.Rectangle | yuma.model.geom.Polygon} geometry the geometry
+ * A shape defining a 2D annotated area.
+ * @param {annotorious.annotation.ShapeType} type the shape type
+ * @param {annotorious.geom.Point | annotorious.geom.Rectangle | annotorious.geom.Polygon} geometry the geometry
  * @constructor
  */
 annotorious.annotation.Shape = function(type, geometry) {

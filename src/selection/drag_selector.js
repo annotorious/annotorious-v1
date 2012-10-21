@@ -1,4 +1,4 @@
-goog.provide('yuma.selection.DragSelector');
+goog.provide('annotorious.selection.DragSelector');
 
 goog.require('goog.events');
 
@@ -8,7 +8,7 @@ goog.require('goog.events');
  * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-yuma.selection.DragSelector = function(canvas, annotator) {
+annotorious.selection.DragSelector = function(canvas, annotator) {
   /** @private **/
   this._canvas = canvas;
   
@@ -31,7 +31,7 @@ yuma.selection.DragSelector = function(canvas, annotator) {
   var self = this;  
   goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._enabled) {
-      self._selection = new yuma.geom.Rectangle(
+      self._selection = new annotorious.geom.Rectangle(
         self._anchor.x, 
         self._anchor.y,
         event.offsetX - self._anchor.x,
@@ -51,7 +51,7 @@ yuma.selection.DragSelector = function(canvas, annotator) {
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
     self._enabled = false;    
-    self._annotator.fireEvent(yuma.events.EventType.SELECTION_COMPLETED,
+    self._annotator.fireEvent(annotorious.events.EventType.SELECTION_COMPLETED,
       { mouseEvent: event, shape: new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, self._selection) });
   });
 }
@@ -61,10 +61,10 @@ yuma.selection.DragSelector = function(canvas, annotator) {
  * @param {number} x the X coordinate
  * @param {number} y the Y coordinate
  */
-yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
+annotorious.selection.DragSelector.prototype.startSelection = function(x, y) {
   this._enabled = true;
-  this._anchor = new yuma.geom.Point(x, y);
-  this._annotator.fireEvent(yuma.events.EventType.SELECTION_STARTED, {
+  this._anchor = new annotorious.geom.Point(x, y);
+  this._annotator.fireEvent(annotorious.events.EventType.SELECTION_STARTED, {
     offsetX: x, offsetY: y});
   
   goog.style.setStyle(document.body, '-webkit-user-select', 'none');
@@ -73,7 +73,7 @@ yuma.selection.DragSelector.prototype.startSelection = function(x, y) {
 /**
  * Stops the selection.
  */
-yuma.selection.DragSelector.prototype.stopSelection = function() {
+annotorious.selection.DragSelector.prototype.stopSelection = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
   goog.style.setStyle(document.body, '-webkit-user-select', 'auto');
 }
@@ -82,6 +82,6 @@ yuma.selection.DragSelector.prototype.stopSelection = function() {
  * Returns the currently selected shape
  * @return {yuma.annotation.Shape} the shape
  */
-yuma.selection.DragSelector.prototype.getShape = function() {
+annotorious.selection.DragSelector.prototype.getShape = function() {
   return new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, this._selection)
 }

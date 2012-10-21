@@ -17,11 +17,11 @@ annotorious.plugin['ElasticSearchStorage'] = function(opt_config_options) {
 
 annotorious.plugin['ElasticSearchStorage'].prototype.initPlugin = function(module) {
   var self = this;
-  module.addHandler(yuma.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
+  module.addHandler(annotorious.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
     self._create(event.annotation);
   });
 
-  module.addHandler(yuma.events.EventType.POPUP_BTN_DELETE, function(event) {
+  module.addHandler(annotorious.events.EventType.POPUP_BTN_DELETE, function(event) {
     self._delete(event.annotation);
   });
   

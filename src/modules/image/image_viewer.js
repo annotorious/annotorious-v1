@@ -1,4 +1,4 @@
-goog.provide('yuma.modules.image.Viewer');
+goog.provide('annotorious.modules.image.Viewer');
 
 goog.require('goog.soy');
 goog.require('goog.events');
@@ -13,7 +13,7 @@ goog.require('goog.dom.query');
  * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-yuma.modules.image.Viewer = function(canvas, popup, annotator) {
+annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
   /** @private **/
   this._canvas = canvas;
 
@@ -47,7 +47,7 @@ yuma.modules.image.Viewer = function(canvas, popup, annotator) {
     }
   });
 
-  annotator.addHandler(yuma.events.EventType.POPUP_HIDDEN, function() {
+  annotator.addHandler(annotorious.events.EventType.POPUP_HIDDEN, function() {
     if (self._cachedMouseEvent) {
       var mouseX = self._cachedMouseEvent.offsetX;
       var mouseY = self._cachedMouseEvent.offsetY;
@@ -58,10 +58,10 @@ yuma.modules.image.Viewer = function(canvas, popup, annotator) {
       self._eventsEnabled = true;
             
       if (previousAnnotation != self._currentAnnotation) {
-        self._annotator.fireEvent(yuma.events.EventType.MOUSE_OUT_OF_ANNOTATION,
+        self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATION,
           { annotation: previousAnnotation, mouseEvent: event });
   
-        self._annotator.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATION,
+        self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATION,
           { annotation: self._currentAnnotation, mouseEvent: event });
       }
     }
@@ -72,7 +72,7 @@ yuma.modules.image.Viewer = function(canvas, popup, annotator) {
  * Adds an annotation to the viewer.
  * @param {yuma.annotation.Annotation} the annotation
  */
-yuma.modules.image.Viewer.prototype.addAnnotation = function(annotation) {
+annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation) {
   this._annotations.push(annotation);  
   this._draw(annotation, '#ffffff', 1);
 }
@@ -81,14 +81,14 @@ yuma.modules.image.Viewer.prototype.addAnnotation = function(annotation) {
  * Removes an annotation from the viewer.
  * @param {yuma.annotation.Annotation} the annotation
  */
-yuma.modules.image.Viewer.prototype.removeAnnotation = function(annotation) {
+annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotation) {
   if (annotation == this._currentAnnotation)
     delete this._currentAnnotation;
     
   goog.array.remove(this._annotations, annotation);
   this._redraw();
   
-  this._annotator.fireEvent(yuma.events.EventType.ANNOTATION_REMOVED,
+  this._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_REMOVED,
     { annotation: annotation });
 }
 
@@ -97,7 +97,7 @@ yuma.modules.image.Viewer.prototype.removeAnnotation = function(annotation) {
  * @param {number} px the X coordinate
  * @param {number} py the Y coordinates
  */
-yuma.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
+annotorious.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
   var annotationsAt = this.annotationsAt(px, py);
   if (annotationsAt.length > 0) {
     return annotationsAt[0];
@@ -112,18 +112,18 @@ yuma.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
  * @param {number} py the Y coordinate
  * @return {Array.<yuma.annotation.Annotation>} the annotations sorted by size, smallest first
  */
-yuma.modules.image.Viewer.prototype.annotationsAt = function(px, py) { 
+annotorious.modules.image.Viewer.prototype.annotationsAt = function(px, py) { 
   // TODO for large numbers of annotations, we can optimize this
   // using a tree- or grid-like data structure instead of a list
   var intersectedAnnotations = [];
   goog.array.forEach(this._annotations, function(annotation, idx, array) {
-    if (yuma.geom.intersects(annotation.shape.geometry, px, py)) {
+    if (annotorious.geom.intersects(annotation.shape.geometry, px, py)) {
       intersectedAnnotations.push(annotation);
     }
   });
 
   goog.array.sort(intersectedAnnotations, function(a, b) {
-    return yuma.geom.size(a.shape.geometry) > yuma.geom.size(b.shape.geometry);
+    return annotorious.geom.size(a.shape.geometry) > annotorious.geom.size(b.shape.geometry);
   });
   
   return intersectedAnnotations;
@@ -132,14 +132,14 @@ yuma.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
 /**
  * @private
  */
-yuma.modules.image.Viewer.prototype._resetPopup = function(annotation, x, y) {
+annotorious.modules.image.Viewer.prototype._resetPopup = function(annotation, x, y) {
   this._popup.show(annotation, x, y);
 }
 
 /**
  * @private
  */
-yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
+annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
   var topAnnotation = this.topAnnotationAt(event.offsetX, event.offsetY);
     
   // TODO remove code duplication
@@ -150,7 +150,7 @@ yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
       // Mouse moved into annotation from empty space - highlight immediately
       this._currentAnnotation = topAnnotation;
       this._redraw();
-      this._annotator.fireEvent(yuma.events.EventType.MOUSE_OVER_ANNOTATION,
+      this._annotator.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATION,
         { annotation: this._currentAnnotation, mouseEvent: event });   
     } else if (this._currentAnnotation != topAnnotation) {
       // Mouse changed from one annotation to another one
@@ -169,7 +169,7 @@ yuma.modules.image.Viewer.prototype._onMouseMove = function(event) {
 /**
  * @private
  */
-yuma.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidth) {
+annotorious.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidth) {
   this._g2d.lineWidth = lineWidth;
 
   var shape = annotation.shape;
@@ -189,7 +189,7 @@ yuma.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidt
 /**
  * @private
  */
-yuma.modules.image.Viewer.prototype._redraw = function() {  
+annotorious.modules.image.Viewer.prototype._redraw = function() {  
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
   
   var self = this;

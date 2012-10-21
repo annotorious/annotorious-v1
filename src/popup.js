@@ -1,4 +1,4 @@
-goog.provide('yuma.viewer');
+goog.provide('annotorious.viewer');
 
 goog.require('goog.style');
 goog.require('goog.dom');
@@ -7,10 +7,10 @@ goog.require('goog.dom.query');
 /**
  * A popup bubble widget to show annotation details.
  * @param {element} parentEl the DOM element to attach to
- * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
+ * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-yuma.viewer.Popup = function(parentEl, annotator) {      
+annotorious.viewer.Popup = function(parentEl, annotator) {      
   /** @private **/
   this._annotator = annotator;
 
@@ -31,7 +31,7 @@ yuma.viewer.Popup = function(parentEl, annotator) {
   var self = this;
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
     goog.style.setOpacity(self._element, 0.0); 
-    annotator.fireEvent(yuma.events.EventType.POPUP_BTN_DELETE,
+    annotator.fireEvent(annotorious.events.EventType.POPUP_BTN_DELETE,
       { annotation: self._currentAnnotation, mouseEvent: event });
   });
   
@@ -50,12 +50,12 @@ yuma.viewer.Popup = function(parentEl, annotator) {
 /**
  * Start the popup hide timer.
  */
-yuma.viewer.Popup.prototype.startHideTimer = function() {
+annotorious.viewer.Popup.prototype.startHideTimer = function() {
   if (!this._timer) {
     var self = this;
     this._timer = window.setTimeout(function() {
       goog.style.setOpacity(self._element, 0.0);
-      self._annotator.fireEvent(yuma.events.EventType.POPUP_HIDDEN);
+      self._annotator.fireEvent(annotorious.events.EventType.POPUP_HIDDEN);
       delete self._timer;
     }, 300);
   }
@@ -64,7 +64,7 @@ yuma.viewer.Popup.prototype.startHideTimer = function() {
 /**
  * Clear the popup hide timer.
  */
-yuma.viewer.Popup.prototype.clearHideTimer = function() {
+annotorious.viewer.Popup.prototype.clearHideTimer = function() {
   if (this._timer) {
     window.clearTimeout(this._timer);
     delete this._timer;
@@ -77,7 +77,7 @@ yuma.viewer.Popup.prototype.clearHideTimer = function() {
  * @param {number} x coordinate (relative to the image)
  * @param {number} y coordiante (relative to the image)
  */
-yuma.viewer.Popup.prototype.show = function(annotation, x, y) {
+annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
   this._currentAnnotation = annotation;
   this._text.innerHTML = annotation.text;
   this.setPosition(x, y);
@@ -89,7 +89,7 @@ yuma.viewer.Popup.prototype.show = function(annotation, x, y) {
  * @param {number} x coordinate (relative to the image)
  * @param {number} y coordinate (realtive to the image)
  */
-yuma.viewer.Popup.prototype.setPosition = function(x, y) {
+annotorious.viewer.Popup.prototype.setPosition = function(x, y) {
   goog.style.setPosition(this._element, new goog.math.Coordinate(x, y));
 }
 

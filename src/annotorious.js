@@ -4,10 +4,10 @@ goog.require('goog.array');
 goog.require('annotorious.dom');
 
 /**
- * The Annotorious object is the main application entrypoint. It exposes the 
- * Annotorious JavaScript API through the global 'anno' object. Internally, it
- * manages a set of 'modules'. Each module is responsible for one particular
- * media type (image, deepzoom, ...).  
+ * The main entrypoint to the application. The Annotorious object exposes the 
+ * external JavaScript API (through the global 'anno' object) and manages
+ * a set of 'modules' (each module being responsible for one particular media
+ * type - image, deepzoom, etc.)  
  * @constructor
  */
 annotorious.Annotorious = function() {
@@ -18,39 +18,49 @@ annotorious.Annotorious = function() {
   this._plugins = [];
 
   var self = this;
-  annotorious.dom.addOnLoadHandler(function() { self._init(); });
+  annotorious.dom.addOnLoadHandler(function() { 
+    goog.array.forEach(self._modules, function(module) {
+      module.init();
+    });
+
+    goog.array.forEach(self._plugins, function(plugin) {
+      plugin.initPlugin(self);
+    });
+  });
 }
 
 /**
- * @private
+ * Adds an event handler to Annotorious.
+ * @param {annotorious.event.EventType} type the event type
+ * @param {function} handler the handler function
  */
-annotorious.Annotorious.prototype._init = function() {
-  var self = this;
-
-  goog.array.forEach(this._modules, function(module) {
-    module.init();
-  });
-
-  goog.array.forEach(this._plugins, function(plugin) {
-    plugin.initPlugin(self);
-  });
-}
-
 annotorious.Annotorious.prototype.addHandler = function(type, handler) {
   goog.array.forEach(this._modules, function(module) {
     module.addHandler(type, handler);
   });
 }
 
+/**
+ * Adds a plugin to Annotorious.
+ * @param {string} pluginName the plugin name
+ * @param {object} opt_config_options an optional associative array with plugin config options
+ */
 annotorious.Annotorious.prototype['addPlugin'] = function(pluginName, opt_config_options) {
   this._plugins.push(new annotorious.plugin[pluginName](opt_config_options));
 }
 
-annotorious.Annotorious.prototype['addAnnotation'] = function(src, annotation) {
+/**
+ * Adds an annotation to an item on the page.
+ * @param {object} annotation the annotation
+ */
+annotorious.Annotorious.prototype['addAnnotation'] = function(annotation) {
   // TODO implement
 }
 
-annotorious.Annotorious.prototype['removeAnnotation'] = function(src, annotation) {
+/**
+ * Removes an annotation from an item on the page.
+ */
+annotorious.Annotorious.prototype['removeAnnotation'] = function(annotation) {
   // TODO implement
 }
 

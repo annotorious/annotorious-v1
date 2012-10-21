@@ -1,14 +1,17 @@
-goog.provide('yuma.geom');
+/**
+ * A collection of geometry helper functions.
+ */
+goog.provide('annotorious.geom');
 
 /**
  * Checks whether a given geometry intersects a point.
- * @param {yuma.geom.Point | yuma.geom.Rectangle | yuma.geom.Polygon} geometry the geometry
+ * @param {annotorious.geom.Point | annotorious.geom.Rectangle | annotorious.geom.Polygon} geometry the geometry
  * @param {number} px the X coordinate
  * @param {nubmer} py the Y coordinate
  * @returns {boolean} true if the point intersects the geometry
  */
-yuma.geom.intersects = function(geometry, px, py) {
-    if (yuma.geom.isRectangle(geometry)) {
+annotorious.geom.intersects = function(geometry, px, py) {
+    if (annotorious.geom.isRectangle(geometry)) {
       if (px < geometry.x)
         return false;
 
@@ -29,11 +32,11 @@ yuma.geom.intersects = function(geometry, px, py) {
 
 /**
  * Returns the size of a given geometry.
- * @param {yuma.geom.Rectangle | yuma.geom.Polygon} geometry the geometry
+ * @param {annotorious.geom.Rectangle | annotorious.geom.Polygon} geometry the geometry
  * @returns {number} the size
  */
-yuma.geom.size = function(geometry) {
-  if (yuma.geom.isRectangle(geometry)) {
+annotorious.geom.size = function(geometry) {
+  if (annotorious.geom.isRectangle(geometry)) {
     return geometry.width * geometry.height;
   }
   
@@ -42,9 +45,11 @@ yuma.geom.size = function(geometry) {
 
 /**
  * Tests whether the geometry is a rectangle. Note: we need this 'duck typing' style
- * of instance check to make sure that not only instances of yuma.geom.Rectangle are
+ * of instance check to make sure that not only instances of annotorious.geom.Rectangle are
  * recognized correctly, but also plain JSON objects.
+ * @param {object} geometry the object to check
+ * @returns {boolean} true if the object is a Rectangle
  */
-yuma.geom.isRectangle = function(geometry) {
+annotorious.geom.isRectangle = function(geometry) {
   return (geometry.width && geometry.height && geometry.x && geometry.y)
 }

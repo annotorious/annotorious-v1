@@ -1,4 +1,4 @@
-goog.provide('yuma.events');
+goog.provide('annotorious.events');
 
 goog.require('goog.array');
 goog.require('goog.events');
@@ -7,17 +7,17 @@ goog.require('goog.events');
  * A central 'event bus' to distribute the annotation lifecycle events.
  * @constructor
  */
-yuma.events.EventBroker = function() {
+annotorious.events.EventBroker = function() {
   /** @private **/
   this._handlers = [];
 }
 
 /**
  * Adds an event handler.
- * @param {yuma.events.EventType} type the event type
+ * @param {annotorious.events.EventType} type the event type
  * @param {function} the handler function to add
  */
-yuma.events.EventBroker.prototype.addHandler = function(type, handler) {
+annotorious.events.EventBroker.prototype.addHandler = function(type, handler) {
   if (!this._handlers[type]) 
     this._handlers[type] = [];
 
@@ -26,10 +26,10 @@ yuma.events.EventBroker.prototype.addHandler = function(type, handler) {
 
 /**
  * Removes an event handler.
- * @param {yuma.events.EventType} type the event type
+ * @param {annotorious.events.EventType} type the event type
  * @param {function} the handler function to remove
  */
-yuma.events.EventBroker.prototype.removeHandler = function(type, handler) {
+annotorious.events.EventBroker.prototype.removeHandler = function(type, handler) {
   var handlers = this._handlers[type];
   if (handlers)
     goog.array.remove(handlers, handler);  
@@ -37,10 +37,10 @@ yuma.events.EventBroker.prototype.removeHandler = function(type, handler) {
 
 /**
  * Fires an event, triggering execution of all registered handlers.
- * @param {yuma.events.EventType} type the event type
- * @param {Object} the event object
+ * @param {annotorious.events.EventType} type the event type
+ * @param {object} the event object
  */
-yuma.events.EventBroker.prototype.fireEvent = function(type, event) {
+annotorious.events.EventBroker.prototype.fireEvent = function(type, event) {
   var handlers = this._handlers[type];
   if (handlers) {
     goog.array.forEach(handlers, function(handler, idx, array) {
@@ -53,7 +53,7 @@ yuma.events.EventBroker.prototype.fireEvent = function(type, event) {
  * Annotation lifecycle events
  * @enum {string}
  */
-yuma.events.EventType = {
+annotorious.events.EventType = {
 
   /**
    * The mouse entered the annotatable media area

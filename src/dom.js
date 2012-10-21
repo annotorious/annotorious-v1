@@ -1,9 +1,12 @@
+/**
+ * A collection of helper functions for general use.
+ */
 goog.provide('annotorious.dom');
 
 /**
- * Utility function that computes the absolute offset
- * of a DOM element relative to the document.
+ * Computes the absolute top/left offset of a DOM element relative to the document.
  * @param {element} el the DOM element
+ * @returns {object} an object containing the offset { top, left }
  */
 annotorious.dom.getOffset = function(el) {
   var _x = 0;
@@ -18,21 +21,21 @@ annotorious.dom.getOffset = function(el) {
 }
 
 /**
- * Utility method to check whether a certain DOM element
- * is (partly) within the viewport.
+ * Checks whether a certain DOM element is (partly) within the current viewport.
  * Cf. http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
- * @param {element} element the DOM element to check for visibility
+ * @param {element} el the DOM element to check for visibility
+ * @returns {boolean} true if the element is within the current viewport
  */
-annotorious.dom.isInViewport = function(element) {
-  var top = element.offsetTop;
-  var left = element.offsetLeft;
-  var width = element.offsetWidth;
-  var height = element.offsetHeight;
+annotorious.dom.isInViewport = function(el) {
+  var top = el.offsetTop;
+  var left = el.offsetLeft;
+  var width = el.offsetWidth;
+  var height = el.offsetHeight;
 
-  while (element.offsetParent) {
-    element = element.offsetParent;
-    top += element.offsetTop;
-    left += element.offsetLeft;
+  while (el.offsetParent) {
+    el = el.offsetParent;
+    top += el.offsetTop;
+    left += el.offsetLeft;
   }
 
   return (
@@ -44,8 +47,7 @@ annotorious.dom.isInViewport = function(element) {
 }
 
 /**
- * Utility function that adds an additional handler function
- * to window.onload, without overwriting existing ones.
+ * Adds an additional handler function to window.onload, without overwriting existing ones.
  * @param {function} fn the handler function to add
  */
 annotorious.dom.addOnLoadHandler = function(fn) {

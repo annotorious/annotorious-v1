@@ -1,11 +1,11 @@
-goog.provide('yuma.geom.Polygon');
+goog.provide('annotorious.geom.Polygon');
 
 /**
  * A polygon geometry primitive.
- * @param {Array.<yuma.model.geom.Point>} points the points
+ * @param {Array.<annotorious.geom.Point>} points the points
  * @constructor
  */
-yuma.geom.Polygon = function(points) {
+annotorious.geom.Polygon = function(points) {
   this.points = points;
 }
 

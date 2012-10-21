@@ -1,4 +1,4 @@
-goog.provide('yuma.geom.Rectangle');
+goog.provide('annotorious.geom.Rectangle');
 
 /**
  * A rectangle geometry primitive.
@@ -8,7 +8,7 @@ goog.provide('yuma.geom.Rectangle');
  * @param {number} height the rectangle height
  * @constructor
  */
-yuma.geom.Rectangle = function(x, y, width, height) {
+annotorious.geom.Rectangle = function(x, y, width, height) {
   // Normalize to positive width and height
   if (width > 0) {
     this.x = x;
