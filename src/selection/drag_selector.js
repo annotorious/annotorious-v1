@@ -50,9 +50,15 @@ annotorious.selection.DragSelector = function(canvas, annotator) {
   });
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
-    self._enabled = false;    
-    self._annotator.fireEvent(annotorious.events.EventType.SELECTION_COMPLETED,
-      { mouseEvent: event, shape: new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, self._selection) });
+    self._enabled = false;
+    
+    var shape = new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, self._selection);
+    if (shape.geometry) {
+      self._annotator.fireEvent(annotorious.events.EventType.SELECTION_COMPLETED,
+        { mouseEvent: event, shape: shape }); 
+    } else {
+      self._annotator.fireEvent(annotorious.events.EventType.SELECTION_CANCELED); 
+    }
   });
 }
 

@@ -71,6 +71,11 @@ annotorious.modules.image.ImageAnnotator = function(image) {
                                         shape.geometry.y + shape.geometry.height + 4 + self._image.offsetTop);
   });
   
+  this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
+    goog.style.showElement(self._editCanvas, false);
+    self._selector.stopSelection();
+  });
+  
   this._eventBroker.addHandler(annotorious.events.EventType.ANNOTATION_EDIT_CANCEL, function(event) {
     goog.style.showElement(self._editCanvas, false);
     self._selector.stopSelection();
