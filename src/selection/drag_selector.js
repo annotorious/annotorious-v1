@@ -51,8 +51,7 @@ annotorious.selection.DragSelector = function(canvas, annotator) {
 
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
     self._enabled = false;
-    
-    var shape = new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, self._selection);
+    var shape = self.getShape();
     if (shape.geometry) {
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_COMPLETED,
         { mouseEvent: event, shape: shape }); 
@@ -82,12 +81,14 @@ annotorious.selection.DragSelector.prototype.startSelection = function(x, y) {
 annotorious.selection.DragSelector.prototype.stopSelection = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
   goog.style.setStyle(document.body, '-webkit-user-select', 'auto');
+  delete this._selection;
 }
 
 /**
- * Returns the currently selected shape
- * @return {yuma.annotation.Shape} the shape
+ * The currently edited shape
+ *
+ * TODO remove this method - pass via events instead!
  */
 annotorious.selection.DragSelector.prototype.getShape = function() {
-  return new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, this._selection)
+  return new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, this._selection); 
 }

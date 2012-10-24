@@ -30,7 +30,7 @@ annotorious.plugin['ElasticSearchStorage'].prototype.initPlugin = function(anno)
   
   // this._loadAnnotations(anno);  
   self._loadAnnotations(anno);
-  window.setInterval(function() { self._loadAnnotations(anno); }, 2000);
+  // window.setInterval(function() { self._loadAnnotations(anno); }, 2000);
 }
 
 /**
