@@ -49,17 +49,22 @@
 }
 
 .yuma-popup {
-  line-height:normal;
+  line-height:135%;
   font-family:Arial, Verdana, Sans;
   font-size:12px;
   color:#000;
   background-color:#fff;
-  border:1px solid black;
-  padding:3px 6px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -khtml-border-radius: 5px;
+  border:1px solid #ccc;
+  padding:6px 8px;
+  word-wrap:break-word;
+  width:180px;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  -moz-box-shadow:2px 2px 2px #222;
+  -webkit-box-shadow:2px 2px 2px #222;
+  box-shadow:2px 2px 2px #222;
 
   /* Firefox */
   -moz-transition-property: opacity;
@@ -77,6 +82,8 @@
   transition-property: opacity;
   transition-duration: 0.5s;
   transition-delay: 0s;
+  
+
 }
 
 .yuma-popup-action {
@@ -103,6 +110,20 @@
   transition-property: opacity;
   transition-duration: 0.5s;
   transition-delay: 0s;
+}
+
+.yuma-popup-action-delete {
+  background:url(delete.png);
+  width:16px;
+  height:16px;
+  text-indent:100px;
+  overflow:hidden;
+  opacity:0.4;
+  float:right;
+}
+
+.yuma-popup-action-delete:hover {
+  opacity:0.9;
 }
 
 .yuma-editform {

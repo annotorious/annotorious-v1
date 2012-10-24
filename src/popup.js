@@ -81,7 +81,7 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
   this._currentAnnotation = annotation;
   this._text.innerHTML = annotation.text;
   this.setPosition(x, y);
-  goog.style.setOpacity(this._element, 1.0); 
+  goog.style.setOpacity(this._element, 0.9); 
 }
 
 /**
