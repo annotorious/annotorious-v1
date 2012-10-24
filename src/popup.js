@@ -24,6 +24,9 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   this._text = goog.dom.query('.yuma-popup-text', this._element)[0];
 
   /** @private **/
+  this._buttons = goog.dom.query('.yuma-popup-action-delete', this._element)[0];
+
+  /** @private **/
   this._timer;
 
   var btnDelete = goog.dom.query('.yuma-popup-action-delete', this._element)[0];
@@ -36,10 +39,12 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   });
   
   goog.events.listen(this._element, goog.events.EventType.MOUSEOVER, function(event) {
+    goog.style.setOpacity(self._buttons, 0.4);
     self.clearHideTimer();
   });
   
   goog.events.listen(this._element, goog.events.EventType.MOUSEOUT, function(event) {
+    goog.style.setOpacity(self._buttons, 0);
     self.startHideTimer();
   });
   
@@ -78,10 +83,23 @@ annotorious.viewer.Popup.prototype.clearHideTimer = function() {
  * @param {number} y coordiante (relative to the image)
  */
 annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
-  this._currentAnnotation = annotation;
-  this._text.innerHTML = annotation.text;
-  this.setPosition(x, y);
-  goog.style.setOpacity(this._element, 0.9); 
+  if (!this.isShown()) {
+    this._currentAnnotation = annotation;
+    this._text.innerHTML = annotation.text;
+    this.setPosition(x, y);
+    goog.style.setOpacity(this._element, 0.9); 
+
+    var self = this;
+    goog.style.setOpacity(this._buttons, 0.4);
+    window.setTimeout(function() {
+      goog.style.setOpacity(self._buttons, 0);
+    }, 1000);
+  }
+}
+
+annotorious.viewer.Popup.prototype.isShown = function() {
+  // TODO fix!
+  return goog.style.getOpacity(this._element) > 0;
 }
 
 /**
