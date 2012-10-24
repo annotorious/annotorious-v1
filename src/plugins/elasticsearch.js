@@ -13,19 +13,24 @@ goog.require('goog.net.XhrIo');
 annotorious.plugin['ElasticSearchStorage'] = function(opt_config_options) {
   /** @private **/
   this._STORE_URI = opt_config_options['base_url'];
+
+  /** @private **/
+  this._annotations = [];
 }
 
-annotorious.plugin['ElasticSearchStorage'].prototype.initPlugin = function(module) {
+annotorious.plugin['ElasticSearchStorage'].prototype.initPlugin = function(anno) {
   var self = this;
-  module.addHandler(annotorious.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
+  anno.addHandler(annotorious.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
     self._create(event.annotation);
   });
 
-  module.addHandler(annotorious.events.EventType.POPUP_BTN_DELETE, function(event) {
+  anno.addHandler(annotorious.events.EventType.POPUP_BTN_DELETE, function(event) {
     self._delete(event.annotation);
   });
   
-  this._loadAnnotations(module);  
+  // this._loadAnnotations(anno);  
+  self._loadAnnotations(anno);
+  // window.setInterval(function() { self._loadAnnotations(anno); }, 2000);
 }
 
 /**
@@ -40,9 +45,8 @@ annotorious.plugin['ElasticSearchStorage'].prototype._showError = function(error
 /**
  * @private
  */
-annotorious.plugin['ElasticSearchStorage'].prototype._loadAnnotations = function(module) {
+annotorious.plugin['ElasticSearchStorage'].prototype._loadAnnotations = function(anno) {
   // TODO need to restrict search to the URL of the annotated
-  
   var self = this;
   goog.net.XhrIo.send(this._STORE_URI + '_search?query=*:*', function(data) {
     try {
@@ -50,7 +54,10 @@ annotorious.plugin['ElasticSearchStorage'].prototype._loadAnnotations = function
       goog.array.forEach(hits, function(hit, idx, array) {
         var annotation = hit['_source'];
         annotation.id = hit['_id'];
-        module.addAnnotation(annotation);
+        if (!goog.array.contains(self._annotations, annotation.id)) {
+          self._annotations.push(annotation.id);
+          anno.addAnnotation(annotation);
+        }
       });
     } catch (e) {
       self._showError(e);

@@ -80,6 +80,11 @@ annotorious.events.EventType = {
    */
   SELECTION_STARTED: goog.events.getUniqueId('selection_started'),
   
+  /**
+   * The current selection was canceled
+   */
+  SELECTION_CANCELED: goog.events.getUniqueId('selection_canceled'),
+  
   /** 
    * The current selection was completed
    */
