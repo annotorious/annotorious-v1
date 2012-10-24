@@ -72,7 +72,7 @@ annotorious.modules.image.ImageModule.prototype.addHandler = function(type, hand
 
 /**
  * Adds an annotation to the image with the specified src URL.
- * @param {yuma.annotation.Annotation} the annotation
+ * @param {Annotation} the annotation
  * @param {string} src the src URL of the image
  */
 annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {

@@ -41,20 +41,14 @@ annotorious.Annotorious.prototype.addHandler = function(type, handler) {
 }
 
 /**
- * Adds a plugin to Annotorious.
- * @param {string} pluginName the plugin name
- * @param {object} opt_config_options an optional associative array with plugin config options
- */
-annotorious.Annotorious.prototype['addPlugin'] = function(pluginName, opt_config_options) {
-  this._plugins.push(new annotorious.plugin[pluginName](opt_config_options));
-}
-
-/**
  * Adds an annotation to an item on the page.
- * @param {object} annotation the annotation
+ * @param {Annotation} annotation the annotation
  */
-annotorious.Annotorious.prototype['addAnnotation'] = function(annotation) {
-  // TODO implement
+annotorious.Annotorious.prototype.addAnnotation = function(annotation) {
+  // TODO make this more efficient
+  goog.array.forEach(this._modules, function(module) {
+    module.addAnnotation(annotation);
+  });
 }
 
 /**
@@ -64,4 +58,19 @@ annotorious.Annotorious.prototype['removeAnnotation'] = function(annotation) {
   // TODO implement
 }
 
+/**
+ * Adds a plugin to Annotorious.
+ * @param {string} pluginName the plugin name
+ * @param {object} opt_config_options an optional associative array with plugin config options
+ */
+annotorious.Annotorious.prototype['addPlugin'] = function(pluginName, opt_config_options) {
+  this._plugins.push(new annotorious.plugin[pluginName](opt_config_options));
+}
+
 window['anno'] = new annotorious.Annotorious();
+
+annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.prototype.addAnnotation;
+annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
+
+
+
