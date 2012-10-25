@@ -54,15 +54,20 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
             
       var previousAnnotation = self._currentAnnotation;
       self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
-      self._redraw();
       self._eventsEnabled = true;
-            
+          
       if (previousAnnotation != self._currentAnnotation) {
+        // Annotation under mouse has changed in the mean time - redraw
+        self._redraw();
         self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATION,
           { annotation: previousAnnotation, mouseEvent: event });
   
         self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATION,
           { annotation: self._currentAnnotation, mouseEvent: event });
+      } else {
+        if (self._currentAnnotation)
+          // Annotation under mouse is the same - just keep showing the popup
+          self._popup.show();
       }
     }
   });
@@ -130,15 +135,6 @@ annotorious.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
 }
 
 /**
- * TODO has turned into a one-line method -> remove
- *
- * @private
- */
-annotorious.modules.image.Viewer.prototype._resetPopup = function(annotation, x, y) {
-  this._popup.show(annotation, x, y);
-}
-
-/**
  * @private
  */
 annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
@@ -191,7 +187,7 @@ annotorious.modules.image.Viewer.prototype._draw = function(annotation, color, l
 /**
  * @private
  */
-annotorious.modules.image.Viewer.prototype._redraw = function() {  
+annotorious.modules.image.Viewer.prototype._redraw = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
   
   var self = this;
@@ -205,7 +201,7 @@ annotorious.modules.image.Viewer.prototype._redraw = function() {
     // TODO need to introduce a bbox property that's supported by every shape type
     // Currently the shape.geometry will always be a yuma.geom.Rectangle
     var bbox = this._currentAnnotation.shape.geometry;
-    this._resetPopup(this._currentAnnotation, bbox.x, bbox.y + bbox.height + 5);
+    this._popup.show(this._currentAnnotation, bbox.x, bbox.y + bbox.height + 5);
 
     // TODO Orientation check - what if the popup would be outside the viewport?
   } else {

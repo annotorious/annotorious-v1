@@ -25,9 +25,12 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
 
   /** @private **/
   this._buttons = goog.dom.query('.yuma-popup-action-delete', this._element)[0];
-
+  
   /** @private **/
-  this._timer;
+  this._popupHideTimer;
+  
+  /** @private **/
+  this._buttonHideTimer;
 
   var btnDelete = goog.dom.query('.yuma-popup-action-delete', this._element)[0];
 
@@ -38,8 +41,18 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
       { annotation: self._currentAnnotation, mouseEvent: event });
   });
   
-  goog.events.listen(this._element, goog.events.EventType.MOUSEOVER, function(event) {
+  goog.events.listen(this._buttons, goog.events.EventType.MOUSEOVER, function(event) {
+    goog.style.setOpacity(self._buttons, 0.9);
+  });
+  
+  goog.events.listen(this._buttons, goog.events.EventType.MOUSEOUT, function() {
     goog.style.setOpacity(self._buttons, 0.4);
+  });
+  
+  goog.events.listen(this._element, goog.events.EventType.MOUSEOVER, function(event) {
+    window.clearTimeout(self._buttonHideTimer);
+    if (goog.style.getStyle(self._buttons, 'opacity') < 0.4)
+      goog.style.setOpacity(self._buttons, 0.4);
     self.clearHideTimer();
   });
   
@@ -48,6 +61,7 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
     self.startHideTimer();
   });
   
+  goog.style.setOpacity(this._buttons, 0.0);
   goog.style.setOpacity(this._element, 0.0);
   goog.dom.appendChild(parentEl, this._element);
 }
@@ -56,12 +70,12 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
  * Start the popup hide timer.
  */
 annotorious.viewer.Popup.prototype.startHideTimer = function() {
-  if (!this._timer) {
+  if (!this._popupHideTimer) {
     var self = this;
-    this._timer = window.setTimeout(function() {
+    this._popupHideTimer = window.setTimeout(function() {
       goog.style.setOpacity(self._element, 0.0);
       self._annotator.fireEvent(annotorious.events.EventType.POPUP_HIDDEN);
-      delete self._timer;
+      delete self._popupHideTimer;
     }, 300);
   }
 }
@@ -70,9 +84,9 @@ annotorious.viewer.Popup.prototype.startHideTimer = function() {
  * Clear the popup hide timer.
  */
 annotorious.viewer.Popup.prototype.clearHideTimer = function() {
-  if (this._timer) {
-    window.clearTimeout(this._timer);
-    delete this._timer;
+  if (this._popupHideTimer) {
+    window.clearTimeout(this._popupHideTimer);
+    delete this._popupHideTimer;
   }
 }
 
@@ -83,23 +97,20 @@ annotorious.viewer.Popup.prototype.clearHideTimer = function() {
  * @param {number} y coordiante (relative to the image)
  */
 annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
-  if (!this.isShown()) {
+  if (annotation && x && y) {
+    // New annotation and position - reset
     this._currentAnnotation = annotation;
     this._text.innerHTML = annotation.text;
     this.setPosition(x, y);
-    goog.style.setOpacity(this._element, 0.9); 
-
-    var self = this;
+    
     goog.style.setOpacity(this._buttons, 0.4);
-    window.setTimeout(function() {
+    var self = this;
+    this._buttonHideTimer = window.setTimeout(function() {
       goog.style.setOpacity(self._buttons, 0);
     }, 1000);
   }
-}
-
-annotorious.viewer.Popup.prototype.isShown = function() {
-  // TODO fix!
-  return goog.style.getOpacity(this._element) > 0;
+  
+  goog.style.setOpacity(this._element, 0.9); 
 }
 
 /**
