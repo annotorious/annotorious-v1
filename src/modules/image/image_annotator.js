@@ -41,13 +41,13 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   goog.dom.appendChild(annotationLayer, this._editCanvas);  
 
   var self = this;  
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function() { 
+  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function() {
     self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
     goog.style.setOpacity(viewCanvas, 1.0); 
     goog.style.setOpacity(hint, 0.8); 
   });
   
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function() { 
+  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function() {
     self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
     goog.style.setOpacity(viewCanvas, 0.4); 
     goog.style.setOpacity(hint, 0);
