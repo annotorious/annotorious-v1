@@ -89,7 +89,6 @@
 .yuma-popup-action {
   font-size:10px;
   text-decoration:none;
-  background-color:transparent;
   display:inline-block;
   color:#000;
   font-weight:bold;
@@ -111,6 +110,10 @@
   transition-property: opacity;
   transition-duration: 1s;
   transition-delay: 0s;
+}
+
+.yuma-popup-action:hover {
+  background-color:transparent;
 }
 
 .yuma-popup-action-delete {
