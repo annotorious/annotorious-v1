@@ -89,6 +89,7 @@
 .yuma-popup-action {
   font-size:10px;
   text-decoration:none;
+  background-color:transparent;
   display:inline-block;
   color:#000;
   font-weight:bold;
