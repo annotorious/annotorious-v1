@@ -60,10 +60,10 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
         // Annotation under mouse has changed in the mean time - redraw
         self._redraw();
         self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATION,
-          { annotation: previousAnnotation, mouseEvent: event });
+          { annotation: previousAnnotation, mouseEvent: self._cachedMouseEvent });
   
         self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATION,
-          { annotation: self._currentAnnotation, mouseEvent: event });
+          { annotation: self._currentAnnotation, mouseEvent: self._cachedMouseEvent });
       } else {
         if (self._currentAnnotation)
           // Annotation under mouse is the same - just keep showing the popup
