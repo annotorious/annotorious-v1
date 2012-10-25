@@ -103,6 +103,9 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
     this._text.innerHTML = annotation.text;
     this.setPosition(x, y);
     
+    if (this._buttonHideTimer)
+      window.clearTimeout(this._buttonHideTimer);
+      
     goog.style.setOpacity(this._buttons, 0.4);
     var self = this;
     this._buttonHideTimer = window.setTimeout(function() {
