@@ -61,12 +61,14 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
     self.startHideTimer();
   });
   
+  /*
   annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function(event) {
     self._popupHideTimer = window.setTimeout(function() {
       goog.style.setOpacity(self._element, 0.0);
       delete self._popupHideTimer;
     }, 300);
   });
+  */
   
   goog.style.setOpacity(this._buttons, 0.0);
   goog.style.setOpacity(this._element, 0.0);
