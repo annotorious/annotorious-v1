@@ -10,10 +10,10 @@ goog.require('goog.dom.query');
  * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.viewer.Popup = function(parentEl, annotator) {      
+annotorious.viewer.Popup = function(parentEl, annotator) {
   /** @private **/
-  this._annotator = annotator;
-
+  this._annotator = annotator;  
+  
   /** @private **/
   this._element = goog.soy.renderAsElement(annotorious.templates.popup);
   
@@ -61,6 +61,10 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
     self.startHideTimer();
   });
   
+  annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function(event) {
+    self.startHideTimer();
+  });
+  
   goog.style.setOpacity(this._buttons, 0.0);
   goog.style.setOpacity(this._element, 0.0);
   goog.dom.appendChild(parentEl, this._element);
@@ -97,6 +101,8 @@ annotorious.viewer.Popup.prototype.clearHideTimer = function() {
  * @param {number} y coordiante (relative to the image)
  */
 annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
+  this.clearHideTimer();
+  
   if (annotation && x && y) {
     // New annotation and position - reset
     this._currentAnnotation = annotation;
