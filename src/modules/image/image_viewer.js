@@ -47,7 +47,7 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
     }
   });
 
-  annotator.addHandler(annotorious.events.EventType.POPUP_HIDDEN, function() {
+  annotator.addHandler(annotorious.events.EventType.BEFORE_POPUP_HIDE, function() {
     if (self._cachedMouseEvent) {
       var mouseX = self._cachedMouseEvent.offsetX;
       var mouseY = self._cachedMouseEvent.offsetY;
@@ -67,7 +67,7 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
       } else {
         if (self._currentAnnotation)
           // Annotation under mouse is the same - just keep showing the popup
-          self._popup.show();
+          self._popup.clearHideTimer();
       }
     }
   });

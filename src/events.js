@@ -98,7 +98,7 @@ annotorious.events.EventType = {
   /**
    * The annotation popup widget was hidden
    */
-  POPUP_HIDDEN: goog.events.getUniqueId('popup_hidden'),
+  BEFORE_POPUP_HIDE: goog.events.getUniqueId('before_popup_hide'),
 
   /**
    * The 'delete annotation' button was pressed in the popup

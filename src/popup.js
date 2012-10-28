@@ -32,6 +32,9 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   /** @private **/
   this._buttonHideTimer;
 
+  /** @private **/
+  this._cancelHide = false;
+
   var btnDelete = goog.dom.query('.yuma-popup-action-delete', this._element)[0];
 
   var self = this;
@@ -79,12 +82,16 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
  * Start the popup hide timer.
  */
 annotorious.viewer.Popup.prototype.startHideTimer = function() {
+  this._cancelHide = false;
   if (!this._popupHideTimer) {
     var self = this;
     this._popupHideTimer = window.setTimeout(function() {
-      goog.style.setOpacity(self._element, 0.0);
-      self._annotator.fireEvent(annotorious.events.EventType.POPUP_HIDDEN);
-      delete self._popupHideTimer;
+      self._annotator.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
+      if (!self._cancelHide) {
+        goog.style.setOpacity(self._element, 0.0);
+        goog.style.setOpacity(self._buttons, 0.4);
+        delete self._popupHideTimer;
+      }
     }, 300);
   }
 }
@@ -93,6 +100,7 @@ annotorious.viewer.Popup.prototype.startHideTimer = function() {
  * Clear the popup hide timer.
  */
 annotorious.viewer.Popup.prototype.clearHideTimer = function() {
+  this._cancelHide = true;
   if (this._popupHideTimer) {
     window.clearTimeout(this._popupHideTimer);
     delete this._popupHideTimer;
@@ -111,7 +119,7 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
   if (annotation && x && y) {
     // New annotation and position - reset
     this._currentAnnotation = annotation;
-    this._text.innerHTML = annotation.text;
+    this._text.innerHTML = annotorious.viewer.Popup.toHTML(annotation.text);
     this.setPosition(x, y);
     
     if (this._buttonHideTimer)
@@ -123,7 +131,7 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
       goog.style.setOpacity(self._buttons, 0);
     }, 1000);
   }
-  
+
   goog.style.setOpacity(this._element, 0.9); 
 }
 
@@ -134,5 +142,10 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
  */
 annotorious.viewer.Popup.prototype.setPosition = function(x, y) {
   goog.style.setPosition(this._element, new goog.math.Coordinate(x, y));
+}
+
+annotorious.viewer.Popup.toHTML = function(text) {
+  var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+  return text.replace(exp,"<a href=\"$1\" target=\"blank\">$1</a>"); 
 }
 
