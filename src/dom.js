@@ -62,11 +62,3 @@ annotorious.dom.addOnLoadHandler = function(fn) {
   }   
 }
 
-/*
-annotorious.dom.cancelBubble = function(event) {
- var e = event ? event : window.event;
- if (e.stopPropagation) e.stopPropagation();
- if (e.cancelBubble != null) e.cancelBubble = true;
-}
-*/
-
