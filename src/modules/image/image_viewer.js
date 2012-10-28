@@ -47,8 +47,15 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
     }
   });
 
+  annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function(event) {
+    self._popup.startHideTimer();
+    delete self._currentAnnotation;
+    self._redraw();
+    self._eventsEnabled = true;
+  });
+
   annotator.addHandler(annotorious.events.EventType.BEFORE_POPUP_HIDE, function() {
-    if (self._cachedMouseEvent) {
+    if (!self._eventsEnabled && self._cachedMouseEvent) {
       var mouseX = self._cachedMouseEvent.offsetX;
       var mouseY = self._cachedMouseEvent.offsetY;
             
@@ -204,8 +211,5 @@ annotorious.modules.image.Viewer.prototype._redraw = function() {
     this._popup.show(this._currentAnnotation, bbox.x, bbox.y + bbox.height + 5);
 
     // TODO Orientation check - what if the popup would be outside the viewport?
-  } else {
-    if (this._showPopups)
-      this._clearPopup();    
   }
 }
