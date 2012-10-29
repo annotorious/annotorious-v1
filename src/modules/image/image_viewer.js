@@ -50,7 +50,6 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
   annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function(event) {
     self._popup.startHideTimer();
     delete self._currentAnnotation;
-    self._redraw();
     self._eventsEnabled = true;
   });
 
@@ -76,6 +75,10 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
           // Annotation under mouse is the same - just keep showing the popup
           self._popup.clearHideTimer();
       }
+    } else {
+      // Popup is hiding and mouse events are enabled? Must be because 
+      // the mouse is outside the annotatable media! Redraw.
+      self._redraw();
     }
   });
 }
