@@ -80,6 +80,7 @@ annotorious.viewer.Popup.prototype.startHideTimer = function() {
       self._annotator.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
       if (!self._cancelHide) {
         goog.style.setOpacity(self._element, 0.0);
+        goog.style.setStyle(self._element, 'pointer-events', 'none');
         goog.style.setOpacity(self._buttons, 0.4);
         delete self._popupHideTimer;
       }
@@ -123,7 +124,8 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
     }, 1000);
   }
 
-  goog.style.setOpacity(this._element, 0.9); 
+  goog.style.setOpacity(this._element, 0.9);
+  goog.style.setStyle(self._element, 'pointer-events', 'auto');
 }
 
 /**
