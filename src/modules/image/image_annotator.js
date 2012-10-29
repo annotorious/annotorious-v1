@@ -32,6 +32,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   
   var viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:image.width, height:image.height });
+  goog.style.setOpacity(viewCanvas, 0.4); 
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
   /** @private **/
