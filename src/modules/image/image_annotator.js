@@ -35,10 +35,16 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
   /** @private **/
+  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, new annotorious.viewer.Popup(annotationLayer, this), this);
+
+  /** @private **/
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:image.width, height:image.height });
   goog.style.showElement(this._editCanvas, false); 
   goog.dom.appendChild(annotationLayer, this._editCanvas);  
+
+  /** @private **/
+  this._selector = new annotorious.selection.DragSelector(this._editCanvas, this);
 
   var self = this;  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
@@ -60,12 +66,6 @@ annotorious.modules.image.ImageAnnotator = function(image) {
       goog.style.setOpacity(hint, 0);
     }
   });
- 
-  /** @private **/
-  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, new annotorious.viewer.Popup(annotationLayer, this), this);
-  
-  /** @private **/
-  this._selector = new annotorious.selection.DragSelector(this._editCanvas, this);
 
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
     goog.style.showElement(self._editCanvas, true);
