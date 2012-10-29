@@ -54,8 +54,11 @@ annotorious.Annotorious.prototype.addAnnotation = function(annotation) {
 /**
  * Removes an annotation from an item on the page.
  */
-annotorious.Annotorious.prototype['removeAnnotation'] = function(annotation) {
-  // TODO implement
+annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
+  // TODO make this more efficient
+  goog.array.forEach(this._modules, function(module) {
+    module.removeAnnotation(annotation);
+  });
 }
 
 /**
