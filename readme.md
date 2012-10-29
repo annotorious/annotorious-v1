@@ -15,7 +15,7 @@ Want to help out? There are many ways you can contribute!
 * Want to improve our documentation? We'd really appreciate an extra hand [on our Wiki](annotorious/wiki)!
 * Design-minded? Annotorious could use some style and CSS-wizardry. [Get in touch](http://groups.google.com/group/annotorious)!
 * JavaScript-savvy? We're always looking for fellow coders! Check the [developer section on our Wiki](annotorious/wiki/Developers).
-* Last but not least: we're looking for an Annotorious Logo! Ideas welcome!
+* Last but not least: we're looking for an Annotorious logo! Ideas welcome!
 
 ## License
 
