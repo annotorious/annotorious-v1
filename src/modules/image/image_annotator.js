@@ -49,9 +49,8 @@ annotorious.modules.image.ImageAnnotator = function(image) {
 
   var self = this;  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
-    // TODO support IE
     var relatedTarget = event.relatedTarget;
-    if (!goog.dom.contains(annotationLayer, relatedTarget)) {
+    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
       goog.style.setOpacity(viewCanvas, 1.0); 
       goog.style.setOpacity(hint, 0.8); 
@@ -59,9 +58,8 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
-    // TODO support IE
     var relatedTarget = event.relatedTarget;
-    if (!goog.dom.contains(annotationLayer, relatedTarget)) {
+    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
       goog.style.setOpacity(viewCanvas, 0.4); 
       goog.style.setOpacity(hint, 0);
