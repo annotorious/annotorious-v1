@@ -48,7 +48,6 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
   });
 
   annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function(event) {
-    self._popup.startHideTimer();
     delete self._currentAnnotation;
     self._eventsEnabled = true;
   });
@@ -71,9 +70,10 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
         self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATION,
           { annotation: self._currentAnnotation, mouseEvent: self._cachedMouseEvent });
       } else {
-        if (self._currentAnnotation)
+        if (self._currentAnnotation) {
           // Annotation under mouse is the same - just keep showing the popup
           self._popup.clearHideTimer();
+        }
       }
     } else {
       // Popup is hiding and mouse events are enabled? Must be because 
@@ -151,7 +151,7 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
   var topAnnotation = this.topAnnotationAt(event.offsetX, event.offsetY);
     
   // TODO remove code duplication
-  
+
   var self = this;
   if (topAnnotation) {
     if (!this._currentAnnotation) {
@@ -167,7 +167,7 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
     }
   } else {
     if (this._currentAnnotation) {
-      // Mouse moved out of an annotation, into empty space      
+      // Mouse moved out of an annotation, into empty space  
       this._eventsEnabled = false;
       this._popup.startHideTimer();
     }

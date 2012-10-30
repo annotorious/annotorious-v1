@@ -1,5 +1,5 @@
 {
-  "id": "yuma2-okfn-plugin",
+  "id": "annotorious-okfn-plugin",
   "define": {
     "goog.DEBUG": false,
     "goog.dom.ASSUME_STANDARDS_MODE": true

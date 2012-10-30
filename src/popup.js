@@ -63,6 +63,10 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
     goog.style.setOpacity(self._buttons, 0);
     self.startHideTimer();
   });
+
+  annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function(event) {
+    self.startHideTimer();
+  });
     
   goog.style.setOpacity(this._buttons, 0.0);
   goog.style.setOpacity(this._element, 0.0);

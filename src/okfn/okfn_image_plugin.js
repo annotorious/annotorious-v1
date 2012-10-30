@@ -43,13 +43,13 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     return !goog.dom.classes.has(okfnAnnotator.editor.element[0], 'annotator-hide');  
   }
   
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function() {
+  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
     goog.dom.classes.add(annotationLayer, 'hover');
     if (!(popup.isShown() || editorIsShown()))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
   });
   
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function() {
+  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
     goog.dom.classes.remove(annotationLayer, 'hover'); 
     if (!(popup.isShown() || editorIsShown()))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
@@ -81,7 +81,6 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {	
     var annotation = { url: image.src, shape: event.shape };
-
     okfnAnnotator.publish('beforeAnnotationCreated', annotation);
 	
     var imgOffset = annotorious.dom.getOffset(image);
@@ -114,7 +113,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
 
   okfnAnnotator.viewer.on('hide', function() {
-    eventBroker.fireEvent(annotorious.events.EventType.POPUP_HIDDEN);
+    eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
     if (!goog.dom.classes.has(annotationLayer, 'hover'))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
   });
@@ -184,6 +183,8 @@ annotorious.okfn.Popup.prototype.startHideTimer = function() {
  */
 annotorious.okfn.Popup.prototype.clearHideTimer = function() {
   this._okfnAnnotator.clearViewerHideTimer();
+  if (!this.isShown())
+    goog.dom.classes.remove(this._okfnAnnotator.viewer.element[0], 'annotator-hide');
 }
 
 /**
@@ -220,7 +221,7 @@ annotorious.okfn.Popup.prototype.isShown = function() {
  * OKFN plugin interface.
  */
 window['Annotator']['Plugin']['AnnotoriousImagePlugin'] = (function() {
-  function YumaImagePlugin(element, options) {
+  function AnnotoriousImagePlugin(element, options) {
     this._el = element;
   }
 
