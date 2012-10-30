@@ -216,17 +216,15 @@ annotorious.okfn.Popup.prototype.isShown = function() {
   return this._okfnAnnotator.viewer.isShown();
 }
 
-
-
 /**
  * OKFN plugin interface.
  */
-window['Annotator']['Plugin']['YumaImagePlugin'] = (function() {
+window['Annotator']['Plugin']['AnnotoriousImagePlugin'] = (function() {
   function YumaImagePlugin(element, options) {
     this._el = element;
   }
 
-  YumaImagePlugin.prototype['pluginInit'] = function() {
+  AnnotoriousImagePlugin.prototype['pluginInit'] = function() {
     var images = this._el.getElementsByTagName('img');
     
     var self = this;
@@ -237,6 +235,6 @@ window['Annotator']['Plugin']['YumaImagePlugin'] = (function() {
     });
   }
   
-  return YumaImagePlugin;
+  return AnnotoriousImagePlugin;
 })();
 
