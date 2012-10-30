@@ -44,15 +44,17 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   }
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
-    goog.dom.classes.add(annotationLayer, 'hover');
-    if (!(popup.isShown() || editorIsShown()))
+    if (!(popup.isShown() || editorIsShown())) {
+      goog.dom.classes.add(annotationLayer, 'hover');
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
+    }
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
-    goog.dom.classes.remove(annotationLayer, 'hover'); 
-    if (!(popup.isShown() || editorIsShown()))
+    if (!(popup.isShown() || editorIsShown())) {
+      goog.dom.classes.remove(annotationLayer, 'hover'); 
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+    }
   });
  
   var popup = new annotorious.okfn.Popup(image, eventBroker, okfnAnnotator, baseOffset);
@@ -99,6 +101,8 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     // event handler is called N times & we need to check against the image SRC.
     // TODO find a better solution
     if (annotation.url == image.src) {
+      goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
+      
       // TODO code duplication -> move into a function
       var imgOffset = annotorious.dom.getOffset(image);
       var geometry = annotation.shape.geometry;
