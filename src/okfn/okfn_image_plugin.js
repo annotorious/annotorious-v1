@@ -100,9 +100,11 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     // Problem: We have N yuma.okfn.ImagePlugin instances for N images, hence this
     // event handler is called N times & we need to check against the image SRC.
     // TODO find a better solution
-    if (annotation.url == image.src) {
+    if (annotation.url == image.src) { 
       goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
-      
+      goog.style.setStyle(viewCanvas, 'pointer-events', 'none');
+      viewer.highlightAnnotation(undefined);
+
       // TODO code duplication -> move into a function
       var imgOffset = annotorious.dom.getOffset(image);
       var geometry = annotation.shape.geometry;
@@ -147,6 +149,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   okfnAnnotator.subscribe('annotationEditorHidden', function(editor) {
     goog.style.showElement(editCanvas, false);
+    goog.style.setStyle(viewCanvas, 'pointer-events', 'auto');
     selector.stopSelection();
   });
 }

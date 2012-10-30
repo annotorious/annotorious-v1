@@ -108,6 +108,16 @@ annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotatio
 }
 
 /**
+ * Highlights a particular annotation in the viewer, or de-highlights (if that's a
+ * word...) all, if no annotation is passed to the method.
+ * @param {annotorious.annotation.Annotation | undefined} opt_annotation the annotation
+ */
+annotorious.modules.image.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
+  this._currentAnnotation = opt_annotation;
+  this._redraw();
+}
+
+/**
  * Convenience method returing only the top-most annotation at the specified coordinates.
  * @param {number} px the X coordinate
  * @param {number} py the Y coordinates
