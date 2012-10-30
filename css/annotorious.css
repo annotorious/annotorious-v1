@@ -151,10 +151,11 @@
   font-family:Verdana, Arial;
   font-size:11px;
   padding:4px;
-  margin:0px;  
+  margin:0px 0px 3px 0px;  
   color:#000;
   text-shadow:none;
   overflow-y:auto;
+  display:block;
 }
 
 .yuma-button {
