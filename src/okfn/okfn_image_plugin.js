@@ -34,44 +34,32 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     { width:image.width, height:image.height });
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
-  var editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
-    { width:image.width, height:image.height });
-  goog.style.showElement(editCanvas, false); 
-  goog.dom.appendChild(annotationLayer, editCanvas);  
-  
-  var editorIsShown = function() {
-    return !goog.dom.classes.has(okfnAnnotator.editor.element[0], 'annotator-hide');  
-  }
-  
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
-    goog.dom.classes.add(annotationLayer, 'annotorious-over-media');
-    var relatedTarget = event.relatedTarget;
-    if (relatedTarget == image || !(goog.dom.contains(annotationLayer, relatedTarget) ||
-	  editorIsShown() || popup.isShown()))
-
-      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
-  });
-  
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
-    goog.dom.classes.remove(annotationLayer, 'annotorious-over-media');
-    var relatedTarget = event.relatedTarget;
-    if (!(goog.dom.contains(annotationLayer, relatedTarget) ||
-	  popup.isShown() || editorIsShown())) {
-
-      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
-    }
-  });
- 
   var popup = new annotorious.okfn.Popup(image, eventBroker, okfnAnnotator, baseOffset);
 
   var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, eventBroker);
   
-  var selector = new annotorious.selection.DragSelector(editCanvas, eventBroker);
+  var editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
+    { width:image.width, height:image.height });
+  goog.style.showElement(editCanvas, false); 
+  goog.dom.appendChild(annotationLayer, editCanvas);  
 
-  var self = this;
+  var selector = new annotorious.selection.DragSelector(editCanvas, eventBroker);
+  
+  var self = this;  
+  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
+    var relatedTarget = event.relatedTarget;
+    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget))
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
+  });
+  
+  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
+    var relatedTarget = event.relatedTarget;
+    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget))
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+  });
+ 
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
     goog.style.showElement(editCanvas, true);
-    viewer.highlightAnnotation(undefined);
     selector.startSelection(event.offsetX, event.offsetY);
   });
   
@@ -81,8 +69,6 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
   
   eventBroker.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function() {
-    popup.startHideTimer();
-    viewer.highlightAnnotation(undefined);
     goog.style.setOpacity(viewCanvas, 0.4); 
     goog.style.setOpacity(hint, 0);
   });
@@ -127,6 +113,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     }
   });
 
+/*
   okfnAnnotator.viewer.on('hide', function() {
     if (viewer.getHighlightedAnnotation()) {
       eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
@@ -157,7 +144,8 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       }
     }
   });
-  
+  */
+
   okfnAnnotator.subscribe('annotationCreated', function(annotation) {
     if (annotation.url == image.src) {
       selector.stopSelection();
@@ -191,74 +179,6 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     goog.style.setStyle(viewCanvas, 'pointer-events', 'auto');
     selector.stopSelection();
   });
-}
-
-/**
- * A wrapper around the OKFN viewer popup, corresponding to Yuma's Popup 'interface'.
- * @param {element} image the image
- * @param {yuma.events.EventBroker} eventBroker reference to the Yuma EventBroker
- * @param {Object} okfnAnnotator reference to the OKFN Annotator
- * @param {Object} the base offset of the annotatable DOM element
- * @constructor
- */
-annotorious.okfn.Popup = function(image, eventBroker, okfnAnnotator, baseOffset) {  
-  /** @private **/
-  this._image = image;
-
-  /** @private **/
-  this._eventBroker = eventBroker;
-  
-  /** @private **/ 
-  this._okfnAnnotator = okfnAnnotator;
-  
-  /** @private **/
-  this._baseOffset = baseOffset;
-}
-
-/**
- * Start the popup hide timer.
- */
-annotorious.okfn.Popup.prototype.startHideTimer = function() {
-  this._okfnAnnotator.startViewerHideTimer();
-}
-
-/**
- * Clear the popup hide timer.
- */
-annotorious.okfn.Popup.prototype.clearHideTimer = function() {
-  this._okfnAnnotator.clearViewerHideTimer();
-  if (!this.isShown())
-    goog.dom.classes.remove(this._okfnAnnotator.viewer.element[0], 'annotator-hide');
-}
-
-/**
- * Show the popup, loaded with the specified annotation, at the specified coordinates.
- * @param {Object} annotation the annotation
- * @param {number} x coordinate (relative to the image)
- * @param {number} y coordiante (relative to the image)
- */
-annotorious.okfn.Popup.prototype.show = function(annotation, x, y) {
-  var baseOffset = annotorious.dom.getOffset(this._okfnAnnotator.element); 
-  var imgOffset = annotorious.dom.getOffset(this._image); 
-
-  this._okfnAnnotator.showViewer([annotation], {top: window.pageYOffset - this._baseOffset.top , left: 0});   
-  goog.style.setPosition(this._okfnAnnotator.viewer.element[0],
-			 imgOffset.left - this._baseOffset.left + x + 16,
-			 imgOffset.top + window.pageYOffset - this._baseOffset.top + y);
-  this._okfnAnnotator.clearViewerHideTimer();
-}
-
-/**
- * Set the position of the popup.
- * @param {number} x coordinate (relative to the image)
- * @param {number} y coordinate (realtive to the image)
- */
-annotorious.okfn.Popup.prototype.setPosition = function(x, y) {
-  goog.style.setPosition(this._okfnAnnotator.viewer.element[0], x, y);  
-}
-
-annotorious.okfn.Popup.prototype.isShown = function() {
-  return this._okfnAnnotator.viewer.isShown();
 }
 
 /**

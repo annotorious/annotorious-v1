@@ -11,6 +11,7 @@
     "src/geometry/rectangle.js",
     "src/modules/image/image_viewer.js",
     "src/okfn/okfn_image_plugin.js",
+    "src/okfn/okfn_popup.js",
     "src/selection/drag_selector.js",
     "src/annotation.js",
     "src/dom.js",
@@ -24,6 +25,6 @@
   "externs": [
     "externs/okfn_annotator.js"
   ],
-  "mode": "ADVANCED", // "ADVANCED"
+  "mode": "RAW", // "ADVANCED"
   "level": "DEFAULT" // "VERBOSE"
 }
