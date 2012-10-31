@@ -44,21 +44,20 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   }
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
-    goog.dom.classes.add(annotationLayer, 'annotorious-hover');
+    goog.dom.classes.add(annotationLayer, 'annotorious-over-media');
     var relatedTarget = event.relatedTarget;
-    if (!(goog.dom.contains(annotationLayer, relatedTarget) ||
-	  editorIsShown() || popup.isShown())) {
+    if (relatedTarget == image || !(goog.dom.contains(annotationLayer, relatedTarget) ||
+	  editorIsShown() || popup.isShown()))
 
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
-    }
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
-    goog.dom.classes.remove(annotationLayer, 'annotorious-hover');
     var relatedTarget = event.relatedTarget;
     if (!(goog.dom.contains(annotationLayer, relatedTarget) ||
-	  editorIsShown() || popup.isShown())) {
+	  popup.isShown() || editorIsShown())) {
 
+      goog.dom.classes.remove(annotationLayer, 'annotorious-over-media');
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
     }
   });
@@ -108,7 +107,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     // Problem: We have N yuma.okfn.ImagePlugin instances for N images, hence this
     // event handler is called N times & we need to check against the image SRC.
     // TODO find a better solution
-    if (annotation.url == image.src) { 
+    if (annotation.url == image.src) {
       goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
       goog.style.setStyle(viewCanvas, 'pointer-events', 'none');
       viewer.highlightAnnotation(undefined);
@@ -129,8 +128,28 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   okfnAnnotator.viewer.on('hide', function() {
     if (viewer.getHighlightedAnnotation()) {
       eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
-      if (!goog.dom.classes.has(annotationLayer, 'annotorious-hover'))
+      if (!goog.dom.classes.has(annotationLayer, 'annotorious-over-media'))
 	eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+    }
+  });
+  
+  // Ugly and violent: sometimes the viewer doesn't fade out when outside of the image
+  // area - this workaround forces a hide (and OUT_OF_ANNOTATBLE_MEDIA) after 500ms
+  goog.events.listen(okfnAnnotator.viewer.element[0], goog.events.EventType.MOUSEOUT, function(event) {
+    if (viewer.getHighlightedAnnotation()) {
+      if (!goog.dom.contains(okfnAnnotator.viewer.element[0], event.relatedTarget)) {
+	var relatedTarget = event.relatedTarget;
+	setTimeout(function() {
+	  if (!(goog.dom.contains(annotationLayer, relatedTarget))) {
+	    if (!goog.dom.classes.has(okfnAnnotator.viewer.element[0], 'annotator-hide')) {
+	      goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
+	      goog.dom.classes.remove(annotationLayer, 'annotorious-over-media');
+	      viewer.highlightAnnotation(undefined);
+	      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+	    }
+	  }
+	}, 500);
+      }
     }
   });
   
