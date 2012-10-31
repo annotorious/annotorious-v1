@@ -138,17 +138,16 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.events.listen(okfnAnnotator.viewer.element[0], goog.events.EventType.MOUSEOUT, function(event) {
     if (viewer.getHighlightedAnnotation()) {
       if (!goog.dom.contains(okfnAnnotator.viewer.element[0], event.relatedTarget)) {
-	var relatedTarget = event.relatedTarget;
-	setTimeout(function() {
-	  if (!(goog.dom.contains(annotationLayer, relatedTarget))) {
-	    if (!goog.dom.classes.has(okfnAnnotator.viewer.element[0], 'annotator-hide')) {
+	if (event.relatedTarget.parentNode != annotationLayer) {
+	  window.setTimeout(function() {
+	    if (!goog.dom.classes.has(okfnAnnotator.viewer.element[0], 'annotator-hide')) {	      
 	      goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
 	      goog.dom.classes.remove(annotationLayer, 'annotorious-over-media');
 	      viewer.highlightAnnotation(undefined);
 	      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
 	    }
-	  }
-	}, 500);
+	  }, 500);     
+	}
       }
     }
   });
