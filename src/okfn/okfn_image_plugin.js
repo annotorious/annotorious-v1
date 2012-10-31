@@ -39,18 +39,27 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.style.showElement(editCanvas, false); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
   
+  var editorIsShown = function() {
+    return !goog.dom.classes.has(okfnAnnotator.editor.element[0], 'annotator-hide');  
+  }
+  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
-    goog.style.setOpacity(viewCanvas, 1.0); 
-    goog.style.setOpacity(hint, 0.8); 
+    goog.dom.classes.add(annotationLayer, 'annotorious-hover');
+    var relatedTarget = event.relatedTarget;
+    if (!(goog.dom.contains(annotationLayer, relatedTarget) ||
+	  editorIsShown() || popup.isShown())) {
+
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
+    }
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
+    goog.dom.classes.remove(annotationLayer, 'annotorious-hover');
     var relatedTarget = event.relatedTarget;
-    if (!(goog.dom.contains(okfnAnnotator.editor.element[0], relatedTarget) ||
-	  goog.dom.contains(okfnAnnotator.viewer.element[0], relatedTarget))) {
+    if (!(goog.dom.contains(annotationLayer, relatedTarget) ||
+	  editorIsShown() || popup.isShown())) {
 
-      goog.style.setOpacity(viewCanvas, 0.4); 
-      goog.style.setOpacity(hint, 0);
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
     }
   });
  
@@ -65,6 +74,17 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     goog.style.showElement(editCanvas, true);
     viewer.highlightAnnotation(undefined);
     selector.startSelection(event.offsetX, event.offsetY);
+  });
+  
+  eventBroker.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA, function() {
+    goog.style.setOpacity(viewCanvas, 1.0); 
+    goog.style.setOpacity(hint, 0.8); 
+  });
+  
+  eventBroker.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function() {
+    popup.startHideTimer();
+    goog.style.setOpacity(viewCanvas, 0.4); 
+    goog.style.setOpacity(hint, 0);
   });
 
   /** Communication yuma -> okfn **/
@@ -107,7 +127,11 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
 
   okfnAnnotator.viewer.on('hide', function() {
-    eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
+    if (viewer.getHighlightedAnnotation()) {
+      eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
+      if (!goog.dom.classes.has(annotationLayer, 'annotorious-hover'))
+	eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+    }
   });
   
   okfnAnnotator.subscribe('annotationCreated', function(annotation) {
@@ -116,6 +140,9 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       if(annotation.url == image.src) {
 	viewer.addAnnotation(annotation);
       }
+      
+      if (!goog.dom.classes.has(annotationLayer, 'annotorious-hover'))
+	eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
     }
   });
   

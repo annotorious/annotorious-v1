@@ -119,6 +119,10 @@ annotorious.modules.image.Viewer.prototype.highlightAnnotation = function(opt_an
   this._redraw();
 }
 
+annotorious.modules.image.Viewer.prototype.getHighlightedAnnotation = function() {
+  return this._currentAnnotation;
+}
+
 /**
  * Convenience method returing only the top-most annotation at the specified coordinates.
  * @param {number} px the X coordinate
