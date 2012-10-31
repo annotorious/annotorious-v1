@@ -114,6 +114,8 @@ annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotatio
  */
 annotorious.modules.image.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
   this._currentAnnotation = opt_annotation;
+  if (!opt_annotation)
+    this._popup.startHideTimer();
   this._redraw();
 }
 

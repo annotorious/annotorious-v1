@@ -68,6 +68,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
 
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
     goog.style.showElement(self._editCanvas, true);
+    self._viewer.highlightAnnotation(undefined);
     self._selector.startSelection(event.offsetX, event.offsetY);
   });
 

@@ -66,6 +66,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var self = this;
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
     goog.style.showElement(editCanvas, true);
+    viewer.highlightAnnotation(undefined);
     selector.startSelection(event.offsetX, event.offsetY);
   });
 
@@ -81,7 +82,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
 
   /** Communication yuma -> okfn **/
   
-  eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {	
+  eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {    
     var annotation = { url: image.src, shape: event.shape };
     okfnAnnotator.publish('beforeAnnotationCreated', annotation);
 	
