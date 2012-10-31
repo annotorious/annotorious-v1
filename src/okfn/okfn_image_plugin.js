@@ -18,7 +18,7 @@ goog.require('goog.style');
 annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var baseOffset = annotorious.dom.getOffset(okfnAnnotator.element[0].firstChild);
     
-  var eventBroker = new annotorious.events.EventBroker(this);
+  var eventBroker = new annotorious.events.EventBroker();
   
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
@@ -39,21 +39,18 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.style.showElement(editCanvas, false); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
   
-  var editorIsShown = function() {
-    return !goog.dom.classes.has(okfnAnnotator.editor.element[0], 'annotator-hide');  
-  }
-  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
-    if (!(popup.isShown() || editorIsShown())) {
-      goog.dom.classes.add(annotationLayer, 'hover');
-      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
-    }
+    goog.style.setOpacity(viewCanvas, 1.0); 
+    goog.style.setOpacity(hint, 0.8); 
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
-    if (!(popup.isShown() || editorIsShown())) {
-      goog.dom.classes.remove(annotationLayer, 'hover'); 
-      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+    var relatedTarget = event.relatedTarget;
+    if (!(goog.dom.contains(okfnAnnotator.editor.element[0], relatedTarget) ||
+	  goog.dom.contains(okfnAnnotator.viewer.element[0], relatedTarget))) {
+
+      goog.style.setOpacity(viewCanvas, 0.4); 
+      goog.style.setOpacity(hint, 0);
     }
   });
  
@@ -68,16 +65,6 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     goog.style.showElement(editCanvas, true);
     viewer.highlightAnnotation(undefined);
     selector.startSelection(event.offsetX, event.offsetY);
-  });
-
-  eventBroker.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA, function() {
-    goog.style.setOpacity(viewCanvas, 1.0); 
-    goog.style.setOpacity(hint, 0.8); 
-  });
-  
-  eventBroker.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function() {
-    goog.style.setOpacity(viewCanvas, 0.4); 
-    goog.style.setOpacity(hint, 0);
   });
 
   /** Communication yuma -> okfn **/
@@ -121,14 +108,14 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
 
   okfnAnnotator.viewer.on('hide', function() {
     eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
-    if (!goog.dom.classes.has(annotationLayer, 'hover'))
-      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
   });
   
   okfnAnnotator.subscribe('annotationCreated', function(annotation) {
-    selector.stopSelection();
-    if(annotation.url == image.src) {
-      viewer.addAnnotation(annotation);
+    if (annotation.url == image.src) {
+      selector.stopSelection();
+      if(annotation.url == image.src) {
+	viewer.addAnnotation(annotation);
+      }
     }
   });
   
@@ -154,8 +141,6 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     selector.stopSelection();
   });
 }
-
-
 
 /**
  * A wrapper around the OKFN viewer popup, corresponding to Yuma's Popup 'interface'.

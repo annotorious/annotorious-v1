@@ -18,7 +18,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   this._image = image;
   
   /** @private **/
-  this._eventBroker = new annotorious.events.EventBroker(this);
+  this._eventBroker = new annotorious.events.EventBroker();
   
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
