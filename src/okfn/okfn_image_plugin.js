@@ -53,11 +53,11 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
+    goog.dom.classes.remove(annotationLayer, 'annotorious-over-media');
     var relatedTarget = event.relatedTarget;
     if (!(goog.dom.contains(annotationLayer, relatedTarget) ||
 	  popup.isShown() || editorIsShown())) {
 
-      goog.dom.classes.remove(annotationLayer, 'annotorious-over-media');
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
     }
   });
@@ -82,6 +82,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   eventBroker.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function() {
     popup.startHideTimer();
+    viewer.highlightAnnotation(undefined);
     goog.style.setOpacity(viewCanvas, 0.4); 
     goog.style.setOpacity(hint, 0);
   });
@@ -108,6 +109,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     // event handler is called N times & we need to check against the image SRC.
     // TODO find a better solution
     if (annotation.url == image.src) {
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
       goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
       goog.style.setStyle(viewCanvas, 'pointer-events', 'none');
       viewer.highlightAnnotation(undefined);
@@ -136,15 +138,19 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   // Ugly and violent: sometimes the viewer doesn't fade out when outside of the image
   // area - this workaround forces a hide (and OUT_OF_ANNOTATBLE_MEDIA) after 500ms
   goog.events.listen(okfnAnnotator.viewer.element[0], goog.events.EventType.MOUSEOUT, function(event) {
-    if (viewer.getHighlightedAnnotation()) {
+    var currentAnnotation = viewer.getHighlightedAnnotation();
+    if (currentAnnotation) {
       if (!goog.dom.contains(okfnAnnotator.viewer.element[0], event.relatedTarget)) {
 	if (event.relatedTarget.parentNode != annotationLayer) {
 	  window.setTimeout(function() {
-	    if (!goog.dom.classes.has(okfnAnnotator.viewer.element[0], 'annotator-hide')) {	      
-	      goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
-	      goog.dom.classes.remove(annotationLayer, 'annotorious-over-media');
-	      viewer.highlightAnnotation(undefined);
-	      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+	    if (viewer.getHighlightedAnnotation() == currentAnnotation) {
+	      if (!goog.dom.classes.has(annotationLayer, 'annotorious-over-media')) {
+		if (!goog.dom.classes.has(okfnAnnotator.viewer.element[0], 'annotator-hide')) {	      
+		  goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
+		  goog.dom.classes.remove(annotationLayer, 'annotorious-over-media');
+		  viewer.highlightAnnotation(undefined);
+		}
+	      }
 	    }
 	  }, 500);     
 	}
