@@ -20,7 +20,8 @@ var Annotator = {
   /** Viewer object **/   
   viewer : {
     element : {},
-    load : function(annotations) {}
+    load : function(annotations) {},
+    on : function() {}
   },
   
   /** Show the editor widget **/  

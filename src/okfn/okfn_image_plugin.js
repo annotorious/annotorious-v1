@@ -34,6 +34,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     { width:image.width, height:image.height });
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
+
   var popup = new annotorious.okfn.Popup(image, eventBroker, okfnAnnotator, baseOffset);
 
   var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, eventBroker);
@@ -44,17 +45,49 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.dom.appendChild(annotationLayer, editCanvas);  
 
   var selector = new annotorious.selection.DragSelector(editCanvas, eventBroker);
-  
+ 
+  /** Checks if the mouseover/out event happened inside the annotatable area. **/
+  /** Annotator makes this task a little complex...                           **/
+  var isMouseEventInside = function(event) {
+    var relatedTarget = event.relatedTarget;
+    
+    // No related target - mouse was inside the annotationLayer on page load
+    if (!relatedTarget)
+      return true;  
+
+    // Related target is a child of the annotation layer - inside
+    if (goog.dom.contains(annotationLayer, relatedTarget))
+      return true;
+
+    // Related target is part of the Annotator editor - inside
+    if (goog.dom.contains(okfnAnnotator.editor.element[0], relatedTarget))
+      return true;
+
+    // Related target is part of the Annotator popup - inside
+    if (goog.dom.contains(okfnAnnotator.viewer.element[0], relatedTarget))
+      return true;
+
+    return false;
+  }
+ 
   var self = this;  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
-    var relatedTarget = event.relatedTarget;
-    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget))
+    if (!isMouseEventInside(event))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
-    var relatedTarget = event.relatedTarget;
-    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget))
+    if (!isMouseEventInside(event))
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+  });
+
+  popup.addMouseOverHandler(function(event) {
+    if (!isMouseEventInside(event))
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
+  });
+
+  popup.addMouseOutHandler(function(event) { 
+    if (!isMouseEventInside(event))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
   });
  
@@ -91,9 +124,6 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   /** Communication okfn -> yuma **/
   
   okfnAnnotator.viewer.on('edit', function(annotation) {
-    // Problem: We have N yuma.okfn.ImagePlugin instances for N images, hence this
-    // event handler is called N times & we need to check against the image SRC.
-    // TODO find a better solution
     if (annotation.url == image.src) {
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
       goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
@@ -113,59 +143,21 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     }
   });
 
-/*
-  okfnAnnotator.viewer.on('hide', function() {
-    if (viewer.getHighlightedAnnotation()) {
-      eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
-      if (!goog.dom.classes.has(annotationLayer, 'annotorious-over-media'))
-	eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
-    }
-  });
-  
-  // Ugly and violent: sometimes the viewer doesn't fade out when outside of the image
-  // area - this workaround forces a hide (and OUT_OF_ANNOTATBLE_MEDIA) after 500ms
-  goog.events.listen(okfnAnnotator.viewer.element[0], goog.events.EventType.MOUSEOUT, function(event) {
-    var currentAnnotation = viewer.getHighlightedAnnotation();
-    if (currentAnnotation) {
-      if (!goog.dom.contains(okfnAnnotator.viewer.element[0], event.relatedTarget)) {
-	if (event.relatedTarget.parentNode != annotationLayer) {
-	  window.setTimeout(function() {
-	    if (viewer.getHighlightedAnnotation() == currentAnnotation) {
-	      if (!goog.dom.classes.has(annotationLayer, 'annotorious-over-media')) {
-		if (!goog.dom.classes.has(okfnAnnotator.viewer.element[0], 'annotator-hide')) {	      
-		  goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
-		  goog.dom.classes.remove(annotationLayer, 'annotorious-over-media');
-		  viewer.highlightAnnotation(undefined);
-		}
-	      }
-	    }
-	  }, 500);     
-	}
-      }
-    }
-  });
-  */
-
   okfnAnnotator.subscribe('annotationCreated', function(annotation) {
     if (annotation.url == image.src) {
       selector.stopSelection();
       if(annotation.url == image.src) {
 	viewer.addAnnotation(annotation);
       }
-      
-      if (!goog.dom.classes.has(annotationLayer, 'annotorious-hover'))
-	eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
     }
   });
   
   okfnAnnotator.subscribe('annotationsLoaded', function(annotations) {
-    // Use Google's forEach utility instead!
-    for(var i in annotations) {
-      var annotation = annotations[i];
+    goog.array.forEach(annotations, function(annotation) {
       if(annotation.url == image.src) {
 	viewer.addAnnotation(annotation);
       }
-    }
+    });
   });
   
   okfnAnnotator.subscribe('annotationDeleted', function(annotation) {
