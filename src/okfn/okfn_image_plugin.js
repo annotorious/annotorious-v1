@@ -64,7 +64,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       return true;
 
     // Related target is part of the Annotator popup - inside
-    if (goog.dom.contains(okfnAnnotator.viewer.element[0], relatedTarget))
+    if (goog.dom.contains(okfnAnnotator.viewer.element[0], relatedTarget) && popup.isViewerCurrentlyOwned())
       return true;
 
     return false;
@@ -98,6 +98,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
   
   eventBroker.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA, function() {
+    okfnAnnotator.clearViewerHideTimer(); // In case the mouse arrives (fast) from an HTML annotation
     goog.style.setOpacity(viewCanvas, 1.0); 
     goog.style.setOpacity(hint, 0.8); 
   });

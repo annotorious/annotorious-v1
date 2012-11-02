@@ -39,7 +39,7 @@ annotorious.okfn.Popup = function(image, eventBroker, okfnAnnotator, baseOffset)
 
   var self = this;
   goog.events.listen(this._okfnAnnotator.viewer.element[0], goog.events.EventType.MOUSEOVER, function(event) {
-    if (self._isViewerCurrentlyOwned()) {
+    if (self.isViewerCurrentlyOwned()) {
       self.clearHideTimer()
       goog.array.forEach(self._mouseoverHandlers, function(handler) {
         handler(event);
@@ -48,7 +48,7 @@ annotorious.okfn.Popup = function(image, eventBroker, okfnAnnotator, baseOffset)
   });
   
   goog.events.listen(this._okfnAnnotator.viewer.element[0], goog.events.EventType.MOUSEOUT, function(event) {
-    if (self._isViewerCurrentlyOwned()) {
+    if (self.isViewerCurrentlyOwned()) {
       okfnAnnotator.clearViewerHideTimer(); // Switch off Annotator's own fade out
       self.startHideTimer();
       goog.array.forEach(self._mouseoutHandlers, function(handler) {
@@ -64,9 +64,8 @@ annotorious.okfn.Popup = function(image, eventBroker, okfnAnnotator, baseOffset)
  * viewer is an image annotation, and the annotation 'url' property matches this wrapper's
  * _image.src.
  * @returns {boolean} true if the viewer is currently owned by this wrapper
- * @private 
  */
-annotorious.okfn.Popup.prototype._isViewerCurrentlyOwned = function() {
+annotorious.okfn.Popup.prototype.isViewerCurrentlyOwned = function() {
   var annotations = this._okfnAnnotator.viewer.annotations;
 
   if (!annotations) 
@@ -110,7 +109,7 @@ annotorious.okfn.Popup.prototype.startHideTimer = function() {
       var self = this;
       this._popupHideTimer = window.setTimeout(function() {
         self._eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
-        if (!self._cancelHide && self._isViewerCurrentlyOwned()) {
+        if (!self._cancelHide && self.isViewerCurrentlyOwned()) {
           goog.dom.classes.add(self._okfnAnnotator.viewer.element[0], 'annotator-hide');
           self._okfnAnnotator.viewer.annotations = [];
           delete self._popupHideTimer;
