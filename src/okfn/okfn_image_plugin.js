@@ -93,6 +93,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
  
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
     goog.style.showElement(editCanvas, true);
+    viewer.highlightAnnotation(undefined);
     selector.startSelection(event.offsetX, event.offsetY);
   });
   
