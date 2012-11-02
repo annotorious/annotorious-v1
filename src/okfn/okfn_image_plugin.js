@@ -168,6 +168,9 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     if(annotation.url == image.src) {
       viewer.removeAnnotation(annotation);
     }
+
+    // Annotator silently closes the popup - so we need to fire the event manually afterwards
+    eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
   });
   
   okfnAnnotator.subscribe('annotationEditorHidden', function(editor) {
