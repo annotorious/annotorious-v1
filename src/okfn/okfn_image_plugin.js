@@ -120,6 +120,11 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     okfnAnnotator.showEditor(annotation, {top: window.pageYOffset - baseOffset.top, left: 0});
     goog.style.setPosition(okfnAnnotator.editor.element[0], x, y);	
   });
+
+  eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
+    goog.style.showElement(editCanvas, false);
+    selector.stopSelection();
+  });
   
   /** Communication okfn -> yuma **/
   
