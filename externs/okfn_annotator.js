@@ -20,6 +20,7 @@ var Annotator = {
   /** Viewer object **/   
   viewer : {
     element : {},
+    annotations : [],
     load : function(annotations) {},
     on : function() {}
   },

@@ -125,9 +125,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   okfnAnnotator.viewer.on('edit', function(annotation) {
     if (annotation.url == image.src) {
-      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
-      goog.dom.classes.add(okfnAnnotator.viewer.element[0], 'annotator-hide');
-      goog.style.setStyle(viewCanvas, 'pointer-events', 'none');
+      goog.style.showElement(editCanvas, true);
       viewer.highlightAnnotation(undefined);
 
       // TODO code duplication -> move into a function
@@ -168,8 +166,10 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   okfnAnnotator.subscribe('annotationEditorHidden', function(editor) {
     goog.style.showElement(editCanvas, false);
-    goog.style.setStyle(viewCanvas, 'pointer-events', 'auto');
     selector.stopSelection();
+    
+    // TODO workaround before we have decent 'edit' behavior in Annotorious standalone!
+    eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
   });
 }
 

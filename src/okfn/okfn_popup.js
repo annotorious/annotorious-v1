@@ -32,9 +32,6 @@ annotorious.okfn.Popup = function(image, eventBroker, okfnAnnotator, baseOffset)
   this._cancelHide = false;
 
   /** @private **/
-  this._currentAnnotation;
-
-  /** @private **/
   this._mouseoverHandlers = [];
 
   /** @private **/
@@ -42,26 +39,43 @@ annotorious.okfn.Popup = function(image, eventBroker, okfnAnnotator, baseOffset)
 
   var self = this;
   goog.events.listen(this._okfnAnnotator.viewer.element[0], goog.events.EventType.MOUSEOVER, function(event) {
-    if (self._currentAnnotation) {
-      if (self._currentAnnotation.url == self._image.src) {
-        self.clearHideTimer();
-        goog.array.forEach(self._mouseoverHandlers, function(handler) {
-          handler(event);
-        });
-      }
+    if (self._isViewerCurrentlyOwned()) {
+      self.clearHideTimer()
+      goog.array.forEach(self._mouseoverHandlers, function(handler) {
+        handler(event);
+      });
     }
   });
   
   goog.events.listen(this._okfnAnnotator.viewer.element[0], goog.events.EventType.MOUSEOUT, function(event) {
-    if (self._currentAnnotation) {
-      if (self._currentAnnotation.url == self._image.src) {
-        self.startHideTimer();
-        goog.array.forEach(self._mouseoutHandlers, function(handler) {
-          handler(event);
-        });
-      }
+    if (self._isViewerCurrentlyOwned()) {
+      okfnAnnotator.clearViewerHideTimer(); // Switch off Annotator's own fade out
+      self.startHideTimer();
+      goog.array.forEach(self._mouseoutHandlers, function(handler) {
+        handler(event);
+      });
     }
   });
+}
+
+/**
+ * Utility method that tests if the viewer is currently 'owned' by the image that this
+ * popup wrapper is responsible for. I.e. whether the (first) current annotation in the 
+ * viewer is an image annotation, and the annotation 'url' property matches this wrapper's
+ * _image.src.
+ * @returns {boolean} true if the viewer is currently owned by this wrapper
+ * @private 
+ */
+annotorious.okfn.Popup.prototype._isViewerCurrentlyOwned = function() {
+  var annotations = this._okfnAnnotator.viewer.annotations;
+
+  if (!annotations) 
+    return false;
+
+  if (annotations.length < 1)
+    return false;
+
+  return annotations[0].url == this._image.src;
 }
 
 /**
@@ -90,16 +104,19 @@ annotorious.okfn.Popup.prototype.addMouseOutHandler = function(handler) {
  * Start the popup hide timer.
  */
 annotorious.okfn.Popup.prototype.startHideTimer = function() {
-  this._cancelHide = false;
-  if (!this._popupHideTimer) {
-    var self = this;
-    this._popupHideTimer = window.setTimeout(function() {
-      self._eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
-      if (!self._cancelHide) {
-        goog.dom.classes.add(self._okfnAnnotator.viewer.element[0], 'annotator-hide');
-        delete self._popupHideTimer;
-      }
-    }, 300);
+  if (!goog.dom.classes.has(this._okfnAnnotator.viewer.element[0], 'annotator-hide')) {
+    this._cancelHide = false;
+    if (!this._popupHideTimer) {
+      var self = this;
+      this._popupHideTimer = window.setTimeout(function() {
+        self._eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
+        if (!self._cancelHide && self._isViewerCurrentlyOwned()) {
+          goog.dom.classes.add(self._okfnAnnotator.viewer.element[0], 'annotator-hide');
+          self._okfnAnnotator.viewer.annotations = [];
+          delete self._popupHideTimer;
+        }
+      }, 300);
+    }
   }
 }
 
@@ -121,7 +138,7 @@ annotorious.okfn.Popup.prototype.clearHideTimer = function() {
  * @param {number} y coordiante (relative to the image)
  */
 annotorious.okfn.Popup.prototype.show = function(annotation, x, y) {
-  this._currentAnnotation = annotation;
+  goog.dom.classes.remove(this._okfnAnnotator.viewer.element[0], 'annotator-hide');
 
   var imgOffset = annotorious.dom.getOffset(this._image); 
 
