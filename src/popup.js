@@ -24,7 +24,7 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   this._text = goog.dom.query('.annotorious-popup-text', this._element)[0];
 
   /** @private **/
-  this._buttons = goog.dom.query('.annotorious-popup-action-delete', this._element)[0];
+  this._buttons = goog.dom.query('.annotorious-popup-button-delete', this._element)[0];
   
   /** @private **/
   this._popupHideTimer;
@@ -35,7 +35,7 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   /** @private **/
   this._cancelHide = false;
 
-  var btnDelete = goog.dom.query('.annotorious-popup-action-delete', this._element)[0];
+  var btnDelete = goog.dom.query('.annotorious-popup-button-delete', this._element)[0];
 
   var self = this;
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
