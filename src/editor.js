@@ -26,13 +26,13 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, px, py, opt
   this._div = goog.soy.renderAsElement(annotorious.templates.editform);
 
   /** @private **/
-  this._textarea = goog.dom.query('.annotation-text', this._div)[0];
+  this._textarea = goog.dom.query('.annotorious-editor-text', this._div)[0];
 
   /** @private **/
-  this._btnCancel = goog.dom.query('.annotation-cancel', this._div)[0];
+  this._btnCancel = goog.dom.query('.annotorious-editor-button-cancel', this._div)[0];
 
   /** @private **/
-  this._btnSave = goog.dom.query('.annotation-save', this._div)[0];
+  this._btnSave = goog.dom.query('.annotorious-editor-button-save', this._div)[0];
 
   var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function(event) {

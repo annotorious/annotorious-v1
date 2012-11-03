@@ -1,54 +1,6 @@
-.yuma-hint {
-  line-height: normal;
-  font-family:Arial, Verdana, Sans;
-  font-size:11px;
-  color:#000;
-  background-color:#fff;
-  margin:0px;
-  padding:5px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -khtml-border-radius: 5px;
+/** Popup **/
 
-  /* Firefox */
-  -moz-transition-property: opacity;
-  -moz-transition-duration: 0.5s;
-  -moz-transition-delay: 0s;
-  /* WebKit */
-  -webkit-transition-property: opacity;
-  -webkit-transition-duration: 0.5s;
-  -webkit-transition-delay: 0s;
-  /* Opera */
-  -o-transition-property: opacity;
-  -o-transition-duration: 0.5s;
-  -o-transition-delay: 0s;
-  /* Standard */
-  transition-property: opacity;
-  transition-duration: 0.5s;
-  transition-delay: 0s;
-}
-
-.yuma-canvas {
-  /* Firefox */
-  -moz-transition-property: opacity;
-  -moz-transition-duration: 0.5s;
-  -moz-transition-delay: 0s;
-  /* WebKit */
-  -webkit-transition-property: opacity;
-  -webkit-transition-duration: 0.5s;
-  -webkit-transition-delay: 0s;
-  /* Opera */
-  -o-transition-property: opacity;
-  -o-transition-duration: 0.5s;
-  -o-transition-delay: 0s;
-  /* Standard */
-  transition-property: opacity;
-  transition-duration: 0.5s;
-  transition-delay: 0s;
-}
-
-.yuma-popup {
+.annotorious-popup {
   line-height:135%;
   font-family:Arial, Verdana, Sans;
   font-size:12px;
@@ -66,25 +18,21 @@
   -webkit-box-shadow:0px 5px 15px #111;  
   box-shadow:0px 5px 15px #111;  
 
-  /* Firefox */
   -moz-transition-property: opacity;
   -moz-transition-duration: 0.5s;
   -moz-transition-delay: 0s;
-  /* WebKit */
   -webkit-transition-property: opacity;
   -webkit-transition-duration: 0.5s;
   -webkit-transition-delay: 0s;
-  /* Opera */
   -o-transition-property: opacity;
   -o-transition-duration: 0.5s;
   -o-transition-delay: 0s;
-  /* Standard */
   transition-property: opacity;
   transition-duration: 0.5s;
   transition-delay: 0s;
 }
 
-.yuma-popup-action {
+.annotorious-popup-button {
   font-size:10px;
   text-decoration:none;
   display:inline-block;
@@ -92,29 +40,25 @@
   font-weight:bold;
   margin:0px 0px 0px 10px;
   
-  /* Firefox */
   -moz-transition-property: opacity;
   -moz-transition-duration: 1s;
   -moz-transition-delay: 0s;
-  /* WebKit */
   -webkit-transition-property: opacity;
   -webkit-transition-duration: 1s;
   -webkit-transition-delay: 0s;
-  /* Opera */
   -o-transition-property: opacity;
   -o-transition-duration: 1s;
   -o-transition-delay: 0s;
-  /* Standard */
   transition-property: opacity;
   transition-duration: 1s;
   transition-delay: 0s;
 }
 
-.yuma-popup-action:hover {
+.annotorious-popup-button:hover {
   background-color:transparent;
 }
 
-.yuma-popup-action-delete {
+.annotorious-popup-button-delete {
   background:url(delete.png);
   width:16px;
   height:16px;
@@ -123,7 +67,9 @@
   float:right;
 }
 
-.yuma-editform {
+/** Editor **/
+
+.annotorious-editor {
   line-height: normal;
   padding:0px 0px 2px 0px;
   background-color:#f2f2f2;
@@ -139,7 +85,7 @@
   box-shadow:0px 5px 15px #111;  
 }
 
-.annotation-text {
+.annotorious-editor-text {
   border-width:0px 0px 1px 0px;
   border-style:solid;
   border-color:#ccc;
@@ -158,7 +104,7 @@
   display:block;
 }
 
-.yuma-button {
+.annotorious-editor-button {
   float:right;
   line-height: normal;
   display:inline-block;
@@ -181,8 +127,50 @@
   border-radius:2px;
 }
 
-.yuma-button:hover {
+.annotorious-editor-button:hover {
   background:#999;
 }
 
+/** Module components **/
 
+.annotorious-canvas {
+  -moz-transition-property: opacity;
+  -moz-transition-duration: 0.5s;
+  -moz-transition-delay: 0s;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 0.5s;
+  -webkit-transition-delay: 0s;
+  -o-transition-property: opacity;
+  -o-transition-duration: 0.5s;
+  -o-transition-delay: 0s;
+  transition-property: opacity;
+  transition-duration: 0.5s;
+  transition-delay: 0s;
+}
+
+.annotorious-hint {
+  line-height: normal;
+  font-family:Arial, Verdana, Sans;
+  font-size:11px;
+  color:#000;
+  background-color:#fff;
+  margin:0px;
+  padding:5px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -khtml-border-radius: 5px;
+
+  -moz-transition-property: opacity;
+  -moz-transition-duration: 0.5s;
+  -moz-transition-delay: 0s;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 0.5s;
+  -webkit-transition-delay: 0s;
+  -o-transition-property: opacity;
+  -o-transition-duration: 0.5s;
+  -o-transition-delay: 0s;
+  transition-property: opacity;
+  transition-duration: 0.5s;
+  transition-delay: 0s;
+}

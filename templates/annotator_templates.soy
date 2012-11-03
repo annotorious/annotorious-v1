@@ -4,9 +4,9 @@
  * A dummy element to be used for annotation popups later on
  */
 {template .popup}
-<div class="yuma-popup" style="position:absolute;">
-  <a class="yuma-popup-action yuma-popup-action-delete" title="Delete" href="#delete">DELETE</a>
-  <span class="yuma-popup-text"></span>
+<div class="annotorious-popup" style="position:absolute;">
+  <a class="annotorious-popup-action annotorious-popup-action-delete" title="Delete" href="#delete">DELETE</a>
+  <span class="annotorious-popup-text"></span>
 </div>
 {/template}
 
@@ -15,12 +15,12 @@
  * A basic annotation edit text form
  */
 {template .editform}
-<div class="yuma-editform" style="position:absolute;">
+<div class="annotorious-editor" style="position:absolute;">
   <form>
     <textarea class="annotation-text" placeholder="Add a Comment..."></textarea>
     <div style="margin-top:-2px;">
-      <a class="yuma-button annotation-cancel" href="#cancel">Cancel</a>
-      <a class="yuma-button annotation-save" href="#save">Save</a>
+      <a class="annotorious-editor-button annotorious-editor-button-cancel" href="#cancel">Cancel</a>
+      <a class="annotorious-editor-button annotorious-editor-button-save" href="#save">Save</a>
     </div>
   </form>
 </div>

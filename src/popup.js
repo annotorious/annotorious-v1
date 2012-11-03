@@ -21,10 +21,10 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   this._currentAnnotation;
 
   /** @private **/
-  this._text = goog.dom.query('.yuma-popup-text', this._element)[0];
+  this._text = goog.dom.query('.annotorious-popup-text', this._element)[0];
 
   /** @private **/
-  this._buttons = goog.dom.query('.yuma-popup-action-delete', this._element)[0];
+  this._buttons = goog.dom.query('.annotorious-popup-action-delete', this._element)[0];
   
   /** @private **/
   this._popupHideTimer;
@@ -35,7 +35,7 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   /** @private **/
   this._cancelHide = false;
 
-  var btnDelete = goog.dom.query('.yuma-popup-action-delete', this._element)[0];
+  var btnDelete = goog.dom.query('.annotorious-popup-action-delete', this._element)[0];
 
   var self = this;
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
@@ -141,6 +141,10 @@ annotorious.viewer.Popup.prototype.setPosition = function(x, y) {
   goog.style.setPosition(this._element, new goog.math.Coordinate(x, y));
 }
 
+/**
+ * Utility method that makes links mentioned in annotations clickable.
+ * TODO move this into a 'clickable' plugin!
+ */
 annotorious.viewer.Popup.toHTML = function(text) {
   var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
   return text.replace(exp,"<a href=\"$1\" target=\"blank\">$1</a>"); 
