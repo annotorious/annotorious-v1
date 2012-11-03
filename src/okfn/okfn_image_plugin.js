@@ -45,9 +45,21 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.dom.appendChild(annotationLayer, editCanvas);  
 
   var selector = new annotorious.selection.DragSelector(editCanvas, eventBroker);
+
+  /** 
+   * Checks if the OKFN Editor is currently 'owned' by this image. I.e. whether
+   * the current annotation in the editor is an image annotation, and the annotation 
+   * 'url' property matches this wrapper's _image.src.
+   */
+  var isEditorCurrentlyOwned = function() {
+    // TODO implement
+    return true;
+  }
  
-  /** Checks if the mouseover/out event happened inside the annotatable area. **/
-  /** Annotator makes this task a little complex...                           **/
+  /**
+   * Checks if the mouseover/out event happened inside the annotatable area. 
+   * Unfortunately Annotator makes this task a little complex...
+   */                       
   var isMouseEventInside = function(event) {
     var relatedTarget = event.relatedTarget;
     
@@ -60,7 +72,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       return true;
 
     // Related target is part of the Annotator editor - inside
-    if (goog.dom.contains(okfnAnnotator.editor.element[0], relatedTarget))
+    if (goog.dom.contains(okfnAnnotator.editor.element[0], relatedTarget) && isEditorCurrentlyOwned());
       return true;
 
     // Related target is part of the Annotator popup - inside
