@@ -52,8 +52,12 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
    * 'url' property matches this wrapper's _image.src.
    */
   var isEditorCurrentlyOwned = function() {
-    // TODO implement
-    return true;
+    var annotation = okfnAnnotator.editor.annotation;
+
+    if (!annotation) 
+      return false;
+
+    return annotation.url == image.src;
   }
  
   /**
@@ -72,7 +76,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       return true;
 
     // Related target is part of the Annotator editor - inside
-    if (goog.dom.contains(okfnAnnotator.editor.element[0], relatedTarget) && isEditorCurrentlyOwned());
+    if (goog.dom.contains(okfnAnnotator.editor.element[0], relatedTarget) && isEditorCurrentlyOwned())
       return true;
 
     // Related target is part of the Annotator popup - inside

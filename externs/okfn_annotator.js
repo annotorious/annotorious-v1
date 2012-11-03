@@ -31,6 +31,7 @@ var Annotator = {
   /** Editor object **/  
   editor : {
     element : {},
+    annotation : {},
     show : function() {}
   }
 }
