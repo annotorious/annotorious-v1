@@ -2,6 +2,7 @@ goog.provide('annotorious.modules.image.ImageModule');
 
 goog.require('goog.array');
 goog.require('goog.events');
+goog.require('goog.structs.Map');
 
 /**
  * The Image Module scans the page for images marked with the
@@ -20,7 +21,7 @@ annotorious.modules.image.ImageModule.prototype.init = function() {
   this._imagesToLoad = goog.array.clone(this._allImages);
   
   /** @private **/
-  this._annotators = [];
+  this._annotators = new goog.structs.Map();
   
   /** @private **/
   this._eventHandlers = [];
@@ -45,7 +46,7 @@ annotorious.modules.image.ImageModule.prototype.addPlugin = function(plugin) {
   this._plugins.push(plugin);
 
   // TODO proper implementation
-  goog.array.forEach(this._annotators, function(annotator) {
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
     plugin['onPopupInit'](annotator.getPopup());
   });
 }
@@ -64,8 +65,13 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
         annotator.addHandler(eventHandler.type, eventHandler.handler);
       });
       
-      self._annotators.push(annotator);
+      self._annotators.set(image.src, annotator);
       goog.array.remove(self._imagesToLoad, image);
+
+      // Callback to registered plugins
+      goog.array.forEach(self._plugins, function(plugin) {
+        plugin['onPopupInit'](annotator.getPopup());
+      });
     }
   });  
 }
@@ -76,7 +82,7 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
  * @param {function} handler the handler function
  */
 annotorious.modules.image.ImageModule.prototype.addHandler = function(type, handler) {
-  goog.array.forEach(this._annotators, function(annotator, idx, array) {
+  goog.array.forEach(this._annotators.getValues(), function(annotator, idx, array) {
     annotator.addHandler(type, handler);
   });
   
@@ -91,7 +97,7 @@ annotorious.modules.image.ImageModule.prototype.addHandler = function(type, hand
 annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
   // TODO make this more efficient!
   // TODO this will fail for lazy loading cases
-  goog.array.forEach(this._annotators, function(annotator) {
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
     if (annotator.getImage().src == annotation.src)
       annotator.addAnnotation(annotation);
   });
