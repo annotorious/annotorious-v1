@@ -24,7 +24,7 @@ annotorious.Annotorious = function() {
     });
 
     goog.array.forEach(self._plugins, function(plugin) {
-      plugin.initPlugin(self);
+      plugin['initPlugin'](self);
     });
   });
 }
@@ -67,13 +67,13 @@ annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
  * @param {object} opt_config_options an optional associative array with plugin config options
  */
 annotorious.Annotorious.prototype['addPlugin'] = function(pluginName, opt_config_options) {
-  this._plugins.push(new annotorious.plugin[pluginName](opt_config_options));
+  this._plugins.push(new window['annotorious']['plugin'][pluginName](opt_config_options));
 }
 
 window['anno'] = new annotorious.Annotorious();
-
 annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.prototype.addAnnotation;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
 
-
+window['annotorious'] = {};
+window['annotorious']['plugin'] = {};
 

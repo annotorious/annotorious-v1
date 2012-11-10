@@ -67,6 +67,12 @@
   float:right;
 }
 
+.annotorious-popup-field {
+  border-top:1px solid #ccc;
+  margin:6px 0px 0px 0px;
+  padding-top:4px;
+}
+
 /** Editor **/
 
 .annotorious-editor {

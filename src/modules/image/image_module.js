@@ -57,6 +57,11 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
   });  
 }
 
+
+annotorious.modules.image.ImageModule.prototype.addPlugin = function(plugin) {
+  // TODO implement
+}
+
 /**
  * Adds a lifecycle event handler to the image module.
  * @param {yuma.events.EventType} type the event type
@@ -77,6 +82,7 @@ annotorious.modules.image.ImageModule.prototype.addHandler = function(type, hand
  */
 annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
   // TODO make this more efficient!
+  // TODO this will fail for lazy loading cases
   goog.array.forEach(this._annotators, function(annotator) {
     if (annotator.getImage().src == annotation.src)
       annotator.addAnnotation(annotation);

@@ -74,6 +74,23 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
 }
 
 /**
+ * Adds a field to the popup GUI widget. A field can be either a string (containing
+ * HTML) or a function that takes an Annotation as argument and returns an (HTML) string.
+ * @param {string | function} field the field
+ */
+annotorious.viewer.Popup.prototype.addField = function(field) {
+  var fieldEl = goog.dom.createDom('div', 'annotorious-popup-field');
+  
+  if (goog.isString(field))  {
+    fieldEl.innerHTML = field;
+  } else if (goog.isFunction(field)) {
+    // TODO implement
+  }
+
+  goog.dom.appendChild(this._element, fieldEl);
+}
+
+/**
  * Start the popup hide timer.
  */
 annotorious.viewer.Popup.prototype.startHideTimer = function() {
