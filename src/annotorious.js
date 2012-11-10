@@ -25,6 +25,9 @@ annotorious.Annotorious = function() {
 
     goog.array.forEach(self._plugins, function(plugin) {
       plugin['initPlugin'](self);
+      goog.array.forEach(self._modules, function(module) {
+        module.addPlugin(plugin);
+      });
     });
   });
 }

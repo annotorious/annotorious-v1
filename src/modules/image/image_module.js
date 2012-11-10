@@ -12,6 +12,7 @@ goog.require('goog.events');
 annotorious.modules.image.ImageModule = function() { }
   
 annotorious.modules.image.ImageModule.prototype.init = function() {
+
   /** @private **/
   this._allImages = goog.dom.query('img.annotatable', document);
   
@@ -23,6 +24,9 @@ annotorious.modules.image.ImageModule.prototype.init = function() {
   
   /** @private **/
   this._eventHandlers = [];
+
+  /** @private **/
+  this._plugins = [];
   
   // Make images in viewport annotatable
   this._lazyLoad();
@@ -34,6 +38,15 @@ annotorious.modules.image.ImageModule.prototype.init = function() {
       self._lazyLoad();
     else
       goog.events.unlistenByKey(key);
+  });
+}
+
+annotorious.modules.image.ImageModule.prototype.addPlugin = function(plugin) {
+  this._plugins.push(plugin);
+
+  // TODO proper implementation
+  goog.array.forEach(this._annotators, function(annotator) {
+    plugin['onPopupInit'](annotator.getPopup());
   });
 }
 
@@ -55,11 +68,6 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
       goog.array.remove(self._imagesToLoad, image);
     }
   });  
-}
-
-
-annotorious.modules.image.ImageModule.prototype.addPlugin = function(plugin) {
-  // TODO implement
 }
 
 /**

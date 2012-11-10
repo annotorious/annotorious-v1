@@ -36,7 +36,10 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
   /** @private **/
-  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, new annotorious.viewer.Popup(annotationLayer, this), this);
+  this._popup = new annotorious.viewer.Popup(annotationLayer, this);
+
+  /** @private **/
+  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this._popup, this);
 
   /** @private **/
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
@@ -106,6 +109,14 @@ annotorious.modules.image.ImageAnnotator = function(image) {
  */
 annotorious.modules.image.ImageAnnotator.prototype.getImage = function() {
   return this._image;
+}
+
+/** 
+ * Returns the popup instance managed by this annotator.
+ * @returns {annotorious.viewer.Popup} the popup
+ */
+annotorious.modules.image.ImageAnnotator.prototype.getPopup = function() {
+  return this._popup;
 }
 
 /**

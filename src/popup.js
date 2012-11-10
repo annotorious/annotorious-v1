@@ -167,3 +167,6 @@ annotorious.viewer.Popup.toHTML = function(text) {
   return text.replace(exp,"<a href=\"$1\" target=\"blank\">$1</a>"); 
 }
 
+// Export addField method
+annotorious.viewer.Popup.prototype['addField'] = annotorious.viewer.Popup.prototype.addField;
+
