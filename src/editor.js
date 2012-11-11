@@ -10,12 +10,10 @@ goog.require('goog.style');
  * @param {annotorious.selection.Selector} selection reference to the selection widget
  * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
  * @param {element} parentEl the DOM element to attach the editor to
- * @param {number} px the X coordinate where the editor should be positioned
- * @param {number} py the Y coordinate where the editor should be positioned
  * @param {annotorious.annotation.Annotation} the (optional) existing annotation to edit
  * @constructor
  */
-annotorious.editor.Editor = function(selection, annotator, parentEl, px, py, opt_annotation) {
+annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotation) {
   /** @private **/
   this._selection = selection;
   
@@ -49,11 +47,24 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, px, py, opt
     self.close();
   });
  
-  this.setPosition(px, py);
+  goog.style.showElement(this._div, false);
   goog.dom.appendChild(parentEl, this._div);
   this._textarea.focus();
 
   annotator.fireEvent(annotorious.events.EventType.ANNOTATION_EDIT, { annotation: opt_annotation });
+}
+
+annotorious.editor.Editor.prototype.open = function() {
+  goog.style.showElement(this._div, true);
+  this._textarea.focus();
+}
+
+/**
+ * Closes the editor.
+ */
+annotorious.editor.Editor.prototype.close = function() {
+  goog.style.showElement(this._div, false);
+  this._textarea.value = "";
 }
 
 /**
@@ -65,12 +76,6 @@ annotorious.editor.Editor.prototype.setPosition = function(x, y) {
   goog.style.setPosition(this._div, x, y);
 }
 
-/**
- * Closes the editor.
- */
-annotorious.editor.Editor.prototype.close = function() {
-  goog.dom.removeNode(this._div);
-}
 
 /**
  * Gets the annotation that is the current state of the editor.

@@ -50,6 +50,9 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   /** @private **/
   this._selector = new annotorious.selection.DragSelector(this._editCanvas, this);
 
+  /** @private **/
+  this._editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);
+
   var self = this;  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
     var relatedTarget = event.relatedTarget;
@@ -77,9 +80,9 @@ annotorious.modules.image.ImageAnnotator = function(image) {
 
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
     var shape = event.shape;
-    var editor = new annotorious.editor.Editor(self._selector, self, annotationLayer,
-                                        shape.geometry.x + self._image.offsetLeft,
-                                        shape.geometry.y + shape.geometry.height + 4 + self._image.offsetTop);
+    self._editor.setPosition(shape.geometry.x + self._image.offsetLeft,
+                             shape.geometry.y + shape.geometry.height + 4 + self._image.offsetTop);
+    self._editor.open();
   });
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
@@ -117,6 +120,14 @@ annotorious.modules.image.ImageAnnotator.prototype.getImage = function() {
  */
 annotorious.modules.image.ImageAnnotator.prototype.getPopup = function() {
   return this._popup;
+}
+
+/**
+ * Returns the editor instance managed by this annotator.
+ * @returns {annotorious.editor.Editor} the editor
+ */
+annotorious.modules.image.ImageAnnotator.prototype.getEditor = function() {
+  return this._editor;
 }
 
 /**
