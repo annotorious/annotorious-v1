@@ -35,6 +35,9 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   /** @private **/
   this._cancelHide = false;
 
+  /** @private **/
+  this._extraFields = [];
+
   var btnDelete = goog.dom.query('.annotorious-popup-button-delete', this._element)[0];
 
   var self = this;
@@ -84,7 +87,7 @@ annotorious.viewer.Popup.prototype.addField = function(field) {
   if (goog.isString(field))  {
     fieldEl.innerHTML = field;
   } else if (goog.isFunction(field)) {
-    // TODO implement
+    this._extraFields.push({el: fieldEl, fn: field});
   }
 
   goog.dom.appendChild(this._element, fieldEl);
@@ -143,6 +146,11 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
     this._buttonHideTimer = window.setTimeout(function() {
       goog.style.setOpacity(self._buttons, 0);
     }, 1000);
+
+    // Update extra fields (if any)
+    goog.array.forEach(this._extraFields, function(field) {
+      field.el.innerHTML = field.fn(annotation);
+    });
   }
 
   goog.style.setOpacity(this._element, 0.9);

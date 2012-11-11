@@ -11,7 +11,9 @@
       }
 
       annotorious.plugin.HelloWorld.prototype.onPopupInit = function(popup) {
-        popup.addField('<em>Hello World</em>');
+        popup.addField(function(annotation) {
+          return '<em>Hello World: ' + annotation.text.length + '</em>';	
+        });
       }
 
       anno.addPlugin('HelloWorld', {});
