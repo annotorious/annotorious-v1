@@ -6,14 +6,16 @@
     <script>
       annotorious.plugin.HelloWorld = function() { }
 
-      annotorious.plugin.HelloWorld.prototype.initPlugin = function(anno) {
-        console.log('Initializing Hello World Plugin');
-      }
+      annotorious.plugin.HelloWorld.prototype.initPlugin = function(anno) { }
 
       annotorious.plugin.HelloWorld.prototype.onPopupInit = function(popup) {
         popup.addField(function(annotation) {
           return '<em>Hello World: ' + annotation.text.length + '</em>';	
         });
+      }
+
+      annotorious.plugin.HelloWorld.prototype.onEditorInit = function(editor) {
+        editor.addField('<em>Hello World</em>');
       }
 
       anno.addPlugin('HelloWorld', {});

@@ -42,9 +42,9 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
 
   var self = this;
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
-    goog.style.setOpacity(self._element, 0.0); 
-    annotator.fireEvent(annotorious.events.EventType.POPUP_BTN_DELETE,
-      { annotation: self._currentAnnotation, mouseEvent: event });
+    goog.style.setOpacity(self._element, 0.0);
+    goog.style.setStyle(self._element, 'pointer-events', 'none'); 
+    annotator.removeAnnotation(self._currentAnnotation);
   });
   
   goog.events.listen(this._buttons, goog.events.EventType.MOUSEOVER, function(event) {
@@ -154,7 +154,7 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
   }
 
   goog.style.setOpacity(this._element, 0.9);
-  goog.style.setStyle(self._element, 'pointer-events', 'auto');
+  goog.style.setStyle(this._element, 'pointer-events', 'auto');
 }
 
 /**

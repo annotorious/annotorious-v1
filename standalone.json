@@ -12,6 +12,7 @@
     "src/modules/image/image_annotator.js",
     "src/modules/image/image_module.js",
     "src/modules/image/image_viewer.js",
+    "src/plugins/plugin.js",
     "src/selection/drag_selector.js",  
     "src/annotation.js",    
     "src/annotorious.js",

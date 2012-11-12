@@ -101,32 +101,19 @@ annotorious.events.EventType = {
   BEFORE_POPUP_HIDE: goog.events.getUniqueId('before_popup_hide'),
 
   /**
-   * The 'delete annotation' button was pressed in the popup
-   */
-  POPUP_BTN_DELETE: goog.events.getUniqueId('popup_btn_delete'),
-
-  /**
-   * The 'edit annotation' button was pressed in the popup
-   */
-  POPUP_BTN_EDIT: goog.events.getUniqueId('popup_btn_edit'),
-
-  /**
    * An annotation was removed
    */
   ANNOTATION_REMOVED: goog.events.getUniqueId('annotation_removed'),
-  
-  /**
-   * An annotation is in edit mode - the edit form is open
-   */
-  // ANNOTATION_EDIT: goog.events.getUniqueId('annotation_edit'),
 
   /**
    * Annotation editing was canceled
+   * TODO replace with ANNOTATION_EDIT
    */
   ANNOTATION_EDIT_CANCEL: goog.events.getUniqueId('annotation_edit_cancel'),
 
   /**
    * Annotation editing was completed - annotation saved
+   * TODO replace with ANNOTATION_CREATED
    */
   ANNOTATION_EDIT_SAVE: goog.events.getUniqueId('annotation_edit_save')
 

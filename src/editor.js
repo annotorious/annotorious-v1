@@ -32,6 +32,9 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotat
   /** @private **/
   this._btnSave = goog.dom.query('.annotorious-editor-button-save', this._div)[0];
 
+  /** @private **/
+  this._extraFields = [];
+
   var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function(event) {
     event.preventDefault();
@@ -54,9 +57,28 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotat
   annotator.fireEvent(annotorious.events.EventType.ANNOTATION_EDIT, { annotation: opt_annotation });
 }
 
+/**
+ * Adds a field to the popup GUI widget. A field can be either a string (containing
+ * HTML) or a function that takes an Annotation as argument and returns an (HTML) string.
+ * @param {string | function} field the field
+ */
+annotorious.editor.Editor.prototype.addField = function(field) {
+  var fieldEl = goog.dom.createDom('div', 'annotorious-editor-field');
+  
+  if (goog.isString(field))  {
+    fieldEl.innerHTML = field;
+  } else if (goog.isFunction(field)) {
+    this._extraFields.push({el: fieldEl, fn: field});
+  }
+
+  goog.dom.appendChild(this._div, fieldEl);
+}
+
 annotorious.editor.Editor.prototype.open = function() {
   goog.style.showElement(this._div, true);
   this._textarea.focus();
+
+  // TODO update extra fields in case there is an existing annotation
 }
 
 /**
@@ -84,3 +106,7 @@ annotorious.editor.Editor.prototype.setPosition = function(x, y) {
 annotorious.editor.Editor.prototype.getAnnotation = function() {
   return new annotorious.annotation.Annotation(this._imgSrc, this._textarea.value, this._selection.getShape()); 
 }
+
+// Export addField method
+annotorious.editor.Editor.prototype['addField'] = annotorious.editor.Editor.prototype.addField;
+

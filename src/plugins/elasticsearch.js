@@ -1,4 +1,4 @@
-goog.provide('annotorious.plugin');
+goog.provide('annotorious.plugin.ElasticSearch');
 
 goog.require('goog.array');
 goog.require('goog.net.XhrIo');
