@@ -10,7 +10,7 @@ goog.require('goog.net.XhrIo');
  * @param {yuma.modules.Module} module the module
  * @constructor
  */
-annotorious.plugin['ElasticSearchStorage'] = function(opt_config_options) {
+annotorious.plugin.ElasticSearch = function(opt_config_options) {
   /** @private **/
   this._STORE_URI = opt_config_options['base_url'];
 
@@ -18,7 +18,7 @@ annotorious.plugin['ElasticSearchStorage'] = function(opt_config_options) {
   this._annotations = [];
 }
 
-annotorious.plugin['ElasticSearchStorage'].prototype.initPlugin = function(anno) {
+annotorious.plugin.ElasticSearch.prototype.initPlugin = function(anno) {
   var self = this;
   anno.addHandler(annotorious.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
     self._create(event.annotation);
@@ -36,7 +36,7 @@ annotorious.plugin['ElasticSearchStorage'].prototype.initPlugin = function(anno)
 /**
  * @private
  */
-annotorious.plugin['ElasticSearchStorage'].prototype._showError = function(error) {
+annotorious.plugin.ElasticSearch.prototype._showError = function(error) {
   // TODO proper error handling
   window.alert('ERROR');
   console.log(error);
@@ -45,7 +45,7 @@ annotorious.plugin['ElasticSearchStorage'].prototype._showError = function(error
 /**
  * @private
  */
-annotorious.plugin['ElasticSearchStorage'].prototype._loadAnnotations = function(anno) {
+annotorious.plugin.ElasticSearch.prototype._loadAnnotations = function(anno) {
   // TODO need to restrict search to the URL of the annotated
   var self = this;
   goog.net.XhrIo.send(this._STORE_URI + '_search?query=*:*', function(data) {
@@ -68,7 +68,7 @@ annotorious.plugin['ElasticSearchStorage'].prototype._loadAnnotations = function
 /**
  * @private
  */
-annotorious.plugin['ElasticSearchStorage'].prototype._create = function(annotation) {
+annotorious.plugin.ElasticSearch.prototype._create = function(annotation) {
   var self = this;
   goog.net.XhrIo.send(this._STORE_URI + 'annotation/', function(response) {
     // TODO error handling if response status != 201 (CREATED)
@@ -81,9 +81,11 @@ annotorious.plugin['ElasticSearchStorage'].prototype._create = function(annotati
 /**
  * @private
  */
-annotorious.plugin['ElasticSearchStorage'].prototype._delete = function(annotation) {
+annotorious.plugin.ElasticSearch.prototype._delete = function(annotation) {
   goog.net.XhrIo.send(this._STORE_URI + 'annotation/' + annotation.id, function(response) {
     // TODO error handling
   }, 'DELETE');  
 }
 
+window['annotorious']['plugin']['ElasticSearch'] = annotorious.plugin.ElasticSearch;
+annotorious.plugin.ElasticSearch.prototype['initPlugin'] = annotorious.plugin.ElasticSearch.prototype.initPlugin;

@@ -46,8 +46,11 @@ annotorious.modules.image.ImageModule.prototype.addPlugin = function(plugin) {
   this._plugins.push(plugin);
 
   goog.array.forEach(this._annotators.getValues(), function(annotator) {
-    plugin['onPopupInit'](annotator.getPopup());
-    plugin['onEditorInit'](annotator.getEditor());
+    if (plugin['onPopupInit'])
+      plugin['onPopupInit'](annotator.getPopup());
+
+    if (plugin['onEditorInit'])  
+      plugin['onEditorInit'](annotator.getEditor());
   });
 }
 
@@ -70,8 +73,12 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
 
       // Callback to registered plugins
       goog.array.forEach(self._plugins, function(plugin) {
-        plugin['onPopupInit'](annotator.getPopup());
-        plugin['onEditorInit'](annotator.getEditor());
+        // TODO remove code duplication
+        if (plugin['onPopupInit'])
+          plugin['onPopupInit'](annotator.getPopup());
+
+        if (plugin['onEditorInit'])  
+          plugin['onEditorInit'](annotator.getEditor());
       });
     }
   });  
