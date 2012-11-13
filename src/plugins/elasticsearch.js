@@ -24,13 +24,11 @@ annotorious.plugin.ElasticSearch.prototype.initPlugin = function(anno) {
     self._create(event.annotation);
   });
 
-  anno.addHandler(annotorious.events.EventType.POPUP_BTN_DELETE, function(event) {
+  anno.addHandler(annotorious.events.EventType.ANNOTATION_REMOVED, function(event) {
     self._delete(event.annotation);
   });
   
-  // this._loadAnnotations(anno);  
   self._loadAnnotations(anno);
-  // window.setInterval(function() { self._loadAnnotations(anno); }, 2000);
 }
 
 /**
