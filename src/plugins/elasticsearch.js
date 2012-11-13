@@ -7,6 +7,7 @@ goog.require('goog.net.XhrIo');
  * A simple storage connector to the ElasticSearch REST interface.
  * Note: work in progress!
  * 
+ * @implements {Plugin}
  * @param {yuma.modules.Module} module the module
  * @constructor
  */
@@ -86,4 +87,4 @@ annotorious.plugin.ElasticSearch.prototype._delete = function(annotation) {
 }
 
 window['annotorious']['plugin']['ElasticSearch'] = annotorious.plugin.ElasticSearch;
-annotorious.plugin.ElasticSearch.prototype['initPlugin'] = annotorious.plugin.ElasticSearch.prototype.initPlugin;
+

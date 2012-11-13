@@ -31,3 +31,14 @@ var Annotation = {
     geometry : {}
   }
 };
+
+var Plugin = {
+
+  initPlugin : function(anno) {},
+
+  onPopupInit : function(popup) {},
+
+  onEditorInit : function(editor) {}
+  
+}
+
