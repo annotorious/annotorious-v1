@@ -106,8 +106,6 @@ annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotat
   // TODO make this more efficient!
   // TODO this will fail for lazy loading cases
   goog.array.forEach(this._annotators.getValues(), function(annotator) {
-    console.log(annotator.getImage().src);
-    console.log(annotation.src);
     if (annotator.getImage().src == annotation.src)
       annotator.addAnnotation(annotation);
   });
