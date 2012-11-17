@@ -30,7 +30,7 @@
     "."
   ],
   "externs": [
-    "externs/annotation.js"
+    "externs/api.js"
   ],
   "mode": "ADVANCED", // "RAW" or "ADVANCED"
   "level": "DEFAULT" // "DEFAULT" or "VERBOSE"
