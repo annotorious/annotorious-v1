@@ -14,7 +14,7 @@ Want to help out? There are many ways you can contribute!
 * Found a bug? [Drop us a line](http://groups.google.com/group/annotorious) or post an issue on our [issue tracker](annotorious/issues).
 * Want to improve our documentation? We'd really appreciate an extra hand [on our Wiki](annotorious/wiki)!
 * Design-minded? Annotorious could use some style and CSS-wizardry. [Get in touch](http://groups.google.com/group/annotorious)!
-* Missing a feature? [Learn how to develop your own Annotorious Plugins.](annotorious/wiki/Developing-Plugins)
+* Missing a feature? [Learn how to develop your own Annotorious Plugins](annotorious/wiki/Developing-Plugins).
 * Last but not least: we're looking for an Annotorious logo! Ideas welcome!
 
 ## License
