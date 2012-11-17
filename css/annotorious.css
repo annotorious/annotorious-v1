@@ -103,11 +103,15 @@
   font-family:Verdana, Arial;
   font-size:11px;
   padding:4px;
-  margin:0px 0px 3px 0px;  
+  margin:0px;  
   color:#000;
   text-shadow:none;
   overflow-y:auto;
   display:block;
+}
+
+.annotorious-editor-button-container {
+  padding-top:2px;
 }
 
 .annotorious-editor-button {
@@ -135,6 +139,15 @@
 
 .annotorious-editor-button:hover {
   background:#999;
+}
+
+.annotorious-editor-field {
+  border-bottom:1px solid #ccc;
+  margin:0px;
+  background-color:#fff;
+  padding:3px;
+  font-family:Verdana, Arial;
+  font-size:12px;	
 }
 
 /** Module components **/

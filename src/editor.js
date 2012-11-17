@@ -33,6 +33,9 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotat
   this._btnSave = goog.dom.query('.annotorious-editor-button-save', this._div)[0];
 
   /** @private **/
+  this._btnContainer = goog.dom.getParentElement(this._btnSave);
+
+  /** @private **/
   this._extraFields = [];
 
   var self = this;
@@ -71,7 +74,7 @@ annotorious.editor.Editor.prototype.addField = function(field) {
     this._extraFields.push({el: fieldEl, fn: field});
   }
 
-  goog.dom.appendChild(this._div, fieldEl);
+  goog.dom.insertSiblingBefore(fieldEl, this._btnContainer);
 }
 
 annotorious.editor.Editor.prototype.open = function() {
