@@ -117,5 +117,10 @@ annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotat
  * @param {string} src the src URL of the image
  */
 annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(annotation, src) {
-  // TODO implement
+  // TODO make this more efficient"
+  // TODO this will fail for lazy loading cases
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
+    if (annotator.getImage().src == annotation.src)
+      annotator.removeAnnotation(annotation);
+  });
 }
