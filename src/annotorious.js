@@ -65,6 +65,14 @@ annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
 }
 
 /**
+ * Returns all annotations on the annotatable media with the specified URL
+ * @return {Array.<Annotation>} 
+ */
+annotorious.Annotorious.prototype.getAnnotations = function(mediaURL) {
+  // TODO implement
+}
+
+/**
  * Adds a plugin to Annotorious.
  * @param {string} pluginName the plugin name
  * @param {object} opt_config_options an optional associative array with plugin config options
@@ -74,6 +82,7 @@ annotorious.Annotorious.prototype['addPlugin'] = function(pluginName, opt_config
 }
 
 window['anno'] = new annotorious.Annotorious();
+annotorious.Annotorious.prototype['addHandler'] = annotorious.Annotorious.prototype.addHandler;
 annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.prototype.addAnnotation;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
-annotorious.Annotorious.prototype['addHandler'] = annotorious.Annotorious.prototype.addHandler;
+annotorious.Annotorious.prototype['getAnnotations'] = annotorious.Annotorious.prototype.getAnnotations;
