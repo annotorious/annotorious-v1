@@ -67,7 +67,7 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
       goog.array.forEach(self._eventHandlers, function(eventHandler) {
         annotator.addHandler(eventHandler.type, eventHandler.handler);
       });
-      
+
       self._annotators.set(image.src, annotator);
       goog.array.remove(self._imagesToLoad, image);
 
@@ -103,12 +103,10 @@ annotorious.modules.image.ImageModule.prototype.addHandler = function(type, hand
  * @param {string} src the src URL of the image
  */
 annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
-  // TODO make this more efficient!
   // TODO this will fail for lazy loading cases
-  goog.array.forEach(this._annotators.getValues(), function(annotator) {
-    if (annotator.getImage().src == annotation.src)
-      annotator.addAnnotation(annotation);
-  });
+  var annotator = this._annotators.get(annotation.src);
+  if (annotator)
+    annotator.addAnnotation(annotation)
 }
 
 /**
@@ -116,11 +114,9 @@ annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotat
  * @param {yuma.annotation.Annotation} annotation the annotation
  * @param {string} src the src URL of the image
  */
-annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(annotation, src) {
-  // TODO make this more efficient"
+annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(annotation) {
   // TODO this will fail for lazy loading cases
-  goog.array.forEach(this._annotators.getValues(), function(annotator) {
-    if (annotator.getImage().src == annotation.src)
-      annotator.removeAnnotation(annotation);
-  });
+  var annotator = this._annotators.get(annotation.src);
+  if (annotator)
+    annotator.removeAnnotation(annotation);
 }

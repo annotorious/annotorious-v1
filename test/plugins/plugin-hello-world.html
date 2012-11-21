@@ -20,32 +20,11 @@
       }
 
       anno.addPlugin('HelloWorld', {});
-
-      // Some code demonstrating the anno.addAnnotation and 
-      // anno.removeAnnotation API functions
-      var annotation = {
-         src: "file:///home/aboutgeo/Workspaces/annotorious/annotorious/test/image/640px-Hallstatt.jpg",
-         text: "A dummy annotation",
-         shape: {
-           type: "Rectangle",
-           geometry: {
-             x: 100, y: 40, width:100, height: 50
-           }
-         }
-      };
-
-      function addAnnotation() {
-       anno.addAnnotation(annotation);
-      }
-
-      function removeAnnotation() {
-        anno.removeAnnotation(annotation);
-      }
     </script>
   </head>
 
   <body>
-    <img src="../image/640px-Hallstatt.jpg" class="annotatable">
+    <img src="../image/640px-Hallstatt.jpg" id="hallstatt" class="annotatable">
     <input type="button" value="Add" onclick="addAnnotation();" />
     <input type="button" value="Remove" onclick="removeAnnotation();" />
     <p>
@@ -66,5 +45,27 @@
       rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
     </p>
     <img class="annotatable" src="../image/371px-Claudius-Ptolemaeus.jpg">
+    <script>
+      // Some code demonstrating the anno.addAnnotation and 
+      // anno.removeAnnotation API functions
+      var annotation = {
+         src: document.getElementById('hallstatt').src,
+         text: "A dummy annotation",
+         shape: {
+           type: "Rectangle",
+           geometry: {
+             x: 100, y: 40, width:100, height: 50
+           }
+         }
+      };
+
+      function addAnnotation() {
+       anno.addAnnotation(annotation);
+      }
+
+      function removeAnnotation() {
+        anno.removeAnnotation(annotation);
+      }
+    </script>
   </body>
 </html>
