@@ -20,6 +20,10 @@
       }
 
       anno.addPlugin('HelloWorld', {});
+
+      anno.addHandler('onAnnotationCreated', function(annotation) {
+        alert(annotation.text);
+      });
     </script>
   </head>
 

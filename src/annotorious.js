@@ -76,3 +76,4 @@ annotorious.Annotorious.prototype['addPlugin'] = function(pluginName, opt_config
 window['anno'] = new annotorious.Annotorious();
 annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.prototype.addAnnotation;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
+annotorious.Annotorious.prototype['addHandler'] = annotorious.Annotorious.prototype.addHandler;

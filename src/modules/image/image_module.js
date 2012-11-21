@@ -10,16 +10,7 @@ goog.require('goog.structs.Map');
  * each one.
  * @constructor
  */
-annotorious.modules.image.ImageModule = function() { }
-  
-annotorious.modules.image.ImageModule.prototype.init = function() {
-
-  /** @private **/
-  this._allImages = goog.dom.query('img.annotatable', document);
-  
-  /** @private **/
-  this._imagesToLoad = goog.array.clone(this._allImages);
-  
+annotorious.modules.image.ImageModule = function() {   
   /** @private **/
   this._annotators = new goog.structs.Map();
   
@@ -28,7 +19,15 @@ annotorious.modules.image.ImageModule.prototype.init = function() {
 
   /** @private **/
   this._plugins = [];
+}
   
+annotorious.modules.image.ImageModule.prototype.init = function() {  
+  /** @private **/
+  this._allImages = goog.dom.query('img.annotatable', document);
+  
+  /** @private **/
+  this._imagesToLoad = goog.array.clone(this._allImages);
+
   // Make images in viewport annotatable
   this._lazyLoad();
   

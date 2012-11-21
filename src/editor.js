@@ -49,8 +49,7 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotat
     event.preventDefault();
     annotator.addAnnotation(self.getAnnotation());
     annotator.stopSelection();
-    annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, 
-      { mouseEvent: event, annotation: self.getAnnotation() });
+    annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, self.getAnnotation());
     self.close();
   });
  
