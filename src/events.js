@@ -58,63 +58,56 @@ annotorious.events.EventType = {
   /**
    * The mouse entered the annotatable media area
    */
-  MOUSE_OVER_ANNOTATABLE_MEDIA: goog.events.getUniqueId('mouse_over_media'),
+  MOUSE_OVER_ANNOTATABLE_MEDIA: 'onMouseOverMedia',
 
   /**
    * The mouse moved out of the annotatable media area
    */
-  MOUSE_OUT_OF_ANNOTATABLE_MEDIA: goog.events.getUniqueId('mouse_out_of_media'),
+  MOUSE_OUT_OF_ANNOTATABLE_MEDIA: 'onMouseOutOfMedia',
 
   /** 
    * The mouse entered an annotation
    */ 
-  MOUSE_OVER_ANNOTATION: goog.events.getUniqueId('mouse_over_annotation'),
+  MOUSE_OVER_ANNOTATION: 'onMouseOverAnnotation',
 
   /** 
    * The mouse moved out of an annotation
    */ 
-  MOUSE_OUT_OF_ANNOTATION: goog.events.getUniqueId('mouse_out_of_annotation'),
+  MOUSE_OUT_OF_ANNOTATION: 'onMouseOutOfAnnotation',
 
   /**
    * A new selection was started
    */
-  SELECTION_STARTED: goog.events.getUniqueId('selection_started'),
+  SELECTION_STARTED: 'onSelectionStarted',
   
   /**
    * The current selection was canceled
    */
-  SELECTION_CANCELED: goog.events.getUniqueId('selection_canceled'),
+  SELECTION_CANCELED: 'onSelectionCanceled',
   
   /** 
    * The current selection was completed
    */
-  SELECTION_COMPLETED: goog.events.getUniqueId('selection_completed'),
+  SELECTION_COMPLETED: 'onSelectionCompleted',
   
   /** 
    * The current selection was changed
    */
-  SELECTION_CHANGED: goog.events.getUniqueId('selection_changed'),
+  SELECTION_CHANGED: 'onSelectionChanged',
 
   /**
    * The annotation popup widget was hidden
    */
-  BEFORE_POPUP_HIDE: goog.events.getUniqueId('before_popup_hide'),
+  BEFORE_POPUP_HIDE: 'beforePopupHide',
 
   /**
    * An annotation was removed
    */
-  ANNOTATION_REMOVED: goog.events.getUniqueId('annotation_removed'),
-
-  /**
-   * Annotation editing was canceled
-   * TODO replace with ANNOTATION_EDIT
-   */
-  ANNOTATION_EDIT_CANCEL: goog.events.getUniqueId('annotation_edit_cancel'),
+  ANNOTATION_REMOVED: 'onAnnotationRemoved',
 
   /**
    * Annotation editing was completed - annotation saved
-   * TODO replace with ANNOTATION_CREATED
    */
-  ANNOTATION_EDIT_SAVE: goog.events.getUniqueId('annotation_edit_save')
+  ANNOTATION_CREATED: 'onAnnotationCreated'
 
 };

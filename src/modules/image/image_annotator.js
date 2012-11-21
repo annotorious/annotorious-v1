@@ -89,17 +89,11 @@ annotorious.modules.image.ImageAnnotator = function(image) {
     goog.style.showElement(self._editCanvas, false);
     self._selector.stopSelection();
   });
-  
-  this._eventBroker.addHandler(annotorious.events.EventType.ANNOTATION_EDIT_CANCEL, function(event) {
-    goog.style.showElement(self._editCanvas, false);
-    self._selector.stopSelection();
-  });
+}
 
-  this._eventBroker.addHandler(annotorious.events.EventType.ANNOTATION_EDIT_SAVE, function(event) {
-   goog.style.showElement(self._editCanvas, false);
-   self._selector.stopSelection();
-   self._viewer.addAnnotation(event.annotation);
-  });
+annotorious.modules.image.ImageAnnotator.prototype.stopSelection = function() {
+   goog.style.showElement(this._editCanvas, false);
+   this._selector.stopSelection();
 }
 
 /**

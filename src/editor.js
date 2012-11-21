@@ -41,14 +41,15 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotat
   var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function(event) {
     event.preventDefault();
-    annotator.fireEvent(annotorious.events.EventType.ANNOTATION_EDIT_CANCEL, 
-      { mouseEvent: event, annotation: opt_annotation });
+    annotator.stopSelection();
     self.close();
   });
 
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function(event) {
     event.preventDefault();
-    annotator.fireEvent(annotorious.events.EventType.ANNOTATION_EDIT_SAVE, 
+    annotator.addAnnotation(self.getAnnotation());
+    annotator.stopSelection();
+    annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, 
       { mouseEvent: event, annotation: self.getAnnotation() });
     self.close();
   });
