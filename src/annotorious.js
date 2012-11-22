@@ -63,16 +63,20 @@ annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
 }
 
 /**
- * Returns all annotations on the annotatable media with the specified URL.
+ * Returns all annotations on the annotatable media with the specified URL, or
+ * all annotations on the page in case no URL is specified.
+ * @param {string | undefined} opt_media_url a media URL (optional)
  * @return {Array.<Annotation>} the annotations
  */
-annotorious.Annotorious.prototype.getAnnotations = function(mediaURL) {
-  // Note: only one module should return a value in normal cases
+annotorious.Annotorious.prototype.getAnnotations = function(opt_media_url) {
   var annotations = [];
 
   goog.array.forEach(this._modules, function(module) {
-    if (module.isInChargeOf(mediaURL)) {
-      annotations = module.getAnnotations(mediaURL);
+    if (opt_media_url) {
+      if (module.isInChargeOf(opt_media_url))
+        annotations = module.getAnnotations(opt_media_url);
+    } else {
+      goog.array.extend(annotations, module.getAnnotations());
     }
   });
   return annotations;
