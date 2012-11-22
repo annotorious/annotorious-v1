@@ -71,10 +71,10 @@ annotorious.Annotorious.prototype.getAnnotations = function(mediaURL) {
   var annotations = [];
 
   goog.array.forEach(this._modules, function(module) {
-    if (module.isInChargeOf(mediaURL))
+    if (module.isInChargeOf(mediaURL)) {
       annotations = module.getAnnotations(mediaURL);
+    }
   });
-
   return annotations;
 }
 

@@ -159,5 +159,5 @@ annotorious.modules.image.ImageAnnotator.prototype.removeAnnotation = function(a
  * @return {Array.<Annotation>} the annotations
  */
 annotorious.modules.image.ImageAnnotator.prototype.getAnnotations = function() {
-  this._viewer.getAnnotations();
+  return this._viewer.getAnnotations();
 }

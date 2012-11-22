@@ -140,6 +140,5 @@ annotorious.modules.image.ImageModule.prototype.getAnnotations = function(mediaU
  * @return {boolean} true if this module is in charge of the media
  */ 
 annotorious.modules.image.ImageModule.prototype.isInChargeOf = function(mediaURL) {
-  // TODO implement
-  return false;
+  return this._annotators.containsKey(mediaURL);
 }

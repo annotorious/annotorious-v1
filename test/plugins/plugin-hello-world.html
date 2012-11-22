@@ -22,16 +22,18 @@
       anno.addPlugin('HelloWorld', {});
 
       anno.addHandler('onAnnotationCreated', function(annotation) {
-        alert(annotation.text);
+        console.log('New Annotation: ' + annotation.text);
       });
     </script>
   </head>
 
   <body>
-    <img src="../image/640px-Hallstatt.jpg" id="hallstatt" class="annotatable">
-    <input type="button" value="Add" onclick="addAnnotation();" />
-    <input type="button" value="Remove" onclick="removeAnnotation();" />
-    <input type="button" value="List" onclick="getAnnotations();" />
+    <img src="../image/640px-Hallstatt.jpg" id="hallstatt" class="annotatable" />
+    <div>
+      <input type="button" value="Add" onclick="addAnnotation();" />
+      <input type="button" value="Remove" onclick="removeAnnotation();" />
+      <input type="button" value="List" onclick="getAnnotations();" />
+    </div>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
       diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
