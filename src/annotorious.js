@@ -48,7 +48,6 @@ annotorious.Annotorious.prototype.addHandler = function(type, handler) {
  * @param {Annotation} annotation the annotation
  */
 annotorious.Annotorious.prototype.addAnnotation = function(annotation) {
-  // TODO make this more efficient
   goog.array.forEach(this._modules, function(module) {
     module.addAnnotation(annotation);
   });
@@ -58,18 +57,25 @@ annotorious.Annotorious.prototype.addAnnotation = function(annotation) {
  * Removes an annotation from an item on the page.
  */
 annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
-  // TODO make this more efficient
   goog.array.forEach(this._modules, function(module) {
     module.removeAnnotation(annotation);
   });
 }
 
 /**
- * Returns all annotations on the annotatable media with the specified URL
- * @return {Array.<Annotation>} 
+ * Returns all annotations on the annotatable media with the specified URL.
+ * @return {Array.<Annotation>} the annotations
  */
 annotorious.Annotorious.prototype.getAnnotations = function(mediaURL) {
-  // TODO implement
+  // Note: only one module should return a value in normal cases
+  var annotations = [];
+
+  goog.array.forEach(this._modules, function(module) {
+    if (module.isInChargeOf(mediaURL))
+      annotations = module.getAnnotations(mediaURL);
+  });
+
+  return annotations;
 }
 
 /**

@@ -108,6 +108,14 @@ annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotatio
 }
 
 /**
+ * Returns all annotations in this viewer.
+ * @return {Array.<Annotation>} the annotations
+ */
+annotorious.modules.image.Viewer.prototype.getAnnotations = function() {
+  return this._annotations;
+}
+
+/**
  * Highlights a particular annotation in the viewer, or de-highlights (if that's a
  * word...) all, if no annotation is passed to the method.
  * @param {annotorious.annotation.Annotation | undefined} opt_annotation the annotation

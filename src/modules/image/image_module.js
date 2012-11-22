@@ -119,3 +119,27 @@ annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(anno
   if (annotator)
     annotator.removeAnnotation(annotation);
 }
+
+/**
+ * Returns all annotations on the annotatable media with the specified URL.
+ * @return {Array.<Annotation>} the annotations
+ */
+annotorious.modules.image.ImageModule.prototype.getAnnotations = function(mediaURL) {
+  // TODO Return this will fail for lazy loading cases
+  var annotator = this._annotators.get(mediaURL);
+  if (annotator) {
+    return annotator.getAnnotations();
+  } else {
+    return [];
+  }
+}
+
+/**
+ * Tests if this module is in charge of the annotatable media with the
+ * specified URL.
+ * @return {boolean} true if this module is in charge of the media
+ */ 
+annotorious.modules.image.ImageModule.prototype.isInChargeOf = function(mediaURL) {
+  // TODO implement
+  return false;
+}

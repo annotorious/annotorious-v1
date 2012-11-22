@@ -153,3 +153,11 @@ annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(anno
 annotorious.modules.image.ImageAnnotator.prototype.removeAnnotation = function(annotation) {
   this._viewer.removeAnnotation(annotation);
 }
+
+/**
+ * Returns all annotations on the annotatable media.
+ * @return {Array.<Annotation>} the annotations
+ */
+annotorious.modules.image.ImageAnnotator.prototype.getAnnotations = function() {
+  this._viewer.getAnnotations();
+}

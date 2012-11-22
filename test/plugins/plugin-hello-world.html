@@ -31,6 +31,7 @@
     <img src="../image/640px-Hallstatt.jpg" id="hallstatt" class="annotatable">
     <input type="button" value="Add" onclick="addAnnotation();" />
     <input type="button" value="Remove" onclick="removeAnnotation();" />
+    <input type="button" value="List" onclick="getAnnotations();" />
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
       diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
@@ -69,6 +70,13 @@
 
       function removeAnnotation() {
         anno.removeAnnotation(annotation);
+      }
+
+      function getAnnotations() {
+        var annotations = anno.getAnnotations(document.getElementById('hallstatt').src);
+        for (var i=0; i<annotations.length; i++) {
+          console.log(annotations[i].text);
+        }
       }
     </script>
   </body>
