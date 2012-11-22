@@ -73,6 +73,7 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
     
   goog.style.setOpacity(this._buttons, 0.0);
   goog.style.setOpacity(this._element, 0.0);
+  goog.style.setStyle(this._element, 'pointer-events', 'none');
   goog.dom.appendChild(parentEl, this._element);
 }
 

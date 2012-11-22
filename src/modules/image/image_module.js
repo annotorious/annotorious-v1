@@ -30,6 +30,12 @@ annotorious.modules.image.ImageModule.prototype.init = function() {
   
   /** @private **/
   this._imagesToLoad = goog.array.clone(this._allImages);
+  
+  /** @private **/
+  this._bufferedForAdding = [];
+  
+  /** @private **/
+  this._bufferedForRemoval = [];
 
   // Make images in viewport annotatable
   this._lazyLoad();
@@ -58,9 +64,6 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
         annotator.addHandler(eventHandler.type, eventHandler.handler);
       });
 
-      self._annotators.set(image.src, annotator);
-      goog.array.remove(self._imagesToLoad, image);
-
       // Callback to registered plugins
       goog.array.forEach(self._plugins, function(plugin) {
         // TODO remove code duplication
@@ -70,6 +73,21 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
         if (plugin.onEditorInit)  
           plugin.onEditorInit(annotator.getEditor());
       });
+      
+      // Cross-check with annotation add/remove buffers
+      goog.array.forEach(self._bufferedForAdding, function(annotation) {
+        if (annotation.src == image.src)
+          annotator.addAnnotation(annotation);
+      });
+      
+      goog.array.forEach(self._bufferedForRemoval, function(annotation) {
+        if (annotation.src == image.src)
+          annotator.removeAnnotation(annotation);
+      });
+      
+      // Update _annotators and _imagesToLoad lists
+      self._annotators.set(image.src, annotator);
+      goog.array.remove(self._imagesToLoad, image);
     }
   });  
 }
@@ -109,10 +127,13 @@ annotorious.modules.image.ImageModule.prototype.addHandler = function(type, hand
  * @param {string} src the src URL of the image
  */
 annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
-  // TODO this will fail for lazy loading cases
-  var annotator = this._annotators.get(annotation.src);
-  if (annotator)
-    annotator.addAnnotation(annotation)
+  if (this.isInChargeOf(annotation.src)) {
+    var annotator = this._annotators.get(annotation.src);
+    if (annotator)
+      annotator.addAnnotation(annotation)
+    else
+      this._bufferedForAdding.push(annotation);
+  }
 }
 
 /**
@@ -121,10 +142,13 @@ annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotat
  * @param {string} src the src URL of the image
  */
 annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(annotation) {
-  // TODO this will fail for lazy loading cases
-  var annotator = this._annotators.get(annotation.src);
-  if (annotator)
-    annotator.removeAnnotation(annotation);
+  if (this.isInChargeOf(annotation.src)) {
+    var annotator = this._annotators.get(annotation.src);
+    if (annotator)
+      annotator.removeAnnotation(annotation);
+    else
+      this._bufferedForRemoval.push(annotation);
+  }
 }
 
 /**
@@ -134,19 +158,21 @@ annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(anno
  * @return {Array.<Annotation>} the annotations
  */
 annotorious.modules.image.ImageModule.prototype.getAnnotations = function(opt_media_url) {
-  // TODO Return this will fail for lazy loading cases
   if (opt_media_url) {
-    var annotator = this._annotators.get(mediaURL);
+    var annotator = this._annotators.get(opt_media_url);
     if (annotator) {
       return annotator.getAnnotations();
     } else {
-      return [];
+      return goog.array.filter(this._bufferedForAdding, function(annotation) {
+        return annotation.src == opt_media_url;
+      });
     }
   } else {
     var annotations = [];
     goog.array.forEach(this._annotators.getValues(), function(annotator) {
-      goog.array.extend(anntoations, annotator.getAnnotations());
+      goog.array.extend(annotations, annotator.getAnnotations());
     });
+    goog.array.extend(annotations, this._bufferedForAdding);
     return annotations;
   }
 }
@@ -157,5 +183,13 @@ annotorious.modules.image.ImageModule.prototype.getAnnotations = function(opt_me
  * @return {boolean} true if this module is in charge of the media
  */ 
 annotorious.modules.image.ImageModule.prototype.isInChargeOf = function(mediaURL) {
-  return this._annotators.containsKey(mediaURL);
+  if (this._annotators.containsKey(mediaURL))
+    return true;
+  
+  var isInCharge = false;
+  goog.array.forEach(this._imagesToLoad, function(image) {
+    if (image.src == mediaURL)
+      isInCharge = true;
+  });
+  return isInCharge;
 }

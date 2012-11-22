@@ -51,12 +51,12 @@
       velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
       rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
     </p>
-    <img class="annotatable" src="../image/371px-Claudius-Ptolemaeus.jpg">
+    <img class="annotatable" id="ptolemy" src="../image/371px-Claudius-Ptolemaeus.jpg">
     <script>
       // Some code demonstrating the anno.addAnnotation and 
       // anno.removeAnnotation API functions
       var annotation = {
-         src: document.getElementById('hallstatt').src,
+         src: document.getElementById('ptolemy').src,
          text: "A dummy annotation",
          shape: {
            type: "Rectangle",
@@ -75,7 +75,7 @@
       }
 
       function getAnnotations() {
-        var annotations = anno.getAnnotations(document.getElementById('hallstatt').src);
+        var annotations = anno.getAnnotations(document.getElementById('ptolemy').src);
         for (var i=0; i<annotations.length; i++) {
           console.log(annotations[i].text);
         }
