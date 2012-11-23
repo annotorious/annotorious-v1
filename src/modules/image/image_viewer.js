@@ -102,9 +102,6 @@ annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotatio
     
   goog.array.remove(this._annotations, annotation);
   this._redraw();
-  
-  this._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_REMOVED,
-    { annotation: annotation });
 }
 
 /**
