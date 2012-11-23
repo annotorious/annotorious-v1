@@ -48,16 +48,14 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotat
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function(event) {
     event.preventDefault();
     annotator.addAnnotation(self.getAnnotation());
-    annotator.stopSelection();
     annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, self.getAnnotation());
+    annotator.stopSelection();
     self.close();
   });
  
   goog.style.showElement(this._div, false);
   goog.dom.appendChild(parentEl, this._div);
   this._textarea.focus();
-
-  annotator.fireEvent(annotorious.events.EventType.ANNOTATION_EDIT, { annotation: opt_annotation });
 }
 
 /**

@@ -55,7 +55,8 @@ annotorious.plugin.ElasticSearch.prototype._loadAnnotations = function(anno) {
         annotation.id = hit['_id'];
         if (!goog.array.contains(self._annotations, annotation.id)) {
           self._annotations.push(annotation.id);
-          anno.addAnnotation(annotation);
+          if (annotation.shape.geometry)
+            anno.addAnnotation(annotation);
         }
       });
     } catch (e) {
