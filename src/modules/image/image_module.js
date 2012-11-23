@@ -76,13 +76,17 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
       
       // Cross-check with annotation add/remove buffers
       goog.array.forEach(self._bufferedForAdding, function(annotation) {
-        if (annotation.src == image.src)
+        if (annotation.src == image.src) {
           annotator.addAnnotation(annotation);
+          goog.array.remove(self._bufferedForAdding, annotation);
+        }
       });
       
       goog.array.forEach(self._bufferedForRemoval, function(annotation) {
-        if (annotation.src == image.src)
+        if (annotation.src == image.src) {
           annotator.removeAnnotation(annotation);
+          goog.array.remove(self._bufferedForRemoval, annotation);
+        }
       });
       
       // Update _annotators and _imagesToLoad lists
