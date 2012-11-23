@@ -21,8 +21,8 @@ annotorious.plugin.ElasticSearch = function(opt_config_options) {
 
 annotorious.plugin.ElasticSearch.prototype.initPlugin = function(anno) {
   var self = this;
-  anno.addHandler(annotorious.events.EventType.ANNOTATION_CREATED, function(event) {
-    self._create(event.annotation);
+  anno.addHandler(annotorious.events.EventType.ANNOTATION_CREATED, function(annotation) {
+    self._create(annotation);
   });
 
   anno.addHandler(annotorious.events.EventType.ANNOTATION_REMOVED, function(event) {
