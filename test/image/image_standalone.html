@@ -2,10 +2,13 @@
 <html>
   <head>
     <link rel="stylesheet" href="../../css/annotorious.css" type="text/css" />
-    <script src="http://localhost:9810/compile?id=annotorious"></script>
     <script>
-      anno.addPlugin('ElasticSearch', { base_url: 'http://62.218.164.156/annotations/' });
+      window.onload = function() {
+        anno.addPlugin('ElasticSearch', { base_url: 'http://62.218.164.156/annotations/' });
+        anno.makeAnnotatable(document.getElementById('ptolemy'));
+      }
     </script>
+    <script src="http://localhost:9810/compile?id=annotorious"></script>
     <style>
       html, body {
         background-color: #ededed;
@@ -76,7 +79,7 @@
         rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
       </p>
       <div style="float:left; width:371px; margin:0px 20px 10px 0px;">
-        <img class="annotatable" src="371px-Claudius-Ptolemaeus.jpg">
+        <img id="ptolemy" src="371px-Claudius-Ptolemaeus.jpg">
         <p class="image-caption">
           Medival Ideal Portrait of Ptolemy. Public Domain. Source:
           <a href="http://commons.wikimedia.org/wiki/File:Claudius_Ptolemaeus.jpg">Wikimedia

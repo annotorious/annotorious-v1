@@ -89,7 +89,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var self = this;  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
     if (!isMouseEventInside(event))
-      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
@@ -99,7 +99,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
 
   popup.addMouseOverHandler(function(event) {
     if (!isMouseEventInside(event))
-      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
   });
 
   popup.addMouseOutHandler(function(event) { 
@@ -113,7 +113,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     selector.startSelection(event.offsetX, event.offsetY);
   });
   
-  eventBroker.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA, function() {
+  eventBroker.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM, function() {
     okfnAnnotator.clearViewerHideTimer(); // In case the mouse arrives (fast) from an HTML annotation
     goog.style.setOpacity(viewCanvas, 1.0); 
     goog.style.setOpacity(hint, 0.8); 

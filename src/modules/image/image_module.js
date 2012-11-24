@@ -1,5 +1,6 @@
 goog.provide('annotorious.modules.image.ImageModule');
 
+goog.require('goog.dom');
 goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.structs.Map');
@@ -19,23 +20,28 @@ annotorious.modules.image.ImageModule = function() {
 
   /** @private **/
   this._plugins = [];
-}
-  
-/**
- * Standard module init() function.
- */
-annotorious.modules.image.ImageModule.prototype.init = function() {  
-  /** @private **/
-  this._allImages = goog.dom.query('img.annotatable', document);
   
   /** @private **/
-  this._imagesToLoad = goog.array.clone(this._allImages);
+  this._allImages = [];
+  
+  /** @private **/
+  this._imagesToLoad = [];
   
   /** @private **/
   this._bufferedForAdding = [];
   
   /** @private **/
   this._bufferedForRemoval = [];
+}
+  
+/**
+ * Standard module init() function.
+ */
+annotorious.modules.image.ImageModule.prototype.init = function() {
+  // Query images marked with 'annotatable' CSS class
+  var annotatableImages = goog.dom.query('img.annotatable', document);
+  goog.array.extend(this._allImages, annotatableImages);
+  goog.array.extend(this._imagesToLoad, annotatableImages);  
 
   // Make images in viewport annotatable
   this._lazyLoad();
@@ -48,6 +54,17 @@ annotorious.modules.image.ImageModule.prototype.init = function() {
     else
       goog.events.unlistenByKey(key);
   });
+}
+
+/**
+ * @private
+ */
+annotorious.modules.image.ImageModule.prototype._initPlugin = function(plugin, annotator) {
+  if (plugin.onInitPopup)
+    plugin.onInitPopup(annotator.getPopup());
+
+  if (plugin.onInitEditor)  
+    plugin.onInitEditor(annotator.getEditor());
 }
 
 /**
@@ -66,12 +83,7 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
 
       // Callback to registered plugins
       goog.array.forEach(self._plugins, function(plugin) {
-        // TODO remove code duplication
-        if (plugin.onPopupInit)
-          plugin.onPopupInit(annotator.getPopup());
-
-        if (plugin.onEditorInit)  
-          plugin.onEditorInit(annotator.getEditor());
+        self._initPlugin(plugin, annotator);
       });
       
       // Cross-check with annotation add/remove buffers
@@ -97,19 +109,18 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
 }
 
 /**
- * Standard module method: adds a plugin to this module.
- * @param {Plugin} plugin the plugin
+ * Standard module method: adds an annotation to the image with the specified src URL.
+ * @param {Annotation} the annotation
+ * @param {string} src the src URL of the image
  */
-annotorious.modules.image.ImageModule.prototype.addPlugin = function(plugin) {
-  this._plugins.push(plugin);
-
-  goog.array.forEach(this._annotators.getValues(), function(annotator) {
-    if (plugin.onPopupInit)
-      plugin.onPopupInit(annotator.getPopup());
-
-    if (plugin.onEditorInit)  
-      plugin.onEditorInit(annotator.getEditor());
-  });
+annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
+  if (this.annotatesItem (annotation.src)) {
+    var annotator = this._annotators.get(annotation.src);
+    if (annotator)
+      annotator.addAnnotation(annotation)
+    else
+      this._bufferedForAdding.push(annotation);
+  }
 }
 
 /**
@@ -126,32 +137,33 @@ annotorious.modules.image.ImageModule.prototype.addHandler = function(type, hand
 }
 
 /**
- * Standard module method: adds an annotation to the image with the specified src URL.
- * @param {Annotation} the annotation
- * @param {string} src the src URL of the image
+ * Standard module method: adds a plugin to this module.
+ * @param {Plugin} plugin the plugin
  */
-annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
-  if (this.isInChargeOf(annotation.src)) {
-    var annotator = this._annotators.get(annotation.src);
-    if (annotator)
-      annotator.addAnnotation(annotation)
-    else
-      this._bufferedForAdding.push(annotation);
-  }
+annotorious.modules.image.ImageModule.prototype.addPlugin = function(plugin) {
+  this._plugins.push(plugin);
+  
+  var self = this;
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
+    self._initPlugin(plugin, annotator);
+  });
 }
 
 /**
- * Standard module method: removes an annotation from the image with the specified src URL.
- * @param {Annotation} annotation the annotation
- * @param {string} src the src URL of the image
- */
-annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(annotation) {
-  if (this.isInChargeOf(annotation.src)) {
-    var annotator = this._annotators.get(annotation.src);
-    if (annotator)
-      annotator.removeAnnotation(annotation);
-    else
-      this._bufferedForRemoval.push(annotation);
+ * Standard module method: tests if this module is in charge of managing the
+ * annotatable item with the specified URL.
+ * @param {string} item_url the URL of the item
+ * @return {boolean} true if this module is in charge of the media
+ */ 
+annotorious.modules.image.ImageModule.prototype.annotatesItem = function(item_url) {
+  if (this._annotators.containsKey(item_url)) {
+    return true;
+  } else {
+    var image = goog.array.find(this._imagesToLoad, function(image) {
+      return image.src == item_url;
+    });
+    
+    return goog.isDefAndNotNull(image);
   }
 }
 
@@ -161,14 +173,14 @@ annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(anno
  * @param {string | undefined} opt_media_url a media URL (optional)
  * @return {Array.<Annotation>} the annotations
  */
-annotorious.modules.image.ImageModule.prototype.getAnnotations = function(opt_media_url) {
-  if (opt_media_url) {
-    var annotator = this._annotators.get(opt_media_url);
+annotorious.modules.image.ImageModule.prototype.getAnnotations = function(opt_item_url) {
+  if (opt_item_url) {
+    var annotator = this._annotators.get(opt_item_url);
     if (annotator) {
       return annotator.getAnnotations();
     } else {
       return goog.array.filter(this._bufferedForAdding, function(annotation) {
-        return annotation.src == opt_media_url;
+        return annotation.src == opt_item_url;
       });
     }
   } else {
@@ -181,19 +193,36 @@ annotorious.modules.image.ImageModule.prototype.getAnnotations = function(opt_me
   }
 }
 
+annotorious.modules.image.ImageModule.prototype.makeAnnotatable = function(item) {
+  this._allImages.push(item);
+  this._imagesToLoad.push(item);
+  this._lazyLoad();
+}
+
 /**
- * Standard module method: tests if this module is in charge of managing the
- * annotatable media with the specified URL.
- * @return {boolean} true if this module is in charge of the media
- */ 
-annotorious.modules.image.ImageModule.prototype.isInChargeOf = function(mediaURL) {
-  if (this._annotators.containsKey(mediaURL))
-    return true;
-  
-  var isInCharge = false;
-  goog.array.forEach(this._imagesToLoad, function(image) {
-    if (image.src == mediaURL)
-      isInCharge = true;
-  });
-  return isInCharge;
+ * Standard module method: removes an annotation from the image with the specified src URL.
+ * @param {Annotation} annotation the annotation
+ * @param {string} src the src URL of the image
+ */
+annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(annotation) {
+  if (this.annotatesItem(annotation.src)) {
+    var annotator = this._annotators.get(annotation.src);
+    if (annotator)
+      annotator.removeAnnotation(annotation);
+    else
+      this._bufferedForRemoval.push(annotation);
+  }
+}
+
+/**
+ * Standard module method: tests if this module is able to support annotation on the
+ * specified item.
+ * @param {object} item the item to test
+ * @return {boolean} true if this module can provide annotation functionality for the item
+ */
+annotorious.modules.image.ImageModule.prototype.supports = function(item) {
+  if (goog.dom.isElement(item))
+    return (item.tagName == 'IMG');
+  else
+    return false;
 }

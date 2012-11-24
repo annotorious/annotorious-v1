@@ -58,12 +58,12 @@ annotorious.events.EventType = {
   /**
    * The mouse entered the annotatable media area
    */
-  MOUSE_OVER_ANNOTATABLE_MEDIA: 'onMouseOverMedia',
+  MOUSE_OVER_ANNOTATABLE_ITEM: 'onMouseOverItem',
 
   /**
    * The mouse moved out of the annotatable media area
    */
-  MOUSE_OUT_OF_ANNOTATABLE_MEDIA: 'onMouseOutOfMedia',
+  MOUSE_OUT_OF_ANNOTATABLE_ITEM: 'onMouseOutOfItem',
 
   /** 
    * The mouse entered an annotation

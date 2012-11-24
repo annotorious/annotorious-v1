@@ -35,10 +35,10 @@ var Plugin = {
   initPlugin : function(anno) {},
 
   /** type {function} called on initialization of a Popup element **/
-  onPopupInit : function(popup) {},
+  onInitPopup : function(popup) {},
 
   /** type {function} called on initialization of an Editor element **/
-  onEditorInit : function(editor) {}
+  onInitEditor : function(editor) {}
   
 }
 

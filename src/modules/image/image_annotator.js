@@ -57,7 +57,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
-      self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_MEDIA);
+      self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
       goog.style.setOpacity(viewCanvas, 1.0); 
       goog.style.setOpacity(hint, 0.8); 
     }
