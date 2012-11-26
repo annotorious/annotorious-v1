@@ -3,9 +3,8 @@
   <head>
     <meta http-equiv="expires" content="0">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/annotorious.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/annotorious.css" />
     <script src="http://openlayers.org/dev/OpenLayers.js" type="text/javascript"></script>
-    <script type="text/javascript" src="http://localhost:9810/compile?id=annotorious"></script>
     <script type="text/javascript">
       window.onload = function() {    	
         var map = new OpenLayers.Map('map');
@@ -16,8 +15,11 @@
         map.addLayer(ol_wms);
         map.addControl(new OpenLayers.Control.LayerSwitcher());
         map.zoomToMaxExtent();
+	
+	anno.makeAnnotatable(map);
       }
     </script>
+    <script type="text/javascript" src="http://localhost:9810/compile?id=annotorious"></script>
     <style>
       html, body, #map {
         width:100%;
@@ -39,7 +41,6 @@
 	  
   <body>
     <div id="map"></div>
-    <input id="annotate-button" type="button" value="Add Note"/>
   </body>
 </html>
 

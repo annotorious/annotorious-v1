@@ -12,6 +12,9 @@
     "src/modules/image/image_annotator.js",
     "src/modules/image/image_module.js",
     "src/modules/image/image_viewer.js",
+    "src/modules/openlayers/openlayers_annotator.js",
+    "src/modules/openlayers/openlayers_module.js",
+    "src/modules/openlayers/openlayers_viewer.js",
     "src/plugins/plugin.js",
     "src/selection/drag_selector.js",  
     "src/annotation.js",    
@@ -30,7 +33,8 @@
     "."
   ],
   "externs": [
-    "externs/api.js"
+    "externs/api.js",
+    "externs/openlayers.js"
   ],
   "mode": "RAW", // "RAW" or "ADVANCED"
   "level": "DEFAULT" // "DEFAULT" or "VERBOSE"

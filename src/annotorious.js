@@ -14,6 +14,9 @@ annotorious.Annotorious = function() {
   /** @private **/
   this._modules = [ new annotorious.modules.image.ImageModule() ];
   
+  if (annotorious.modules.openlayers)
+    this._modules.push(new annotorious.modules.openlayers.OpenLayersModule());
+  
   /** @private **/
   this._plugins = [];
 

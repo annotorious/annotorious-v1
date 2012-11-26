@@ -20,32 +20,28 @@ annotorious.selection.DragSelector = function(canvas, annotator) {
   this._g2d.lineWidth = 1;
  
   /** @private **/
-  this._anchor; 
+  this._anchor;
+  
+  /** @private **/
+  this._opposite;
 
   /** @private **/
-  this._selection;
-
-  // TODO handle this with listener (de)registration rather than a flag
   this._enabled = false;
 
   var self = this;  
   goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._enabled) {
-      self._selection = new annotorious.geom.Rectangle(
-        self._anchor.x, 
-        self._anchor.y,
-        event.offsetX - self._anchor.x,
-        event.offsetY - self._anchor.y
-      );
+      self._opposite = { x: event.offsetX, y: event.offsetY };
 
       self._g2d.clearRect(0, 0, canvas.width, canvas.height);
       
+      var width = self._opposite.x - self._anchor.x;
+      var height = self._opposite.y - self._anchor.y;
+      
       self._g2d.strokeStyle = '#000000';
-      self._g2d.strokeRect(self._selection.x + 0.5, self._selection.y + 0.5,
-                           self._selection.width, self._selection.height);
+      self._g2d.strokeRect(self._anchor.x + 0.5, self._anchor.y + 0.5, width, height);
       self._g2d.strokeStyle = '#ffffff';
-      self._g2d.strokeRect(self._selection.x + 1.5, self._selection.y + 1.5,
-                           self._selection.width - 2, self._selection.height - 2);
+      self._g2d.strokeRect(self._anchor.x + 1.5, self._anchor.y + 1.5, width - 2, height - 2);
     }
   });
 
@@ -54,7 +50,7 @@ annotorious.selection.DragSelector = function(canvas, annotator) {
     var shape = self.getShape();
     if (shape.geometry) {
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_COMPLETED,
-        { mouseEvent: event, shape: shape }); 
+        { mouseEvent: event, shape: shape, viewportBounds: self.getViewportBounds() }); 
     } else {
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_CANCELED); 
     }
@@ -81,7 +77,7 @@ annotorious.selection.DragSelector.prototype.startSelection = function(x, y) {
 annotorious.selection.DragSelector.prototype.stopSelection = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
   goog.style.setStyle(document.body, '-webkit-user-select', 'auto');
-  delete this._selection;
+  delete this._opposite;
 }
 
 /**
@@ -90,5 +86,37 @@ annotorious.selection.DragSelector.prototype.stopSelection = function() {
  * TODO remove this method - pass via events instead!
  */
 annotorious.selection.DragSelector.prototype.getShape = function() {
-  return new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, this._selection); 
+  var item_anchor = this._annotator.toItemCoordinates(this._anchor);
+  var item_opposite = this._annotator.toItemCoordinates(this._opposite);
+  
+  var rect = new annotorious.geom.Rectangle(
+    item_anchor.x,
+    item_anchor.y,
+    item_opposite.x - item_anchor.x,
+    item_opposite.y - item_anchor.y
+  );
+
+  return new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, rect); 
+}
+
+annotorious.selection.DragSelector.prototype.getViewportBounds = function() {
+  var right, left;
+  if (this._opposite.x > this._anchor.x) {
+    right = this._opposite.x;
+    left = this._anchor.x;
+  } else {
+    right = this._anchor.x;
+    left = this._opposite.x;    
+  }
+  
+  var top, bottom;
+  if (this._opposite.y > this._anchor.y) {
+    top = this._anchor.y;
+    bottom = this._opposite.y;
+  } else {
+    top = this._opposite.y;
+    bottom = this._anchor.y;    
+  }
+  
+  return {top: top, right: right, bottom: bottom, left: left};
 }

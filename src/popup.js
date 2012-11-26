@@ -14,17 +14,16 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   /** @private **/
   this._annotator = annotator;  
   
-  /** @private **/
-  this._element = goog.soy.renderAsElement(annotorious.templates.popup);
+  this.element = goog.soy.renderAsElement(annotorious.templates.popup);
   
   /** @private **/
   this._currentAnnotation;
 
   /** @private **/
-  this._text = goog.dom.query('.annotorious-popup-text', this._element)[0];
+  this._text = goog.dom.query('.annotorious-popup-text', this.element)[0];
 
   /** @private **/
-  this._buttons = goog.dom.query('.annotorious-popup-button-delete', this._element)[0];
+  this._buttons = goog.dom.query('.annotorious-popup-button-delete', this.element)[0];
   
   /** @private **/
   this._popupHideTimer;
@@ -38,12 +37,12 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   /** @private **/
   this._extraFields = [];
 
-  var btnDelete = goog.dom.query('.annotorious-popup-button-delete', this._element)[0];
+  var btnDelete = goog.dom.query('.annotorious-popup-button-delete', this.element)[0];
 
   var self = this;
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
-    goog.style.setOpacity(self._element, 0.0);
-    goog.style.setStyle(self._element, 'pointer-events', 'none');
+    goog.style.setOpacity(self.element, 0.0);
+    goog.style.setStyle(self.element, 'pointer-events', 'none');
     annotator.fireEvent(annotorious.events.EventType.ANNOTATION_REMOVED, self._currentAnnotation);
     annotator.removeAnnotation(self._currentAnnotation);
   });
@@ -56,14 +55,14 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
     goog.style.setOpacity(self._buttons, 0.4);
   });
   
-  goog.events.listen(this._element, goog.events.EventType.MOUSEOVER, function(event) {
+  goog.events.listen(this.element, goog.events.EventType.MOUSEOVER, function(event) {
     window.clearTimeout(self._buttonHideTimer);
     if (goog.style.getStyle(self._buttons, 'opacity') < 0.4)
       goog.style.setOpacity(self._buttons, 0.4);
     self.clearHideTimer();
   });
   
-  goog.events.listen(this._element, goog.events.EventType.MOUSEOUT, function(event) {
+  goog.events.listen(this.element, goog.events.EventType.MOUSEOUT, function(event) {
     goog.style.setOpacity(self._buttons, 0);
     self.startHideTimer();
   });
@@ -73,9 +72,9 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   });
     
   goog.style.setOpacity(this._buttons, 0.0);
-  goog.style.setOpacity(this._element, 0.0);
-  goog.style.setStyle(this._element, 'pointer-events', 'none');
-  goog.dom.appendChild(parentEl, this._element);
+  goog.style.setOpacity(this.element, 0.0);
+  goog.style.setStyle(this.element, 'pointer-events', 'none');
+  goog.dom.appendChild(parentEl, this.element);
 }
 
 /**
@@ -92,7 +91,7 @@ annotorious.viewer.Popup.prototype.addField = function(field) {
     this._extraFields.push({el: fieldEl, fn: field});
   }
 
-  goog.dom.appendChild(this._element, fieldEl);
+  goog.dom.appendChild(this.element, fieldEl);
 }
 
 /**
@@ -105,8 +104,8 @@ annotorious.viewer.Popup.prototype.startHideTimer = function() {
     this._popupHideTimer = window.setTimeout(function() {
       self._annotator.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE, self);
       if (!self._cancelHide) {
-        goog.style.setOpacity(self._element, 0.0);
-        goog.style.setStyle(self._element, 'pointer-events', 'none');
+        goog.style.setOpacity(self.element, 0.0);
+        goog.style.setStyle(self.element, 'pointer-events', 'none');
         goog.style.setOpacity(self._buttons, 0.4);
         delete self._popupHideTimer;
       }
@@ -155,8 +154,8 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
     });
   }
 
-  goog.style.setOpacity(this._element, 0.9);
-  goog.style.setStyle(this._element, 'pointer-events', 'auto');
+  goog.style.setOpacity(this.element, 0.9);
+  goog.style.setStyle(this.element, 'pointer-events', 'auto');
 }
 
 /**
@@ -165,7 +164,7 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
  * @param {number} y coordinate (realtive to the image)
  */
 annotorious.viewer.Popup.prototype.setPosition = function(x, y) {
-  goog.style.setPosition(this._element, new goog.math.Coordinate(x, y));
+  goog.style.setPosition(this.element, new goog.math.Coordinate(x, y));
 }
 
 /**

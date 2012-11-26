@@ -161,3 +161,13 @@ annotorious.modules.image.ImageAnnotator.prototype.removeAnnotation = function(a
 annotorious.modules.image.ImageAnnotator.prototype.getAnnotations = function() {
   return this._viewer.getAnnotations();
 }
+
+annotorious.modules.image.ImageAnnotator.prototype.toItemCoordinates = function(pxCoords) {
+  // For the time being, pxCoords = itemCoords
+  return pxCoords;
+}
+
+annotorious.modules.image.ImageAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
+  // For the time being, itemCoords = pxCoords
+  return pxCoords;
+}

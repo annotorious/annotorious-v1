@@ -20,17 +20,16 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotat
   /** @private **/
   this._imgSrc = annotator.getImage().src;
 
-  /** @private **/
-  this._div = goog.soy.renderAsElement(annotorious.templates.editform);
+  this.element = goog.soy.renderAsElement(annotorious.templates.editform);
 
   /** @private **/
-  this._textarea = goog.dom.query('.annotorious-editor-text', this._div)[0];
+  this._textarea = goog.dom.query('.annotorious-editor-text', this.element)[0];
 
   /** @private **/
-  this._btnCancel = goog.dom.query('.annotorious-editor-button-cancel', this._div)[0];
+  this._btnCancel = goog.dom.query('.annotorious-editor-button-cancel', this.element)[0];
 
   /** @private **/
-  this._btnSave = goog.dom.query('.annotorious-editor-button-save', this._div)[0];
+  this._btnSave = goog.dom.query('.annotorious-editor-button-save', this.element)[0];
 
   /** @private **/
   this._btnContainer = goog.dom.getParentElement(this._btnSave);
@@ -53,8 +52,8 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotat
     self.close();
   });
  
-  goog.style.showElement(this._div, false);
-  goog.dom.appendChild(parentEl, this._div);
+  goog.style.showElement(this.element, false);
+  goog.dom.appendChild(parentEl, this.element);
   this._textarea.focus();
 }
 
@@ -76,7 +75,7 @@ annotorious.editor.Editor.prototype.addField = function(field) {
 }
 
 annotorious.editor.Editor.prototype.open = function() {
-  goog.style.showElement(this._div, true);
+  goog.style.showElement(this.element, true);
   this._textarea.focus();
 
   // TODO update extra fields in case there is an existing annotation
@@ -86,7 +85,7 @@ annotorious.editor.Editor.prototype.open = function() {
  * Closes the editor.
  */
 annotorious.editor.Editor.prototype.close = function() {
-  goog.style.showElement(this._div, false);
+  goog.style.showElement(this.element, false);
   this._textarea.value = "";
 }
 
@@ -96,7 +95,7 @@ annotorious.editor.Editor.prototype.close = function() {
  * @param {number} y the Y coordinate
  */
 annotorious.editor.Editor.prototype.setPosition = function(x, y) {
-  goog.style.setPosition(this._div, x, y);
+  goog.style.setPosition(this.element, x, y);
 }
 
 
