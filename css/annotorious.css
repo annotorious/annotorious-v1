@@ -193,3 +193,16 @@
   transition-duration: 0.5s;
   transition-delay: 0s;
 }
+
+/** OpenLayers module **/
+.annotorious-ol-boxmarker-outer {
+  border:1px solid #000;
+}
+
+.annotorious-ol-boxmarker-inner {
+  border:1px solid #fff;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}

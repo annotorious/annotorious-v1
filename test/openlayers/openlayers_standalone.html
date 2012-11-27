@@ -7,13 +7,19 @@
     <script src="http://openlayers.org/dev/OpenLayers.js" type="text/javascript"></script>
     <script type="text/javascript">
       window.onload = function() {    	
-        var map = new OpenLayers.Map('map');
+        var options = {
+          maxExtent: new OpenLayers.Bounds(0, 0, 13500, 7522),
+          maxResolution: 64,
+          numZoomLevels: 7,
+          units: "pixels"
+        };
 
-        var ol_wms = new OpenLayers.Layer.WMS( "OpenLayers WMS",
-          "http://vmap0.tiles.osgeo.org/wms/vmap0?", {layers: 'basic'} );
+        var map = new OpenLayers.Map('map', options);
 
-        map.addLayer(ol_wms);
-        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        var baseLayer = new OpenLayers.Layer.TMS("Baselayer", "http://yuma-js.github.com/demos/openlayers/waldseemueller/",
+		            { layername: ".", serviceVersion: ".", transitionEffect: "resize", type:"jpg" });
+
+        map.addLayer(baseLayer);
         map.zoomToMaxExtent();
 	
 	anno.makeAnnotatable(map);
@@ -26,6 +32,7 @@
         height:100%;
         padding:0px;
         margin:0px;
+        overflow:hidden;
       }
 
       #annotate-button {

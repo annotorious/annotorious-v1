@@ -2,6 +2,7 @@ goog.provide('annotorious.modules.openlayers.Viewer');
 
 goog.require('goog.style');
 goog.require('goog.events');
+goog.require('goog.dom.classes');
 
 /**
  * The OpenLayers viewer wraps an OpenLayers Box Marker layer to display annotations inside
@@ -32,21 +33,26 @@ annotorious.modules.openlayers.Viewer = function(map, popup, annotator) {
  * @param {annotorious.annotation.Annotation} the annotation
  */
 annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotation) {
-  // TODO annotation should contain item coordinates (no transformation needed)
   var geometry = annotation.shape.geometry;
-  // var top_left = this._map.getLonLatFromPixel(new OpenLayers.Pixel(geometry.x, geometry.y));
-  // var bottom_right = this._map.getLonLatFromPixel(new OpenLayers.Pixel(geometry.x + geometry.width, geometry.y + geometry.height));
   var marker =
     new OpenLayers.Marker.Box(new OpenLayers.Bounds(geometry.x, geometry.y, geometry.x + geometry.width, geometry.y + geometry.height));
+  goog.dom.classes.add(marker.div, 'annotorious-ol-boxmarker-outer');
+  goog.style.setStyle(marker.div, 'border', null);
+
+  var inner = goog.dom.createDom('div', 'annotorious-ol-boxmarker-inner');
+  goog.style.setSize(inner, '100%', '100%');
+  goog.dom.appendChild(marker.div, inner);
   
   var self = this;
   goog.events.listen(marker.div, goog.events.EventType.MOUSEOVER, function(event) {
     var pos = goog.style.getRelativePosition(marker.div, self._map.div);
     var height = parseInt(goog.style.getStyle(marker.div, 'height'), 10);
+    goog.style.setStyle(inner, 'border-color', '#fff000');
     self._popup.show(annotation, pos.x, pos.y + height + 5);
   });
   
   goog.events.listen(marker.div, goog.events.EventType.MOUSEOUT, function(event) {
+    goog.style.setStyle(inner, 'border-color', '#fff');
     self._popup.startHideTimer();
   });
 
