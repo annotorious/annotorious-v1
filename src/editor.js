@@ -104,7 +104,7 @@ annotorious.editor.Editor.prototype.setPosition = function(x, y) {
  * @return {annotorious.annotation.Annotation} the annotation
  */
 annotorious.editor.Editor.prototype.getAnnotation = function() {
-  return new annotorious.annotation.Annotation(this._imgSrc, this._textarea.value, this._selection.getShape()); 
+  return new annotorious.annotation.Annotation(this._imgSrc, this._textarea.value, this._selection.getShape());
 }
 
 // Export addField method

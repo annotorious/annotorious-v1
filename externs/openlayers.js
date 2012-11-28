@@ -4,7 +4,7 @@
 var OpenLayers = {
     
   /** Bounds class **/
-  Bounds: function() {},
+  Bounds: function(left, bottom, right, top) {},
     
   /** Layer namespace **/
   Layer : {
@@ -16,10 +16,16 @@ var OpenLayers = {
     }
   },
     
+  /** LonLat class **/
+  LonLat : {
+    lon : {},
+    lat : {}
+  },
+  
   /** Map class **/
   Map : {
     div : {},
-    addLayer : function() {},
+    addLayer : function(layer) {},
     getViewPortPxFromLonLat : function() {},
     getLonLatFromPixel : function() {}
   },
