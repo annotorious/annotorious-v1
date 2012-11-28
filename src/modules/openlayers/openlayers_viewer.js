@@ -43,6 +43,8 @@ annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotat
   goog.style.setSize(inner, '100%', '100%');
   goog.dom.appendChild(marker.div, inner);
   
+  console.log('done');
+  
   var self = this;
   goog.events.listen(marker.div, goog.events.EventType.MOUSEOVER, function(event) {
     var pos = goog.style.getRelativePosition(marker.div, self._map.div);

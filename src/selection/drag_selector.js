@@ -48,7 +48,7 @@ annotorious.selection.DragSelector = function(canvas, annotator) {
   goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
     self._enabled = false;
     var shape = self.getShape();
-    if (shape.geometry) {
+    if (shape) {
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_COMPLETED,
         { mouseEvent: event, shape: shape, viewportBounds: self.getViewportBounds() }); 
     } else {
@@ -89,14 +89,18 @@ annotorious.selection.DragSelector.prototype.getShape = function() {
   var item_anchor = this._annotator.toItemCoordinates(this._anchor);
   var item_opposite = this._annotator.toItemCoordinates(this._opposite);
   
-  var rect = new annotorious.geom.Rectangle(
-    item_anchor.x,
-    item_anchor.y,
-    item_opposite.x - item_anchor.x,
-    item_opposite.y - item_anchor.y
-  );
+  if (item_opposite) {
+    var rect = new annotorious.geom.Rectangle(
+      item_anchor.x,
+      item_anchor.y,
+      item_opposite.x - item_anchor.x,
+      item_opposite.y - item_anchor.y
+    );
 
-  return new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, rect); 
+    return new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, rect);
+  } else {
+    return undefined;
+  }
 }
 
 annotorious.selection.DragSelector.prototype.getViewportBounds = function() {

@@ -80,7 +80,6 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   });
   
   goog.events.listen(this._div, goog.events.EventType.MOUSEDOWN, function(event) {
-    console.log('mousedown');
     if (isCtrlKeyDown) {
       goog.style.showElement(self._editCanvas, true);
       //self._viewer.highlightAnnotation(undefined);
