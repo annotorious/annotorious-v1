@@ -25,6 +25,9 @@ var OpenLayers = {
   /** Map class **/
   Map : {
     div : {},
+    events : {
+      register : function() {}
+    },
     addLayer : function(layer) {},
     getViewPortPxFromLonLat : function() {},
     getLonLatFromPixel : function() {}

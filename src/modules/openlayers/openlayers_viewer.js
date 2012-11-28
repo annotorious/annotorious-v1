@@ -3,6 +3,7 @@ goog.provide('annotorious.modules.openlayers.Viewer');
 goog.require('goog.style');
 goog.require('goog.events');
 goog.require('goog.dom.classes');
+goog.require('goog.events.MouseWheelHandler');
 
 /**
  * The OpenLayers viewer wraps an OpenLayers Box Marker layer to display annotations inside
@@ -38,7 +39,7 @@ annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotat
     new OpenLayers.Marker.Box(new OpenLayers.Bounds(geometry.x, geometry.y, geometry.x + geometry.width, geometry.y + geometry.height));
   goog.dom.classes.add(marker.div, 'annotorious-ol-boxmarker-outer');
   goog.style.setStyle(marker.div, 'border', null);
-
+  
   var inner = goog.dom.createDom('div', 'annotorious-ol-boxmarker-inner');
   goog.style.setSize(inner, '100%', '100%');
   goog.dom.appendChild(marker.div, inner);
@@ -55,16 +56,21 @@ annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotat
     goog.style.setStyle(inner, 'border-color', '#fff');
     self._popup.startHideTimer();
   });
-
-  goog.events.listen(marker.div, goog.events.EventType.MOUSEMOVE, function(event) {
+  
+  // TODO improve!
+  this._map.events.register('mousemove', marker, function() {
     var pos = goog.style.getRelativePosition(marker.div, self._map.div);
     var height = parseInt(goog.style.getStyle(marker.div, 'height'), 10);
     self._popup.setPosition(pos.x, pos.y + height + 5);
   });
   
-  // TODO add mouse scroll listener
+  this._map.events.register('zoomend', marker, function() {
+    var pos = goog.style.getRelativePosition(marker.div, self._map.div);
+    var height = parseInt(goog.style.getStyle(marker.div, 'height'), 10);
+    self._popup.setPosition(pos.x, pos.y + height + 5);
+  });
   
-  // TODO sort by size
+  // TODO sort by size and (re-)assign z-indices
   this._boxesLayer.addMarker(marker);
   this._overlays.push({annotation: annotation, marker: marker});
 }
