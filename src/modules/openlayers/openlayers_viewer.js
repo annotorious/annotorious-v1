@@ -25,8 +25,21 @@ annotorious.modules.openlayers.Viewer = function(map, popup, annotator) {
   this._overlays = [];
 
   /** @private **/
+  this._currentOverlay;
+
+  /** @private **/
   this._boxesLayer = new OpenLayers.Layer.Boxes('Annotorious');
   this._map.addLayer(this._boxesLayer);
+
+  var self = this;
+  this._map.events.register('move', this._map, function() {
+    if (self._currentOverlay) {
+      var div = self._currentOverlay.marker.div;
+      var pos = goog.style.getRelativePosition(div, self._map.div);
+      var height = parseInt(goog.style.getStyle(div, 'height'), 10);
+      self._popup.setPosition(pos.x, pos.y + height + 5);
+    }
+  });
 }
 
 /**
@@ -50,14 +63,16 @@ annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotat
     var height = parseInt(goog.style.getStyle(marker.div, 'height'), 10);
     goog.style.setStyle(inner, 'border-color', '#fff000');
     self._popup.show(annotation, pos.x, pos.y + height + 5);
+    self._currentOverlay = {annotation: annotation, marker: marker};
   });
   
   goog.events.listen(marker.div, goog.events.EventType.MOUSEOUT, function(event) {
     goog.style.setStyle(inner, 'border-color', '#fff');
     self._popup.startHideTimer();
+    delete self._currentOverlay;
   });
   
-  // TODO improve!
+  /*
   this._map.events.register('mousemove', marker, function() {
     var pos = goog.style.getRelativePosition(marker.div, self._map.div);
     var height = parseInt(goog.style.getStyle(marker.div, 'height'), 10);
@@ -69,6 +84,7 @@ annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotat
     var height = parseInt(goog.style.getStyle(marker.div, 'height'), 10);
     self._popup.setPosition(pos.x, pos.y + height + 5);
   });
+  */
   
   // TODO sort by size and (re-)assign z-indices
   this._boxesLayer.addMarker(marker);

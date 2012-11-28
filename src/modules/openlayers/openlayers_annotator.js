@@ -93,6 +93,10 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
                              bounds.bottom + 4 + self._div.offsetTop);
     self._editor.open();    
   });
+
+  this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function(event) {
+    self.stopSelection();    
+  });
 }
 
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.stopSelection = function() {
