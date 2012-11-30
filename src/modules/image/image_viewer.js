@@ -209,9 +209,9 @@ annotorious.modules.image.Viewer.prototype._draw = function(annotation, color, l
   } else if (shape.type == annotorious.annotation.ShapeType.RECTANGLE) {
     var rect = shape.geometry;
     this._g2d.strokeStyle = '#000000';
-    this._g2d.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
+    this._g2d.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width + 1, rect.height + 1);
     this._g2d.strokeStyle = color;
-    this._g2d.strokeRect(rect.x + 1.5, rect.y + 1.5, rect.width - 2, rect.height - 2);
+    this._g2d.strokeRect(rect.x + 1.5, rect.y + 1.5, rect.width - 1, rect.height - 1);
   }  
 }
 
