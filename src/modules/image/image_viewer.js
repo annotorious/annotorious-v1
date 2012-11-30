@@ -205,7 +205,19 @@ annotorious.modules.image.Viewer.prototype._draw = function(annotation, color, l
   if (shape.type == annotorious.annotation.ShapeType.POINT) {
     // TODO implement
   } else if (shape.type == annotorious.annotation.ShapeType.POLYGON) {
-    // TODO implement
+    this._g2d.strokeStyle = '#0000ff';
+    this._g2d.lineWidth = 1.5;
+    this._g2d.beginPath();
+    var points = shape.geometry.points;
+    
+    // TODO should we check for invalid polygons (e.g. points.length < 3)?
+    this._g2d.moveTo(points[0].x, points[0].y);
+    for (var i=1; i<points.length; i++) {
+      this._g2d.lineTo(points[i].x, points[i].y);
+    }
+    this._g2d.lineTo(points[0].x, points[0].y);
+
+    this._g2d.stroke();
   } else if (shape.type == annotorious.annotation.ShapeType.RECTANGLE) {
     var rect = shape.geometry;
     this._g2d.strokeStyle = '#000000';

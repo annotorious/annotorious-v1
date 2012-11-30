@@ -79,9 +79,9 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   });
 
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
-    var shape = event.shape;
-    self._editor.setPosition(shape.geometry.x + self._image.offsetLeft,
-                             shape.geometry.y + shape.geometry.height + 4 + self._image.offsetTop);
+    var bounds = event.viewportBounds;
+    self._editor.setPosition(bounds.left + self._image.offsetLeft,
+                             bounds.bottom + 4 + self._image.offsetTop);
     self._editor.open();
   });
   
