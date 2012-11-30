@@ -48,7 +48,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   goog.dom.appendChild(annotationLayer, this._editCanvas);  
 
   /** @private **/
-  this._selector = new annotorious.selection.DragSelector(this._editCanvas, this);
+  this._selector = new annotorious.selection.PolygonSelector(this._editCanvas, this);
 
   /** @private **/
   this._editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);

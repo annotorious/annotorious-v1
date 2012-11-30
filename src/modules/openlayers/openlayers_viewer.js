@@ -28,7 +28,7 @@ annotorious.modules.openlayers.Viewer = function(map, popup, annotator) {
   this._currentOverlay;
 
   /** @private **/
-  this._boxesLayer = new OpenLayers.Layer.Boxes('Annotorious');
+  this._boxesLayer = new OpenLayers.Layer.Boxes('Annotorious'); // TODO make configurable
   this._map.addLayer(this._boxesLayer);
 
   var self = this;
