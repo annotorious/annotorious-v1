@@ -36,19 +36,22 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
   /** @private **/
-  this._popup = new annotorious.viewer.Popup(annotationLayer, this);
-
-  /** @private **/
-  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this._popup, this);
-
-  /** @private **/
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:image.width, height:image.height });
   goog.style.showElement(this._editCanvas, false); 
   goog.dom.appendChild(annotationLayer, this._editCanvas);  
 
   /** @private **/
-  this._selector = new annotorious.selection.PolygonSelector(this._editCanvas, this);
+  this._popup = new annotorious.viewer.Popup(annotationLayer, this);
+
+  // TODO these should be plugins, not hardcoded!
+  // this._selector = new annotorious.plugins.selection.PolygonSelector(this._editCanvas, this); 
+
+  /** @private **/
+  this._selector = new annotorious.plugins.selection.RectDragSelector(this._editCanvas, this); 
+
+  /** @private **/
+  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this._popup, [this._selector], this);
 
   /** @private **/
   this._editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);

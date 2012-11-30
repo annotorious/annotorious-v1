@@ -1,4 +1,4 @@
-goog.provide('annotorious.selection.DragSelector');
+goog.provide('annotorious.plugins.selection.RectDragSelector');
 
 goog.require('goog.events');
 
@@ -8,7 +8,7 @@ goog.require('goog.events');
  * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.selection.DragSelector = function(canvas, annotator) {
+annotorious.plugins.selection.RectDragSelector = function(canvas, annotator) {
   /** @private **/
   this._canvas = canvas;
   
@@ -57,12 +57,16 @@ annotorious.selection.DragSelector = function(canvas, annotator) {
   });
 }
 
+annotorious.plugins.selection.RectDragSelector.prototype.supportedShapeType = function() {
+  return annotorious.annotation.ShapeType.RECTANGLE;
+}
+
 /**
  * Starts the selection at the specified coordinates.
  * @param {number} x the X coordinate
  * @param {number} y the Y coordinate
  */
-annotorious.selection.DragSelector.prototype.startSelection = function(x, y) {
+annotorious.plugins.selection.RectDragSelector.prototype.startSelection = function(x, y) {
   this._enabled = true;
   this._anchor = new annotorious.geom.Point(x, y);
   this._annotator.fireEvent(annotorious.events.EventType.SELECTION_STARTED, {
@@ -74,7 +78,7 @@ annotorious.selection.DragSelector.prototype.startSelection = function(x, y) {
 /**
  * Stops the selection.
  */
-annotorious.selection.DragSelector.prototype.stopSelection = function() {
+annotorious.plugins.selection.RectDragSelector.prototype.stopSelection = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
   goog.style.setStyle(document.body, '-webkit-user-select', 'auto');
   delete this._opposite;
@@ -83,7 +87,7 @@ annotorious.selection.DragSelector.prototype.stopSelection = function() {
 /**
  * The currently edited shape
  */
-annotorious.selection.DragSelector.prototype.getShape = function() {
+annotorious.plugins.selection.RectDragSelector.prototype.getShape = function() {
   if (this._opposite) {
     var item_anchor = this._annotator.toItemCoordinates(this._anchor);
     var item_opposite = this._annotator.toItemCoordinates({x: this._opposite.x - 1, y: this._opposite.y - 1});
@@ -101,7 +105,7 @@ annotorious.selection.DragSelector.prototype.getShape = function() {
   }
 }
 
-annotorious.selection.DragSelector.prototype.getViewportBounds = function() {
+annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = function() {
   var right, left;
   if (this._opposite.x > this._anchor.x) {
     right = this._opposite.x;
@@ -121,4 +125,23 @@ annotorious.selection.DragSelector.prototype.getViewportBounds = function() {
   }
   
   return {top: top, right: right, bottom: bottom, left: left};
+}
+
+annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2d, shape, highlight) {
+  // TODO check if the shape is really a rect
+  var color, lineWidth;
+  if (highlight) {
+    color = '#fff000';
+    lineWidth = 1.2;
+  } else {
+    color = '#ffffff';
+    lineWidth = 1;
+  }
+
+  var rect = shape.geometry;
+  g2d.strokeStyle = '#000000';
+  g2d.lineWidth = lineWidth;
+  g2d.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width + 1, rect.height + 1);
+  g2d.strokeStyle = color;
+  g2d.strokeRect(rect.x + 1.5, rect.y + 1.5, rect.width - 1, rect.height - 1);
 }

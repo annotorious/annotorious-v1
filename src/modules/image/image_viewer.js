@@ -13,12 +13,15 @@ goog.require('goog.dom.query');
  * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
+annotorious.modules.image.Viewer = function(canvas, popup, selectors, annotator) {
   /** @private **/
   this._canvas = canvas;
 
   /** @private **/
   this._popup = popup;
+
+  /** @private **/
+  this._selectors = selectors;
   
   /** @private **/
   this._annotator = annotator;
@@ -89,7 +92,7 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
  */
 annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation) {
   this._annotations.push(annotation);  
-  this._draw(annotation, '#ffffff', 1);
+  this._draw(annotation);
 }
 
 /**
@@ -159,7 +162,7 @@ annotorious.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
   });
 
   goog.array.sort(intersectedAnnotations, function(a, b) {
-    return annotorious.geom.size(a.shape.geometry) > annotorious.geom.size(b.shape.geometry);
+    return annotorious.geom.size(a.shapes[0].geometry) > annotorious.geom.size(b.shapes[0].geometry);
   });
   
   return intersectedAnnotations;
@@ -198,33 +201,14 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
 /**
  * @private
  */
-annotorious.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidth) {
-  this._g2d.lineWidth = lineWidth;
-
+annotorious.modules.image.Viewer.prototype._draw = function(annotation, highlight) {
   var shape = annotation.shapes[0];
-  if (shape.type == annotorious.annotation.ShapeType.POINT) {
-    // TODO implement
-  } else if (shape.type == annotorious.annotation.ShapeType.POLYGON) {
-    this._g2d.strokeStyle = '#0000ff';
-    this._g2d.lineWidth = 1.5;
-    this._g2d.beginPath();
-    var points = shape.geometry.points;
-    
-    // TODO should we check for invalid polygons (e.g. points.length < 3)?
-    this._g2d.moveTo(points[0].x, points[0].y);
-    for (var i=1; i<points.length; i++) {
-      this._g2d.lineTo(points[i].x, points[i].y);
-    }
-    this._g2d.lineTo(points[0].x, points[0].y);
+  var selector = goog.array.find(this._selectors, function(selector) {
+    return selector.supportedShapeType() == shape.type;
+  });  
 
-    this._g2d.stroke();
-  } else if (shape.type == annotorious.annotation.ShapeType.RECTANGLE) {
-    var rect = shape.geometry;
-    this._g2d.strokeStyle = '#000000';
-    this._g2d.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width + 1, rect.height + 1);
-    this._g2d.strokeStyle = color;
-    this._g2d.strokeRect(rect.x + 1.5, rect.y + 1.5, rect.width - 1, rect.height - 1);
-  }  
+  if (selector)
+    selector.drawShape(this._g2d, shape, highlight);
 }
 
 /**
@@ -235,11 +219,11 @@ annotorious.modules.image.Viewer.prototype._redraw = function() {
   
   var self = this;
   goog.array.forEach(this._annotations, function(annotation, idx, array) {
-    self._draw(annotation, '#ffffff', 1);
+    self._draw(annotation);
   });
     
   if (this._currentAnnotation) {
-    this._draw(this._currentAnnotation, '#fff000', 1.2);
+    this._draw(this._currentAnnotation, true);
         
     // TODO need to introduce a bbox property that's supported by every shape type
     // Currently the shape.geometry will always be a yuma.geom.Rectangle
