@@ -15,14 +15,14 @@ var Annotation = {
   text  : {},
   
   /** @type {Object} the annotation shape **/
-  shape : {
+  shapes : [{
   
     /** @type {string} the annotation shape type (e.g. rectangle, point, polygon) **/
     type     : {},
     
     /** @type {Object} the shape geometry **/
     geometry : {}
-  }
+  }]
 };
 
 /**

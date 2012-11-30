@@ -153,7 +153,7 @@ annotorious.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
   // using a tree- or grid-like data structure instead of a list
   var intersectedAnnotations = [];
   goog.array.forEach(this._annotations, function(annotation, idx, array) {
-    if (annotorious.geom.intersects(annotation.shape.geometry, px, py)) {
+    if (annotorious.geom.intersects(annotation.shapes[0].geometry, px, py)) {
       intersectedAnnotations.push(annotation);
     }
   });
@@ -201,7 +201,7 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
 annotorious.modules.image.Viewer.prototype._draw = function(annotation, color, lineWidth) {
   this._g2d.lineWidth = lineWidth;
 
-  var shape = annotation.shape;
+  var shape = annotation.shapes[0];
   if (shape.type == annotorious.annotation.ShapeType.POINT) {
     // TODO implement
   } else if (shape.type == annotorious.annotation.ShapeType.POLYGON) {
@@ -231,7 +231,7 @@ annotorious.modules.image.Viewer.prototype._redraw = function() {
         
     // TODO need to introduce a bbox property that's supported by every shape type
     // Currently the shape.geometry will always be a yuma.geom.Rectangle
-    var bbox = this._currentAnnotation.shape.geometry;
+    var bbox = this._currentAnnotation.shapes[0].geometry;
     this._popup.show(this._currentAnnotation, bbox.x, bbox.y + bbox.height + 5);
 
     // TODO Orientation check - what if the popup would be outside the viewport?

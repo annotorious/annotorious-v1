@@ -82,8 +82,6 @@ annotorious.selection.DragSelector.prototype.stopSelection = function() {
 
 /**
  * The currently edited shape
- *
- * TODO remove this method - pass via events instead!
  */
 annotorious.selection.DragSelector.prototype.getShape = function() {
   if (this._opposite) {

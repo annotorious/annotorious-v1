@@ -11,7 +11,7 @@ goog.provide('annotorious.annotation');
 annotorious.annotation.Annotation = function(src, text, shape) {
   this.src = src;
   this.text = text;
-  this.shape = shape;
+  this.shapes = [ shape ];
   this['context'] = document.URL; // Prevents dead code removal
 }
 
@@ -24,6 +24,7 @@ annotorious.annotation.Annotation = function(src, text, shape) {
 annotorious.annotation.Shape = function(type, geometry) {
   this.type = type
   this.geometry = geometry;
+  this['unit'] = 'pixel'; // Digilib conformance
 }
 
 /**
