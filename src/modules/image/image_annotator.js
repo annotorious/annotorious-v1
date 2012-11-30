@@ -45,9 +45,8 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   this._popup = new annotorious.viewer.Popup(annotationLayer, this);
 
   // TODO these should be plugins, not hardcoded!
-  // this._selector = new annotorious.plugins.selection.PolygonSelector(this._editCanvas, this); 
-
   /** @private **/
+  // this._selector = new annotorious.plugins.selection.PolygonSelector(this._editCanvas, this); 
   this._selector = new annotorious.plugins.selection.RectDragSelector(this._editCanvas, this); 
 
   /** @private **/

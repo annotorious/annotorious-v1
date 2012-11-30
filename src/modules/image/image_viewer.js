@@ -225,9 +225,7 @@ annotorious.modules.image.Viewer.prototype._redraw = function() {
   if (this._currentAnnotation) {
     this._draw(this._currentAnnotation, true);
         
-    // TODO need to introduce a bbox property that's supported by every shape type
-    // Currently the shape.geometry will always be a yuma.geom.Rectangle
-    var bbox = this._currentAnnotation.shapes[0].geometry;
+    var bbox = annotorious.geom.getBoundingRect(this._currentAnnotation.shapes[0].geometry);
     this._popup.show(this._currentAnnotation, bbox.x, bbox.y + bbox.height + 5);
 
     // TODO Orientation check - what if the popup would be outside the viewport?
