@@ -28,9 +28,15 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   goog.dom.replaceNode(annotationLayer, this._div);
   goog.dom.appendChild(annotationLayer, this._div);
     
-  var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
+  var hint = goog.soy.renderAsElement(annotorious.templates.openlayers.hint, {msg:'Press and Hold CTRL to Annotate'});
+  goog.style.setStyle(hint, 'z-index', 9998);
   goog.style.setOpacity(hint, 0); 
   goog.dom.appendChild(annotationLayer, hint);
+
+  var secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
+  goog.style.setStyle(secondaryHint, 'z-index', 9998);
+  goog.style.setOpacity(secondaryHint, 0); 
+  goog.dom.appendChild(annotationLayer, secondaryHint);
   
   /** @private **/
   this._popup = new annotorious.viewer.Popup(annotationLayer, this);
@@ -46,7 +52,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   goog.dom.appendChild(annotationLayer, this._editCanvas);  
 
   /** @private **/
-  this._selector = new annotorious.selection.DragSelector(this._editCanvas, this);
+  this._selector = new annotorious.plugins.selection.RectDragSelector(this._editCanvas, this);
     
   /** @private **/
   this._editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);
@@ -58,6 +64,9 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
     if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
       goog.style.setOpacity(hint, 0.8); 
+      window.setTimeout(function() {
+        goog.style.setOpacity(hint, 0);
+      }, 2000);
     }
   });
   
@@ -71,8 +80,14 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   
   var isCtrlKeyDown = false;
   goog.events.listen(document, goog.events.EventType.KEYDOWN, function(event) {
-    if (event.keyCode == 17)
+    if (event.keyCode == 17) {
       isCtrlKeyDown = true;
+      goog.style.setOpacity(hint, 0);
+      goog.style.setOpacity(secondaryHint, 0.8); 
+      window.setTimeout(function() {
+        goog.style.setOpacity(secondaryHint, 0);
+      }, 2000);
+    }
   });
   
   goog.events.listen(document, goog.events.EventType.KEYUP, function(event) {

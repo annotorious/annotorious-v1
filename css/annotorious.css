@@ -152,7 +152,7 @@
 
 /** Module components **/
 
-.annotorious-canvas {
+.annotorious-opacity-fade {
   -moz-transition-property: opacity;
   -moz-transition-duration: 0.5s;
   -moz-transition-delay: 0s;
@@ -205,4 +205,22 @@
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
+}
+
+.annotorious-ol-hint {
+  line-height: normal;
+  font-family:Arial, Verdana, Sans;
+  font-size:16px;
+  color:#000;
+  background-color:#fff;
+  margin:0px;
+  padding:9px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -khtml-border-radius: 5px;
+}
+
+.annotorious-ol-hint-secondary {
+  background-color:#fff000;
 }

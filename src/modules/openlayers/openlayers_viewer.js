@@ -45,7 +45,10 @@ annotorious.modules.openlayers.Viewer = function(map, popup, annotator) {
   });
 
   annotator.addHandler(annotorious.events.EventType.BEFORE_POPUP_HIDE, function() {
-    self._updateHighlight(self._lastHoveredOverlay, self._currentlyHighlightedOverlay);
+    if (self._lastHoveredOverlay == self._currentlyHighlightedOverlay)
+      self._popup.clearHideTimer();
+    else
+      self._updateHighlight(self._lastHoveredOverlay, self._currentlyHighlightedOverlay);
   });
 }
 
@@ -83,14 +86,14 @@ annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotat
   var overlay = {annotation: annotation, marker: marker, inner: inner};
 
   var self = this;
-  goog.events.listen(marker.div, goog.events.EventType.MOUSEOVER, function(event) {
+  goog.events.listen(inner, goog.events.EventType.MOUSEOVER, function(event) {
     if (!self._currentlyHighlightedOverlay)
-      self._updateHighlight(overlay, self._lastHoveredOverlay);
+      self._updateHighlight(overlay);
 
     self._lastHoveredOverlay = overlay;
   });
   
-  goog.events.listen(marker.div, goog.events.EventType.MOUSEOUT, function(event) {
+  goog.events.listen(inner, goog.events.EventType.MOUSEOUT, function(event) {
     delete self._lastHoveredOverlay;
     self._popup.startHideTimer();
   });
