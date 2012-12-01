@@ -25,7 +25,10 @@ annotorious.modules.openlayers.Viewer = function(map, popup, annotator) {
   this._overlays = [];
 
   /** @private **/
-  this._currentOverlay;
+  this._currentlyHighlightedOverlay;
+
+  /** @private **/
+  this._lastHoveredOverlay;
 
   /** @private **/
   this._boxesLayer = new OpenLayers.Layer.Boxes('Annotorious'); // TODO make configurable
@@ -33,13 +36,33 @@ annotorious.modules.openlayers.Viewer = function(map, popup, annotator) {
 
   var self = this;
   this._map.events.register('move', this._map, function() {
-    if (self._currentOverlay) {
-      var div = self._currentOverlay.marker.div;
+    if (self._currentlyHighlightedOverlay) {
+      var div = self._currentlyHighlightedOverlay.marker.div;
       var pos = goog.style.getRelativePosition(div, self._map.div);
       var height = parseInt(goog.style.getStyle(div, 'height'), 10);
       self._popup.setPosition(pos.x, pos.y + height + 5);
     }
   });
+
+  annotator.addHandler(annotorious.events.EventType.BEFORE_POPUP_HIDE, function() {
+    self._updateHighlight(self._lastHoveredOverlay, self._currentlyHighlightedOverlay);
+  });
+}
+
+annotorious.modules.openlayers.Viewer.prototype._updateHighlight = function(new_highlight, previous_highlight) {
+  if (new_highlight) {
+    var pos = goog.style.getRelativePosition(new_highlight.marker.div, this._map.div);
+    var height = parseInt(goog.style.getStyle(new_highlight.marker.div, 'height'), 10);
+    goog.style.setStyle(new_highlight.inner, 'border-color', '#fff000');
+    this._popup.show(new_highlight.annotation, pos.x, pos.y + height + 5);
+    this._currentlyHighlightedOverlay = new_highlight;
+  } else {
+    delete this._currentlyHighlightedOverlay;
+  }
+
+  if (previous_highlight) {
+    goog.style.setStyle(previous_highlight.inner, 'border-color', '#fff');
+  }
 }
 
 /**
@@ -57,24 +80,28 @@ annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotat
   goog.style.setSize(inner, '100%', '100%');
   goog.dom.appendChild(marker.div, inner);
 
+  var overlay = {annotation: annotation, marker: marker, inner: inner};
+
   var self = this;
   goog.events.listen(marker.div, goog.events.EventType.MOUSEOVER, function(event) {
-    var pos = goog.style.getRelativePosition(marker.div, self._map.div);
-    var height = parseInt(goog.style.getStyle(marker.div, 'height'), 10);
-    goog.style.setStyle(inner, 'border-color', '#fff000');
-    self._popup.show(annotation, pos.x, pos.y + height + 5);
-    self._currentOverlay = {annotation: annotation, marker: marker};
+    if (!self._currentlyHighlightedOverlay)
+      self._updateHighlight(overlay, self._lastHoveredOverlay);
+
+    self._lastHoveredOverlay = overlay;
   });
   
   goog.events.listen(marker.div, goog.events.EventType.MOUSEOUT, function(event) {
-    goog.style.setStyle(inner, 'border-color', '#fff');
+    delete self._lastHoveredOverlay;
     self._popup.startHideTimer();
-    delete self._currentOverlay;
   });
   
-  this._overlays.push({annotation: annotation, marker: marker});
+  this._overlays.push(overlay);
 
-  // TODO sort by size
+  goog.array.sort(this._overlays, function(a, b) {
+    var geomA = a.annotation.shapes[0].geometry;
+    var geomB = b.annotation.shapes[0].geometry;
+    return annotorious.geom.size(geomB) - annotorious.geom.size(geomA);
+  });
  
   var zIndex = 10000;
   goog.array.forEach(this._overlays, function(overlay) {
