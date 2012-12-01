@@ -41,7 +41,16 @@ annotorious.plugins.selection.RectDragSelector = function(canvas, annotator) {
       self._g2d.strokeStyle = '#000000';
       self._g2d.strokeRect(self._anchor.x + 0.5, self._anchor.y + 0.5, width, height);
       self._g2d.strokeStyle = '#ffffff';
-      self._g2d.strokeRect(self._anchor.x + 1.5, self._anchor.y + 1.5, width - 2, height - 2);
+
+      if (width > 0 && height > 0) {
+        self._g2d.strokeRect(self._anchor.x + 1.5, self._anchor.y + 1.5, width - 2, height - 2);
+      } else if (width > 0 && height < 0) {
+        self._g2d.strokeRect(self._anchor.x + 1.5, self._anchor.y - 0.5, width - 2, height + 2);
+      } else if (width < 0 && height < 0) {
+        self._g2d.strokeRect(self._anchor.x - 0.5, self._anchor.y - 0.5, width + 2, height + 2);
+      } else {
+        self._g2d.strokeRect(self._anchor.x - 0.5, self._anchor.y + 1.5, width + 2, height - 2);
+      }
     }
   });
 
