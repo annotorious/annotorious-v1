@@ -1,0 +1,21 @@
+{namespace annotorious.templates.openlayers}
+
+/**
+ * The 'Press and Hold Ctrl to Annotate' hint
+ * @param msg
+ */
+{template .hint}
+<div class="annotorious-opacity-fade" style="white-space:nowrap; position:absolute; pointer-events:none; top:80px; width:100%; text-align:center;">
+  <div class="annotorious-ol-hint" style="width: 400px; margin:0px auto;">{$msg}</dvi>
+</div>
+{/template}
+
+/**
+ * The secondary 'Click and Drag' hint
+ * @param msg
+ */
+{template .secondaryHint}
+<div class="annotorious-opacity-fade" style="white-space:nowrap; position:absolute; pointer-events:none; top:80px; width:100%; text-align:center;">
+  <div class="annotorious-ol-hint annotorious-ol-hint-secondary" style="width: 400px; margin:0px auto;">{$msg}</dvi>
+</div>
+{/template}

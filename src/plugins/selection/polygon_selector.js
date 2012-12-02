@@ -36,9 +36,16 @@ annotorious.plugins.selection.PolygonSelector = function(canvas, annotator) {
     self._g2d.clearRect(0, 0, canvas.width, canvas.height);
     self._g2d.beginPath();
     self._g2d.moveTo(self._anchor.x, self._anchor.y);
+
+    // Polyline
     goog.array.forEach(self._points, function(pt) {
       self._g2d.lineTo(pt.x, pt.y);
     });
+
+    /* Vertex circles
+    goog.array.forEach(self._points, function(pt) {
+      self._g2d.arc(pt.x, pt.y, 5, 0, 2 * Math.PI, false);
+    }*/
   }
 
   var self = this;  

@@ -1,3 +1,47 @@
+/** Hint/help popup **/
+
+.annotorious-hint {
+  width:100%;
+  background-color:rgba(0, 0, 0, 0.8);
+  margin:0px;
+  padding:0px;
+
+  -moz-transition-property: opacity;
+  -moz-transition-duration: 0.5s;
+  -moz-transition-delay: 0s;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 0.5s;
+  -webkit-transition-delay: 0s;
+  -o-transition-property: opacity;
+  -o-transition-duration: 0.5s;
+  -o-transition-delay: 0s;
+  transition-property: opacity;
+  transition-duration: 0.5s;
+  transition-delay: 0s;
+}
+
+.annotorious-hint-icon {
+  display:inline-block;
+  background:url('feather_icon.png');
+  width:26px;
+  height:36px;
+  margin:4px 0px 0px 10px;
+  position:relative;
+  bottom:-6px;
+}
+
+.annotorious-hint-msg {
+  display:inline-block;
+  position:relative;
+  bottom:6px;
+  padding:12px;
+  font-weight:bold;
+  font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+  line-height: normal;
+  font-size:14px;
+  color:#fff;
+}
+
 /** Popup **/
 
 .annotorious-popup {
@@ -153,33 +197,6 @@
 /** Module components **/
 
 .annotorious-opacity-fade {
-  -moz-transition-property: opacity;
-  -moz-transition-duration: 0.5s;
-  -moz-transition-delay: 0s;
-  -webkit-transition-property: opacity;
-  -webkit-transition-duration: 0.5s;
-  -webkit-transition-delay: 0s;
-  -o-transition-property: opacity;
-  -o-transition-duration: 0.5s;
-  -o-transition-delay: 0s;
-  transition-property: opacity;
-  transition-duration: 0.5s;
-  transition-delay: 0s;
-}
-
-.annotorious-hint {
-  line-height: normal;
-  font-family:Arial, Verdana, Sans;
-  font-size:11px;
-  color:#000;
-  background-color:#fff;
-  margin:0px;
-  padding:5px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -khtml-border-radius: 5px;
-
   -moz-transition-property: opacity;
   -moz-transition-duration: 0.5s;
   -moz-transition-delay: 0s;

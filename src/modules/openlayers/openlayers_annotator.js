@@ -28,7 +28,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   goog.dom.replaceNode(annotationLayer, this._div);
   goog.dom.appendChild(annotationLayer, this._div);
     
-  var hint = goog.soy.renderAsElement(annotorious.templates.openlayers.hint, {msg:'Press and Hold CTRL to Annotate'});
+  var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Press and Hold CTRL to Annotate'});
   goog.style.setStyle(hint, 'z-index', 9998);
   goog.style.setOpacity(hint, 0); 
   goog.dom.appendChild(annotationLayer, hint);
@@ -64,9 +64,6 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
     if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
       goog.style.setOpacity(hint, 0.8); 
-      window.setTimeout(function() {
-        goog.style.setOpacity(hint, 0);
-      }, 2000);
     }
   });
   

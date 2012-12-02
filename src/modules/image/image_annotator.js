@@ -62,6 +62,9 @@ annotorious.modules.image.ImageAnnotator = function(image) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
       goog.style.setOpacity(viewCanvas, 1.0); 
       goog.style.setOpacity(hint, 0.8); 
+      window.setTimeout(function() {
+        goog.style.setOpacity(hint, 0.3);
+      }, 3000);
     }
   });
   
