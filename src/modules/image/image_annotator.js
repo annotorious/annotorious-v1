@@ -25,10 +25,6 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   goog.style.setSize(annotationLayer, image.width, image.height); 
   goog.dom.replaceNode(annotationLayer, image);
   goog.dom.appendChild(annotationLayer, image);
-    
-  var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
-  goog.style.setOpacity(hint, 0); 
-  goog.dom.appendChild(annotationLayer, hint);
   
   var viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:image.width, height:image.height });
@@ -55,16 +51,44 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   /** @private **/
   this._editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);
 
+  var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
+  goog.style.setOpacity(hint, 0); 
+  goog.dom.appendChild(annotationLayer, hint);
+  var hintHideTimer;
+  var hintIcon = goog.dom.query('.annotorious-hint-icon', hint)[0];
+ 
+  // TODO maybe it makes sense to refactor this into a dedicated 'hint' class
+  var hideHint = function() {
+    window.clearTimeout(hintHideTimer);
+    goog.style.setOpacity(hint, 0.3);
+    goog.style.setStyle(hint, 'pointer-events', 'none');
+  }
+
+  var showHint = function() {
+    window.clearTimeout(hintHideTimer);
+    goog.style.setOpacity(hint, 0.8);
+    goog.style.setStyle(hint, 'pointer-events', 'auto');
+  }
+
   var self = this;  
+  goog.events.listen(hintIcon, goog.events.EventType.MOUSEOVER, function(event) {
+    showHint();
+  });
+
+  goog.events.listen(hintIcon, goog.events.EventType.MOUSEOUT, function(event) {
+    hideHint();
+  });
+
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
       goog.style.setOpacity(viewCanvas, 1.0); 
-      goog.style.setOpacity(hint, 0.8); 
-      window.setTimeout(function() {
-        goog.style.setOpacity(hint, 0);
-      }, 4000);
+ 
+      showHint();
+      hintHideTimer = window.setTimeout(function() {
+        hideHint();
+      }, 2000);
     }
   });
   

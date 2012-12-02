@@ -2,7 +2,7 @@
 
 .annotorious-hint {
   width:100%;
-  background-color:rgba(0, 0, 0, 0.8);
+  background-color:rgba(0, 0, 0, 0.5);
   margin:0px;
   padding:0px;
 
@@ -23,23 +23,22 @@
 .annotorious-hint-icon {
   display:inline-block;
   background:url('feather_icon.png');
-  width:26px;
-  height:36px;
-  margin:4px 0px 0px 10px;
+  width:19px;
+  height:27px;
+  margin:2px 4px 0px 6px;
   position:relative;
-  bottom:-6px;
+  bottom:-2px;
 }
 
 .annotorious-hint-msg {
   display:inline-block;
-  position:relative;
-  bottom:6px;
-  padding:12px;
-  font-weight:bold;
+  padding:6px;
   font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
   line-height: normal;
   font-size:14px;
   color:#fff;
+  position:relative;
+  bottom:5px;
 }
 
 /** Popup **/
