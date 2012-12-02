@@ -98,8 +98,9 @@ annotorious.plugins.selection.RectDragSelector.prototype.stopSelection = functio
  */
 annotorious.plugins.selection.RectDragSelector.prototype.getShape = function() {
   if (this._opposite) {
-    var item_anchor = this._annotator.toItemCoordinates(this._anchor);
-    var item_opposite = this._annotator.toItemCoordinates({x: this._opposite.x - 1, y: this._opposite.y - 1});
+    var viewportBounds = this.getViewportBounds();
+    var item_anchor = this._annotator.toItemCoordinates({x: viewportBounds.left, y: viewportBounds.top});
+    var item_opposite = this._annotator.toItemCoordinates({x: viewportBounds.right - 1, y: viewportBounds.bottom - 1});
  
     var rect = new annotorious.geom.Rectangle(
       item_anchor.x,
