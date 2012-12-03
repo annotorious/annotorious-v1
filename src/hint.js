@@ -23,6 +23,7 @@ annotorious.hint.Hint = function(parent) {
   var self = this;
   goog.events.listen(this._icon, goog.events.EventType.MOUSEOVER, function(event) {
     self.show();
+    window.clearTimeout(self._hideTimer);
   });
 
   goog.events.listen(this._icon, goog.events.EventType.MOUSEOUT, function(event) {
