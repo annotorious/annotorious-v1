@@ -47,7 +47,7 @@ annotorious.plugin.ElasticSearch.prototype._showError = function(error) {
 annotorious.plugin.ElasticSearch.prototype._loadAnnotations = function(anno) {
   // TODO need to restrict search to the URL of the annotated
   var self = this;
-  goog.net.XhrIo.send(this._STORE_URI + '_search?query=*:*', function(data) {
+  goog.net.XhrIo.send(this._STORE_URI + '_search?query=*:*&size=1000', function(data) {
     try {
       var hits = data.target.getResponseJson()['hits']['hits'];
       goog.array.forEach(hits, function(hit, idx, array) {
@@ -55,7 +55,7 @@ annotorious.plugin.ElasticSearch.prototype._loadAnnotations = function(anno) {
         annotation.id = hit['_id'];
         if (!goog.array.contains(self._annotations, annotation.id)) {
           self._annotations.push(annotation.id);
-          if (annotation.shape.geometry)
+          if (annotation.shapes[0].geometry)
             anno.addAnnotation(annotation);
         }
       });
