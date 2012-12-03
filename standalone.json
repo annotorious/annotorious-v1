@@ -23,6 +23,7 @@
     "src/dom.js",
     "src/editor.js",
     "src/events.js",
+    "src/hint.js",
     "src/popup.js",
 
     "templates/annotator_templates.soy",

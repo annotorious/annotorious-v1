@@ -1,44 +1,27 @@
 /** Hint/help popup **/
 
-.annotorious-hint {
-  width:100%;
-  background-color:rgba(0, 0, 0, 0.5);
-  margin:0px;
-  padding:0px;
-
-  -moz-transition-property: opacity;
-  -moz-transition-duration: 0.5s;
-  -moz-transition-delay: 0s;
-  -webkit-transition-property: opacity;
-  -webkit-transition-duration: 0.5s;
-  -webkit-transition-delay: 0s;
-  -o-transition-property: opacity;
-  -o-transition-duration: 0.5s;
-  -o-transition-delay: 0s;
-  transition-property: opacity;
-  transition-duration: 0.5s;
-  transition-delay: 0s;
+.annotorious-hint-msg {
+  background-color:rgba(0,0,0,0.7);
+  margin:4px;
+  padding:8px 15px 8px 30px;
+  font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+  line-height: normal;
+  font-size:12px;
+  color:#fff;
+  border-radius:4px;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px;
+  -khtml-border-radius:4px;
 }
 
 .annotorious-hint-icon {
-  display:inline-block;
+  position:absolute;
+  top:6px;
+  left: 5px;
   background:url('feather_icon.png');
   width:16px;
   height:22px;
   margin:2px 4px 0px 6px;
-  position:relative;
-  bottom:-2px;
-}
-
-.annotorious-hint-msg {
-  display:inline-block;
-  padding:6px;
-  font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
-  line-height: normal;
-  font-size:14px;
-  color:#fff;
-  position:relative;
-  bottom:3px;
 }
 
 /** Popup **/

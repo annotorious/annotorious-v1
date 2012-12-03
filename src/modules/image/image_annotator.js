@@ -51,13 +51,15 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   /** @private **/
   this._editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);
 
+  var hint = new annotorious.hint.Hint(annotationLayer);
+  
+  /*
   var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
   goog.style.setOpacity(hint, 0); 
   goog.dom.appendChild(annotationLayer, hint);
   var hintHideTimer;
   var hintIcon = goog.dom.query('.annotorious-hint-icon', hint)[0];
- 
-  // TODO maybe it makes sense to refactor this into a dedicated 'hint' class
+
   var hideHint = function() {
     window.clearTimeout(hintHideTimer);
     goog.style.setOpacity(hint, 0.3);
@@ -68,27 +70,28 @@ annotorious.modules.image.ImageAnnotator = function(image) {
     window.clearTimeout(hintHideTimer);
     goog.style.setOpacity(hint, 0.8);
     goog.style.setStyle(hint, 'pointer-events', 'auto');
-  }
+  } 
+  */
 
   var self = this;  
+  /*
   goog.events.listen(hintIcon, goog.events.EventType.MOUSEOVER, function(event) {
-    showHint();
+    hint.show();
   });
 
   goog.events.listen(hintIcon, goog.events.EventType.MOUSEOUT, function(event) {
-    hideHint();
+    hint.hide();
   });
+  */
 
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
       goog.style.setOpacity(viewCanvas, 1.0); 
- 
-      showHint();
-      hintHideTimer = window.setTimeout(function() {
-        hideHint();
-      }, 2000);
+      
+      // TODO handle via events
+      hint.show();
     }
   });
   
@@ -96,8 +99,10 @@ annotorious.modules.image.ImageAnnotator = function(image) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
-      goog.style.setOpacity(viewCanvas, 0.4); 
-      goog.style.setOpacity(hint, 0);
+      goog.style.setOpacity(viewCanvas, 0.4);
+
+      // TODO handle via events 
+      hint.hide();
     }
   });
 
