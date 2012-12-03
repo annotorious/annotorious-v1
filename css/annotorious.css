@@ -23,8 +23,8 @@
 .annotorious-hint-icon {
   display:inline-block;
   background:url('feather_icon.png');
-  width:19px;
-  height:27px;
+  width:16px;
+  height:22px;
   margin:2px 4px 0px 6px;
   position:relative;
   bottom:-2px;
@@ -38,7 +38,7 @@
   font-size:14px;
   color:#fff;
   position:relative;
-  bottom:5px;
+  bottom:3px;
 }
 
 /** Popup **/
