@@ -4,8 +4,11 @@
     <link rel="stylesheet" href="../../css/annotorious.css" type="text/css" />
     <script>
       window.onload = function() {
-        anno.addPlugin('ElasticSearch', { base_url: 'http://62.218.164.156/annotations/' });
+        // anno.addPlugin('ElasticSearch', { base_url: 'http://62.218.164.156/annotations/' });
         anno.makeAnnotatable(document.getElementById('ptolemy'));
+        anno.addHandler('onAnnotationCreated', function(annotation) {
+          console.log(annotation);
+        });
       }
     </script>
     <script src="http://localhost:9810/compile?id=annotorious"></script>
@@ -54,7 +57,7 @@
       
       <h2>Test Images</h2>
       <div style="float:right; margin:0px 0px 10px 20px;">
-        <img src="640px-Hallstatt.jpg" class="annotatable">
+        <img data-original="http://www.example.com/image.jpg" src="640px-Hallstatt.jpg" class="annotatable">
         <p class="image-caption">
           Hallstatt, Austria. By Nick Csakany, 2007. Public Domain. Source:
           <a href="http://commons.wikimedia.org/wiki/File:Hallstatt_300.jpg">Wikimedia
