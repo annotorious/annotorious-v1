@@ -71,6 +71,11 @@ annotorious.modules.image.ImageModule.prototype._initPlugin = function(plugin, a
  * @private
  */
 annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
+  // Keep track of changes
+  var loadedImages = [];
+  var addedAnnotations = [];
+  var removedAnnotations = [];
+  
   var self = this;
   goog.array.forEach(this._imagesToLoad, function(image) {
     if (annotorious.dom.isInViewport(image)) {
@@ -90,22 +95,35 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
       goog.array.forEach(self._bufferedForAdding, function(annotation) {
         if (annotation.src == image.src) {
           annotator.addAnnotation(annotation);
-          goog.array.remove(self._bufferedForAdding, annotation);
+          addedAnnotations.push(annotation);
         }
       });
       
       goog.array.forEach(self._bufferedForRemoval, function(annotation) {
         if (annotation.src == image.src) {
           annotator.removeAnnotation(annotation);
-          goog.array.remove(self._bufferedForRemoval, annotation);
+          removedAnnotations.push(annotation);
         }
       });
-      
+  
       // Update _annotators and _imagesToLoad lists
       self._annotators.set(image.src, annotator);
-      goog.array.remove(self._imagesToLoad, image);
+      loadedImages.push(image);
     }
-  });  
+  });
+
+  // Apply changes
+  goog.array.forEach(addedAnnotations, function(annotation) {
+    goog.array.remove(self._bufferedForAdding, annotation);
+  });
+  
+  goog.array.forEach(removedAnnotations, function(annotation) {
+    goog.array.remove(self._bufferedForRemoval, annotation);
+  });
+  
+  goog.array.forEach(loadedImages, function(image) {
+    goog.array.remove(self._imagesToLoad, image);
+  });
 }
 
 /**
