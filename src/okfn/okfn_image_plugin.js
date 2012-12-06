@@ -36,15 +36,24 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
 
 
   var popup = new annotorious.okfn.Popup(image, eventBroker, okfnAnnotator, baseOffset);
-
-  var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, eventBroker);
   
   var editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:image.width, height:image.height });
   goog.style.showElement(editCanvas, false); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
 
-  var selector = new annotorious.selection.DragSelector(editCanvas, eventBroker);
+  var selector = new annotorious.plugins.selection.RectDragSelector(editCanvas, eventBroker);
+
+  var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, [ selector ], eventBroker);
+
+  // TODO clean up this mess
+  eventBroker.toItemCoordinates = function(pxCoords) {
+    return pxCoords;
+  }
+
+  eventBroker.fromItemCoordinates = function(itemCoords) {
+    return pxCoords;
+  }
 
   /** 
    * Checks if the OKFN Editor is currently 'owned' by this image. I.e. whether
@@ -127,7 +136,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   /** Communication yuma -> okfn **/
   
   eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {    
-    var annotation = { url: image.src, shape: event.shape };
+    var annotation = { url: image.src, shapes: [event.shape] };
     okfnAnnotator.publish('beforeAnnotationCreated', annotation);
 	
     var imgOffset = annotorious.dom.getOffset(image);
