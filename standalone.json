@@ -31,6 +31,7 @@
     "templates/openlayers_templates.soy",
     
     "src/plugins/elasticsearch.js" // Note: plugin produces approx. 12kB extra!
+    
   ],
   "paths": [
     "."
