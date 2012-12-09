@@ -100,7 +100,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     return false;
   };
  
-  var self = this;  
+  var self = this;
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
     if (!isMouseEventInside(event))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
@@ -223,12 +223,10 @@ window.Annotator.Plugin.AnnotoriousImagePlugin = (function() {
 
   AnnotoriousImagePlugin.prototype.pluginInit = function() {
     var images = this._el.getElementsByTagName('img');
-    
     var self = this;
-    annotorious.dom.addOnLoadHandler(function() {
-      goog.array.forEach(images, function(img, idx, array) {
-        new annotorious.okfn.ImagePlugin(img, self.annotator);
-      });
+
+    goog.array.forEach(images, function(img, idx, array) {
+      new annotorious.okfn.ImagePlugin(img, self.annotator);
     });
   };
   
