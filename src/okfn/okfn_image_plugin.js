@@ -16,44 +16,49 @@ goog.require('goog.style');
  * @constructor
  */
 annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
-  var baseOffset = annotorious.dom.getOffset(okfnAnnotator.element[0].firstChild);
-    
-  var eventBroker = new annotorious.events.EventBroker();
-  
-  var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
+  var baseOffset = annotorious.dom.getOffset(okfnAnnotator.element[0].firstChild),
+      eventBroker = new annotorious.events.EventBroker(),
+      annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer'),
+      hint, 
+      viewCanvas, 
+      popup, 
+      editCanvas, 
+      selector, 
+      viewer;
+      
+      
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setSize(annotationLayer, image.width, image.height); 
   goog.dom.replaceNode(annotationLayer, image);
   goog.dom.appendChild(annotationLayer, image);
     
-  var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
+  hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
   goog.style.setOpacity(hint, 0); 
   goog.dom.appendChild(annotationLayer, hint);
   
-  var viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
+  viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:image.width, height:image.height });
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
-
-  var popup = new annotorious.okfn.Popup(image, eventBroker, okfnAnnotator, baseOffset);
+  popup = new annotorious.okfn.Popup(image, eventBroker, okfnAnnotator, baseOffset);
   
-  var editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
+  editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:image.width, height:image.height });
   goog.style.showElement(editCanvas, false); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
 
-  var selector = new annotorious.plugins.selection.RectDragSelector(editCanvas, eventBroker);
+  selector = new annotorious.plugins.selection.RectDragSelector(editCanvas, eventBroker);
 
-  var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, [ selector ], eventBroker);
+  viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, [ selector ], eventBroker);
 
   // TODO clean up this mess
   eventBroker.toItemCoordinates = function(pxCoords) {
     return pxCoords;
-  }
+  };
 
   eventBroker.fromItemCoordinates = function(itemCoords) {
     return pxCoords;
-  }
+  };
 
   /** 
    * Checks if the OKFN Editor is currently 'owned' by this image. I.e. whether
@@ -67,7 +72,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       return false;
 
     return annotation.url == image.src;
-  }
+  };
  
   /**
    * Checks if the mouseover/out event happened inside the annotatable area. 
@@ -93,7 +98,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       return true;
 
     return false;
-  }
+  };
  
   var self = this;  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
@@ -206,26 +211,26 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     // TODO workaround before we have decent 'edit' behavior in Annotorious standalone!
     eventBroker.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE);
   });
-}
+};
 
 /**
  * OKFN plugin interface.
  */
-window['Annotator']['Plugin']['AnnotoriousImagePlugin'] = (function() {
+window.Annotator.Plugin.AnnotoriousImagePlugin = (function() {
   function AnnotoriousImagePlugin(element, options) {
     this._el = element;
   }
 
-  AnnotoriousImagePlugin.prototype['pluginInit'] = function() {
+  AnnotoriousImagePlugin.prototype.pluginInit = function() {
     var images = this._el.getElementsByTagName('img');
     
     var self = this;
     annotorious.dom.addOnLoadHandler(function() {
       goog.array.forEach(images, function(img, idx, array) {
-        new annotorious.okfn.ImagePlugin(img, self['annotator']);
+        new annotorious.okfn.ImagePlugin(img, self.annotator);
       });
     });
-  }
+  };
   
   return AnnotoriousImagePlugin;
 })();

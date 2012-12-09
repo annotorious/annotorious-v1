@@ -14,19 +14,21 @@ goog.require('goog.style');
  * @constructor
  */
 annotorious.modules.image.ImageAnnotator = function(image) {
+  var annotationLayer, viewCanvas, hint;
+
   /** @private **/
   this._image = image;
   
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
   
-  var annotationLayer = goog.dom.createDom('div', 'annotorious-annotationlayer');
+  annotationLayer = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setSize(annotationLayer, image.width, image.height); 
   goog.dom.replaceNode(annotationLayer, image);
   goog.dom.appendChild(annotationLayer, image);
   
-  var viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
+  viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:image.width, height:image.height });
   goog.style.setOpacity(viewCanvas, 0.4); 
   goog.dom.appendChild(annotationLayer, viewCanvas);   
@@ -51,7 +53,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   /** @private **/
   this._editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);
 
-  var hint = new annotorious.hint.Hint(annotationLayer);
+  hint = new annotorious.hint.Hint(annotationLayer);
   
   /*
   var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});

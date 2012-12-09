@@ -40,6 +40,8 @@ annotorious.modules.image.ImageModule = function() {
 annotorious.modules.image.ImageModule.prototype.init = function() {
   // Query images marked with 'annotatable' CSS class
   var annotatableImages = goog.dom.query('img.annotatable', document);
+  var self = this, key;
+  
   goog.array.extend(this._allImages, annotatableImages);
   goog.array.extend(this._imagesToLoad, annotatableImages);  
 
@@ -47,8 +49,7 @@ annotorious.modules.image.ImageModule.prototype.init = function() {
   this._lazyLoad();
   
   // Attach a listener to make images annotatable as they scroll into view
-  var self = this;
-  var key = goog.events.listen(window, goog.events.EventType.SCROLL, function() {
+  key = goog.events.listen(window, goog.events.EventType.SCROLL, function() {
     if (self._imagesToLoad.length > 0)
       self._lazyLoad();
     else
