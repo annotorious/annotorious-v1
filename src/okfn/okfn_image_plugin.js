@@ -227,11 +227,11 @@ window['Annotator']['Plugin']['AnnotoriousImagePlugin'] = (function() {
     var images = this._el.getElementsByTagName('img');
     
     var self = this;
-    annotorious.dom.addOnLoadHandler(function() {
+    // annotorious.dom.addOnLoadHandler(function() {
       goog.array.forEach(images, function(img, idx, array) {
         new annotorious.okfn.ImagePlugin(img, self['annotator']);
       });
-    });
+    // });
   }
   
   return AnnotoriousImagePlugin;
