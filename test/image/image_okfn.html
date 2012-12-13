@@ -111,8 +111,9 @@
     </div>
     <script src="http://localhost:9810/compile?id=annotorious-okfn-plugin"></script>
     <script>
-      $('#annotatable-area').annotator()
-	.annotator('addPlugin', 'AnnotoriousImagePlugin');
+      annotorious.dom.addOnLoadHandler(function() {
+        $('#annotatable-area').annotator().annotator('addPlugin', 'AnnotoriousImagePlugin');
+      });
     </script>
   </body>  
 </html>

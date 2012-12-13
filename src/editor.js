@@ -14,6 +14,8 @@ goog.require('goog.style');
  * @constructor
  */
 annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotation) {
+  var self = this;
+  
   /** @private **/
   this._selection = selection;
   
@@ -37,7 +39,6 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotat
   /** @private **/
   this._extraFields = [];
 
-  var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function(event) {
     event.preventDefault();
     annotator.stopSelection();
