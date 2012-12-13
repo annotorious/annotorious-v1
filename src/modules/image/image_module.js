@@ -75,11 +75,12 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
   var loadedImages = [];
   var addedAnnotations = [];
   var removedAnnotations = [];
-  
+        
   var self = this;
   goog.array.forEach(this._imagesToLoad, function(image) {
     if (annotorious.dom.isInViewport(image)) {
       var annotator = new annotorious.modules.image.ImageAnnotator(image);
+      var image_src = annotorious.modules.image.ImageModule.getItemURL(image);
       
       // Attach handlers that are already registered
       goog.array.forEach(self._eventHandlers, function(eventHandler) {
@@ -91,23 +92,25 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
         self._initPlugin(plugin, annotator);
       });
       
+
+      
       // Cross-check with annotation add/remove buffers
       goog.array.forEach(self._bufferedForAdding, function(annotation) {
-        if (annotation.src == image.src) {
+        if (annotation.src == image_src) {
           annotator.addAnnotation(annotation);
           addedAnnotations.push(annotation);
         }
       });
       
       goog.array.forEach(self._bufferedForRemoval, function(annotation) {
-        if (annotation.src == image.src) {
+        if (annotation.src == image_src) {
           annotator.removeAnnotation(annotation);
           removedAnnotations.push(annotation);
         }
       });
   
       // Update _annotators and _imagesToLoad lists
-      self._annotators.set(image.src, annotator);
+      self._annotators.set(image_src, annotator);
       loadedImages.push(image);
     }
   });
@@ -132,7 +135,7 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
  * @param {string} src the src URL of the image
  */
 annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
-  if (this.annotatesItem (annotation.src)) {
+  if (this.annotatesItem(annotation.src)) {
     var annotator = this._annotators.get(annotation.src);
     if (annotator)
       annotator.addAnnotation(annotation)
@@ -178,7 +181,7 @@ annotorious.modules.image.ImageModule.prototype.annotatesItem = function(item_ur
     return true;
   } else {
     var image = goog.array.find(this._imagesToLoad, function(image) {
-      return image.src == item_url;
+      return annotorious.modules.image.ImageModule.getItemURL(image) == item_url;
     });
     
     return goog.isDefAndNotNull(image);
@@ -243,4 +246,17 @@ annotorious.modules.image.ImageModule.prototype.supports = function(item) {
     return (item.tagName == 'IMG');
   else
     return false;
+}
+
+/**
+ * Annotations should be bound to the URL defined in the 'data-original' attribute of
+ * the image. Only if this attribute does not exist, they should be bound to the original
+ * image SRC. This utility function returns the correct URL to bind to.
+ */
+annotorious.modules.image.ImageModule.getItemURL = function(image) {
+  var src = image.getAttribute('data-original');
+  if (src)
+    return src;
+  else
+    return image.src;
 }

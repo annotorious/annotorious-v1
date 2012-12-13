@@ -134,8 +134,9 @@ annotorious.modules.image.ImageAnnotator.prototype.stopSelection = function() {
  * Returns the image that this annotator is responsible for.
  * @returns {element} the image
  */
-annotorious.modules.image.ImageAnnotator.prototype.getImage = function() {
-  return this._image;
+annotorious.modules.image.ImageAnnotator.prototype.getItem = function() {
+  // TODO include width and height
+  return { src: annotorious.modules.image.ImageModule.getItemURL(this._image) };
 }
 
 /** 

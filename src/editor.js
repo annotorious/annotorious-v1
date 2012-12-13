@@ -18,7 +18,7 @@ annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotat
   this._selection = selection;
   
   /** @private **/
-  this._img = annotator.getImage();
+  this._item = annotator.getItem();
 
   this.element = goog.soy.renderAsElement(annotorious.templates.editform);
 
@@ -98,17 +98,12 @@ annotorious.editor.Editor.prototype.setPosition = function(x, y) {
   goog.style.setPosition(this.element, x, y);
 }
 
-
 /**
  * Gets the annotation that is the current state of the editor.
  * @return {annotorious.annotation.Annotation} the annotation
  */
 annotorious.editor.Editor.prototype.getAnnotation = function() {
-  var src = this._img.getAttribute('data-original');
-  if (!src)
-    src = this._img.src;
-
-  return new annotorious.annotation.Annotation(src, this._textarea.value, this._selection.getShape());
+  return new annotorious.annotation.Annotation(this._item.src, this._textarea.value, this._selection.getShape());
 }
 
 // Export addField method
