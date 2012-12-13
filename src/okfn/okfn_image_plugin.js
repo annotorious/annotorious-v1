@@ -25,10 +25,12 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.style.setSize(annotationLayer, image.width, image.height); 
   goog.dom.replaceNode(annotationLayer, image);
   goog.dom.appendChild(annotationLayer, image);
-    
+  
+  /*  
   var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
   goog.style.setOpacity(hint, 0); 
   goog.dom.appendChild(annotationLayer, hint);
+  */
   
   var viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:image.width, height:image.height });
@@ -45,7 +47,9 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var selector = new annotorious.plugins.selection.RectDragSelector(editCanvas, eventBroker);
 
   var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, [ selector ], eventBroker);
-
+    
+  var hint = new annotorious.hint.Hint(annotationLayer);
+  
   // TODO clean up this mess
   eventBroker.toItemCoordinates = function(pxCoords) {
     return pxCoords;
@@ -124,13 +128,17 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   eventBroker.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM, function() {
     okfnAnnotator.clearViewerHideTimer(); // In case the mouse arrives (fast) from an HTML annotation
-    goog.style.setOpacity(viewCanvas, 1.0); 
-    goog.style.setOpacity(hint, 0.8); 
+    goog.style.setOpacity(viewCanvas, 1.0);
+    
+    // TODO handle via events
+    hint.show();
   });
   
   eventBroker.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function() {
-    goog.style.setOpacity(viewCanvas, 0.4); 
-    goog.style.setOpacity(hint, 0);
+    goog.style.setOpacity(viewCanvas, 0.4);
+    
+    // TODO handle via events
+    hint.hide(); 
   });
 
   /** Communication yuma -> okfn **/
