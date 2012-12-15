@@ -51,7 +51,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   /** @private **/
   this._editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);
 
-  var hint = new annotorious.hint.Hint(annotationLayer);
+  var hint = new annotorious.hint.Hint(this, annotationLayer);
   
   var self = this;  
 
@@ -60,20 +60,14 @@ annotorious.modules.image.ImageAnnotator = function(image) {
     if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
       goog.style.setOpacity(viewCanvas, 1.0); 
-      
-      // TODO handle via events
-      hint.show();
     }
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
-      self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+      self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
       goog.style.setOpacity(viewCanvas, 0.4);
-
-      // TODO handle via events 
-      hint.hide();
     }
   });
 
@@ -85,8 +79,8 @@ annotorious.modules.image.ImageAnnotator = function(image) {
 
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
     var bounds = event.viewportBounds;
-    self._editor.setPosition(bounds.left + self._image.offsetLeft,
-                             bounds.bottom + 4 + self._image.offsetTop);
+    self._editor.setPosition({ x: bounds.left + self._image.offsetLeft,
+                               y: bounds.bottom + 4 + self._image.offsetTop });
     self._editor.open();
   });
   
@@ -168,12 +162,24 @@ annotorious.modules.image.ImageAnnotator.prototype.getAnnotations = function() {
   return this._viewer.getAnnotations();
 }
 
-annotorious.modules.image.ImageAnnotator.prototype.toItemCoordinates = function(pxCoords) {
-  // For the time being, pxCoords = itemCoords
-  return pxCoords;
+annotorious.modules.image.ImageAnnotator.prototype.toItemCoordinates = function(coords, units) {
+  if (units == annotorious.annotation.Units.PIXEL) {
+    // Item coordinates = viewport coordinates
+    return coords;
+  } else {
+    // Otherwise, fraction is assumed (no other possible option supported)
+    var imgSize = goog.style.getSize(this._image);
+    return { x: coords.x / imgSize.width, y: coords.y / imgSize.height };
+  }
 }
 
-annotorious.modules.image.ImageAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
-  // For the time being, itemCoords = pxCoords
-  return pxCoords;
+annotorious.modules.image.ImageAnnotator.prototype.fromItemCoordinates = function(coords, units) {
+  if (units == annotorious.annotation.Units.PIXEL) {
+    // Item coordinates = viewport coordinates
+    return coords;
+  } else {
+    // Otherwise, fraction is assumed (no other possible option supported)
+    var imgSize = goog.style.getSize(this._image);
+    return { x: coords.x * imgSize.width, y: coords.y * imgSize.height };
+  }
 }

@@ -41,15 +41,15 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
 
   var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, [ selector ], eventBroker);
     
-  var hint = new annotorious.hint.Hint(annotationLayer);
+  var hint = new annotorious.hint.Hint(eventBroker, annotationLayer);
   
   // TODO clean up this mess
-  eventBroker.toItemCoordinates = function(pxCoords) {
-    return pxCoords;
+  eventBroker.toItemCoordinates = function(coords) {
+    return coords;
   }
 
-  eventBroker.fromItemCoordinates = function(itemCoords) {
-    return pxCoords;
+  eventBroker.fromItemCoordinates = function(coords) {
+    return coords;
   }
 
   /** 
@@ -122,16 +122,10 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   eventBroker.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM, function() {
     okfnAnnotator.clearViewerHideTimer(); // In case the mouse arrives (fast) from an HTML annotation
     goog.style.setOpacity(viewCanvas, 1.0);
-    
-    // TODO handle via events
-    hint.show();
   });
   
   eventBroker.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function() {
     goog.style.setOpacity(viewCanvas, 0.4);
-    
-    // TODO handle via events
-    hint.hide(); 
   });
 
   /** Communication yuma -> okfn **/

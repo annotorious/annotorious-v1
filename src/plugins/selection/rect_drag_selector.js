@@ -148,10 +148,13 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2
     lineWidth = 1;
   }
 
-  var rect = shape.geometry;
+  var geom = shape.geometry;
+  var anchor = this._annotator.fromItemCoordinates({ x: geom.x, y: geom.y });
+  var size = this._annotator.fromItemCoordinates({ x: geom.width, y: geom.height });
+
   g2d.strokeStyle = '#000000';
   g2d.lineWidth = lineWidth;
-  g2d.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width + 1, rect.height + 1);
+  g2d.strokeRect(anchor.x + 0.5, anchor.y + 0.5, size.x + 1, size.y + 1);
   g2d.strokeStyle = color;
-  g2d.strokeRect(rect.x + 1.5, rect.y + 1.5, rect.width - 1, rect.height - 1);
+  g2d.strokeRect(anchor.x + 1.5, anchor.y + 1.5, size.x - 1, size.y - 1);
 }

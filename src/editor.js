@@ -14,13 +14,13 @@ goog.require('goog.style');
  * @constructor
  */
 annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotation) {
+  this.element = goog.soy.renderAsElement(annotorious.templates.editform);
+
   /** @private **/
   this._selection = selection;
   
   /** @private **/
   this._item = annotator.getItem();
-
-  this.element = goog.soy.renderAsElement(annotorious.templates.editform);
 
   /** @private **/
   this._textarea = goog.dom.query('.annotorious-editor-text', this.element)[0];
@@ -91,11 +91,10 @@ annotorious.editor.Editor.prototype.close = function() {
 
 /**
  * Sets the position (i.e. CSS left/top value) of the editor element.
- * @param {number} x the X coordinate
- * @param {number} y the Y coordinate
+ * @param {annotorious.geom.Point} xy the viewport coordinate
  */
-annotorious.editor.Editor.prototype.setPosition = function(x, y) {
-  goog.style.setPosition(this.element, x, y);
+annotorious.editor.Editor.prototype.setPosition = function(xy) {
+  goog.style.setPosition(this.element, xy.x, xy.y);
 }
 
 /**

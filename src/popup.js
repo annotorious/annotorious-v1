@@ -11,11 +11,11 @@ goog.require('goog.dom.query');
  * @constructor
  */
 annotorious.viewer.Popup = function(parentEl, annotator) {
+  this.element = goog.soy.renderAsElement(annotorious.templates.popup);
+
   /** @private **/
   this._annotator = annotator;  
-  
-  this.element = goog.soy.renderAsElement(annotorious.templates.popup);
-  
+    
   /** @private **/
   this._currentAnnotation;
 
@@ -127,17 +127,16 @@ annotorious.viewer.Popup.prototype.clearHideTimer = function() {
 /**
  * Show the popup, loaded with the specified annotation, at the specified coordinates.
  * @param {Object} annotation the annotation
- * @param {number} x coordinate (relative to the image)
- * @param {number} y coordiante (relative to the image)
+ * @param {annotorious.geom.Point} xy the viewport coordinate
  */
-annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
+annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
   this.clearHideTimer();
   
-  if (annotation && x && y) {
+  if (annotation && xy) {
     // New annotation and position - reset
     this._currentAnnotation = annotation;
     this._text.innerHTML = annotorious.viewer.Popup.toHTML(annotation.text);
-    this.setPosition(x, y);
+    this.setPosition(xy);
     
     if (this._buttonHideTimer)
       window.clearTimeout(this._buttonHideTimer);
@@ -160,11 +159,10 @@ annotorious.viewer.Popup.prototype.show = function(annotation, x, y) {
 
 /**
  * Set the position of the popup.
- * @param {number} x coordinate (relative to the image)
- * @param {number} y coordinate (realtive to the image)
+ * @param {annotorious.geom.Point} xy the viewport coordinate
  */
-annotorious.viewer.Popup.prototype.setPosition = function(x, y) {
-  goog.style.setPosition(this.element, new goog.math.Coordinate(x, y));
+annotorious.viewer.Popup.prototype.setPosition = function(xy) {
+  goog.style.setPosition(this.element, new goog.math.Coordinate(xy.x, xy.y));
 }
 
 /**

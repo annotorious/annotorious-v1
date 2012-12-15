@@ -133,10 +133,9 @@ annotorious.okfn.Popup.prototype.clearHideTimer = function() {
 /**
  * Show the popup, loaded with the specified annotation, at the specified coordinates.
  * @param {Object} annotation the annotation
- * @param {number} x coordinate (relative to the image)
- * @param {number} y coordiante (relative to the image)
+ * @param {annotorious.geom.Point} xy the viewport coordinate (relative to the image)
  */
-annotorious.okfn.Popup.prototype.show = function(annotation, x, y) {
+annotorious.okfn.Popup.prototype.show = function(annotation, xy) {
   goog.dom.classes.remove(this._okfnAnnotator.viewer.element[0], 'annotator-hide');
 
   var imgOffset = annotorious.dom.getOffset(this._image); 
@@ -144,16 +143,15 @@ annotorious.okfn.Popup.prototype.show = function(annotation, x, y) {
   goog.style.setPosition(this._okfnAnnotator.viewer.element[0], 0, window.pageYOffset - this._baseOffset.top);
   this._okfnAnnotator.viewer.load([annotation]);   
   goog.style.setPosition(this._okfnAnnotator.viewer.element[0],
-			 imgOffset.left - this._baseOffset.left + x + 16,
-			 imgOffset.top + window.pageYOffset - this._baseOffset.top + y);
+			 imgOffset.left - this._baseOffset.left + xy.x + 16,
+			 imgOffset.top + window.pageYOffset - this._baseOffset.top + xy.y);
   this.clearHideTimer();
 }
 
 /**
  * Set the position of the popup.
- * @param {number} x coordinate (relative to the image)
- * @param {number} y coordinate (realtive to the image)
+ * @param {annotorious.geom.Point} xy the viewport coordinate (relative to the image)
  */
 annotorious.okfn.Popup.prototype.setPosition = function(x, y) {
-  goog.style.setPosition(this._okfnAnnotator.viewer.element[0], x, y);  
+  goog.style.setPosition(this._okfnAnnotator.viewer.element[0], xy.x, xy.y);  
 }

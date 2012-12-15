@@ -91,9 +91,7 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
       goog.array.forEach(self._plugins, function(plugin) {
         self._initPlugin(plugin, annotator);
       });
-      
-
-      
+            
       // Cross-check with annotation add/remove buffers
       goog.array.forEach(self._bufferedForAdding, function(annotation) {
         if (annotation.src == image_src) {

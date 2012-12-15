@@ -8,7 +8,7 @@ goog.require('goog.dom.query');
 /**
  * @constructor
  */
-annotorious.hint.Hint = function(parent) {
+annotorious.hint.Hint = function(annotator, parent) {
   this.element = goog.soy.renderAsElement(annotorious.templates.hint);
 
   /** @private **/
@@ -30,6 +30,14 @@ annotorious.hint.Hint = function(parent) {
     self.hide();
   });
  
+  annotator.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM, function(event) {
+    self.show();
+  });
+
+  annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, function(event) {
+    self.hide();
+  });
+
   this.hide();
   goog.dom.appendChild(parent, this.element);
 }
