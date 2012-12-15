@@ -149,8 +149,8 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2
   }
 
   var geom = shape.geometry;
-  var anchor = this._annotator.fromItemCoordinates({ x: geom.x, y: geom.y });
-  var size = this._annotator.fromItemCoordinates({ x: geom.width, y: geom.height });
+  var anchor = this._annotator.fromItemCoordinates({ x: geom.x, y: geom.y }, shape.units);
+  var size = this._annotator.fromItemCoordinates({ x: geom.width, y: geom.height }, shape.units);
 
   g2d.strokeStyle = '#000000';
   g2d.lineWidth = lineWidth;

@@ -17,8 +17,11 @@ var Annotation = {
   /** @type {Object} the annotation shape **/
   shapes : [{
   
-    /** @type {string} the annotation shape type (e.g. rectangle, point, polygon) **/
+    /** @type {string} the annotation shape type (e.g. rect, point, polygon) **/
     type     : {},
+
+    /** @type {string} measurement units used for the geometry (e.g. 'pixel', 'fraction') **/
+    units    : {},
     
     /** @type {Object} the shape geometry **/
     geometry : {}

@@ -127,5 +127,18 @@
       </p>
       <p style="clear:both;"></p>
     </div>
+    <script>
+      window.setTimeout(function() {
+        anno.addAnnotation({
+          src: 'http://www.example.com/image.jpg',
+          text: 'This is an annotation',
+          shapes: [{
+            type: 'rect',
+            units: 'pixel',
+            geometry: {x: 100, y: 80, width: 60, height: 50}
+          }]
+        });
+      }, 500);
+    </script>
   </body>
 </html>

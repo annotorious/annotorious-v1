@@ -81,7 +81,7 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
     if (annotorious.dom.isInViewport(image)) {
       var annotator = new annotorious.modules.image.ImageAnnotator(image);
       var image_src = annotorious.modules.image.ImageModule.getItemURL(image);
-      
+
       // Attach handlers that are already registered
       goog.array.forEach(self._eventHandlers, function(eventHandler) {
         annotator.addHandler(eventHandler.type, eventHandler.handler);

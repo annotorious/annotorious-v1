@@ -152,11 +152,15 @@ annotorious.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
  * @return {Array.<annotorious.annotation.Annotation>} the annotations sorted by size, smallest first
  */
 annotorious.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
+  // Note: it's rather inefficient to re-calculate this on every mouse move
+  // TODO calculate on .addAnnotation and store for re-use
   var itemCoord = this._annotator.toItemCoordinates({x: px, y: py});
  
   // TODO for large numbers of annotations, we can optimize this
   // using a tree- or grid-like data structure instead of a list
   var intersectedAnnotations = [];
+
+  var self = this;
   goog.array.forEach(this._annotations, function(annotation, idx, array) {
     if (annotorious.geom.intersects(annotation.shapes[0].geometry, itemCoord.x, itemCoord.y)) {
       intersectedAnnotations.push(annotation);
@@ -211,6 +215,8 @@ annotorious.modules.image.Viewer.prototype._draw = function(annotation, highligh
 
   if (selector)
     selector.drawShape(this._g2d, shape, highlight);
+  else
+    console.log('WARNING unsupported shape type: ' + shape.type);
 }
 
 /**
@@ -227,8 +233,9 @@ annotorious.modules.image.Viewer.prototype._redraw = function() {
   if (this._currentAnnotation) {
     this._draw(this._currentAnnotation, true);
         
-    var bbox = annotorious.geom.getBoundingRect(this._currentAnnotation.shapes[0].geometry);
-    var anchor = this._annotator.fromItemCoordinates({ x: bbox.x, y: bbox.y + bbox.height });
+    var shape = this._currentAnnotation.shapes[0];
+    var bbox = annotorious.geom.getBoundingRect(shape.geometry);
+    var anchor = this._annotator.fromItemCoordinates({ x: bbox.x, y: bbox.y + bbox.height }, shape.units);
     this._popup.show(this._currentAnnotation, { x: anchor.x, y: anchor.y + 5 });
 
     // TODO Orientation check - what if the popup would be outside the viewport?
