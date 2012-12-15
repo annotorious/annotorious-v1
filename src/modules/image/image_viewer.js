@@ -30,6 +30,9 @@ annotorious.modules.image.Viewer = function(canvas, popup, selectors, annotator)
   this._annotations = [];
 
   /** @private **/
+  this._shapes = [];
+
+  /** @private **/
   this._g2d = this._canvas.getContext('2d');
 
   /** @private **/
@@ -91,8 +94,22 @@ annotorious.modules.image.Viewer = function(canvas, popup, selectors, annotator)
  * @param {annotorious.annotation.Annotation} the annotation
  */
 annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation) {
-  this._annotations.push(annotation);  
-  this._draw(annotation);
+  this._annotations.push(annotation);
+  
+  // The viewer operates in pixel coordinates for efficiency reasons
+  var shape = annotation.shapes[0];
+  if (shape.units == annotorious.shape.Units.PIXEL) {
+    this._shapes[goog.getUid(annotation)] = shape;     
+    this._draw(shape);
+  } else {
+    var self = this;
+    var viewportShape = annotorious.shape.transform(shape, function(xy) {
+      return self._annotator.fromItemCoordinates(xy); 
+    });
+
+    this._shapes[goog.getUid(annotation)] = viewportShape;
+    this._draw(viewportShape);
+  }
 }
 
 /**
@@ -102,8 +119,9 @@ annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation) 
 annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotation) {
   if (annotation == this._currentAnnotation)
     delete this._currentAnnotation;
-    
+   
   goog.array.remove(this._annotations, annotation);
+  delete this._shapes[goog.getUid(annotation)]
   this._redraw();
 }
 
@@ -152,23 +170,19 @@ annotorious.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
  * @return {Array.<annotorious.annotation.Annotation>} the annotations sorted by size, smallest first
  */
 annotorious.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
-  // Note: it's rather inefficient to re-calculate this on every mouse move
-  // TODO calculate on .addAnnotation and store for re-use
-  var itemCoord = this._annotator.toItemCoordinates({x: px, y: py});
- 
   // TODO for large numbers of annotations, we can optimize this
   // using a tree- or grid-like data structure instead of a list
   var intersectedAnnotations = [];
 
   var self = this;
-  goog.array.forEach(this._annotations, function(annotation, idx, array) {
-    if (annotorious.geom.intersects(annotation.shapes[0].geometry, itemCoord.x, itemCoord.y)) {
+  goog.array.forEach(this._annotations, function(annotation) {
+    if (annotorious.shape.intersects(self._shapes[goog.getUid(annotation)], px, py)) {
       intersectedAnnotations.push(annotation);
     }
   });
 
   goog.array.sort(intersectedAnnotations, function(a, b) {
-    return annotorious.geom.size(a.shapes[0].geometry) > annotorious.geom.size(b.shapes[0].geometry);
+    return annotorious.shape.size(a.shapes[0]) > annotorious.shape.size(b.shapes[0]);
   });
   
   return intersectedAnnotations;
@@ -207,8 +221,7 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
 /**
  * @private
  */
-annotorious.modules.image.Viewer.prototype._draw = function(annotation, highlight) {
-  var shape = annotation.shapes[0];
+annotorious.modules.image.Viewer.prototype._draw = function(shape, highlight) {
   var selector = goog.array.find(this._selectors, function(selector) {
     return selector.supportedShapeType() == shape.type;
   });  
@@ -224,19 +237,17 @@ annotorious.modules.image.Viewer.prototype._draw = function(annotation, highligh
  */
 annotorious.modules.image.Viewer.prototype._redraw = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
-  
+
   var self = this;
-  goog.array.forEach(this._annotations, function(annotation, idx, array) {
-    self._draw(annotation);
+  goog.array.forEach(this._annotations, function(annotation) {
+    self._draw(self._shapes[goog.getUid(annotation)]);
   });
     
   if (this._currentAnnotation) {
-    this._draw(this._currentAnnotation, true);
-        
-    var shape = this._currentAnnotation.shapes[0];
-    var bbox = annotorious.geom.getBoundingRect(shape.geometry);
-    var anchor = this._annotator.fromItemCoordinates({ x: bbox.x, y: bbox.y + bbox.height }, shape.units);
-    this._popup.show(this._currentAnnotation, { x: anchor.x, y: anchor.y + 5 });
+    var shape = this._shapes[goog.getUid(this._currentAnnotation)];
+    this._draw(shape, true);
+    var bbox = annotorious.shape.getBoundingRect(shape);
+    this._popup.show(this._currentAnnotation, { x: bbox.x, y: bbox.y + bbox.height + 5 });
 
     // TODO Orientation check - what if the popup would be outside the viewport?
   }

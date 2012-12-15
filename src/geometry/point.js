@@ -1,4 +1,4 @@
-goog.provide('annotorious.geom.Point');
+goog.provide('annotorious.shape.geom.Point');
 
 /**
  * A point geometry primitive.
@@ -6,7 +6,7 @@ goog.provide('annotorious.geom.Point');
  * @param {number} y the y coordinate
  * @constructor
  */
-annotorious.geom.Point = function(x, y) {
+annotorious.shape.geom.Point = function(x, y) {
   this.x = x;
   this.y = y;
 }

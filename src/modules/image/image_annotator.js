@@ -162,24 +162,12 @@ annotorious.modules.image.ImageAnnotator.prototype.getAnnotations = function() {
   return this._viewer.getAnnotations();
 }
 
-annotorious.modules.image.ImageAnnotator.prototype.toItemCoordinates = function(coords, units) {
-  if (units == annotorious.annotation.Units.PIXEL) {
-    // Item coordinates = viewport coordinates
-    return coords;
-  } else {
-    // Otherwise, fraction is assumed (no other possible option supported)
-    var imgSize = goog.style.getSize(this._image);
-    return { x: coords.x / imgSize.width, y: coords.y / imgSize.height };
-  }
+annotorious.modules.image.ImageAnnotator.prototype.toItemCoordinates = function(xy) {
+  var imgSize = goog.style.getSize(this._image);
+  return { x: xy.x / imgSize.width, y: xy.y / imgSize.height };
 }
 
-annotorious.modules.image.ImageAnnotator.prototype.fromItemCoordinates = function(coords, units) {
-  if (units == annotorious.annotation.Units.PIXEL) {
-    // Item coordinates = viewport coordinates
-    return coords;
-  } else {
-    // Otherwise, fraction is assumed (no other possible option supported)
-    var imgSize = goog.style.getSize(this._image);
-    return { x: coords.x * imgSize.width, y: coords.y * imgSize.height };
-  }
+annotorious.modules.image.ImageAnnotator.prototype.fromItemCoordinates = function(xy) {
+  var imgSize = goog.style.getSize(this._image);
+  return { x: xy.x * imgSize.width, y: xy.y * imgSize.height };
 }

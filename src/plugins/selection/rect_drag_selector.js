@@ -67,7 +67,7 @@ annotorious.plugins.selection.RectDragSelector = function(canvas, annotator) {
 }
 
 annotorious.plugins.selection.RectDragSelector.prototype.supportedShapeType = function() {
-  return annotorious.annotation.ShapeType.RECTANGLE;
+  return annotorious.shape.ShapeType.RECTANGLE;
 }
 
 /**
@@ -77,7 +77,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.supportedShapeType = fu
  */
 annotorious.plugins.selection.RectDragSelector.prototype.startSelection = function(x, y) {
   this._enabled = true;
-  this._anchor = new annotorious.geom.Point(x, y);
+  this._anchor = new annotorious.shape.geom.Point(x, y);
   this._annotator.fireEvent(annotorious.events.EventType.SELECTION_STARTED, {
     offsetX: x, offsetY: y});
   
@@ -102,14 +102,14 @@ annotorious.plugins.selection.RectDragSelector.prototype.getShape = function() {
     var item_anchor = this._annotator.toItemCoordinates({x: viewportBounds.left, y: viewportBounds.top});
     var item_opposite = this._annotator.toItemCoordinates({x: viewportBounds.right - 1, y: viewportBounds.bottom - 1});
  
-    var rect = new annotorious.geom.Rectangle(
+    var rect = new annotorious.shape.geom.Rectangle(
       item_anchor.x,
       item_anchor.y,
       item_opposite.x - item_anchor.x,
       item_opposite.y - item_anchor.y
     );
 
-    return new annotorious.annotation.Shape(annotorious.annotation.ShapeType.RECTANGLE, rect);
+    return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, rect);
   } else {
     return undefined;
   }
@@ -138,23 +138,21 @@ annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = fun
 }
 
 annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2d, shape, highlight) {
-  // TODO check if the shape is really a rect
-  var color, lineWidth;
-  if (highlight) {
-    color = '#fff000';
-    lineWidth = 1.2;
-  } else {
-    color = '#ffffff';
-    lineWidth = 1;
+  if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
+    var color, lineWidth;
+    if (highlight) {
+      color = '#fff000';
+      lineWidth = 1.2;
+    } else {
+      color = '#ffffff';
+      lineWidth = 1;
+    }
+
+    var geom = shape.geometry;
+    g2d.strokeStyle = '#000000';
+    g2d.lineWidth = lineWidth;
+    g2d.strokeRect(geom.x + 0.5, geom.y + 0.5, geom.width + 1, geom.height + 1);
+    g2d.strokeStyle = color;
+    g2d.strokeRect(geom.x + 1.5, geom.y + 1.5, geom.width - 1, geom.height - 1);
   }
-
-  var geom = shape.geometry;
-  var anchor = this._annotator.fromItemCoordinates({ x: geom.x, y: geom.y }, shape.units);
-  var size = this._annotator.fromItemCoordinates({ x: geom.width, y: geom.height }, shape.units);
-
-  g2d.strokeStyle = '#000000';
-  g2d.lineWidth = lineWidth;
-  g2d.strokeRect(anchor.x + 0.5, anchor.y + 0.5, size.x + 1, size.y + 1);
-  g2d.strokeStyle = color;
-  g2d.strokeRect(anchor.x + 1.5, anchor.y + 1.5, size.x - 1, size.y - 1);
 }
