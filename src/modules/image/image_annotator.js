@@ -53,36 +53,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
 
   var hint = new annotorious.hint.Hint(annotationLayer);
   
-  /*
-  var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
-  goog.style.setOpacity(hint, 0); 
-  goog.dom.appendChild(annotationLayer, hint);
-  var hintHideTimer;
-  var hintIcon = goog.dom.query('.annotorious-hint-icon', hint)[0];
-
-  var hideHint = function() {
-    window.clearTimeout(hintHideTimer);
-    goog.style.setOpacity(hint, 0.3);
-    goog.style.setStyle(hint, 'pointer-events', 'none');
-  }
-
-  var showHint = function() {
-    window.clearTimeout(hintHideTimer);
-    goog.style.setOpacity(hint, 0.8);
-    goog.style.setStyle(hint, 'pointer-events', 'auto');
-  } 
-  */
-
   var self = this;  
-  /*
-  goog.events.listen(hintIcon, goog.events.EventType.MOUSEOVER, function(event) {
-    hint.show();
-  });
-
-  goog.events.listen(hintIcon, goog.events.EventType.MOUSEOUT, function(event) {
-    hint.hide();
-  });
-  */
 
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
     var relatedTarget = event.relatedTarget;

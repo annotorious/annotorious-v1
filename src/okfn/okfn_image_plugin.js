@@ -26,12 +26,6 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.dom.replaceNode(annotationLayer, image);
   goog.dom.appendChild(annotationLayer, image);
   
-  /*  
-  var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Click and Drag to Annotate'});
-  goog.style.setOpacity(hint, 0); 
-  goog.dom.appendChild(annotationLayer, hint);
-  */
-  
   var viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:image.width, height:image.height });
   goog.dom.appendChild(annotationLayer, viewCanvas);   
