@@ -13,6 +13,9 @@ var Annotation = {
   
   /** @type {string} annotation text **/
   text  : {},
+
+  /** @type {boolean} flag indicating whether the anntotation is edit-/deletable **/
+  editable : {},
   
   /** @type {Object} the annotation shape **/
   shapes : [{

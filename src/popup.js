@@ -136,6 +136,12 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
     // New annotation and position - reset
     this._currentAnnotation = annotation;
     this._text.innerHTML = annotorious.viewer.Popup.toHTML(annotation.text);
+
+    if (('editable' in annotation) && annotation.editable == false)
+      goog.style.showElement(this._buttons, false);
+    else
+      goog.style.showElement(this._buttons, true);
+
     this.setPosition(xy);
     
     if (this._buttonHideTimer)
