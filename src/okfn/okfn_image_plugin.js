@@ -46,11 +46,11 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   // TODO clean up this mess
   eventBroker.toItemCoordinates = function(coords) {
     return coords;
-  }
+  };
 
   eventBroker.fromItemCoordinates = function(coords) {
     return coords;
-  }
+  };
 
   /** 
    * Checks if the OKFN Editor is currently 'owned' by this image. I.e. whether
@@ -64,7 +64,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       return false;
 
     return annotation.url == image.src;
-  }
+  };
  
   /**
    * Checks if the mouseover/out event happened inside the annotatable area. 
@@ -90,7 +90,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       return true;
 
     return false;
-  }
+  };
  
   var self = this;  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
@@ -100,7 +100,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
     if (!isMouseEventInside(event))
-      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
   });
 
   popup.addMouseOverHandler(function(event) {
@@ -110,7 +110,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
 
   popup.addMouseOutHandler(function(event) { 
     if (!isMouseEventInside(event))
-      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA);
+      eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
   });
  
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
@@ -124,7 +124,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     goog.style.setOpacity(viewCanvas, 1.0);
   });
   
-  eventBroker.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function() {
+  eventBroker.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, function() {
     goog.style.setOpacity(viewCanvas, 0.4);
   });
 
