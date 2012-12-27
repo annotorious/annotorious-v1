@@ -8,7 +8,9 @@ goog.require('goog.events');
  * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.plugins.selection.RectDragSelector = function(canvas, annotator) {
+annotorious.plugins.selection.RectDragSelector = function() { }
+
+annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator) {
   /** @private **/
   this._canvas = canvas;
   

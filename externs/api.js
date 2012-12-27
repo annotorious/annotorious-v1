@@ -5,6 +5,7 @@
  * @interface
  */
 var Annotation = {  
+
   /** @type {string} source URL of the annotated object (e.g. image) **/
   src   : {},
   
@@ -37,14 +38,21 @@ var Annotation = {
  */
 var Plugin = {
 
-  /** type {function} called on plugin initialization **/
+  /** @type {function} called on plugin initialization **/
   initPlugin : function(anno) {},
 
-  /** type {function} called on initialization of a Popup element **/
-  onInitPopup : function(popup) {},
-
-  /** type {function} called on initialization of an Editor element **/
-  onInitEditor : function(editor) {}
+  /** @type {function} called on initialization of a Popup element **/
+  onInitAnnotator : function(annotator) {}
   
-}
+};
+
+var Annotator = {
+
+  /** @type {object} the popup used by this annotator **/
+  popup : {},
+
+  /** @type {object} the editor used by this annotator **/
+  editor : {}
+
+};
 

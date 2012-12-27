@@ -7,16 +7,12 @@
       // A Hello World Plugin
       annotorious.plugin.HelloWorld = function() { }
 
-      annotorious.plugin.HelloWorld.prototype.initPlugin = function(anno) { }
-
-      annotorious.plugin.HelloWorld.prototype.onInitPopup = function(popup) {
-        popup.addField(function(annotation) {
+      annotorious.plugin.HelloWorld.prototype.onInitAnnotator = function(annotator) {
+        annotator.popup.addField(function(annotation) {
           return '<em>Hello World: ' + annotation.text.length + '</em>';	
         });
-      }
 
-      annotorious.plugin.HelloWorld.prototype.onInitEditor = function(editor) {
-        editor.addField('Hello World');
+        annotator.editor.addField('Hello World');
       }
 
       anno.addPlugin('HelloWorld', {});

@@ -16,6 +16,12 @@ goog.require('goog.style');
 annotorious.modules.image.ImageAnnotator = function(image) {
   var annotationLayer, viewCanvas, hint;
 
+  /** The editor for this annotator (public for use by plugins) **/
+  this.editor;
+
+  /** The popup for this annotator (public for use by plugins) **/
+  this.popup;
+
   /** @private **/
   this._image = image;
   
@@ -42,19 +48,18 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   goog.style.showElement(this._editCanvas, false); 
   goog.dom.appendChild(annotationLayer, this._editCanvas);  
 
-  /** @private **/
-  this._popup = new annotorious.viewer.Popup(annotationLayer, this);
+  this.popup = new annotorious.viewer.Popup(annotationLayer, this);
 
   // TODO these should be plugins, not hardcoded!
   /** @private **/
-  this._selector = new annotorious.plugins.selection.PolygonSelector(this._editCanvas, this); 
-  // this._selector = new annotorious.plugins.selection.RectDragSelector(this._editCanvas, this); 
+  // this._selector = new annotorious.plugins.selection.PolygonSelector(this._editCanvas, this); 
+  this._selector = new annotorious.plugins.selection.RectDragSelector();
+  this._selector.init(this._editCanvas, this); 
 
   /** @private **/
-  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this._popup, [this._selector], this);
+  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this.popup, [this._selector], this);
 
-  /** @private **/
-  this._editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);
+  this.editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);
 
   hint = new annotorious.hint.Hint(this, annotationLayer);
   
@@ -86,9 +91,9 @@ annotorious.modules.image.ImageAnnotator = function(image) {
 
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
     var bounds = event.viewportBounds;
-    self._editor.setPosition({ x: bounds.left + self._image.offsetLeft,
+    self.editor.setPosition({ x: bounds.left + self._image.offsetLeft,
                                y: bounds.bottom + 4 + self._image.offsetTop });
-    self._editor.open();
+    self.editor.open();
   });
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
@@ -111,22 +116,6 @@ annotorious.modules.image.ImageAnnotator.prototype.getItem = function() {
   return { src: annotorious.modules.image.ImageModule.getItemURL(this._image) };
 }
 
-/** 
- * Returns the popup instance managed by this annotator.
- * @returns {annotorious.viewer.Popup} the popup
- */
-annotorious.modules.image.ImageAnnotator.prototype.getPopup = function() {
-  return this._popup;
-}
-
-/**
- * Returns the editor instance managed by this annotator.
- * @returns {annotorious.editor.Editor} the editor
- */
-annotorious.modules.image.ImageAnnotator.prototype.getEditor = function() {
-  return this._editor;
-}
-
 /**
  * Adds a lifecycle event handler to this annotator's Event Broker.
  * @param {annotorious.events.EventType} type the event type
@@ -134,6 +123,10 @@ annotorious.modules.image.ImageAnnotator.prototype.getEditor = function() {
  */
 annotorious.modules.image.ImageAnnotator.prototype.addHandler = function(type, handler) {
   this._eventBroker.addHandler(type, handler);  
+}
+
+annotorious.modules.image.ImageAnnotator.prototype.addSelector = function(selector) {
+
 }
 
 /**

@@ -60,11 +60,8 @@ annotorious.modules.image.ImageModule.prototype.init = function() {
  * @private
  */
 annotorious.modules.image.ImageModule.prototype._initPlugin = function(plugin, annotator) {
-  if (plugin.onInitPopup)
-    plugin.onInitPopup(annotator.getPopup());
-
-  if (plugin.onInitEditor)  
-    plugin.onInitEditor(annotator.getEditor());
+  if (plugin.onInitAnnotator)
+    plugin.onInitAnnotator(annotator);
 }
 
 /**
