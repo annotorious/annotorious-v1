@@ -74,7 +74,7 @@ annotorious.plugins.selection.PolygonSelector = function(canvas, annotator) {
 }
 
 annotorious.plugins.selection.PolygonSelector.prototype.supportedShapeType = function() {
-  return annotorious.annotation.ShapeType.POLYGON;
+  return annotorious.shape.ShapeType.POLYGON;
 }
 
 /**
@@ -84,7 +84,7 @@ annotorious.plugins.selection.PolygonSelector.prototype.supportedShapeType = fun
  */
 annotorious.plugins.selection.PolygonSelector.prototype.startSelection = function(x, y) {
   this._enabled = true;
-  this._anchor = new annotorious.geom.Point(x, y);
+  this._anchor = new annotorious.shape.geom.Point(x, y);
   this._annotator.fireEvent(annotorious.events.EventType.SELECTION_STARTED, {
     offsetX: x, offsetY: y});
   
@@ -106,7 +106,7 @@ annotorious.plugins.selection.PolygonSelector.prototype.stopSelection = function
 annotorious.plugins.selection.PolygonSelector.prototype.getShape = function() {
   var points = [ this._anchor ];
   goog.array.extend(points, this._points);
-  return new annotorious.annotation.Shape(annotorious.annotation.ShapeType.POLYGON, new annotorious.geom.Polygon(points));
+  return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON, new annotorious.shape.geom.Polygon(points));
 }
 
 annotorious.plugins.selection.PolygonSelector.prototype.getViewportBounds = function() {

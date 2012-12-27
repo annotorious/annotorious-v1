@@ -61,6 +61,22 @@ annotorious.shape.intersects = function(shape, px, py) {
         return false;
     
       return true;
+    } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
+      var oddNodes = false;
+      var points = shape.geometry.points;
+      var sides = shape.geometry.points.length - 1;
+
+      var j = sides - 1;
+      for (var i=0; i<sides; i++) {
+        if ((points[i].y < py && points[j].y >= py) ||  (points[j].y < py && points[i].y >= py)) {
+          if (points[i].x + (py - points[i].y) / (points[j].y - points[i].y) * (points[j].x - points[i].x) < px) {
+            oddNodes = !oddNodes;
+          } 
+        }
+        j = i;   
+      }
+
+      return oddNodes;
     }
     
     return false;
@@ -110,8 +126,6 @@ annotorious.shape.getBoundingRect = function(shape) {
     }
 
     return new annotorious.geom.Rectangle(left, top, right - left, bottom - top);
-  } else {
-    return undefined;
   }
 }
 
@@ -130,5 +144,12 @@ annotorious.shape.transform = function(shape, transformationFn) {
     var size = transformationFn({ x: geom.width, y: geom.height });
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, 
       new annotorious.shape.geom.Rectangle(anchor.x, anchor.y, size.x, size.y));
+  } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
+    var transformedPoints = [];
+    goog.array.forEach(shape.geometry.points, function(pt) {
+      transformedPoints.push(transformationFn(pt));
+    });
+    return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON,
+      new annotorious.shape.geom.Polygon(transformedPoints));
   }
 }
