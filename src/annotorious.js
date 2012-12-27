@@ -105,6 +105,7 @@ annotorious.Annotorious.prototype.getAnnotations = function(opt_item_url) {
 
 /**
  * Makes an item annotatable, if there is a module that supports the item type.
+ * @param {object} the annotatable item
  */
 annotorious.Annotorious.prototype.makeAnnotatable = function(item) {
   var module = goog.array.find(this._modules, function(module) {
@@ -127,6 +128,16 @@ annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
     module.removeAnnotation(annotation);
 }
 
+/**
+ * Enables (or disables) the ability to create new annotations on an annotatable item.
+ * @param {boolean} enabled if <code>true</code> new annotations can be created
+ */
+annotorious.Annotorious.prototype.setSelectionEnabled = function(enabled) {
+  goog.array.forEach(this._modules, function(module) {
+    module.setSelectionEnabled(enabled);
+  });
+}
+
 window['anno'] = new annotorious.Annotorious();
 annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.prototype.addAnnotation;
 annotorious.Annotorious.prototype['addHandler'] = annotorious.Annotorious.prototype.addHandler;
@@ -134,3 +145,4 @@ annotorious.Annotorious.prototype['addPlugin'] = annotorious.Annotorious.prototy
 annotorious.Annotorious.prototype['getAnnotations'] = annotorious.Annotorious.prototype.getAnnotations;
 annotorious.Annotorious.prototype['makeAnnotatable'] = annotorious.Annotorious.prototype.makeAnnotatable;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
+annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;

@@ -22,6 +22,9 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
   
+  /** @private **/
+  this._selectionEnabled = true;
+
   annotationLayer = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setSize(annotationLayer, image.width, image.height); 
@@ -74,9 +77,11 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   });
 
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
-    goog.style.showElement(self._editCanvas, true);
-    self._viewer.highlightAnnotation(undefined);
-    self._selector.startSelection(event.offsetX, event.offsetY);
+    if (self._selectionEnabled) {
+      goog.style.showElement(self._editCanvas, true);
+      self._viewer.highlightAnnotation(undefined);
+      self._selector.startSelection(event.offsetX, event.offsetY);
+    }
   });
 
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
@@ -154,6 +159,15 @@ annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(anno
  */
 annotorious.modules.image.ImageAnnotator.prototype.removeAnnotation = function(annotation) {
   this._viewer.removeAnnotation(annotation);
+}
+
+/**
+ * Enables (or disables) the ability to create new annotations on the item
+ * managed by this annotator.
+ * @param {boolean} enabled if <code>true</code> new annotations can be created
+ */
+annotorious.modules.image.ImageAnnotator.prototype.setSelectionEnabled = function(enabled) {
+  this._selectionEnabled = enabled;
 }
 
 /**

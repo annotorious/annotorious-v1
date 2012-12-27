@@ -212,10 +212,29 @@ annotorious.modules.image.ImageModule.prototype.getAnnotations = function(opt_it
   }
 }
 
+/**
+ * Annotations should be bound to the URL defined in the 'data-original' attribute of
+ * the image. Only if this attribute does not exist, they should be bound to the original
+ * image SRC. This utility function returns the correct URL to bind to.
+ */
+annotorious.modules.image.ImageModule.getItemURL = function(image) {
+  var src = image.getAttribute('data-original');
+  if (src)
+    return src;
+  else
+    return image.src;
+}
+
+/**
+ * Makes an item annotatable, if it is an image.
+ * @param {object} the annotatable image
+ */
 annotorious.modules.image.ImageModule.prototype.makeAnnotatable = function(item) {
-  this._allImages.push(item);
-  this._imagesToLoad.push(item);
-  this._lazyLoad();
+  if (this.supports(item)) {
+    this._allImages.push(item);
+    this._imagesToLoad.push(item);
+    this._lazyLoad();
+  }
 }
 
 /**
@@ -234,6 +253,16 @@ annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(anno
 }
 
 /**
+ * Enables (or disables) the ability to create new annotations on an annotatable image.
+ * @param {boolean} enabled if <code>true</code> new annotations can be created
+ */
+annotorious.modules.image.ImageModule.prototype.setSelectionEnabled = function(enabled) {
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
+    annotator.setSelectionEnabled(enabled);
+  });
+}
+
+/**
  * Standard module method: tests if this module is able to support annotation on the
  * specified item.
  * @param {object} item the item to test
@@ -246,15 +275,4 @@ annotorious.modules.image.ImageModule.prototype.supports = function(item) {
     return false;
 }
 
-/**
- * Annotations should be bound to the URL defined in the 'data-original' attribute of
- * the image. Only if this attribute does not exist, they should be bound to the original
- * image SRC. This utility function returns the correct URL to bind to.
- */
-annotorious.modules.image.ImageModule.getItemURL = function(image) {
-  var src = image.getAttribute('data-original');
-  if (src)
-    return src;
-  else
-    return image.src;
-}
+

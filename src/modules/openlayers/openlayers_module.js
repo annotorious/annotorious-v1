@@ -71,6 +71,14 @@ annotorious.modules.openlayers.OpenLayersModule.prototype.removeAnnotation = fun
 
 }
 
+/**
+ * Enables (or disables) the ability to create new annotations on an annotatable image.
+ * @param {boolean} enabled if <code>true</code> new annotations can be created
+ */
+annotorious.modules.openlayers.OpenLayersModule.prototype.setSelectionEnabled = function(enabled) {
+
+}
+
 annotorious.modules.openlayers.OpenLayersModule.prototype.supports = function(item) {
   return (item instanceof OpenLayers.Map);
 }
