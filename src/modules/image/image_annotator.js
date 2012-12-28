@@ -27,7 +27,13 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
+
+  /** @private **/
+  this._selectors = [];
   
+  /** @private **/
+  this._currentSelector;
+
   /** @private **/
   this._selectionEnabled = true;
 
@@ -51,15 +57,19 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   this.popup = new annotorious.viewer.Popup(annotationLayer, this);
 
   // TODO these should be plugins, not hardcoded!
-  /** @private **/
-  // this._selector = new annotorious.plugins.selection.PolygonSelector(this._editCanvas, this); 
-  this._selector = new annotorious.plugins.selection.RectDragSelector();
-  this._selector.init(this._editCanvas, this); 
+  var default_selector = new annotorious.plugins.selection.RectDragSelector();
+  default_selector.init(this._editCanvas, this); 
+  this._selectors.push(default_selector);
+  this._currentSelector = default_selector;
+
+  var polygon_selector = new annotorious.plugin.selector.PolygonSelector(this._editCanvas, this); 
+  polygon_selector.init(this._editCanvas, this);
+  this._selectors.push(polygon_selector);
 
   /** @private **/
-  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this.popup, [this._selector], this);
+  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this.popup, [this._currentSelector], this); // TODO fix hard-wired selector
 
-  this.editor = new annotorious.editor.Editor(this._selector, this, annotationLayer);
+  this.editor = new annotorious.editor.Editor(this._currentSelector, this, annotationLayer); // TODO fix hard-wired selector
 
   hint = new annotorious.hint.Hint(this, annotationLayer);
   
@@ -85,7 +95,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
     if (self._selectionEnabled) {
       goog.style.showElement(self._editCanvas, true);
       self._viewer.highlightAnnotation(undefined);
-      self._selector.startSelection(event.offsetX, event.offsetY);
+      self._currentSelector.startSelection(event.offsetX, event.offsetY);
     }
   });
 
@@ -98,13 +108,13 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
     goog.style.showElement(self._editCanvas, false);
-    self._selector.stopSelection();
+    self._currentSelector.stopSelection();
   });
 }
 
 annotorious.modules.image.ImageAnnotator.prototype.stopSelection = function() {
    goog.style.showElement(this._editCanvas, false);
-   this._selector.stopSelection();
+   this._currentSelector.stopSelection();
 }
 
 /**
@@ -145,6 +155,15 @@ annotorious.modules.image.ImageAnnotator.prototype.fireEvent = function(type, ev
 annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(annotation) {
   this._viewer.addAnnotation(annotation);
 }
+
+annotorious.modules.image.ImageAnnotator.prototype.getAvailableSelectors = function() {
+  // TODO implement
+}
+
+annotorious.modules.image.ImageAnnotator.prototype.setActiveSelector = function(selector) {
+  // TODO implement
+}
+
 
 /**
  * Removes an annotation from this annotator's viewer.

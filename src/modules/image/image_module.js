@@ -209,6 +209,22 @@ annotorious.modules.image.ImageModule.prototype.getAnnotations = function(opt_it
   }
 }
 
+annotorious.modules.image.ImageModule.prototype.getAvailableSelectors = function(item_url) {
+  if (this.annotatesItem(item_url)) {
+    var annotator = this._annotators.get(item_url);
+    if (annotator)
+      return annotator.getAvailableSelectors();
+  }
+}
+
+annotorious.modules.image.ImageModule.prototype.setActiveSelector = function(item_url, selector) {
+  if (this.annotatesItem(item_url)) {
+    var annotator = this._annotators.get(item_url);
+    if (annotator)
+      annotator.setActiveSelector(selector);
+  }
+}
+
 /**
  * Annotations should be bound to the URL defined in the 'data-original' attribute of
  * the image. Only if this attribute does not exist, they should be bound to the original

@@ -103,6 +103,20 @@ annotorious.Annotorious.prototype.getAnnotations = function(opt_item_url) {
   }
 }
 
+annotorious.Annotorious.prototype.getAvailableSelectors = function(item_url) {
+  var module = this._getModuleForItemSrc(item_url);
+
+  if (module)
+    return module.getAvailableSelectors(item_url);  
+}
+
+annotorious.Annotorious.prototype.setActiveSelector = function(item_url, selector) {
+  var module = this._getModuleForItemSrc(item_url);
+
+  if (module)
+    module.setActiveSelector(item_url, selector);  
+}
+
 /**
  * Makes an item annotatable, if there is a module that supports the item type.
  * @param {object} the annotatable item
