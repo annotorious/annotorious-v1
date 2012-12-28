@@ -13,12 +13,12 @@ goog.require('goog.style');
  * @param {annotorious.annotation.Annotation} the (optional) existing annotation to edit
  * @constructor
  */
-annotorious.editor.Editor = function(selection, annotator, parentEl, opt_annotation) {
+annotorious.editor.Editor = function(annotator, parentEl, opt_annotation) {
   this.element = goog.soy.renderAsElement(annotorious.templates.editform);
-
-  /** @private **/
-  this._selection = selection;
   
+  /** @private **/
+  this._annotator = annotator;
+
   /** @private **/
   this._item = annotator.getItem();
 
@@ -102,7 +102,7 @@ annotorious.editor.Editor.prototype.setPosition = function(xy) {
  * @return {annotorious.annotation.Annotation} the annotation
  */
 annotorious.editor.Editor.prototype.getAnnotation = function() {
-  return new annotorious.annotation.Annotation(this._item.src, this._textarea.value, this._selection.getShape());
+  return new annotorious.annotation.Annotation(this._item.src, this._textarea.value, this._annotator.getActiveSelector().getShape());
 }
 
 // Export addField method

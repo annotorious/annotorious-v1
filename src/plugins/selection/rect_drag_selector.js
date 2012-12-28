@@ -30,12 +30,20 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas,
   /** @private **/
   this._enabled = false;
 
+  /** @private **/
+  this._mouseMoveListener;
+
+  /** @private **/
+  this._mouseUpListener;
+}
+
+annotorious.plugins.selection.RectDragSelector.prototype._attachHandlers = function() {
   var self = this;  
-  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
+  this._mouseMoveListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._enabled) {
       self._opposite = { x: event.offsetX, y: event.offsetY };
 
-      self._g2d.clearRect(0, 0, canvas.width, canvas.height);
+      self._g2d.clearRect(0, 0, self._canvas.width, self._canvas.height);
       
       var width = self._opposite.x - self._anchor.x;
       var height = self._opposite.y - self._anchor.y;
@@ -56,7 +64,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas,
     }
   });
 
-  goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
+  this._mouseUpListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEUP, function(event) {
     self._enabled = false;
     var shape = self.getShape();
     if (shape) {
@@ -66,6 +74,14 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas,
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_CANCELED); 
     }
   });
+}
+
+annotorious.plugins.selection.RectDragSelector.prototype._detachHandlers = function() {
+  if (this._mouseMoveListener)
+    goog.events.unlistenByKey(this._mouseMoveListener)
+
+  if (this._mouseUpListener)
+    goog.events.unlistenByKey(this._mouseUpListener)
 }
 
 annotorious.plugins.selection.RectDragSelector.prototype.supportedShapeType = function() {
@@ -79,6 +95,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.supportedShapeType = fu
  */
 annotorious.plugins.selection.RectDragSelector.prototype.startSelection = function(x, y) {
   this._enabled = true;
+  this._attachHandlers();
   this._anchor = new annotorious.shape.geom.Point(x, y);
   this._annotator.fireEvent(annotorious.events.EventType.SELECTION_STARTED, {
     offsetX: x, offsetY: y});
@@ -90,6 +107,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.startSelection = functi
  * Stops the selection.
  */
 annotorious.plugins.selection.RectDragSelector.prototype.stopSelection = function() {
+  this._detachHandlers();
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
   goog.style.setStyle(document.body, '-webkit-user-select', 'auto');
   delete this._opposite;

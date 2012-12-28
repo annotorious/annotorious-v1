@@ -217,6 +217,14 @@ annotorious.modules.image.ImageModule.prototype.getAvailableSelectors = function
   }
 }
 
+annotorious.modules.image.ImageModule.prototype.getActiveSelector = function(item_url) {
+  if (this.annotatesItem(item_url)) {
+    var annotator = this._annotators.get(item_url);
+    if (annotator)
+      return annotator.getActiveSelector();
+  }
+}
+
 annotorious.modules.image.ImageModule.prototype.setActiveSelector = function(item_url, selector) {
   if (this.annotatesItem(item_url)) {
     var annotator = this._annotators.get(item_url);

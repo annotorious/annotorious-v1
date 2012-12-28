@@ -1,18 +1,16 @@
-goog.provide('annotorious.plugin.selector');
+goog.provide('annotorious.plugins.selection.PolygonSelector');
 
 goog.require('goog.events');
 
 /**
- * A basic selector for polygon shapes.
- */
-annotorious.plugin.selector.PolygonSelector = function() { }
-
-/**
- * @param {element} canvas the canvas to draw on
- * @param {object} annotator reference to the annotator
+ * Click-and-drag-style selector.
+ * @param {Element} canvas the canvas to draw on
+ * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.plugin.selector.PolygonSelector.prototype.init = function(canvas, annotator) {
+annotorious.plugins.selection.PolygonSelector = function() { }
+
+annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, annotator) {
   /** @private **/
   this._canvas = canvas;
   
@@ -77,7 +75,7 @@ annotorious.plugin.selector.PolygonSelector.prototype.init = function(canvas, an
   });
 }
 
-annotorious.plugin.selector.PolygonSelector.prototype.supportedShapeType = function() {
+annotorious.plugins.selection.PolygonSelector.prototype.supportedShapeType = function() {
   return annotorious.shape.ShapeType.POLYGON;
 }
 
@@ -86,7 +84,7 @@ annotorious.plugin.selector.PolygonSelector.prototype.supportedShapeType = funct
  * @param {number} x the X coordinate
  * @param {number} y the Y coordinate
  */
-annotorious.plugin.selector.PolygonSelector.prototype.startSelection = function(x, y) {
+annotorious.plugins.selection.PolygonSelector.prototype.startSelection = function(x, y) {
   this._enabled = true;
   this._anchor = new annotorious.shape.geom.Point(x, y);
   this._annotator.fireEvent(annotorious.events.EventType.SELECTION_STARTED, {
@@ -98,7 +96,7 @@ annotorious.plugin.selector.PolygonSelector.prototype.startSelection = function(
 /**
  * Stops the selection.
  */
-annotorious.plugin.selector.PolygonSelector.prototype.stopSelection = function() {
+annotorious.plugins.selection.PolygonSelector.prototype.stopSelection = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
   goog.style.setStyle(document.body, '-webkit-user-select', 'auto');
   this._points = [];
@@ -107,13 +105,19 @@ annotorious.plugin.selector.PolygonSelector.prototype.stopSelection = function()
 /**
  * The currently edited shape
  */
-annotorious.plugin.selector.PolygonSelector.prototype.getShape = function() {
-  var points = [ this._anchor ];
-  goog.array.extend(points, this._points);
+annotorious.plugins.selection.PolygonSelector.prototype.getShape = function() {
+  var points = [];
+  points.push(this._annotator.toItemCoordinates(this._anchor));
+  
+  var self = this;
+  goog.array.forEach(this._points, function(pt) {
+    points.push(self._annotator.toItemCoordinates(pt));
+  });
+
   return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON, new annotorious.shape.geom.Polygon(points));
 }
 
-annotorious.plugin.selector.PolygonSelector.prototype.getViewportBounds = function() {
+annotorious.plugins.selection.PolygonSelector.prototype.getViewportBounds = function() {
   var right = this._anchor.x;
   var left = this._anchor.x;
   var top = this._anchor.y;
@@ -136,9 +140,18 @@ annotorious.plugin.selector.PolygonSelector.prototype.getViewportBounds = functi
   return {top: top, right: right, bottom: bottom, left: left};
 }
 
-annotorious.plugin.selector.PolygonSelector.prototype.drawShape = function(g2d, shape) {
-  g2d.strokeStyle = '#0000ff';
-  g2d.lineWidth = 1.5;
+annotorious.plugins.selection.PolygonSelector.prototype.drawShape = function(g2d, shape, highlight) {
+  var color, lineWidth;
+  if (highlight) {
+    color = '#fff000';
+    lineWidth = 1.2;
+  } else {
+    color = '#ffffff';
+    lineWidth = 1;
+  }
+
+  g2d.strokeStyle = color;;
+  g2d.lineWidth = lineWidth;
   g2d.beginPath();
   var points = shape.geometry.points;
 
@@ -153,14 +166,3 @@ annotorious.plugin.selector.PolygonSelector.prototype.drawShape = function(g2d, 
   g2d.lineTo(points[0].x, points[0].y);
   g2d.stroke();
 }
-
-/**
- * Wraps the polygon selector into an Annotorious plugin.
- * @constructor
- */
-annotorious.plugin.Polygon = function() { }
-
-annotorious.plugin.Polygon.prototype.onInitAnnotator = function(annotator) {
-  annotator.addSelector(new annotorious.selector.PolygonSelector());
-}
-

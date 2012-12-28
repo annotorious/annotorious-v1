@@ -13,15 +13,12 @@ goog.require('goog.dom.query');
  * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.modules.image.Viewer = function(canvas, popup, selectors, annotator) {
+annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
   /** @private **/
   this._canvas = canvas;
 
   /** @private **/
   this._popup = popup;
-
-  /** @private **/
-  this._selectors = selectors;
   
   /** @private **/
   this._annotator = annotator;
@@ -222,7 +219,7 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
  * @private
  */
 annotorious.modules.image.Viewer.prototype._draw = function(shape, highlight) {
-  var selector = goog.array.find(this._selectors, function(selector) {
+  var selector = goog.array.find(this._annotator.getAvailableSelectors(), function(selector) {
     return selector.supportedShapeType() == shape.type;
   });  
 

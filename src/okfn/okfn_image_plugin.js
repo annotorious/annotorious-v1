@@ -40,7 +40,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var selector = new annotorious.plugins.selection.RectDragSelector();
   selector.init(editCanvas, eventBroker);
 
-  var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, [ selector ], eventBroker);
+  var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, eventBroker);
     
   var hint = new annotorious.hint.Hint(eventBroker, annotationLayer);
   
@@ -51,6 +51,10 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
 
   eventBroker.fromItemCoordinates = function(coords) {
     return coords;
+  };
+
+  eventBroker.getAvailableSelectors = function() {
+    return [ selector ];
   };
 
   /** 

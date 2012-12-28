@@ -110,6 +110,13 @@ annotorious.Annotorious.prototype.getAvailableSelectors = function(item_url) {
     return module.getAvailableSelectors(item_url);  
 }
 
+annotorious.Annotorious.prototype.getActiveSelector = function(item_url) {
+  var module = this._getModuleForItemSrc(item_url);
+
+  if (module)
+    return module.getActiveSelector(item_url);  
+}
+
 annotorious.Annotorious.prototype.setActiveSelector = function(item_url, selector) {
   var module = this._getModuleForItemSrc(item_url);
 
@@ -157,6 +164,7 @@ annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.pro
 annotorious.Annotorious.prototype['addHandler'] = annotorious.Annotorious.prototype.addHandler;
 annotorious.Annotorious.prototype['addPlugin'] = annotorious.Annotorious.prototype.addPlugin;
 annotorious.Annotorious.prototype['getAnnotations'] = annotorious.Annotorious.prototype.getAnnotations;
+annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious.prototype.setActiveSelector;
 annotorious.Annotorious.prototype['makeAnnotatable'] = annotorious.Annotorious.prototype.makeAnnotatable;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
 annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;

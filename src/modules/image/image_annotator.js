@@ -62,14 +62,14 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   this._selectors.push(default_selector);
   this._currentSelector = default_selector;
 
-  var polygon_selector = new annotorious.plugin.selector.PolygonSelector(this._editCanvas, this); 
+  var polygon_selector = new annotorious.plugins.selection.PolygonSelector();
   polygon_selector.init(this._editCanvas, this);
   this._selectors.push(polygon_selector);
 
   /** @private **/
-  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this.popup, [this._currentSelector], this); // TODO fix hard-wired selector
+  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this.popup, this); 
 
-  this.editor = new annotorious.editor.Editor(this._currentSelector, this, annotationLayer); // TODO fix hard-wired selector
+  this.editor = new annotorious.editor.Editor(this, annotationLayer);
 
   hint = new annotorious.hint.Hint(this, annotationLayer);
   
@@ -157,11 +157,15 @@ annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(anno
 }
 
 annotorious.modules.image.ImageAnnotator.prototype.getAvailableSelectors = function() {
-  // TODO implement
+  return this._selectors;
+}
+
+annotorious.modules.image.ImageAnnotator.prototype.getActiveSelector = function() {
+  return this._currentSelector;
 }
 
 annotorious.modules.image.ImageAnnotator.prototype.setActiveSelector = function(selector) {
-  // TODO implement
+  this._currentSelector = this._selectors[selector];
 }
 
 

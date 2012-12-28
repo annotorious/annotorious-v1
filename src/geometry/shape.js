@@ -125,7 +125,7 @@ annotorious.shape.getBoundingRect = function(shape) {
         top = points[i].y;
     }
 
-    return new annotorious.geom.Rectangle(left, top, right - left, bottom - top);
+    return new annotorious.shape.geom.Rectangle(left, top, right - left, bottom - top);
   }
 }
 
