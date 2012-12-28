@@ -1,3 +1,6 @@
+/** jQuery seems to cause trouble with Closure "occasionally" (really can't see a distinct pattern yet...) **/
+var $ = {}
+
 /**
  * Externs definition for the OKFN Annotator class.
  */

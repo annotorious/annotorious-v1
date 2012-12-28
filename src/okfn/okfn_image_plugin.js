@@ -19,7 +19,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var baseOffset = annotorious.dom.getOffset(okfnAnnotator.element[0].firstChild);
     
   var eventBroker = new annotorious.events.EventBroker();
-  
+ 
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setSize(annotationLayer, image.width, image.height); 
@@ -37,7 +37,8 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   goog.style.showElement(editCanvas, false); 
   goog.dom.appendChild(annotationLayer, editCanvas);  
 
-  var selector = new annotorious.plugins.selection.RectDragSelector(editCanvas, eventBroker);
+  var selector = new annotorious.plugins.selection.RectDragSelector();
+  selector.init(editCanvas, eventBroker);
 
   var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, [ selector ], eventBroker);
     
@@ -207,13 +208,13 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
  * OKFN plugin interface.
  */
 window['Annotator']['Plugin']['AnnotoriousImagePlugin'] = (function() {
-  function AnnotoriousImagePlugin(element, options) {
+
+  function AnnotoriousImagePlugin(element, options) {    
     this._el = element;
   }
 
   AnnotoriousImagePlugin.prototype['pluginInit'] = function() {
     var images = this._el.getElementsByTagName('img');
-    
     var self = this;
     goog.array.forEach(images, function(img, idx, array) {
       new annotorious.okfn.ImagePlugin(img, self['annotator']);
