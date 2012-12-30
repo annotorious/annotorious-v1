@@ -224,7 +224,7 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
  */
 annotorious.modules.image.Viewer.prototype._draw = function(shape, highlight) {
   var selector = goog.array.find(this._annotator.getAvailableSelectors(), function(selector) {
-    return selector.supportedShapeType() == shape.type;
+    return selector.getSupportedShapeType() == shape.type;
   });  
 
   if (selector)

@@ -3,13 +3,16 @@ goog.provide('annotorious.plugins.selection.RectDragSelector');
 goog.require('goog.events');
 
 /**
- * Click-and-drag-style selector.
- * @param {Element} canvas the canvas to draw on
- * @param {yuma.modules.image.ImageAnnotator} annotator reference to the annotator
+ * A simple click-and-drag-style selector for rectangular areas.
  * @constructor
  */
 annotorious.plugins.selection.RectDragSelector = function() { }
 
+/**
+ * Initializes the selector.
+ * @param {element} canvas the canvas to draw on
+ * @param {object} annotator reference to the annotator
+ */
 annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator) {
   /** @private **/
   this._canvas = canvas;
@@ -37,7 +40,11 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas,
   this._mouseUpListener;
 }
 
-annotorious.plugins.selection.RectDragSelector.prototype._attachHandlers = function() {
+/**
+ * Attaches MOUSEUP and MOUSEMOVE listeners to the editing canvas.
+ * @private
+ */
+annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = function() {
   var self = this;  
   this._mouseMoveListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._enabled) {
@@ -76,7 +83,11 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachHandlers = funct
   });
 }
 
-annotorious.plugins.selection.RectDragSelector.prototype._detachHandlers = function() {
+/**
+ * Detaches MOUSEUP and MOUSEMOVE listeners from the editing canvas.
+ * @private
+ */
+annotorious.plugins.selection.RectDragSelector.prototype._detachListeners = function() {
   if (this._mouseMoveListener) {
     goog.events.unlistenByKey(this._mouseMoveListener);
     delete this._mouseMoveListener;
@@ -88,18 +99,33 @@ annotorious.plugins.selection.RectDragSelector.prototype._detachHandlers = funct
   }
 }
 
-annotorious.plugins.selection.RectDragSelector.prototype.supportedShapeType = function() {
+/**
+ * Selector API method: returns the selector name.
+ * @returns the selector name
+ */
+annotorious.plugins.selection.RectDragSelector.prototype.getName = function() {
+  return 'rect_drag';
+}
+
+/**
+ * Selector API method: returns the supported shape type.
+ *
+ * TODO support for multiple shape types?
+ *
+ * @return the supported shape type
+ */
+annotorious.plugins.selection.RectDragSelector.prototype.getSupportedShapeType = function() {
   return annotorious.shape.ShapeType.RECTANGLE;
 }
 
 /**
- * Starts the selection at the specified coordinates.
+ * Selector API method: starts the selection at the specified coordinates.
  * @param {number} x the X coordinate
  * @param {number} y the Y coordinate
  */
 annotorious.plugins.selection.RectDragSelector.prototype.startSelection = function(x, y) {
   this._enabled = true;
-  this._attachHandlers();
+  this._attachListeners();
   this._anchor = new annotorious.shape.geom.Point(x, y);
   this._annotator.fireEvent(annotorious.events.EventType.SELECTION_STARTED, {
     offsetX: x, offsetY: y});
@@ -108,17 +134,18 @@ annotorious.plugins.selection.RectDragSelector.prototype.startSelection = functi
 }
 
 /**
- * Stops the selection.
+ * Selector API method: stops the selection.
  */
 annotorious.plugins.selection.RectDragSelector.prototype.stopSelection = function() {
-  this._detachHandlers();
+  this._detachListeners();
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
   goog.style.setStyle(document.body, '-webkit-user-select', 'auto');
   delete this._opposite;
 }
 
 /**
- * The currently edited shape
+ * Selector API method: returns the currently edited shape.
+ * @returns {annotorious.shape.Shape} the shape
  */
 annotorious.plugins.selection.RectDragSelector.prototype.getShape = function() {
   if (this._opposite) {
@@ -139,6 +166,10 @@ annotorious.plugins.selection.RectDragSelector.prototype.getShape = function() {
   }
 }
 
+/**
+ * Selector API method: returns the bounds of the selected shape, in viewport (= pixel) coordinates.
+ * @returns {object} the shape viewport bounds
+ */
 annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = function() {
   var right, left;
   if (this._opposite.x > this._anchor.x) {
@@ -161,6 +192,9 @@ annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = fun
   return {top: top, right: right, bottom: bottom, left: left};
 }
 
+/**
+ * TODO not sure if this is really the best way/architecture to handle viewer shape drawing 
+ */
 annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2d, shape, highlight) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     var color, lineWidth;
