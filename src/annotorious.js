@@ -87,7 +87,7 @@ annotorious.Annotorious.prototype.addPlugin = function(pluginName, opt_config_op
  *
  * !!!!!!!!!!!!!!!!!!!!
  * !!
- * !! TODO implement - currently doesn't return anything meaningful yet!!
+ * !! TODO implement - currently doesn't return anything useful yet!!
  * !!
  * !!!!!!!!!!!!!!!!!!!!
  *
@@ -127,7 +127,7 @@ annotorious.Annotorious.prototype.getAnnotations = function(opt_item_url) {
  *
  * !!!!!!!!!!!!!!!!!!!!
  * !!
- * !! TODO implement - currently doesn't return anything meaningful yet!!
+ * !! TODO implement - currently doesn't return anything useful yet!!
  * !!
  * !!!!!!!!!!!!!!!!!!!!
  *

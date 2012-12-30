@@ -184,6 +184,27 @@ annotorious.modules.image.ImageModule.prototype.annotatesItem = function(item_ur
 }
 
 /**
+ * Returns the name of the selector that is currently activated on a 
+ * particular item.
+ *
+ * !!!!!!!!!!!!!!!!!!!!
+ * !!
+ * !! TODO implement - currently doesn't return anything useful yet!!
+ * !!
+ * !!!!!!!!!!!!!!!!!!!!
+ *
+ * @param {string} the URL of the item to query for the active selector
+ */
+annotorious.modules.image.ImageModule.prototype.getActiveSelector = function(item_url) {
+  // TODO return the selector NAME, not the actual selector object
+  if (this.annotatesItem(item_url)) {
+    var annotator = this._annotators.get(item_url);
+    if (annotator)
+      return annotator.getActiveSelector();
+  }
+}
+
+/**
  * Standard module method: returns all annotations on the annotatable media with the specified
  * URL, or all annotations from this module in case no URL is specified.
  * @param {string | undefined} opt_media_url a media URL (optional)
@@ -209,27 +230,24 @@ annotorious.modules.image.ImageModule.prototype.getAnnotations = function(opt_it
   }
 }
 
+/**
+ * Returns the list of available shape selectors for a particular item.
+ *
+ * !!!!!!!!!!!!!!!!!!!!
+ * !!
+ * !! TODO implement - currently doesn't return anything useful yet!!
+ * !!
+ * !!!!!!!!!!!!!!!!!!!!
+ *
+ * @param {string} the URL of the item to query for available selectors
+ * @returns {List.<string>} the list of selector names
+ */
 annotorious.modules.image.ImageModule.prototype.getAvailableSelectors = function(item_url) {
+  // TODO return list of selector NAMES, not the actual selector objects
   if (this.annotatesItem(item_url)) {
     var annotator = this._annotators.get(item_url);
     if (annotator)
       return annotator.getAvailableSelectors();
-  }
-}
-
-annotorious.modules.image.ImageModule.prototype.getActiveSelector = function(item_url) {
-  if (this.annotatesItem(item_url)) {
-    var annotator = this._annotators.get(item_url);
-    if (annotator)
-      return annotator.getActiveSelector();
-  }
-}
-
-annotorious.modules.image.ImageModule.prototype.setActiveSelector = function(item_url, selector) {
-  if (this.annotatesItem(item_url)) {
-    var annotator = this._annotators.get(item_url);
-    if (annotator)
-      annotator.setActiveSelector(selector);
   }
 }
 
@@ -274,6 +292,27 @@ annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(anno
 }
 
 /**
+ * Sets a specific selector on a particular item.
+ *
+ * !!!!!!!!!!!!!!!!!!!!
+ * !!
+ * !! TODO implement - under development - may do unexpected things!!
+ * !!
+ * !!!!!!!!!!!!!!!!!!!!
+ *
+ * @param {string} the URL of the item on which to set the selector
+ * @param {string} the name of the selector to set on the item
+ */
+annotorious.modules.image.ImageModule.prototype.setActiveSelector = function(item_url, selector) {
+  // TODO implement so that param 'selector' is treated as the selector name
+  if (this.annotatesItem(item_url)) {
+    var annotator = this._annotators.get(item_url);
+    if (annotator)
+      annotator.setActiveSelector(selector);
+  }
+}
+
+/**
  * Enables (or disables) the ability to create new annotations on an annotatable image.
  * @param {boolean} enabled if <code>true</code> new annotations can be created
  */
@@ -295,5 +334,3 @@ annotorious.modules.image.ImageModule.prototype.supports = function(item) {
   else
     return false;
 }
-
-

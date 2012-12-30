@@ -162,7 +162,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
 
       // TODO code duplication -> move into a function
       var imgOffset = annotorious.dom.getOffset(image);
-      var geometry = annotation.shape.geometry;
+      var geometry = annotation.shapes[0].geometry;
       var x = geometry.x + imgOffset.left - baseOffset.left + 16;
       var y = geometry.y + geometry.height + imgOffset.top - baseOffset.top + window.pageYOffset + 5;
 
