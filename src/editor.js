@@ -105,6 +105,6 @@ annotorious.editor.Editor.prototype.getAnnotation = function() {
   return new annotorious.annotation.Annotation(this._item.src, this._textarea.value, this._annotator.getActiveSelector().getShape());
 }
 
-// Export addField method
+// Export addField API method
 annotorious.editor.Editor.prototype['addField'] = annotorious.editor.Editor.prototype.addField;
 

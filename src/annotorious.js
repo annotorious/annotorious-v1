@@ -41,8 +41,8 @@ annotorious.Annotorious = function() {
  * Returns the module that is in charge of handling the item with the specified
  * URL or null, if no responsible module is found.
  * @param {string} item_src the URL of the annotatable item 
- * @private
  * @return {object | null}
+ * @private
  */
 annotorious.Annotorious.prototype._getModuleForItemSrc = function(item_src) {
   return goog.array.find(this._modules, function(module) {
@@ -82,6 +82,25 @@ annotorious.Annotorious.prototype.addPlugin = function(pluginName, opt_config_op
 }
 
 /**
+ * Returns the name of the selector that is currently activated on a 
+ * particular item.
+ *
+ * !!!!!!!!!!!!!!!!!!!!
+ * !!
+ * !! TODO implement - currently doesn't return anything meaningful yet!!
+ * !!
+ * !!!!!!!!!!!!!!!!!!!!
+ *
+ * @param {string} the URL of the item to query for the active selector
+ */
+annotorious.Annotorious.prototype.getActiveSelector = function(item_url) {
+  var module = this._getModuleForItemSrc(item_url);
+
+  if (module)
+    return module.getActiveSelector(item_url);  
+}
+
+/**
  * Returns all annotations on the annotatable item with the specified URL, or
  * all annotations on the page in case no URL is specified.
  * @param {string | undefined} opt_item_ url an itemURL (optional)
@@ -103,25 +122,23 @@ annotorious.Annotorious.prototype.getAnnotations = function(opt_item_url) {
   }
 }
 
+/**
+ * Returns the list of available shape selectors for a particular item.
+ *
+ * !!!!!!!!!!!!!!!!!!!!
+ * !!
+ * !! TODO implement - currently doesn't return anything meaningful yet!!
+ * !!
+ * !!!!!!!!!!!!!!!!!!!!
+ *
+ * @param {string} the URL of the item to query for available selectors
+ * @returns {List.<string>} the list of selector names
+ */
 annotorious.Annotorious.prototype.getAvailableSelectors = function(item_url) {
   var module = this._getModuleForItemSrc(item_url);
 
   if (module)
     return module.getAvailableSelectors(item_url);  
-}
-
-annotorious.Annotorious.prototype.getActiveSelector = function(item_url) {
-  var module = this._getModuleForItemSrc(item_url);
-
-  if (module)
-    return module.getActiveSelector(item_url);  
-}
-
-annotorious.Annotorious.prototype.setActiveSelector = function(item_url, selector) {
-  var module = this._getModuleForItemSrc(item_url);
-
-  if (module)
-    module.setActiveSelector(item_url, selector);  
 }
 
 /**
@@ -150,6 +167,25 @@ annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
 }
 
 /**
+ * Sets a specific selector on a particular item.
+ *
+ * !!!!!!!!!!!!!!!!!!!!
+ * !!
+ * !! TODO implement - under development - may do unexpected things!!
+ * !!
+ * !!!!!!!!!!!!!!!!!!!!
+ *
+ * @param {string} the URL of the item on which to set the selector
+ * @param {string} the name of the selector to set on the item
+ */
+annotorious.Annotorious.prototype.setActiveSelector = function(item_url, selector) {
+  var module = this._getModuleForItemSrc(item_url);
+
+  if (module)
+    module.setActiveSelector(item_url, selector);  
+}
+
+/**
  * Enables (or disables) the ability to create new annotations on an annotatable item.
  * @param {boolean} enabled if <code>true</code> new annotations can be created
  */
@@ -163,8 +199,10 @@ window['anno'] = new annotorious.Annotorious();
 annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.prototype.addAnnotation;
 annotorious.Annotorious.prototype['addHandler'] = annotorious.Annotorious.prototype.addHandler;
 annotorious.Annotorious.prototype['addPlugin'] = annotorious.Annotorious.prototype.addPlugin;
+annotorious.Annotorious.prototype['getActiveSelector'] = annotorious.Annotorious.prototype.getActiveSelector;
 annotorious.Annotorious.prototype['getAnnotations'] = annotorious.Annotorious.prototype.getAnnotations;
-annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious.prototype.setActiveSelector;
+annotorious.Annotorious.prototype['getAvailableSelectors'] = annotorious.Annotorious.prototype.getAvailableSelectors;
 annotorious.Annotorious.prototype['makeAnnotatable'] = annotorious.Annotorious.prototype.makeAnnotatable;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
+annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious.prototype.setActiveSelector;
 annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;

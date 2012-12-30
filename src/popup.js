@@ -173,7 +173,8 @@ annotorious.viewer.Popup.prototype.setPosition = function(xy) {
 
 /**
  * Utility method that makes links mentioned in annotations clickable.
- * TODO move this into a 'clickable' plugin!
+ * TODO should links really be clickable by default?
+ * TODO generally: how should we handle HTML in annotations?
  */
 annotorious.viewer.Popup.toHTML = function(text) {
   var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;

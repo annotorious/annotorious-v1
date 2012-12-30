@@ -77,11 +77,15 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachHandlers = funct
 }
 
 annotorious.plugins.selection.RectDragSelector.prototype._detachHandlers = function() {
-  if (this._mouseMoveListener)
-    goog.events.unlistenByKey(this._mouseMoveListener)
+  if (this._mouseMoveListener) {
+    goog.events.unlistenByKey(this._mouseMoveListener);
+    delete this._mouseMoveListener;
+  }
 
-  if (this._mouseUpListener)
-    goog.events.unlistenByKey(this._mouseUpListener)
+  if (this._mouseUpListener) {
+    goog.events.unlistenByKey(this._mouseUpListener);
+    delete this._UpListener;
+  }
 }
 
 annotorious.plugins.selection.RectDragSelector.prototype.supportedShapeType = function() {

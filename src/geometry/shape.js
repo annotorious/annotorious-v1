@@ -35,7 +35,7 @@ annotorious.shape.Units = {
 
 
 
-/** Helper functions **/
+/** Helper functions & geometry computation utilities **/
 
 
 

@@ -34,6 +34,12 @@ annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, 
   /** @private **/
   this._enabled = false;
 
+  /** @private **/
+  this._mouseMoveListener;
+
+  /** @private **/
+  this._mouseUpListener;
+
   var refresh = function() {
     self._g2d.clearRect(0, 0, canvas.width, canvas.height);
     self._g2d.beginPath();
@@ -49,9 +55,11 @@ annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, 
       self._g2d.arc(pt.x, pt.y, 5, 0, 2 * Math.PI, false);
     }*/
   }
+}
 
+annotorious.plugins.selection.PolygonSelector.prototype._attachHandlers = function() {
   var self = this;  
-  goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
+  this._mouseMoveListener = goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._enabled) {
       refresh();
       self._mouse = { x: event.offsetX, y: event.offsetY };
@@ -60,7 +68,7 @@ annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, 
     }
   });
 
-  goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
+  this._mouseUpListener = goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
     if (self._points.length > 0 && Math.abs(event.offsetX - self._anchor.x) < 5 && Math.abs(event.offsetY - self._anchor.y) < 5) {
       self._enabled = false;
       refresh();
@@ -74,6 +82,19 @@ annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, 
     }
   });
 }
+
+annotorious.plugins.selection.PolygonSelector.prototype._detachHandlers = function() {
+  if (this._mouseMoveListener) {
+    goog.events.unlistenByKey(this._mouseMoveListener);
+    delete this._mouseMoveListener;
+  }
+
+  if (this._mouseUpListener) {
+    goog.events.unlistenByKey(this._mouseUpListener);
+    delete this._UpListener;
+  }
+}
+
 
 annotorious.plugins.selection.PolygonSelector.prototype.supportedShapeType = function() {
   return annotorious.shape.ShapeType.POLYGON;

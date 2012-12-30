@@ -142,6 +142,10 @@ annotorious.modules.image.Viewer.prototype.highlightAnnotation = function(opt_an
   this._redraw();
 }
 
+/**
+ * Returns the currently highlighted annotation (or 'undefined' if none).
+ * @returns {object} the currently highlighted annotation
+ */
 annotorious.modules.image.Viewer.prototype.getHighlightedAnnotation = function() {
   return this._currentAnnotation;
 }
