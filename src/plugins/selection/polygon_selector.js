@@ -22,8 +22,6 @@ annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, 
 
   /** @private **/
   this._g2d = canvas.getContext('2d');
-  this._g2d.lineWidth = 1.5;
-  this._g2d.strokeStyle = '#0000ff';
 
   /** @private **/
   this._anchor;
@@ -51,37 +49,54 @@ annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, 
 annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = function() {
   var self = this;  
 
-  var refresh = function() {
+  var refresh = function(last) {
     self._g2d.clearRect(0, 0, self._canvas.width, self._canvas.height);
+
+    // Outer line
+    self._g2d.lineWidth = 2.5;
+    self._g2d.strokeStyle = '#000000';    
     self._g2d.beginPath();
     self._g2d.moveTo(self._anchor.x, self._anchor.y);
-
-    // Polyline
     goog.array.forEach(self._points, function(pt) {
       self._g2d.lineTo(pt.x, pt.y);
     });
+    self._g2d.lineTo(last.x, last.y);
+    self._g2d.stroke();
+
+    // Inner line
+    self._g2d.lineWidth = 1.4;
+    self._g2d.strokeStyle = '#ffffff';
+    self._g2d.beginPath();
+    self._g2d.moveTo(self._anchor.x, self._anchor.y);
+    goog.array.forEach(self._points, function(pt) {
+      self._g2d.lineTo(pt.x, pt.y);
+    });
+    self._g2d.lineTo(last.x, last.y);
+    self._g2d.stroke();
 
     /* Vertex circles
+    self._g2d.lineWidth = 1.0;
+    self._g2d.fillStyle = '#ffffff';
+    self._g2d.strokeStyle = '#000000';
     goog.array.forEach(self._points, function(pt) {
-      self._g2d.arc(pt.x, pt.y, 5, 0, 2 * Math.PI, false);
-    }*/
+      self._g2d.beginPath();
+      self._g2d.arc(pt.x, pt.y, 3.5, 0, 2 * Math.PI, false);
+      self._g2d.fill();
+      self._g2d.stroke();
+    });*/
   }
 
   this._mouseMoveListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._enabled) {
-      refresh();
       self._mouse = { x: event.offsetX, y: event.offsetY };
-      self._g2d.lineTo(self._mouse.x, self._mouse.y);
-      self._g2d.stroke();
+      refresh(self._mouse);
     }
   });
 
   this._mouseUpListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEUP, function(event) {
     if (self._points.length > 0 && Math.abs(event.offsetX - self._anchor.x) < 5 && Math.abs(event.offsetY - self._anchor.y) < 5) {
       self._enabled = false;
-      refresh();
-      self._g2d.lineTo(self._anchor.x, self._anchor.y);
-      self._g2d.fill();
+      refresh(self._anchor);
 
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_COMPLETED,
         { mouseEvent: event, shape: self.getShape(), viewportBounds: self.getViewportBounds() }); 
@@ -198,24 +213,31 @@ annotorious.plugins.selection.PolygonSelector.prototype.getViewportBounds = func
  * TODO not sure if this is really the best way/architecture to handle viewer shape drawing 
  */
 annotorious.plugins.selection.PolygonSelector.prototype.drawShape = function(g2d, shape, highlight) {
-  var color, lineWidth;
+  var color;
   if (highlight) {
     color = '#fff000';
-    lineWidth = 1.2;
   } else {
     color = '#ffffff';
-    lineWidth = 1;
   }
-
-  g2d.strokeStyle = color;;
-  g2d.lineWidth = lineWidth;
-  g2d.beginPath();
-  var points = shape.geometry.points;
 
   // TODO check if it's really a polyogn
 
-  // TODO check if it's a valid polygon (e.g. points.length < 3)
+  // Outer line
+  g2d.lineWidth = 2.5;
+  g2d.strokeStyle = '#000000';
+  g2d.beginPath();
+  var points = shape.geometry.points;
+  g2d.moveTo(points[0].x, points[0].y);
+  for (var i=1; i<points.length; i++) {
+    g2d.lineTo(points[i].x, points[i].y);
+  }
+  g2d.lineTo(points[0].x, points[0].y);
+  g2d.stroke();
 
+  // Inner line
+  g2d.lineWidth = 1.4;
+  g2d.strokeStyle = color;
+  g2d.beginPath();
   g2d.moveTo(points[0].x, points[0].y);
   for (var i=1; i<points.length; i++) {
     g2d.lineTo(points[i].x, points[i].y);
