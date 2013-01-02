@@ -165,7 +165,9 @@ annotorious.modules.image.ImageAnnotator.prototype.getActiveSelector = function(
 }
 
 annotorious.modules.image.ImageAnnotator.prototype.setActiveSelector = function(selector) {
-  this._currentSelector = this._selectors[selector];
+  this._currentSelector = goog.array.find(this._selectors, function(sel) {
+    return sel.getName() == selector;
+  });
 }
 
 

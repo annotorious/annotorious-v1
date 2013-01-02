@@ -49,8 +49,10 @@ annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, 
  * @private
  */
 annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = function() {
+  var self = this;  
+
   var refresh = function() {
-    self._g2d.clearRect(0, 0, canvas.width, canvas.height);
+    self._g2d.clearRect(0, 0, self._canvas.width, self._canvas.height);
     self._g2d.beginPath();
     self._g2d.moveTo(self._anchor.x, self._anchor.y);
 
@@ -65,8 +67,7 @@ annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = funct
     }*/
   }
 
-  var self = this;  
-  this._mouseMoveListener = goog.events.listen(canvas, goog.events.EventType.MOUSEMOVE, function(event) {
+  this._mouseMoveListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._enabled) {
       refresh();
       self._mouse = { x: event.offsetX, y: event.offsetY };
@@ -75,7 +76,7 @@ annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = funct
     }
   });
 
-  this._mouseUpListener = goog.events.listen(canvas, goog.events.EventType.MOUSEUP, function(event) {
+  this._mouseUpListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEUP, function(event) {
     if (self._points.length > 0 && Math.abs(event.offsetX - self._anchor.x) < 5 && Math.abs(event.offsetY - self._anchor.y) < 5) {
       self._enabled = false;
       refresh();
@@ -110,7 +111,7 @@ annotorious.plugins.selection.PolygonSelector.prototype._detachListeners = funct
  * Selector API method: returns the selector name.
  * @returns the selector name
  */
-annotorious.plugins.selection.RectDragSelector.prototype.getName = function() {
+annotorious.plugins.selection.PolygonSelector.prototype.getName = function() {
   return 'polygon';
 }
 
