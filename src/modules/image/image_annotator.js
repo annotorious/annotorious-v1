@@ -71,7 +71,8 @@ annotorious.modules.image.ImageAnnotator = function(image) {
 
   this.editor = new annotorious.editor.Editor(this, annotationLayer);
 
-  hint = new annotorious.hint.Hint(this, annotationLayer);
+  /** @private **/
+  this._hint = new annotorious.hint.Hint(this, annotationLayer);
   
   var self = this;  
 
@@ -135,6 +136,10 @@ annotorious.modules.image.ImageAnnotator.prototype.addHandler = function(type, h
   this._eventBroker.addHandler(type, handler);  
 }
 
+annotorious.modules.image.ImageAnnotator.prototype.removeHandler = function(type, handler) {
+  this._eventBroker.removeHandler(type, handler);
+}
+
 annotorious.modules.image.ImageAnnotator.prototype.addSelector = function(selector) {
 
 }
@@ -186,6 +191,12 @@ annotorious.modules.image.ImageAnnotator.prototype.removeAnnotation = function(a
  */
 annotorious.modules.image.ImageAnnotator.prototype.setSelectionEnabled = function(enabled) {
   this._selectionEnabled = enabled;
+  if (enabled) {
+    // TODO if hint doesn't exist already, create
+  } else {
+    this._hint.destroy();
+    delete this._hint;
+  }
 }
 
 /**

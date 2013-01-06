@@ -9,6 +9,8 @@ goog.require('goog.dom.query');
  * @constructor
  */
 annotorious.hint.Hint = function(annotator, parent) {
+  var self = this;
+
   this.element = goog.soy.renderAsElement(annotorious.templates.hint);
 
   /** @private **/
@@ -29,6 +31,16 @@ annotorious.hint.Hint = function(annotator, parent) {
   /** @private **/
   this._mouseOutListener;
 
+  /** @private **/
+  this._overItemHandler = function() {
+    self.show();
+  };
+
+  /** @private **/
+  this._outOfItemHandler = function() {
+    self.hide();
+  };
+
   this._attachListeners();
   this.hide();
   goog.dom.appendChild(parent, this.element);
@@ -36,7 +48,7 @@ annotorious.hint.Hint = function(annotator, parent) {
 
 /**
  * Attaches MOUSEOVER and MOUSEOUT listeners to the icon, and MOUSE_OVER_ANNOTATABLE_ITEM
- * and MOUSE_OUT_OF_ANNOTATABLE_ITEM listeners to the annototator instance.
+ * and MOUSE_OUT_OF_ANNOTATABLE_ITEM handlers to the annototator instance.
  * @private
  */
 annotorious.hint.Hint.prototype._attachListeners = function() {
@@ -50,14 +62,10 @@ annotorious.hint.Hint.prototype._attachListeners = function() {
   this._mouseOutListener = goog.events.listen(this._icon, goog.events.EventType.MOUSEOUT, function(event) {
     self.hide();
   });
- 
-  this._annotator.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM, function(event) {
-    self.show();
-  });
 
-  this._annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, function(event) {
-    self.hide();
-  });
+  this._annotator.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM, this._overItemHandler);
+
+  this._annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, this._outOfItemHandler);
 }
 
 /**
@@ -66,12 +74,9 @@ annotorious.hint.Hint.prototype._attachListeners = function() {
  */
 annotorious.hint.Hint.prototype._detachListeners = function() {
   goog.events.unlistenByKey(this._mouseOverListener);
-  delete this._mouseOverListener;
-
   goog.events.unlistenByKey(this._mouseOutListener);
-  delete this._mouseOutListener;
-
-  // TODO detach annotator listeners
+  this._annotator.removeHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM, this._overItemHandler);
+  this._annotator.removeHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, this._outOfItemHandler);
 }
 
 /**
@@ -100,5 +105,11 @@ annotorious.hint.Hint.prototype.hide = function() {
  */
 annotorious.hint.Hint.prototype.destroy = function() {
   this._detachListeners();
+
+  delete this._mouseOverListener;
+  delete this._mouseOutListener;
+  delete this._overItemHandler;
+  delete this._outOfItemHandler;
+
   goog.dom.removeNode(this.element);
 }
