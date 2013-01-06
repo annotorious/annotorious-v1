@@ -49,7 +49,7 @@ annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, 
 annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = function() {
   var self = this;  
 
-  var refresh = function(last) {
+  var refresh = function(last, highlight_last) {
     self._g2d.clearRect(0, 0, self._canvas.width, self._canvas.height);
 
     // Outer line
@@ -74,27 +74,32 @@ annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = funct
     self._g2d.lineTo(last.x, last.y);
     self._g2d.stroke();
 
-    /* Vertex circles
-    self._g2d.lineWidth = 1.0;
-    self._g2d.fillStyle = '#ffffff';
-    self._g2d.strokeStyle = '#000000';
-    goog.array.forEach(self._points, function(pt) {
+    // Last coord highlight (if needed)
+    if (highlight_last) {
+      self._g2d.lineWidth = 1.0;
+      self._g2d.fillStyle = '#ffffff';
+      self._g2d.strokeStyle = '#000000';
+
       self._g2d.beginPath();
-      self._g2d.arc(pt.x, pt.y, 3.5, 0, 2 * Math.PI, false);
+      self._g2d.arc(last.x, last.y, 3.5, 0, 2 * Math.PI, false);
       self._g2d.fill();
       self._g2d.stroke();
-    });*/
-  }
+    }
+  };
+
+  var isClosable = function(x, y) {
+    return (self._points.length > 1 && Math.abs(x - self._anchor.x) < 5 && Math.abs(y - self._anchor.y) < 5);
+  };
 
   this._mouseMoveListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._enabled) {
       self._mouse = { x: event.offsetX, y: event.offsetY };
-      refresh(self._mouse);
+      refresh(self._mouse, isClosable(event.offsetX, event.offsetY));
     }
   });
 
   this._mouseUpListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEUP, function(event) {
-    if (self._points.length > 0 && Math.abs(event.offsetX - self._anchor.x) < 5 && Math.abs(event.offsetY - self._anchor.y) < 5) {
+    if (isClosable(event.offsetX, event.offsetY)) {
       self._enabled = false;
       refresh(self._anchor);
 
