@@ -123,7 +123,7 @@ annotorious.plugins.selection.PolygonSelector.prototype._detachListeners = funct
 
   if (this._mouseUpListener) {
     goog.events.unlistenByKey(this._mouseUpListener);
-    delete this._UpListener;
+    delete this._mouseUpListener;
   }
 }
 
