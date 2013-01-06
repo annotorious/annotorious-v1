@@ -59,6 +59,11 @@
   transition-delay: 0s;
 }
 
+.annotorious-popup-empty {
+  color:#999;
+  font-style:italic;
+}
+
 .annotorious-popup-button {
   font-size:10px;
   text-decoration:none;

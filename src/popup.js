@@ -135,7 +135,10 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
   if (annotation && xy) {
     // New annotation and position - reset
     this._currentAnnotation = annotation;
-    this._text.innerHTML = annotorious.viewer.Popup.toHTML(annotation.text);
+    if (annotation.text) 
+      this._text.innerHTML = annotorious.viewer.Popup.toHTML(annotation.text);
+    else
+      this._text.innerHTML = '<span class="annotorious-popup-empty">No comment</span>';
 
     if (('editable' in annotation) && annotation.editable == false)
       goog.style.showElement(this._buttons, false);
