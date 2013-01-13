@@ -124,10 +124,24 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
   });
 }
 
+
 /**
- * Standard module method: adds an annotation to the image with the specified src URL.
+ * Annotations should be bound to the URL defined in the 'data-original' attribute of
+ * the image. Only if this attribute does not exist, they should be bound to the original
+ * image SRC. This utility function returns the correct URL to bind to.
+ * @private
+ */
+annotorious.modules.image.ImageModule.getItemURL = function(image) {
+  var src = image.getAttribute('data-original');
+  if (src)
+    return src;
+  else
+    return image.src;
+}
+
+/**
+ * Standard module method: adds an annotation.
  * @param {Annotation} the annotation
- * @param {string} src the src URL of the image
  */
 annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
   if (this.annotatesItem(annotation.src)) {
@@ -239,16 +253,15 @@ annotorious.modules.image.ImageModule.prototype.getAvailableSelectors = function
 }
 
 /**
- * Annotations should be bound to the URL defined in the 'data-original' attribute of
- * the image. Only if this attribute does not exist, they should be bound to the original
- * image SRC. This utility function returns the correct URL to bind to.
+ * Standard module method: highlights the specified annotation.
+ * @param {Annotation} annotation the annotation
  */
-annotorious.modules.image.ImageModule.getItemURL = function(image) {
-  var src = image.getAttribute('data-original');
-  if (src)
-    return src;
-  else
-    return image.src;
+annotorious.modules.image.ImageModule.prototype.highlightAnnotation = function(annotation) {
+  if (this.annotatesItem(annotation.src)) {
+    var annotator = this._annotators.get(annotation.src);
+    if (annotator)
+      annotator.highlightAnnotation(annotation);
+  }  
 }
 
 /**
@@ -279,7 +292,7 @@ annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(anno
 }
 
 /**
- * Sets a specific selector on a particular item.
+ * Standard module method: sets a specific selector on a particular item.
  * @param {string} the URL of the item on which to set the selector
  * @param {string} the name of the selector to set on the item
  */
@@ -292,7 +305,8 @@ annotorious.modules.image.ImageModule.prototype.setActiveSelector = function(ite
 }
 
 /**
- * Enables (or disables) the ability to create new annotations on an annotatable image.
+ * Standard module method: enables (or disables) the ability to create new annotations
+ * on an annotatable image.
  * @param {boolean} enabled if <code>true</code> new annotations can be created
  */
 annotorious.modules.image.ImageModule.prototype.setSelectionEnabled = function(enabled) {
