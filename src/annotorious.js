@@ -142,6 +142,17 @@ annotorious.Annotorious.prototype.getAvailableSelectors = function(item_url) {
 }
 
 /**
+ * Highlights the specified annotation.
+ * @param {Annotation} annotation the annotation
+ */
+annotorious.Annotorious.prototype.highlightAnnotation = function(annotation) {
+  var module = this._getModuleForItemSrc(annotation.src);
+
+  if (module)
+    module.highlightAnnotation(annotation);
+}
+
+/**
  * Makes an item annotatable, if there is a module that supports the item type.
  * @param {object} the annotatable item
  */
@@ -202,6 +213,7 @@ annotorious.Annotorious.prototype['addPlugin'] = annotorious.Annotorious.prototy
 annotorious.Annotorious.prototype['getActiveSelector'] = annotorious.Annotorious.prototype.getActiveSelector;
 annotorious.Annotorious.prototype['getAnnotations'] = annotorious.Annotorious.prototype.getAnnotations;
 annotorious.Annotorious.prototype['getAvailableSelectors'] = annotorious.Annotorious.prototype.getAvailableSelectors;
+annotorious.Annotorious.prototype['highlightAnnotation'] = annotorious.Annotorious.prototype.highlightAnnotation;
 annotorious.Annotorious.prototype['makeAnnotatable'] = annotorious.Annotorious.prototype.makeAnnotatable;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
 annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious.prototype.setActiveSelector;

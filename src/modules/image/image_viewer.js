@@ -41,6 +41,9 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
   /** @private **/
   this._cachedMouseEvent;
 
+  /** @private **/
+  this._keepHighlighted = false;
+
   var self = this; 
   goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
     if (self._eventsEnabled) {
@@ -137,8 +140,12 @@ annotorious.modules.image.Viewer.prototype.getAnnotations = function() {
  */
 annotorious.modules.image.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
   this._currentAnnotation = opt_annotation;
+
   if (!opt_annotation)
+    this._keepHighlighted = true;
+  else
     this._popup.startHideTimer();
+    
   this._redraw();
 }
 
@@ -199,6 +206,8 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
 
   var self = this;
   if (topAnnotation) {
+    this._keepHighlighted = false;
+
     if (!this._currentAnnotation) {
       // Mouse moved into annotation from empty space - highlight immediately
       this._currentAnnotation = topAnnotation;
@@ -210,7 +219,7 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
       this._eventsEnabled = false;
       this._popup.startHideTimer();
     }
-  } else {
+  } else if (!this._keepHighlighted) {
     if (this._currentAnnotation) {
       // Mouse moved out of an annotation, into empty space  
       this._eventsEnabled = false;

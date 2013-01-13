@@ -6,11 +6,20 @@
       window.onload = function() {
         // anno.addPlugin('ElasticSearch', { base_url: 'http://62.218.164.156/annotations/' });
         anno.makeAnnotatable(document.getElementById('ptolemy'));
-        /*
-        anno.addHandler('onAnnotationCreated', function(annotation) {
-          console.log(annotation);
-        });
-        */
+
+        var annotation = {
+          src: 'http://www.example.com/image.jpg',
+          text: 'This is an annotation',
+          editable: false,
+          shapes: [{
+            type: 'rect',
+            units: 'pixel',
+            geometry: {x: 100, y: 80, width: 60, height: 50}
+          }]
+        };
+
+        anno.addAnnotation(annotation);
+        anno.highlightAnnotation(annotation);
       }
     </script>
     <script src="http://localhost:9810/compile?id=annotorious"></script>
@@ -127,23 +136,5 @@
       </p>
       <p style="clear:both;"></p>
     </div>
-    <script>
-      /*
-      window.setTimeout(function() {
-        anno.addAnnotation({
-          src: 'http://www.example.com/image.jpg',
-          text: 'This is an annotation',
-          editable: false,
-          shapes: [{
-            type: 'rect',
-            units: 'pixel',
-            geometry: {x: 100, y: 80, width: 60, height: 50}
-          }]
-        });
-
-        anno.setSelectionEnabled(false);
-      }, 500);
-      */
-    </script>
   </body>
 </html>

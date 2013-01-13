@@ -54,8 +54,8 @@ annotorious.dom.addOnLoadHandler = function(fn) {
   if (typeof window.onload == 'function') {
     var current = window.onload;
     window.onload = function() {
-      current();
       fn();
+      current();
     }
   } else {
     window.onload = fn;
