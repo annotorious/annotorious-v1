@@ -4,6 +4,7 @@ goog.require('goog.soy');
 goog.require('goog.dom');
 goog.require('goog.dom.query');
 goog.require('goog.style');
+goog.require('goog.string.html.htmlSanitize');
 
 /**
  * Base annotation edit form.
@@ -102,7 +103,10 @@ annotorious.editor.Editor.prototype.setPosition = function(xy) {
  * @return {annotorious.annotation.Annotation} the annotation
  */
 annotorious.editor.Editor.prototype.getAnnotation = function() {
-  return new annotorious.annotation.Annotation(this._item.src, this._textarea.value, this._annotator.getActiveSelector().getShape());
+  var sanitized = goog.string.html.htmlSanitize(this._textarea.value, function(url) {
+    return url;
+  });
+  return new annotorious.annotation.Annotation(this._item.src, sanitized, this._annotator.getActiveSelector().getShape());
 }
 
 // Export addField API method

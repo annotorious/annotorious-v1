@@ -135,8 +135,8 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
   if (annotation && xy) {
     // New annotation and position - reset
     this._currentAnnotation = annotation;
-    if (annotation.text) 
-      this._text.innerHTML = annotorious.viewer.Popup.toHTML(annotation.text);
+    if (annotation.text)
+      this._text.innerHTML = annotation.text;
     else
       this._text.innerHTML = '<span class="annotorious-popup-empty">No comment</span>';
 
@@ -178,11 +178,12 @@ annotorious.viewer.Popup.prototype.setPosition = function(xy) {
  * Utility method that makes links mentioned in annotations clickable.
  * TODO should links really be clickable by default?
  * TODO generally: how should we handle HTML in annotations?
- */
+ *
 annotorious.viewer.Popup.toHTML = function(text) {
   var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
   return text.replace(exp,"<a href=\"$1\" target=\"blank\">$1</a>"); 
 }
+*/
 
 // Export addField method
 annotorious.viewer.Popup.prototype['addField'] = annotorious.viewer.Popup.prototype.addField;
