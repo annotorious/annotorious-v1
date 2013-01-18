@@ -141,7 +141,7 @@ annotorious.modules.image.Viewer.prototype.getAnnotations = function() {
 annotorious.modules.image.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
   this._currentAnnotation = opt_annotation;
 
-  if (!opt_annotation)
+  if (opt_annotation)
     this._keepHighlighted = true;
   else
     this._popup.startHideTimer();
