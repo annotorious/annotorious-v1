@@ -47,8 +47,9 @@ annotorious.editor.Editor = function(annotator, parentEl, opt_annotation) {
 
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function(event) {
     event.preventDefault();
-    annotator.addAnnotation(self.getAnnotation());
-    annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, self.getAnnotation());
+    var annotation = self.getAnnotation();
+    annotator.addAnnotation(annotation);
+    annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, annotation);
     annotator.stopSelection();
     self.close();
   });

@@ -3,6 +3,8 @@
   <head>
     <link rel="stylesheet" href="../../css/annotorious.css" type="text/css" />
     <script>
+      var lastCreated;
+
       window.onload = function() {
         // anno.addPlugin('ElasticSearch', { base_url: 'http://62.218.164.156/annotations/' });
         anno.makeAnnotatable(document.getElementById('ptolemy'));
@@ -20,6 +22,10 @@
 
         anno.addAnnotation(annotation);
         anno.highlightAnnotation(annotation);
+
+        anno.addHandler('onAnnotationCreated', function(annotation){
+          lastCreated = annotation;
+        });
       }
     </script>
     <script src="http://localhost:9810/compile?id=annotorious"></script>
@@ -65,6 +71,8 @@
       </p>
         to start plovr.
       </p>
+
+      <input type="button" value="Highlight last created" onclick="javascript:anno.highlightAnnotation(lastCreated);" />
       
       <h2>Test Images</h2>
       <div style="float:right; margin:0px 0px 10px 20px;">
