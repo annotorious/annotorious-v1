@@ -92,24 +92,33 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
 /**
  * Adds an annotation to the viewer.
  * @param {annotorious.annotation.Annotation} the annotation
+ * @param {Annotation} opt_replace optionally, an existing annotation to replace
  */
-annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation) {
+annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation, opt_replace) {
+  // Remove opt_replace, if specified
+  if (opt_replace) {
+    if (opt_replace == this._currentAnnotation)
+      delete this._currentAnnotation;
+   
+      goog.array.remove(this._annotations, opt_replace);
+      delete this._shapes[goog.getUid(opt_replace)];
+  }
+
   this._annotations.push(annotation);
   
-  // The viewer operates in pixel coordinates for efficiency reasons
+  // The viewer always operates in pixel coordinates for efficiency reasons
   var shape = annotation.shapes[0];
   if (shape.units == annotorious.shape.Units.PIXEL) {
     this._shapes[goog.getUid(annotation)] = shape;     
-    this._draw(shape);
   } else {
     var self = this;
     var viewportShape = annotorious.shape.transform(shape, function(xy) {
       return self._annotator.fromItemCoordinates(xy); 
     });
-
     this._shapes[goog.getUid(annotation)] = viewportShape;
-    this._draw(viewportShape);
   }
+
+  this._redraw();
 }
 
 /**
@@ -121,7 +130,7 @@ annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotatio
     delete this._currentAnnotation;
    
   goog.array.remove(this._annotations, annotation);
-  delete this._shapes[goog.getUid(annotation)]
+  delete this._shapes[goog.getUid(annotation)];
   this._redraw();
 }
 

@@ -142,12 +142,13 @@ annotorious.modules.image.ImageModule.getItemURL = function(image) {
 /**
  * Standard module method: adds an annotation.
  * @param {Annotation} the annotation
+ * @param {Annotation} opt_replace optionally, an existing annotation to replace
  */
-annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation) {
+annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation, opt_replace) {
   if (this.annotatesItem(annotation.src)) {
     var annotator = this._annotators.get(annotation.src);
     if (annotator)
-      annotator.addAnnotation(annotation)
+      annotator.addAnnotation(annotation, opt_replace)
     else
       this._bufferedForAdding.push(annotation);
   }

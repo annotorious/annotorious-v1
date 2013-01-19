@@ -53,12 +53,13 @@ annotorious.Annotorious.prototype._getModuleForItemSrc = function(item_src) {
 /**
  * Adds an annotation to an item on the page.
  * @param {Annotation} annotation the annotation
+ * @param {Annotation} opt_replace optionally, an existing annotation to replace
  */
-annotorious.Annotorious.prototype.addAnnotation = function(annotation) {
+annotorious.Annotorious.prototype.addAnnotation = function(annotation, opt_replace) {
   var module = this._getModuleForItemSrc(annotation.src);
   
   if (module)
-    module.addAnnotation(annotation);
+    module.addAnnotation(annotation, opt_replace);
 }
 
 /**

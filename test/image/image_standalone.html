@@ -20,11 +20,11 @@
           }]
         };
 
-        anno.addAnnotation(annotation);
-        anno.highlightAnnotation(annotation);
+        // anno.addAnnotation(annotation);
+        // anno.highlightAnnotation(annotation);
 
-        anno.addHandler('onAnnotationCreated', function(annotation){
-          lastCreated = annotation;
+        anno.addHandler('onAnnotationCreated', function(a){
+          anno.addAnnotation(annotation, a);
         });
       }
     </script>

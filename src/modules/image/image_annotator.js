@@ -116,9 +116,10 @@ annotorious.modules.image.ImageAnnotator = function(image) {
 /**
  * Standard Annotator method: adds annotation to this annotator's viewer.
  * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {Annotation} opt_replace optionally, an existing annotation to replace
  */
-annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(annotation) {
-  this._viewer.addAnnotation(annotation);
+annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(annotation, opt_replace) {
+  this._viewer.addAnnotation(annotation, opt_replace);
 }
 
 /**
