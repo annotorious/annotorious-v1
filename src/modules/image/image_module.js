@@ -32,6 +32,9 @@ annotorious.modules.image.ImageModule = function() {
   
   /** @private **/
   this._bufferedForRemoval = [];
+
+  /** @private **/
+  this._isSelectionEnabled = true;
 }
   
 /**
@@ -77,6 +80,10 @@ annotorious.modules.image.ImageModule.prototype._lazyLoad = function() {
   goog.array.forEach(this._imagesToLoad, function(image) {
     if (annotorious.dom.isInViewport(image)) {
       var annotator = new annotorious.modules.image.ImageAnnotator(image);
+  
+      if (!self._isSelectionEnabled)
+        annotator.setSelectionEnabled(false);
+
       var image_src = annotorious.modules.image.ImageModule.getItemURL(image);
 
       // Attach handlers that are already registered
@@ -147,10 +154,13 @@ annotorious.modules.image.ImageModule.getItemURL = function(image) {
 annotorious.modules.image.ImageModule.prototype.addAnnotation = function(annotation, opt_replace) {
   if (this.annotatesItem(annotation.src)) {
     var annotator = this._annotators.get(annotation.src);
-    if (annotator)
+    if (annotator) {
       annotator.addAnnotation(annotation, opt_replace)
-    else
+    } else {
       this._bufferedForAdding.push(annotation);
+      if (opt_replace)
+        goog.array.remove(this._bufferedForAdding, opt_replace);
+    }
   }
 }
 
@@ -311,6 +321,7 @@ annotorious.modules.image.ImageModule.prototype.setActiveSelector = function(ite
  * @param {boolean} enabled if <code>true</code> new annotations can be created
  */
 annotorious.modules.image.ImageModule.prototype.setSelectionEnabled = function(enabled) {
+  this._isSelectionEnabled = enabled;
   goog.array.forEach(this._annotators.getValues(), function(annotator) {
     annotator.setSelectionEnabled(enabled);
   });

@@ -20,12 +20,15 @@
           }]
         };
 
-        // anno.addAnnotation(annotation);
-        // anno.highlightAnnotation(annotation);
+        anno.setSelectionEnabled(false);
+        anno.addAnnotation(annotation);
+        anno.highlightAnnotation(annotation);
 
+        /*
         anno.addHandler('onAnnotationCreated', function(a){
           anno.addAnnotation(annotation, a);
         });
+        */
       }
     </script>
     <script src="http://localhost:9810/compile?id=annotorious"></script>
