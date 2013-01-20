@@ -79,7 +79,11 @@ annotorious.Annotorious.prototype.addHandler = function(type, handler) {
  * @param {object} opt_config_options an optional object literal with plugin config options
  */
 annotorious.Annotorious.prototype.addPlugin = function(pluginName, opt_config_options) {
-  this._plugins.push(new window['annotorious']['plugin'][pluginName](opt_config_options));  
+  try {
+    this._plugins.push(new window['annotorious']['plugin'][pluginName](opt_config_options));  
+  } catch (error) {
+    console.log('Could not load plugin: ' + pluginName);
+  }
 }
 
 /**
@@ -147,10 +151,16 @@ annotorious.Annotorious.prototype.getAvailableSelectors = function(item_url) {
  * @param {Annotation} annotation the annotation
  */
 annotorious.Annotorious.prototype.highlightAnnotation = function(annotation) {
-  var module = this._getModuleForItemSrc(annotation.src);
+  if (annotation) {
+    var module = this._getModuleForItemSrc(annotation.src);
 
-  if (module)
-    module.highlightAnnotation(annotation);
+    if (module)
+      module.highlightAnnotation(annotation);
+  } else {
+    goog.array.forEach(this._modules, function(module) {
+      module.highlightAnnotation();
+    });
+  }
 }
 
 /**
