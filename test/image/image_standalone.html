@@ -2,11 +2,14 @@
 <html>
   <head>
     <link rel="stylesheet" href="../../css/annotorious.css" type="text/css" />
+    <script src="http://localhost:9810/compile?id=annotorious"></script>
+    <script src="anno-elasticsearch-plugin.min.js"></script>
     <script>
       var lastCreated;
 
+      anno.addPlugin('ElasticSearch', { base_url: 'http://62.218.164.156/annotations/' });
+
       window.onload = function() {
-        anno.addPlugin('ElasticSearch', { base_url: 'http://62.218.164.156/annotations/' });
         anno.makeAnnotatable(document.getElementById('ptolemy'));
 
         var annotation = {
@@ -20,7 +23,7 @@
           }]
         };
 
-        anno.setSelectionEnabled(false);
+        // anno.setSelectionEnabled(false);
         anno.addAnnotation(annotation);
         anno.highlightAnnotation(annotation);
 
@@ -31,7 +34,6 @@
         */
       }
     </script>
-    <script src="http://localhost:9810/compile?id=annotorious"></script>
     <style>
       html, body {
         background-color: #ededed;

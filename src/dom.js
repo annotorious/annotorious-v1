@@ -51,14 +51,9 @@ annotorious.dom.isInViewport = function(el) {
  * @param {function} fn the handler function to add
  */
 annotorious.dom.addOnLoadHandler = function(fn) {
-  if (typeof window.onload == 'function') {
-    var current = window.onload;
-    window.onload = function() {
-      fn();
-      current();
-    }
-  } else {
-    window.onload = fn;
-  }   
+  if (window.addEventListener)
+    window.addEventListener('load', fn);
+  else if (window.attachEvent) 
+    window.attachEvent('onload', fn);
 }
 
