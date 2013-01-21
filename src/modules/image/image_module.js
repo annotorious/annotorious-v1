@@ -268,11 +268,17 @@ annotorious.modules.image.ImageModule.prototype.getAvailableSelectors = function
  * @param {Annotation} annotation the annotation
  */
 annotorious.modules.image.ImageModule.prototype.highlightAnnotation = function(annotation) {
-  if (this.annotatesItem(annotation.src)) {
-    var annotator = this._annotators.get(annotation.src);
-    if (annotator)
-      annotator.highlightAnnotation(annotation);
-  }  
+  if (annotation) {
+    if (this.annotatesItem(annotation.src)) {
+      var annotator = this._annotators.get(annotation.src);
+      if (annotator)
+        annotator.highlightAnnotation(annotation);
+    }  
+  } else {
+    goog.array.forEach(this._annotators.getValues(), function(annotator) {
+      annotator.highlightAnnotation();
+    });
+  }
 }
 
 /**

@@ -71,6 +71,10 @@ annotorious.modules.openlayers.OpenLayersModule.prototype.removeAnnotation = fun
 
 }
 
+annotorious.modules.openlayers.OpenLayersModule.prototype.highlightAnnotation = function(annotation) {
+
+}
+
 /**
  * Enables (or disables) the ability to create new annotations on an annotatable image.
  * @param {boolean} enabled if <code>true</code> new annotations can be created

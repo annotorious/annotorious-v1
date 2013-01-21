@@ -28,9 +28,7 @@
 
     "templates/annotator_templates.soy",
     "templates/image_templates.soy",
-    "templates/openlayers_templates.soy",
-    
-    "src/plugins/elasticsearch.js" // Note: plugin produces approx. 12kB extra!
+    "templates/openlayers_templates.soy"
   ],
   "paths": [
     "."
