@@ -37,6 +37,6 @@
     "externs/api.js",
     "externs/openlayers.js"
   ],
-  "mode": "RAW", // "RAW" or "ADVANCED"
+  "mode": "ADVANCED", // "RAW" or "ADVANCED"
   "level": "DEFAULT" // "DEFAULT" or "VERBOSE"
 }
