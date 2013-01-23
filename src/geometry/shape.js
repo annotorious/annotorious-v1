@@ -88,6 +88,17 @@ annotorious.shape.intersects = function(shape, px, py) {
 annotorious.shape.size = function(shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     return shape.geometry.width * shape.geometry.height;
+  } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
+    var points = shape.geometry.points;
+    var area = 0.0;
+
+    var j = points.length - 1;
+    for (var i=0; i<points.length; i++) {
+      area += (points[j].x + points[i].x) * (points[j].y -points[i].y); 
+      j = i; 
+    }
+
+    return area / 2;
   }
   
   return 0;
