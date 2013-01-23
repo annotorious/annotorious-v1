@@ -62,21 +62,19 @@ annotorious.shape.intersects = function(shape, px, py) {
     
       return true;
     } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
-      var oddNodes = false;
       var points = shape.geometry.points;
-      var sides = shape.geometry.points.length - 1;
+      var inside = false;
 
-      var j = sides;
-      for (var i=0; i<sides; i++) {
-        if ((points[i].y < py && points[j].y >= py) ||  (points[j].y < py && points[i].y >= py)) {
-          if (points[i].x + (py - points[i].y) / (points[j].y - points[i].y) * (points[j].x - points[i].x) < px) {
-            oddNodes = !oddNodes;
-          } 
+      var j = points.length - 1;
+      for (var i=0; i<points.length; i++) {
+        if ((points[i].y > py) != (points[j].y > py) && 
+            (px < (points[j].x - points[i].x) * (py - points[i].y) / (points[j].y-points[i].y) + points[i].x)) {
+          inside = !inside;
         }
-        j = i;   
+        j = i;
       }
 
-      return oddNodes;
+      return inside;
     }
     
     return false;
