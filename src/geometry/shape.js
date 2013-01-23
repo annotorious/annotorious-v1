@@ -138,6 +138,29 @@ annotorious.shape.getBoundingRect = function(shape) {
   }
 }
 
+annotorious.shape.getCentroid = function(shape) {
+  if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
+    var rect = shape.geometry;
+    return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+  } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
+    var points = shape.geometry.points;
+    var x = 0;
+    var y = 0;
+    var f;
+    var j = points.length - 1;
+
+    for (var i=0; i<points.length; i++) {
+      f = points[i].x * points[j].y - points[j].x * points[i].y;
+      x += (points[i].x + points[j].x) * f;
+      y += (points[i].y + points[j].y) * f;
+      j = i;
+    }
+
+    f = annotorious.shape.size(shape) * 6;
+    return { x: Math.abs(x/f), y: Math.abs(y/f) };
+  }
+}
+
 /**
  * Transforms a shape from a source to a destination coordinate system. The transformation
  * is calculated using the transformationFn parameter, which must be a function(xy)
