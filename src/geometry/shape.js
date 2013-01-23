@@ -98,7 +98,7 @@ annotorious.shape.size = function(shape) {
       j = i; 
     }
 
-    return area / 2;
+    return Math.abs(area / 2);
   }
   
   return 0;
