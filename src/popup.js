@@ -23,7 +23,7 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   this._text = goog.dom.query('.annotorious-popup-text', this.element)[0];
 
   /** @private **/
-  this._buttons = goog.dom.query('.annotorious-popup-button-delete', this.element)[0];
+  this._buttons = goog.dom.query('.annotorious-popup-buttons', this.element)[0];
   
   /** @private **/
   this._popupHideTimer;
@@ -37,7 +37,11 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   /** @private **/
   this._extraFields = [];
 
-  var btnDelete = goog.dom.query('.annotorious-popup-button-delete', this.element)[0];
+  var btnEdit = goog.dom.query('.annotorious-popup-button-edit', this._buttons)[0];
+  goog.style.setOpacity(btnEdit, 0.4);
+
+  var btnDelete = goog.dom.query('.annotorious-popup-button-delete', this._buttons)[0];
+  goog.style.setOpacity(btnDelete, 0.4);
 
   var self = this;
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
@@ -48,7 +52,7 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   });
   
   goog.events.listen(this._buttons, goog.events.EventType.MOUSEOVER, function(event) {
-    goog.style.setOpacity(self._buttons, 0.9);
+    goog.style.setOpacity(self._buttons, 1.0);
   });
   
   goog.events.listen(this._buttons, goog.events.EventType.MOUSEOUT, function() {
@@ -106,7 +110,7 @@ annotorious.viewer.Popup.prototype.startHideTimer = function() {
       if (!self._cancelHide) {
         goog.style.setOpacity(self.element, 0.0);
         goog.style.setStyle(self.element, 'pointer-events', 'none');
-        goog.style.setOpacity(self._buttons, 0.4);
+        goog.style.setOpacity(self._buttons, 0.8);
         delete self._popupHideTimer;
       }
     }, 300);
@@ -150,7 +154,7 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
     if (this._buttonHideTimer)
       window.clearTimeout(this._buttonHideTimer);
       
-    goog.style.setOpacity(this._buttons, 0.4);
+    goog.style.setOpacity(this._buttons, 0.8);
     var self = this;
     this._buttonHideTimer = window.setTimeout(function() {
       goog.style.setOpacity(self._buttons, 0);
@@ -173,17 +177,6 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
 annotorious.viewer.Popup.prototype.setPosition = function(xy) {
   goog.style.setPosition(this.element, new goog.math.Coordinate(xy.x, xy.y));
 }
-
-/**
- * Utility method that makes links mentioned in annotations clickable.
- * TODO should links really be clickable by default?
- * TODO generally: how should we handle HTML in annotations?
- *
-annotorious.viewer.Popup.toHTML = function(text) {
-  var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-  return text.replace(exp,"<a href=\"$1\" target=\"blank\">$1</a>"); 
-}
-*/
 
 // Export addField method
 annotorious.viewer.Popup.prototype['addField'] = annotorious.viewer.Popup.prototype.addField;
