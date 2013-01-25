@@ -14,7 +14,7 @@
  * A dummy element to be used for annotation popups later on.
  */
 {template .popup}
-<div class="annotorious-popup" style="position:absolute;">
+<div class="annotorious-popup" style="position:absolute;z-index:1">
   <a class="annotorious-popup-button annotorious-popup-button-delete" title="Delete" href="javascript:void(0);">DELETE</a>
   <span class="annotorious-popup-text"></span>
 </div>
@@ -25,7 +25,7 @@
  * A basic annotation edit text form.
  */
 {template .editform}
-<div class="annotorious-editor" style="position:absolute;">
+<div class="annotorious-editor" style="position:absolute;z-index:1">
   <form>
     <textarea class="annotorious-editor-text" placeholder="Add a Comment..."></textarea>
     <div class="annotorious-editor-button-container">
