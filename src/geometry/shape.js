@@ -33,11 +33,7 @@ annotorious.shape.Units = {
   FRACTION: 'fraction'
 }
 
-
-
 /** Helper functions & geometry computation utilities **/
-
-
 
 /**
  * Checks whether a given shape intersects a point.
@@ -85,7 +81,7 @@ annotorious.shape.intersects = function(shape, px, py) {
  * @param {annotorious.shape.Shape} shape the shape
  * @returns {number} the size
  */
-annotorious.shape.size = function(shape) {
+annotorious.shape.getSize = function(shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     return shape.geometry.width * shape.geometry.height;
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
@@ -133,11 +129,18 @@ annotorious.shape.getBoundingRect = function(shape) {
       if (points[i].y < top)
         top = points[i].y;
     }
-
+    
     return new annotorious.shape.geom.Rectangle(left, top, right - left, bottom - top);
   }
+  
+  return undefined;
 }
 
+/**
+ * Computes the centroid coordinate for the specified shape.
+ * @param {annotorious.shape.Shape} shape the shape
+ * @returns {annotorious.shape.geom.Point} the centroid X/Y coordinate
+ */
 annotorious.shape.getCentroid = function(shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     var rect = shape.geometry;
@@ -159,6 +162,8 @@ annotorious.shape.getCentroid = function(shape) {
     f = annotorious.shape.size(shape) * 6;
     return { x: Math.abs(x/f), y: Math.abs(y/f) };
   }
+  
+  return undefined;
 }
 
 /**
@@ -184,4 +189,17 @@ annotorious.shape.transform = function(shape, transformationFn) {
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON,
       new annotorious.shape.geom.Polygon(transformedPoints));
   }
+  
+  return undefined;
+}
+
+/**
+ * Computes a 'hashCode' for the specified shape. Not the nicest (and most performat?)
+ * way to do it. But we need a useful .toString kind-of fuctionality to use for hashtable
+ * keys in the viewer!
+ * @param {annotorious.shape.Shape} shape the shape
+ * @returns {string} a 'hashcode' for the shape
+ */
+annotorious.shape.hashCode = function(shape) {
+  return JSON.stringify(shape.geometry);
 }
