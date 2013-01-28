@@ -7,14 +7,12 @@ goog.require('goog.style');
 goog.require('goog.string.html.htmlSanitize');
 
 /**
- * Base annotation edit form.
- * @param {annotorious.selection.Selector} selection reference to the selection widget
+ * Annotation edit form.
  * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
  * @param {element} parentEl the DOM element to attach the editor to
- * @param {annotorious.annotation.Annotation} the (optional) existing annotation to edit
  * @constructor
  */
-annotorious.editor.Editor = function(annotator, parentEl, opt_annotation) {
+annotorious.editor.Editor = function(annotator, parentEl) {
   this.element = goog.soy.renderAsElement(annotorious.templates.editform);
   
   /** @private **/
@@ -22,6 +20,9 @@ annotorious.editor.Editor = function(annotator, parentEl, opt_annotation) {
 
   /** @private **/
   this._item = annotator.getItem();
+  
+  /** @private **/
+  this._annotation;
 
   /** @private **/
   this._textarea = goog.dom.query('.annotorious-editor-text', this.element)[0];
@@ -76,8 +77,15 @@ annotorious.editor.Editor.prototype.addField = function(field) {
   goog.dom.insertSiblingBefore(fieldEl, this._btnContainer);
 }
 
-annotorious.editor.Editor.prototype.open = function() {
+/**
+ * Opens the edit form with an annotation.
+ * @param {Annotation} annotation the annotation to edit
+ */
+annotorious.editor.Editor.prototype.open = function(annotation) {
+  this._annotation = annotation;
+  
   goog.style.showElement(this.element, true);
+  this._textarea.value = annotation.text;
   this._textarea.focus();
 
   // TODO update extra fields in case there is an existing annotation
@@ -92,7 +100,7 @@ annotorious.editor.Editor.prototype.close = function() {
 }
 
 /**
- * Sets the position (i.e. CSS left/top value) of the editor element.
+ * (Re-)sets the position (i.e. CSS left/top value) of the editor element.
  * @param {annotorious.geom.Point} xy the viewport coordinate
  */
 annotorious.editor.Editor.prototype.setPosition = function(xy) {
@@ -107,7 +115,14 @@ annotorious.editor.Editor.prototype.getAnnotation = function() {
   var sanitized = goog.string.html.htmlSanitize(this._textarea.value, function(url) {
     return url;
   });
-  return new annotorious.annotation.Annotation(this._item.src, sanitized, this._annotator.getActiveSelector().getShape());
+
+  // TODO hack!
+  if (this._annotator.getActiveSelector().getShape()) {
+    return new annotorious.annotation.Annotation(this._item.src, sanitized, this._annotator.getActiveSelector().getShape());
+  } else {
+    this._annotation.text = sanitized;
+    return this._annotation;
+  }
 }
 
 // Export addField API method

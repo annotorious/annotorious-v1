@@ -55,6 +55,7 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   goog.events.listen(btnEdit, goog.events.EventType.CLICK, function(event) {
     goog.style.setOpacity(self.element, 0);
     goog.style.setStyle(self.element, 'pointer-events', 'none');
+    annotator.editAnnotation(self._currentAnnotation); 
   });
 
   goog.events.listen(btnDelete, goog.events.EventType.MOUSEOVER, function(event) {

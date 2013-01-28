@@ -101,16 +101,29 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   });
 
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
+    var annotation = new annotorious.annotation.Annotation(self.getItem().src, '', event.shape);
     var bounds = event.viewportBounds;
     self.editor.setPosition({ x: bounds.left + self._image.offsetLeft,
                                y: bounds.bottom + 4 + self._image.offsetTop });
-    self.editor.open();
+    self.editor.open(annotation);
   });
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
     goog.style.showElement(self._editCanvas, false);
     self._currentSelector.stopSelection();
   });
+}
+
+annotorious.modules.image.ImageAnnotator.prototype.editAnnotation = function(annotation) {
+  var self = this;
+  var bounds = annotorious.shape.getBoundingRect(annotation.shapes[0]);
+  var anchor = (annotation.shapes[0].units == 'pixel') ?
+    ({ x: bounds.x, y: bounds.y + bounds.height }) :
+    this.fromItemCoordinates({ x: bounds.x, y: bounds.y + bounds.height });   
+  
+  this.editor.setPosition({ x: anchor.x + this._image.offsetLeft,
+                            y: anchor.y + 4 + this._image.offsetTop });
+  this.editor.open(annotation);  
 }
 
 /**
