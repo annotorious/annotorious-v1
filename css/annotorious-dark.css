@@ -1,38 +1,29 @@
-body {
-	font-size:.625em;
+.annotorious-hint-msg {
+  background-color:rgba(0,0,0,0.5);
+  margin:4px;
+  padding:8px 15px 8px 30px;
+  font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+  line-height: normal;
+  font-size:12px;
+  color:#fff;
+  border-radius:4px;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px;
+  -khtml-border-radius:4px;
 }
 
-.annotorious-hint {
-	line-height:normal;
-	font-family:Arial,Verdana,Sans;
-	font-size:11px;
-	color:#000;
-	background-color:#fff;
-	margin:0;
-	padding:5px;
-	border-radius:5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-khtml-border-radius:5px;
-/* Firefox */
-	-moz-transition-property:opacity;
-	-moz-transition-duration:.5s;
-	-moz-transition-delay:0;
-/* WebKit */
-	-webkit-transition-property:opacity;
-	-webkit-transition-duration:.5s;
-	-webkit-transition-delay:0;
-/* Opera */
-	-o-transition-property:opacity;
-	-o-transition-duration:.5s;
-	-o-transition-delay:0;
-/* Standard */
-	transition-property:opacity;
-	transition-duration:.5s;
-	transition-delay:0;
+.annotorious-hint-icon {
+  position:absolute;
+  top:6px;
+  left: 5px;
+  background:url('feather_icon.png');
+  background-repeat:no-repeat;
+  width:19px;
+  height:22px;
+  margin:2px 4px 0px 6px;
 }
 
-.annotorious-canvas {
+.annotorious-opacity-fade {
 /* Firefox */
 	-moz-transition-property:opacity;
 	-moz-transition-duration:.5s;
@@ -56,13 +47,12 @@ body {
 	top:0px;
 	left:0px;
 	width:220px;
-	height: 70px;
 	margin-top:12px;
 	background-color:#2D2D2D;
 	border:1px solid #000;
 	outline:none;
 	font-family:Verdana,Arial;
-	font-size:1em;
+	font-size:.625em;
 	color:#eee;
 	text-shadow:none;
 
@@ -102,7 +92,6 @@ body {
 .annotorious-popup-text {
 	display: block;
 	margin: 10px;
-	height:50px;
 	width:185px;
 	line-height:150%;
 	overflow-y: auto;
@@ -118,6 +107,26 @@ body {
 	height:18px;
 	width:19px;
 	display:block;
+}
+
+
+.annotorious-popup-buttons {
+  float:right;
+  margin:0px 0px 1px 10px;
+  height:10px;
+  
+  -moz-transition-property: opacity;
+  -moz-transition-duration: 1s;
+  -moz-transition-delay: 0s;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 1s;
+  -webkit-transition-delay: 0s;
+  -o-transition-property: opacity;
+  -o-transition-duration: 1s;
+  -o-transition-delay: 0s;
+  transition-property: opacity;
+  transition-duration: 1s;
+  transition-delay: 0s; 	
 }
 
 .annotorious-popup-button {
@@ -223,7 +232,7 @@ body {
 	outline:none;
 	font-family:Verdana,Arial;
 	font-weight:400;
-	font-size:1em;
+	font-size:.625em;
 	color:#eee;
 	text-shadow:none;
 	overflow-y:auto;
@@ -237,7 +246,7 @@ body {
 	text-align:center;
 	text-decoration:none;
 	font-family:Verdana,Arial;
-	font-size:1em;
+	font-size:.625em;
 	border:1px solid #000;
 	color:#f2f2f2;
 	padding-top:5px;
