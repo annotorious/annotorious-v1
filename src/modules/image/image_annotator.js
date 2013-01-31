@@ -115,7 +115,28 @@ annotorious.modules.image.ImageAnnotator = function(image) {
 }
 
 annotorious.modules.image.ImageAnnotator.prototype.editAnnotation = function(annotation) {
-  var self = this;
+  // Step 1 - remove from viewer
+  this._viewer.removeAnnotation(annotation);
+  
+  // Step 2 - find a suitable selector for the shape
+  var selector = goog.array.find(this._selectors, function(selector) {
+    return selector.getSupportedShapeType() == annotation.shapes[0].type;
+  });
+  
+  // Step 3 - open annotation in editor
+  if (selector) {
+    goog.style.showElement(this._editCanvas, true);
+    this._viewer.highlightAnnotation(undefined);
+    
+    // TODO make editable - not just draw (selector implementation required)
+    var g2d = this._editCanvas.getContext('2d');
+    var shape = annotation.shapes[0];
+    
+    var self = this;
+    var viewportShape = (shape.units == 'pixel') ? shape : annotorious.shape.transform(shape, function(xy) { return self.fromItemCoordinates(xy); }) ;
+    selector.drawShape(g2d, viewportShape);
+  }
+
   var bounds = annotorious.shape.getBoundingRect(annotation.shapes[0]);
   var anchor = (annotation.shapes[0].units == 'pixel') ?
     ({ x: bounds.x, y: bounds.y + bounds.height }) :
@@ -258,9 +279,13 @@ annotorious.modules.image.ImageAnnotator.prototype.setSelectionEnabled = functio
 /**
  * Standard Annotator method: stops the selection (if any).
  */
-annotorious.modules.image.ImageAnnotator.prototype.stopSelection = function() {
+annotorious.modules.image.ImageAnnotator.prototype.stopSelection = function(original_annotation) {
    goog.style.showElement(this._editCanvas, false);
    this._currentSelector.stopSelection();
+   
+   // If this was an edit of an annotation (rather than creation of a new one) re-add to viewer!
+   if (original_annotation)
+     this._viewer.addAnnotation(original_annotation);
 }
 
 /**

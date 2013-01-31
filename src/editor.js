@@ -22,7 +22,7 @@ annotorious.editor.Editor = function(annotator, parentEl) {
   this._item = annotator.getItem();
   
   /** @private **/
-  this._annotation;
+  this._original_annotation;
 
   /** @private **/
   this._textarea = goog.dom.query('.annotorious-editor-text', this.element)[0];
@@ -42,7 +42,7 @@ annotorious.editor.Editor = function(annotator, parentEl) {
   var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function(event) {
     event.preventDefault();
-    annotator.stopSelection();
+    annotator.stopSelection(self._original_annotation);
     self.close();
   });
 
@@ -79,11 +79,13 @@ annotorious.editor.Editor.prototype.addField = function(field) {
 
 /**
  * Opens the edit form with an annotation.
- * @param {Annotation} annotation the annotation to edit
+ * @param {Annotation} opt_annotation the annotation to edit or undefined to create a new annotation
  */
-annotorious.editor.Editor.prototype.open = function(annotation) {
-  this._annotation = annotation;
-  
+annotorious.editor.Editor.prototype.open = function(opt_annotation) {
+  this._original_annotation = opt_annotation;
+  if (opt_annotation)
+    this._textarea.value = opt_annotation.text;
+
   goog.style.showElement(this.element, true);
   this._textarea.value = annotation.text;
   this._textarea.focus();
@@ -116,12 +118,11 @@ annotorious.editor.Editor.prototype.getAnnotation = function() {
     return url;
   });
 
-  // TODO hack!
-  if (this._annotator.getActiveSelector().getShape()) {
-    return new annotorious.annotation.Annotation(this._item.src, sanitized, this._annotator.getActiveSelector().getShape());
+  if (this._original_annotation) {
+    this._original_annotation.text = sanitized;
+    return this._original_annotation;
   } else {
-    this._annotation.text = sanitized;
-    return this._annotation;
+    return new annotorious.annotation.Annotation(this._item.src, sanitized, this._annotator.getActiveSelector().getShape());  
   }
 }
 
