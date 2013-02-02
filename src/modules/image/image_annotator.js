@@ -39,6 +39,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
 
   annotationLayer = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
+  goog.style.setStyle(annotationLayer, 'display', 'inline-block');
   goog.style.setSize(annotationLayer, image.width, image.height); 
   goog.dom.replaceNode(annotationLayer, image);
   goog.dom.appendChild(annotationLayer, image);
