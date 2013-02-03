@@ -1,3 +1,28 @@
+/** Global item styles **/
+
+.annotorious-opacity-fade {
+  -moz-transition-property: opacity;
+  -moz-transition-duration: 0.5s;
+  -moz-transition-delay: 0s;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 0.5s;
+  -webkit-transition-delay: 0s;
+  -o-transition-property: opacity;
+  -o-transition-duration: 0.5s;
+  -o-transition-delay: 0s;
+  transition-property: opacity;
+  transition-duration: 0.5s;
+  transition-delay: 0s;
+}
+
+.annotorious-item-focus {
+  opacity:1.0;
+}
+
+.annotorious-item-unfocus {
+  opacity:0.4;
+}
+
 /** Hint/help popup **/
 
 .annotorious-hint-msg {
@@ -207,23 +232,6 @@
   padding:3px;
   font-family:Verdana, Arial;
   font-size:12px;	
-}
-
-/** Module components **/
-
-.annotorious-opacity-fade {
-  -moz-transition-property: opacity;
-  -moz-transition-duration: 0.5s;
-  -moz-transition-delay: 0s;
-  -webkit-transition-property: opacity;
-  -webkit-transition-duration: 0.5s;
-  -webkit-transition-delay: 0s;
-  -o-transition-property: opacity;
-  -o-transition-duration: 0.5s;
-  -o-transition-delay: 0s;
-  transition-property: opacity;
-  transition-duration: 0.5s;
-  transition-delay: 0s;
 }
 
 /** OpenLayers module **/

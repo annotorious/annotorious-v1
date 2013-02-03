@@ -2,6 +2,7 @@ goog.provide('annotorious.modules.image.ImageAnnotator');
 
 goog.require('goog.soy');
 goog.require('goog.dom');
+goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
 goog.require('goog.events');
 goog.require('goog.math');
@@ -46,7 +47,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   
   viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:image.width, height:image.height });
-  goog.style.setOpacity(viewCanvas, 0.4); 
+  goog.dom.classes.add(viewCanvas, 'annotorious-item-unfocus');
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
   /** @private **/
@@ -81,7 +82,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
-      goog.style.setOpacity(viewCanvas, 1.0); 
+      goog.dom.classes.addRemove(viewCanvas, 'annotorious-item-unfocus', 'annotorious-item-focus');
     }
   });
   
@@ -89,7 +90,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
-      goog.style.setOpacity(viewCanvas, 0.4);
+      goog.dom.classes.addRemove(viewCanvas, 'annotorious-item-focus', 'annotorious-item-unfocus');
     }
   });
 
