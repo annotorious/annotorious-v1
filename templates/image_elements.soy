@@ -1,0 +1,21 @@
+{namespace annotorious.templates.image}
+
+/**
+ * The image annotation canvas template
+ * @param width
+ * @param height
+ */
+{template .canvas}
+<canvas class="annotorious-item annotorious-opacity-fade" style="position:absolute; top:0px; left:0px; width:{$width}px; height:{$height}px; z-index:0" width="{$width}" height="{$height}"></canvas>
+{/template}
+
+/**
+ * The 'hint' element.
+ */
+{template .hint}
+<div class="annotorious-hint" style="white-space:nowrap; position:absolute; top:0px; left:0px; pointer-events:none;">
+  <div class="annotorious-hint-msg annotorious-opacity-fade">Click and Drag to Annotate</div>
+  <div class="annotorious-hint-icon" style="pointer-events:auto"></div>
+</div>
+{/template}
+

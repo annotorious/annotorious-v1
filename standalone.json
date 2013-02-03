@@ -26,9 +26,9 @@
     "src/hint.js",
     "src/popup.js",
 
-    "templates/annotator_templates.soy",
-    "templates/image_templates.soy",
-    "templates/openlayers_templates.soy"
+    "templates/core_elements.soy",
+    "templates/image_elements.soy",
+    "templates/openlayers_elements.soy"
   ],
   "paths": [
     "."

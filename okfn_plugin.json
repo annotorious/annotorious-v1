@@ -18,8 +18,8 @@
     "src/events.js",
     "src/hint.js",
 
-    "templates/annotator_templates.soy",
-    "templates/image_templates.soy"
+    "templates/core_elements.soy",
+    "templates/image_elements.soy"
   ],
   "paths": [
     "."
