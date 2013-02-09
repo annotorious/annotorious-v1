@@ -38,18 +38,18 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   this._extraFields = [];
 
   var btnEdit = goog.dom.query('.annotorious-popup-button-edit', this._buttons)[0];
-  goog.style.setOpacity(btnEdit, 0.4);
+  goog.style.setOpacity(btnEdit, 1);
 
   var btnDelete = goog.dom.query('.annotorious-popup-button-delete', this._buttons)[0];
-  goog.style.setOpacity(btnDelete, 0.4);
+  goog.style.setOpacity(btnDelete, 1);
 
   var self = this;
   goog.events.listen(btnEdit, goog.events.EventType.MOUSEOVER, function(event) {
-    goog.style.setOpacity(btnEdit, 0.9);
+    goog.style.setOpacity(btnEdit, 1);
   });
 
   goog.events.listen(btnEdit, goog.events.EventType.MOUSEOUT, function() {
-    goog.style.setOpacity(btnEdit, 0.4);
+    goog.style.setOpacity(btnEdit, 1);
   });
   
   goog.events.listen(btnEdit, goog.events.EventType.CLICK, function(event) {
@@ -59,11 +59,11 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   });
 
   goog.events.listen(btnDelete, goog.events.EventType.MOUSEOVER, function(event) {
-    goog.style.setOpacity(btnDelete, 0.9);
+    goog.style.setOpacity(btnDelete, 1);
   });
   
   goog.events.listen(btnDelete, goog.events.EventType.MOUSEOUT, function() {
-    goog.style.setOpacity(btnDelete, 0.4);
+    goog.style.setOpacity(btnDelete, 1);
   });
 
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
@@ -75,8 +75,8 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   
   goog.events.listen(this.element, goog.events.EventType.MOUSEOVER, function(event) {
     window.clearTimeout(self._buttonHideTimer);
-    if (goog.style.getStyle(self._buttons, 'opacity') < 0.9)
-      goog.style.setOpacity(self._buttons, 0.9);
+    if (goog.style.getStyle(self._buttons, 'opacity') < 1)
+      goog.style.setOpacity(self._buttons, 1);
     self.clearHideTimer();
   });
   
@@ -124,7 +124,7 @@ annotorious.viewer.Popup.prototype.startHideTimer = function() {
       if (!self._cancelHide) {
         goog.style.setOpacity(self.element, 0.0);
         goog.style.setStyle(self.element, 'pointer-events', 'none');
-        goog.style.setOpacity(self._buttons, 0.9);
+        goog.style.setOpacity(self._buttons, 1);
         delete self._popupHideTimer;
       }
     }, 300);
@@ -168,7 +168,7 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
     if (this._buttonHideTimer)
       window.clearTimeout(this._buttonHideTimer);
       
-    goog.style.setOpacity(this._buttons, 0.9);
+    goog.style.setOpacity(this._buttons, 1);
     var self = this;
     this._buttonHideTimer = window.setTimeout(function() {
       goog.style.setOpacity(self._buttons, 0);
@@ -180,7 +180,7 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
     });
   }
 
-  goog.style.setOpacity(this.element, 0.9);
+  goog.style.setOpacity(this.element, 1);
   goog.style.setStyle(this.element, 'pointer-events', 'auto');
 }
 
