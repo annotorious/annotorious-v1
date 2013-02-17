@@ -84,7 +84,7 @@ annotorious.hint.Hint.prototype._detachListeners = function() {
  */
 annotorious.hint.Hint.prototype.show = function() {
   window.clearTimeout(this._hideTimer);
-  goog.style.setOpacity(this._message, 0.8);
+  goog.style.setOpacity(this._message, 1);
 
   var self = this;
   this._hideTimer = window.setTimeout(function() {
