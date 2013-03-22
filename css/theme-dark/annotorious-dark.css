@@ -215,6 +215,17 @@
   display:block;
 }
 
+.annotorious-editor-text a {
+  text-decoration:underline;
+  color:#eee;
+  background-color:transparent;
+}
+
+.annotorious-editor-text a:hover {
+  color:#eee;
+  background-color:transparent;
+}
+
 .annotorious-editor-button {
   float:right;
   line-height:normal;
