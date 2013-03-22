@@ -2,6 +2,7 @@ goog.provide('annotorious.viewer');
 
 goog.require('goog.style');
 goog.require('goog.dom');
+goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
 
 /**
@@ -38,18 +39,15 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   this._extraFields = [];
 
   var btnEdit = goog.dom.query('.annotorious-popup-button-edit', this._buttons)[0];
-  goog.style.setOpacity(btnEdit, 0.4);
-
   var btnDelete = goog.dom.query('.annotorious-popup-button-delete', this._buttons)[0];
-  goog.style.setOpacity(btnDelete, 0.4);
 
   var self = this;
   goog.events.listen(btnEdit, goog.events.EventType.MOUSEOVER, function(event) {
-    goog.style.setOpacity(btnEdit, 0.9);
+    goog.dom.classes.add(btnEdit, 'annotorious-popup-button-active');
   });
 
   goog.events.listen(btnEdit, goog.events.EventType.MOUSEOUT, function() {
-    goog.style.setOpacity(btnEdit, 0.4);
+    goog.dom.classes.remove(btnEdit, 'annotorious-popup-button-active');
   });
   
   goog.events.listen(btnEdit, goog.events.EventType.CLICK, function(event) {
@@ -59,11 +57,11 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   });
 
   goog.events.listen(btnDelete, goog.events.EventType.MOUSEOVER, function(event) {
-    goog.style.setOpacity(btnDelete, 0.9);
+    goog.dom.classes.add(btnDelete, 'annotorious-popup-button-active');
   });
   
   goog.events.listen(btnDelete, goog.events.EventType.MOUSEOUT, function() {
-    goog.style.setOpacity(btnDelete, 0.4);
+    goog.dom.classes.remove(btnDelete, 'annotorious-popup-button-active');
   });
 
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {

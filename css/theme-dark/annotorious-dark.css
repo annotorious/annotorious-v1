@@ -52,10 +52,7 @@
 	background-color:#383838;
 	border:1px solid #000;
 	outline:none;
-	font-family:Verdana,Arial;
-	font-size:.625em;
-	color:#eee;
-	text-shadow:none;
+        padding:5px;
 /* Firefox */
 	-moz-transition-property:opacity;
 	-moz-transition-duration:.5s;
@@ -88,11 +85,13 @@
 }
 
 .annotorious-popup-text {
-	display:block;
-	margin:10px;
-	width:185px;
+        padding:5px;
+        display:block;
+	font-family:Verdana,Arial;
+	font-size:.625em;
+	color:#eee;
+	text-shadow:none;
 	line-height:150%;
-	overflow-y:auto;
 }
 
 .annotorious-popup:after,.annotorious-editor:after {
@@ -106,12 +105,12 @@
 }
 
 .annotorious-popup-buttons {
-	top:4px;
-	right:5px;
-	height:20px;
-	width:50px;
+        float:right;
+	height:26px;
+	width:56px;
 	display:block;
-	position:absolute;
+        white-space:nowrap;
+        padding-left:4px;
 	-moz-transition-property:opacity;
 	-moz-transition-duration:1s;
 	-moz-transition-delay:0;
@@ -132,7 +131,11 @@
 	display:inline-block;
 	color:#000;
 	font-weight:700;
-	margin:0 0 0 10px;
+	width:26px;
+	height:26px;
+	text-indent:100%;
+	white-space:nowrap;
+	overflow:hidden;
 /* Firefox */
 	-moz-transition-property:opacity;
 	-moz-transition-duration:1s;
@@ -159,44 +162,24 @@
 	background-color:transparent;
 	background:url(DarkSprite.png) no-repeat;
 	background-position:0 -40px;
-	width:26px;
-	height:26px;
 }
 
 .annotorious-popup-button-delete {
-	position:absolute;
-	top:23px;
-	right:0;
 	background:url(DarkSprite.png) no-repeat;
 	background-position:0 -8px;
 	outline:none;
-	width:26px;
-	height:26px;
-	text-indent:100%;
-	white-space:nowrap;
-	overflow:hidden;
 }
 
 .annotorious-popup-button-edit {
-	position:absolute;
-	top:0;
-	right:0;
 	background:url(DarkSprite.png) no-repeat;
 	background-position:0 -70px;
 	outline:none;
-	width:26px;
-	height:26px;
-	text-indent:100%;
-	white-space:nowrap;
-	overflow:hidden;
 }
 
 .annotorious-popup-button-edit:hover {
 	background-color:transparent;
 	background:url(DarkSprite.png) no-repeat;
 	background-position:0 -99px;
-	width:26px;
-	height:26px;
 }
 
 .annotorious-editor {

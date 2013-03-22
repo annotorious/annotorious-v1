@@ -115,6 +115,7 @@
   color:#000;
   font-weight:bold;
   margin-left:5px;
+  opacity:0.4;
   
   -moz-transition-property: opacity;
   -moz-transition-duration: 0.5s;
@@ -132,6 +133,10 @@
 
 .annotorious-popup-button:hover {
   background-color:transparent;
+}
+
+.annotorious-popup-button-active {
+  opacity:0.9;
 }
 
 .annotorious-popup-button-edit {
