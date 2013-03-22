@@ -85,6 +85,12 @@
   line-height:150%;
 }
 
+.annotorious-popup-text a {
+  text-decoration:underline;
+  color:#eee;
+  background-color:transparent;
+}
+
 .annotorious-popup:after,.annotorious-editor:after {
   content:url(Indicator.png);
   position:absolute;
@@ -213,12 +219,6 @@
   text-shadow:none;
   overflow-y:auto;
   display:block;
-}
-
-.annotorious-editor-text a {
-  text-decoration:underline;
-  color:#eee;
-  background-color:transparent;
 }
 
 .annotorious-editor-text a:hover {
