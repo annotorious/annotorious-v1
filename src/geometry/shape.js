@@ -175,7 +175,6 @@ annotorious.shape.getCentroid = function(shape) {
  * @returns {annotorious.shape.Shape} the transformed shape
  */
 annotorious.shape.transform = function(shape, transformationFn) {
-      console.log(shape);
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     var geom = shape.geometry;
     var anchor = transformationFn({ x: geom.x, y: geom.y });
