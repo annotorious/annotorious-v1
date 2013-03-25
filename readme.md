@@ -18,6 +18,7 @@ Want to help out? There are many ways you can contribute!
 * Found a bug? [Drop us a line](http://groups.google.com/group/annotorious) or post an issue on our [issue tracker](annotorious/issues).
 * Want to improve our documentation? We'd really appreciate an extra hand [on our Wiki](annotorious/wiki)!
 * Missing a feature? [Learn how to develop your own Annotorious Plugins](annotorious/wiki/Developing-Plugins).
+* Want to hack on Annotorious? We welcome contributions no matter how small or big!
 
 ## License
 
