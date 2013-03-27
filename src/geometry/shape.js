@@ -77,15 +77,13 @@ annotorious.shape.intersects = function(shape, px, py) {
 }
 
 /**
- * Returns the size of a given shape.
- * @param {annotorious.shape.Shape} shape the shape
- * @returns {number} the size
+ * An internal helper function used to compute size and clockwise/counterclockwise
+ * orientation of a polygon.
+ * @param {Array.<annotorious.shape.geom.Point>} the points
+ * @returns the area - note that depending on the orientation of the poly, the area may be <0!
+ * @private
  */
-annotorious.shape.getSize = function(shape) {
-  if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
-    return shape.geometry.width * shape.geometry.height;
-  } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
-    var points = shape.geometry.points;
+annotorious.shape._polySize = function(points) {
     var area = 0.0;
 
     var j = points.length - 1;
@@ -94,10 +92,36 @@ annotorious.shape.getSize = function(shape) {
       j = i; 
     }
 
-    return Math.abs(area / 2);
+    return area / 2;  
+}
+
+/**
+ * Returns the size of a given shape.
+ * @param {annotorious.shape.Shape} shape the shape
+ * @returns {number} the size
+ */
+annotorious.shape.getSize = function(shape) {
+  if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
+    return shape.geometry.width * shape.geometry.height;
+  } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
+    return Math.abs(annotorious.shape._polySize(shape.geometry.points));
+  }
+  return 0;
+}
+
+/**
+ * Tests whether a shape geometry is oriented in clockwise or counterclockwise
+ * direction.
+ * @param {annotorious.shape.Shape} the shape
+ * @returns {boolean} true if the geometry is in clockwise orientation
+ */
+annotorious.shape.isClockwise = function(shape) {
+  // TODO for the sake of completeness: implement for RECTANGLE
+  if (shape.type == annotorious.shape.ShapeType.POLYGON) {
+    return annotorious.shape._polySize(shape.geometry.points) > 0;
   }
   
-  return 0;
+  return false;
 }
 
 /**
@@ -175,6 +199,7 @@ annotorious.shape.getCentroid = function(shape) {
  * 
  */
 annotorious.shape.expand = function(shape, delta) {
+  // TODO implement for RECTANGLE
   function shiftAlongAxis(px, centroid, distance) {
     var axis = { x: (px.x - centroid.x) , y: (px.y - centroid.y) };
     var sign_x = axis.x > 0 ? 1 : axis.x < 0 ? -1 : 0;
