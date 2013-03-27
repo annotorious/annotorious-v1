@@ -36,7 +36,7 @@ annotorious.shape.geom.Polygon.computeArea = function(points) {
  * @returns {boolean} true if the geometry is in clockwise orientation
  */
 annotorious.shape.geom.Polygon.isClockwise = function(points) {
-  return annotorious.shape.geom.Polygon.computeArea(points) > 0;
+  return annotorious.shape.geom.Polygon.computeArea(points) < 0;
 }
 
 /**
@@ -61,6 +61,10 @@ annotorious.shape.geom.Polygon.computeCentroid = function(points) {
   return { x: Math.abs(x/f), y: Math.abs(y/f) }; 
 }
 
+annotorious.shape.geom.Polygon.sign = function(number) {
+  return number > 0 ? 1 : number < 0 ? -1 : 0;
+}
+
 /**
  * A simple triangle expansion algorithm that shifts triangle vertices in/outwards by a specified
  * delta, along the axis centroid->vertex. Used internally as a subroutine for polygon expansion.
@@ -71,8 +75,9 @@ annotorious.shape.geom.Polygon.computeCentroid = function(points) {
 annotorious.shape.geom.Polygon._expandTriangle = function(points, delta) {
   function shiftAlongAxis(px, centroid, delta) {
     var axis = { x: (px.x - centroid.x) , y: (px.y - centroid.y) };
-    var sign_x = axis.x > 0 ? 1 : axis.x < 0 ? -1 : 0;
-    var sign_y = axis.y > 0 ? 1 : axis.y < 0 ? -1 : 0;
+    var sign_delta = annotorious.shape.geom.Polygon.sign(delta);
+    var sign_x = annotorious.shape.geom.Polygon.sign(axis.x) * sign_delta;
+    var sign_y = annotorious.shape.geom.Polygon.sign(axis.y) * sign_delta;
   
     var dy = Math.sqrt(Math.pow(delta, 2) / (1 + Math.pow((axis.x / axis.y), 2)));
     var dx = (axis.x / axis.y) * dy;
@@ -83,14 +88,39 @@ annotorious.shape.geom.Polygon._expandTriangle = function(points, delta) {
   var expanded = [];
     
   for (var i=0; i<points.length; i++) {
-    expanded.push(shiftAlongAxis(points[i], centroid, delta));
+    var sign = (annotorious.shape.geom.Polygon.isClockwise(points)) ? -1 : 1;
+    expanded.push(shiftAlongAxis(points[i], centroid, sign * delta));
   }
     
   return expanded;
 }
 
+/**
+ * A simple polygon expansion algorithm that generates generates a series of triangles from the
+ * polygon, and then applies annotorious.shape.geom.Polygon._expandTriangle.
+ * @param {Array.<annotorious.shape.geom.Point>} points the points
+ * @returns {Array.<annotorious.shape.geom.Point>} the expanded polygon
+ */
 annotorious.shape.geom.Polygon.expandPolygon = function(points, delta) {
-  return annotorious.shape.geom.Polygon._expandTriangle(points, delta);
+  var sign = (annotorious.shape.geom.Polygon.isClockwise(points)) ? -1 : 1;
+  
+  if (points.length < 4)
+    return annotorious.shape.geom.Polygon._expandTriangle(points, sign * delta);
+  
+  var prev = points.length - 1;
+  var next = 1;
+  
+  var expanded = [];
+  for (var current = 0; current<points.length; current++) {
+    var expTriangle = annotorious.shape.geom.Polygon._expandTriangle([ points[prev], points[current], points[next] ], sign * delta);
+    expanded.push(expTriangle[1]);
+    prev = current;
+    next++;
+    if (next > points.length - 1)
+      next = 0;
+  }
+  
+  return expanded;
 }
 
 
