@@ -106,8 +106,13 @@ annotorious.events.EventType = {
   ANNOTATION_REMOVED: 'onAnnotationRemoved',
 
   /**
-   * Annotation editing was completed - annotation saved
+   * An annotation was created
    */
-  ANNOTATION_CREATED: 'onAnnotationCreated'
+  ANNOTATION_CREATED: 'onAnnotationCreated',
+  
+  /**
+   * An existing annotation was updated
+   */
+  ANNOTATION_UPDATE: 'onAnnotationUpdated'
 
 };

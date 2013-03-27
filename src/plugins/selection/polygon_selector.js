@@ -62,7 +62,21 @@ annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = funct
     });
     self._g2d.lineTo(last.x, last.y);
     self._g2d.stroke();
-
+    
+    /* Outer line
+    g2d.lineWidth = 1.4;
+    g2d.strokeStyle = '#000000';
+  
+    var outline = annotorious.shape.expand(shape, 1).points;
+    g2d.beginPath();
+    g2d.moveTo(outline[0].x, outline[0].y);
+    for (var i=1; i<outline.length; i++) {
+      g2d.lineTo(outline[i].x, outline[i].y);
+    }
+    g2d.lineTo(outline[0].x, outline[0].y);
+    g2d.stroke();
+    */
+    
     // Inner line
     self._g2d.lineWidth = 1.4;
     self._g2d.strokeStyle = '#ffffff';
@@ -226,22 +240,25 @@ annotorious.plugins.selection.PolygonSelector.prototype.drawShape = function(g2d
   }
 
   // TODO check if it's really a polyogn
-
+  
   // Outer line
-  g2d.lineWidth = 2.5;
+  g2d.lineWidth = 1.4;
   g2d.strokeStyle = '#000000';
+  
+  var outline = annotorious.shape.expand(shape, 1).geometry.points;
   g2d.beginPath();
-  var points = shape.geometry.points;
-  g2d.moveTo(points[0].x, points[0].y);
-  for (var i=1; i<points.length; i++) {
-    g2d.lineTo(points[i].x, points[i].y);
+  g2d.moveTo(outline[0].x, outline[0].y);
+  for (var i=1; i<outline.length; i++) {
+    g2d.lineTo(outline[i].x, outline[i].y);
   }
-  g2d.lineTo(points[0].x, points[0].y);
+  g2d.lineTo(outline[0].x, outline[0].y);
   g2d.stroke();
 
   // Inner line
-  g2d.lineWidth = 1.4;
+  g2d.lineWidth = 1;
   g2d.strokeStyle = color;
+  
+  var points = shape.geometry.points;
   g2d.beginPath();
   g2d.moveTo(points[0].x, points[0].y);
   for (var i=1; i<points.length; i++) {

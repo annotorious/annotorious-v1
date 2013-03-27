@@ -159,8 +159,42 @@ annotorious.shape.getCentroid = function(shape) {
       j = i;
     }
 
-    f = annotorious.shape.size(shape) * 6;
+    f = annotorious.shape.getSize(shape) * 6;
     return { x: Math.abs(x/f), y: Math.abs(y/f) };
+  }
+  
+  return undefined;
+}
+
+/**
+ * A naive shape expansion algorithm, which shifts polygon vertices in/outwards by a specified
+ * delta, along the axis centroid->vertex. Note that this is *NOT* real polygon buffering, and
+ * only works perfectly for cases where the polygon is a triangle!
+ *
+ * // TODO add a polygon triangulation step: http://en.wikipedia.org/wiki/Polygon_triangulation
+ * 
+ */
+annotorious.shape.expand = function(shape, delta) {
+  function shiftAlongAxis(px, centroid, distance) {
+    var axis = { x: (px.x - centroid.x) , y: (px.y - centroid.y) };
+    var sign_x = axis.x > 0 ? 1 : axis.x < 0 ? -1 : 0;
+    var sign_y = axis.y > 0 ? 1 : axis.y < 0 ? -1 : 0;
+  
+    var dy = Math.sqrt(Math.pow(distance, 2) / (1 + Math.pow((axis.x / axis.y), 2)));
+    var dx = (axis.x / axis.y) * dy;
+    return { x: px.x + Math.abs(dx) * sign_x, y: px.y + Math.abs(dy) * sign_y };
+  }
+  
+  if (shape.type == annotorious.shape.ShapeType.POLYGON) {
+    var points = shape.geometry.points;
+    var centroid = annotorious.shape.getCentroid(shape);
+    var expanded = [];
+    
+    for (var i=0; i<points.length; i++) {
+      expanded.push(shiftAlongAxis(points[i], centroid, delta));
+    }
+    
+    return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON, new annotorious.shape.geom.Polygon(expanded));
   }
   
   return undefined;
