@@ -77,25 +77,6 @@ annotorious.shape.intersects = function(shape, px, py) {
 }
 
 /**
- * An internal helper function used to compute size and clockwise/counterclockwise
- * orientation of a polygon.
- * @param {Array.<annotorious.shape.geom.Point>} the points
- * @returns the area - note that depending on the orientation of the poly, the area may be <0!
- * @private
- */
-annotorious.shape._polySize = function(points) {
-    var area = 0.0;
-
-    var j = points.length - 1;
-    for (var i=0; i<points.length; i++) {
-      area += (points[j].x + points[i].x) * (points[j].y -points[i].y); 
-      j = i; 
-    }
-
-    return area / 2;  
-}
-
-/**
  * Returns the size of a given shape.
  * @param {annotorious.shape.Shape} shape the shape
  * @returns {number} the size
@@ -104,24 +85,9 @@ annotorious.shape.getSize = function(shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     return shape.geometry.width * shape.geometry.height;
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
-    return Math.abs(annotorious.shape._polySize(shape.geometry.points));
+    return Math.abs(annotorious.shape.geom.Polygon.computeArea(shape.geometry.points));
   }
   return 0;
-}
-
-/**
- * Tests whether a shape geometry is oriented in clockwise or counterclockwise
- * direction.
- * @param {annotorious.shape.Shape} the shape
- * @returns {boolean} true if the geometry is in clockwise orientation
- */
-annotorious.shape.isClockwise = function(shape) {
-  // TODO for the sake of completeness: implement for RECTANGLE
-  if (shape.type == annotorious.shape.ShapeType.POLYGON) {
-    return annotorious.shape._polySize(shape.geometry.points) > 0;
-  }
-  
-  return false;
 }
 
 /**
@@ -170,21 +136,7 @@ annotorious.shape.getCentroid = function(shape) {
     var rect = shape.geometry;
     return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
-    var points = shape.geometry.points;
-    var x = 0;
-    var y = 0;
-    var f;
-    var j = points.length - 1;
-
-    for (var i=0; i<points.length; i++) {
-      f = points[i].x * points[j].y - points[j].x * points[i].y;
-      x += (points[i].x + points[j].x) * f;
-      y += (points[i].y + points[j].y) * f;
-      j = i;
-    }
-
-    f = annotorious.shape.getSize(shape) * 6;
-    return { x: Math.abs(x/f), y: Math.abs(y/f) };
+    return annotorious.shape.geom.Polygon.computeCentroid( shape.geometry.points);
   }
   
   return undefined;
@@ -200,30 +152,9 @@ annotorious.shape.getCentroid = function(shape) {
  */
 annotorious.shape.expand = function(shape, delta) {
   // TODO implement for RECTANGLE
-  function shiftAlongAxis(px, centroid, distance) {
-    var axis = { x: (px.x - centroid.x) , y: (px.y - centroid.y) };
-    var sign_x = axis.x > 0 ? 1 : axis.x < 0 ? -1 : 0;
-    var sign_y = axis.y > 0 ? 1 : axis.y < 0 ? -1 : 0;
-  
-    var dy = Math.sqrt(Math.pow(distance, 2) / (1 + Math.pow((axis.x / axis.y), 2)));
-    var dx = (axis.x / axis.y) * dy;
-    return { x: px.x + Math.abs(dx) * sign_x, y: px.y + Math.abs(dy) * sign_y };
-  }
-  
-  if (shape.type == annotorious.shape.ShapeType.POLYGON) {
-    var points = shape.geometry.points;
-    var centroid = annotorious.shape.getCentroid(shape);
-    var expanded = [];
-    
-    for (var i=0; i<points.length; i++) {
-      expanded.push(shiftAlongAxis(points[i], centroid, delta));
-    }
-    
-    return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON, new annotorious.shape.geom.Polygon(expanded));
-  }
-  
-  return undefined;
-}
+  return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON,
+    new annotorious.shape.geom.Polygon(annotorious.shape.geom.Polygon.expandPolygon(shape.geometry.points, delta)));
+ }
 
 /**
  * Transforms a shape from a source to a destination coordinate system. The transformation
