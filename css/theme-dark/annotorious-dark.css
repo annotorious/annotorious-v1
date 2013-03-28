@@ -38,6 +38,14 @@
   transition-delay:0;
 }
 
+.annotorious-item-focus {
+  opacity:1.0;
+}
+
+.annotorious-item-unfocus {
+  opacity:0.4;
+}
+
 .annotorious-popup {
   position:absolute;
   top:0;
