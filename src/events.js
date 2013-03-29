@@ -113,6 +113,6 @@ annotorious.events.EventType = {
   /**
    * An existing annotation was updated
    */
-  ANNOTATION_UPDATE: 'onAnnotationUpdated'
+  ANNOTATION_UPDATED: 'onAnnotationUpdated'
 
 };

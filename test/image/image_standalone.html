@@ -19,7 +19,11 @@
         };
 
         anno.addHandler('onAnnotationCreated', function(annotation) {
-          console.log(annotation);
+          console.log('created');
+        });
+
+        anno.addHandler('onAnnotationUpdated', function(annotation) {
+          console.log('updated');
         });
         anno.addAnnotation(annotation);
       }

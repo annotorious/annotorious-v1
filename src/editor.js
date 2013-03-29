@@ -50,8 +50,13 @@ annotorious.editor.Editor = function(annotator, parentEl) {
     event.preventDefault();
     var annotation = self.getAnnotation();
     annotator.addAnnotation(annotation);
-    annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, annotation);
     annotator.stopSelection();
+
+    if (self._original_annotation)
+      annotator.fireEvent(annotorious.events.EventType.ANNOTATION_UPDATED, annotation);
+    else
+      annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, annotation);      
+
     self.close();
   });
  
