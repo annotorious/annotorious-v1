@@ -285,7 +285,7 @@ annotorious.modules.image.ImageModule.prototype.highlightAnnotation = function(a
 }
 
 /**
- * Makes an item annotatable, if it is an image.
+ * Standard module method: Makes an item annotatable, if it is an image.
  * @param {object} the annotatable image
  */
 annotorious.modules.image.ImageModule.prototype.makeAnnotatable = function(item) {
@@ -298,7 +298,6 @@ annotorious.modules.image.ImageModule.prototype.makeAnnotatable = function(item)
 /**
  * Standard module method: removes an annotation from the image with the specified src URL.
  * @param {Annotation} annotation the annotation
- * @param {string} src the src URL of the image
  */
 annotorious.modules.image.ImageModule.prototype.removeAnnotation = function(annotation) {
   if (this.annotatesItem(annotation.src)) {

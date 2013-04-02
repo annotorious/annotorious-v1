@@ -139,7 +139,7 @@ annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotatio
  * @return {Array.<Annotation>} the annotations
  */
 annotorious.modules.image.Viewer.prototype.getAnnotations = function() {
-  return this._annotations;
+  return goog.array.clone(this._annotations) 
 }
 
 /**

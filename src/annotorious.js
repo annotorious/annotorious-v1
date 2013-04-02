@@ -179,6 +179,21 @@ annotorious.Annotorious.prototype.makeAnnotatable = function(item) {
 }
 
 /**
+ * Removes all annotations. If the optional parameter opt_item_url is set,
+ * only the annotations on the specified item will be removed. Otherwise all
+ * annotations on all items on the page will be removed.
+ * @param {string} opt_item_url the src URL of the item
+ */
+annotorious.Annotorious.prototype.removeAll = function(opt_item_url) {
+  // TODO this could be optimized a lot by adding a .removeAll method
+  // to modules and annotators!
+  var self = this;
+  goog.array.forEach(this.getAnnotations(opt_item_url), function(annotation) {
+    self.removeAnnotation(annotation);    
+  });
+}
+
+/**
  * Removes an annotation from an item on the page.
  */
 annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
@@ -226,6 +241,7 @@ annotorious.Annotorious.prototype['getAnnotations'] = annotorious.Annotorious.pr
 annotorious.Annotorious.prototype['getAvailableSelectors'] = annotorious.Annotorious.prototype.getAvailableSelectors;
 annotorious.Annotorious.prototype['highlightAnnotation'] = annotorious.Annotorious.prototype.highlightAnnotation;
 annotorious.Annotorious.prototype['makeAnnotatable'] = annotorious.Annotorious.prototype.makeAnnotatable;
+annotorious.Annotorious.prototype['removeAll'] = annotorious.Annotorious.prototype.removeAll;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
 annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious.prototype.setActiveSelector;
 annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;
