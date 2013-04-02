@@ -38,21 +38,23 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   /** @private **/
   this._selectionEnabled = true;
 
+  var img_bounds = goog.style.getBounds(image);
+  
   annotationLayer = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setStyle(annotationLayer, 'display', 'inline-block');
-  goog.style.setSize(annotationLayer, image.width, image.height); 
+  goog.style.setSize(annotationLayer, img_bounds.width, img_bounds.height); 
   goog.dom.replaceNode(annotationLayer, image);
   goog.dom.appendChild(annotationLayer, image);
   
   viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
-    { width:image.width, height:image.height });
+    { width:img_bounds.width, height:img_bounds.height });
   goog.dom.classes.add(viewCanvas, 'annotorious-item-unfocus');
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
   /** @private **/
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
-    { width:image.width, height:image.height });
+    { width:img_bounds.width, height:img_bounds.height });
   goog.style.showElement(this._editCanvas, false); 
   goog.dom.appendChild(annotationLayer, this._editCanvas);  
 
