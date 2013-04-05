@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
+    
+    <!--
+    
+      Sample image used is public domain: Meerwunder vnd seltzame Thier / wie die in den
+      Mitnächtigen Ländern / im Meer vnd auff dem Landt gefunden werden (taken from the
+      vignettes on Olaus Magnus's Carta marina), Basel c. 1544. Public Domain. Sebastian
+      Münster (1488–1552).
+      
+      http://commons.wikimedia.org/wiki/File:M%C3%BCnster_Thier_2.jpg
+    -->
+    
     <meta http-equiv="expires" content="0">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <link rel="stylesheet" type="text/css" href="../../css/annotorious.css" />
-    <script src="http://openlayers.org/dev/OpenLayers.js" type="text/javascript"></script>
+    <script src="OpenLayers.js" type="text/javascript"></script>
     <script type="text/javascript">
       window.onload = function() {    	
         var options = {
-          maxExtent: new OpenLayers.Bounds(0, 0, 13500, 7522),
-          maxResolution: 64,
-          numZoomLevels: 7,
+          maxExtent: new OpenLayers.Bounds(0, -768, 957, 0),
+          maxResolution: 4,
+          numZoomLevels: 3,
           units: "pixels"
         };
 
         var map = new OpenLayers.Map('map', options);
 
-        var baseLayer = new OpenLayers.Layer.TMS("Baselayer", "http://yuma-js.github.com/demos/openlayers/waldseemueller/",
+        var baseLayer = new OpenLayers.Layer.TMS("Baselayer", "map_muenster/",
 		            { layername: ".", serviceVersion: ".", transitionEffect: "resize", type:"jpg" });
 
         map.addLayer(baseLayer);

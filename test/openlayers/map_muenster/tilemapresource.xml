@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<TileMap version="1.0.0" tilemapservice="http://tms.osgeo.org/1.0.0">
+	  <Title>map.jpg</Title>
+	  <Abstract></Abstract>
+	  <SRS></SRS>
+	  <BoundingBox minx="-768.00000000000000" miny="0.00000000000000" maxx="0.00000000000000" maxy="957.00000000000000"/>
+	  <Origin x="-768.00000000000000" y="0.00000000000000"/>
+	  <TileFormat width="256" height="256" mime-type="image/jpeg" extension="jpg"/>
+	  <TileSets profile="raster">
+	    <TileSet href="0" units-per-pixel="4.00000000000000" order="0"/>
+	    <TileSet href="1" units-per-pixel="2.00000000000000" order="1"/>
+	    <TileSet href="2" units-per-pixel="1.00000000000000" order="2"/>
+	  </TileSets>
+	</TileMap>
+	
