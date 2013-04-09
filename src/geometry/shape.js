@@ -93,11 +93,11 @@ annotorious.shape.getSize = function(shape) {
 /**
  * Returns the bounding rectangle of a given shape.
  * @param {annotorious.shape.Shape} shape the shape
- * @returns {annotorious.geom.Rectangle} the bounding rectangle
+ * @returns {annotorious.shape.Shape} the bounding rectangle
  */
 annotorious.shape.getBoundingRect = function(shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
-    return shape.geometry;
+    return shape;
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
     var points = shape.geometry.points;
 
@@ -120,7 +120,8 @@ annotorious.shape.getBoundingRect = function(shape) {
         top = points[i].y;
     }
     
-    return new annotorious.shape.geom.Rectangle(left, top, right - left, bottom - top);
+    return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, 
+      new annotorious.shape.geom.Rectangle(left, top, right - left, bottom - top));
   }
   
   return undefined;
@@ -168,9 +169,9 @@ annotorious.shape.transform = function(shape, transformationFn) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     var geom = shape.geometry;
     var anchor = transformationFn({ x: geom.x, y: geom.y });
-    var size = transformationFn({ x: geom.width, y: geom.height });
-    return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, 
-      new annotorious.shape.geom.Rectangle(anchor.x, anchor.y, size.x, size.y));
+    var opposite = transformationFn({ x: geom.x + geom.width, y: geom.y + geom.height });
+    return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE,
+      new annotorious.shape.geom.Rectangle(anchor.x, anchor.y, (opposite.x - anchor.x), (opposite.y - anchor.y)));
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
     var transformedPoints = [];
     goog.array.forEach(shape.geometry.points, function(pt) {
@@ -179,7 +180,7 @@ annotorious.shape.transform = function(shape, transformationFn) {
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON,
       new annotorious.shape.geom.Polygon(transformedPoints));
   }
-  
+
   return undefined;
 }
 

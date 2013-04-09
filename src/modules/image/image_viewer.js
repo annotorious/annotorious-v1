@@ -265,7 +265,7 @@ annotorious.modules.image.Viewer.prototype._redraw = function() {
   if (this._currentAnnotation) {
     var shape = this._shapes[annotorious.shape.hashCode(this._currentAnnotation.shapes[0])];
     this._draw(shape, true);
-    var bbox = annotorious.shape.getBoundingRect(shape);
+    var bbox = annotorious.shape.getBoundingRect(shape).geometry;
     this._popup.show(this._currentAnnotation, { x: bbox.x, y: bbox.y + bbox.height + 5 });
 
     // TODO Orientation check - what if the popup would be outside the viewport?

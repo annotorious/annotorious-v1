@@ -124,6 +124,29 @@ annotorious.modules.openlayers.Viewer.prototype.removeAnnotation = function(anno
     return overlay.annotation == annotation;
   }); 
 
-  if (overlay)
+  if (overlay) {
+    goog.array.remove(this._overlays, overlay);
     this._boxesLayer.removeMarker(overlay.marker);
+  }
+}
+
+/**
+ * Returns all annotations in this viewer.
+ * @return {Array.<Annotation>} the annotations
+ */
+annotorious.modules.openlayers.Viewer.prototype.getAnnotations = function() {
+
+}
+
+/**
+ * Highlights a particular annotation in the viewer, or de-highlights (if that's a
+ * word...) all, if no annotation is passed to the method.
+ * @param {annotorious.annotation.Annotation | undefined} opt_annotation the annotation
+ */
+annotorious.modules.openlayers.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
+  if (opt_annotation) {
+    // TODO
+  } else {
+    this._popup.startHideTimer();
+  }  
 }

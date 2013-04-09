@@ -144,7 +144,7 @@ annotorious.modules.image.ImageAnnotator.prototype.editAnnotation = function(ann
     selector.drawShape(g2d, viewportShape);
   }
   
-  var bounds = annotorious.shape.getBoundingRect(annotation.shapes[0]);
+  var bounds = annotorious.shape.getBoundingRect(annotation.shapes[0]).geometry;
   var anchor = (annotation.shapes[0].units == 'pixel') ?
     ({ x: bounds.x, y: bounds.y + bounds.height }) :
     this.fromItemCoordinates({ x: bounds.x, y: bounds.y + bounds.height });   

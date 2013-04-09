@@ -119,7 +119,33 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
  * Standard Annotator method: editAnnotation
  */
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.editAnnotation = function(annotation) {
+  // Step 1 - remove from viewer
+  this._viewer.removeAnnotation(annotation);
 
+  // Step 2 - TODO find a suitable selector for the shape
+  var selector = this._selector;
+
+  // Step 3 - open annotation in editor
+  var self = this;
+  if (selector) {
+    goog.style.showElement(this._editCanvas, true);
+    this._viewer.highlightAnnotation(undefined);
+    
+    // TODO make editable - not just draw (selector implementation required)
+    var g2d = this._editCanvas.getContext('2d');
+    var shape = annotation.shapes[0];
+    
+    var viewportShape = annotorious.shape.transform(shape, function(xy) { return self.fromItemCoordinates(xy); });
+    
+    selector.drawShape(g2d, viewportShape);
+  }
+
+
+  var bounds = annotorious.shape.getBoundingRect(annotation.shapes[0]);
+  var viewportBounds = annotorious.shape.transform(bounds, function(xy) { return self.fromItemCoordinates(xy); });
+  this.editor.setPosition({ x: viewportBounds.x + this._div.offsetLeft,
+                            y: viewportBounds.y + viewportBounds.height + 4 + this._div.offsetTop });
+  this.editor.open(annotation);    
 }
 
 /**
@@ -225,9 +251,13 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.setSelectionEnabled
 /**
  * Standard Annotator method: stopSelection
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.stopSelection = function() {
+annotorious.modules.openlayers.OpenLayersAnnotator.prototype.stopSelection = function(original_annotation) {
    goog.style.showElement(this._editCanvas, false);
    this._selector.stopSelection();
+   
+   // If this was an edit of an annotation (rather than creation of a new one) re-add to viewer!
+   if (original_annotation)
+     this._viewer.addAnnotation(original_annotation);
 }
 
 /**
