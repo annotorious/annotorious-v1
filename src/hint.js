@@ -8,10 +8,13 @@ goog.require('goog.dom.query');
 /**
  * @constructor
  */
-annotorious.hint.Hint = function(annotator, parent) {
+annotorious.hint.Hint = function(annotator, parent, opt_msg) {
   var self = this;
 
-  this.element = goog.soy.renderAsElement(annotorious.templates.image.hint);
+  if (!opt_msg)
+    opt_msg = 'Click and Drag to Annotate';
+
+  this.element = goog.soy.renderAsElement(annotorious.templates.image.hint, { msg: opt_msg });
 
   /** @private **/
   this._annotator = annotator;

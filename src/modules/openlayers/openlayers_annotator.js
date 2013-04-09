@@ -15,7 +15,6 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   
   /** @private **/
   this._div = map.div;
-  
   var width = parseInt(goog.style.getComputedStyle(this._div, 'width'));
   var height = parseInt(goog.style.getComputedStyle(this._div, 'height'));
   
@@ -26,12 +25,10 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setSize(annotationLayer, width, height); 
   goog.dom.replaceNode(annotationLayer, this._div);
-  goog.dom.appendChild(annotationLayer, this._div);
-    
-  var hint = goog.soy.renderAsElement(annotorious.templates.image.hint, {msg:'Press and Hold CTRL to Annotate'});
-  goog.style.setStyle(hint, 'z-index', 9998);
-  goog.style.setOpacity(hint, 0); 
-  goog.dom.appendChild(annotationLayer, hint);
+  goog.dom.appendChild(annotationLayer, this._div); 
+
+  /** @private **/
+  var hint = new annotorious.hint.Hint(this, annotationLayer, 'Hold CTRL to Annotate');
 
   var secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
   goog.style.setStyle(secondaryHint, 'z-index', 9998);
@@ -62,45 +59,28 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   var self = this;  
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
     var relatedTarget = event.relatedTarget;
-    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
+    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget))
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
-      goog.style.setOpacity(hint, 0.8); 
-    }
   });
   
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
     var relatedTarget = event.relatedTarget;
-    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
+    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget))
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
-      goog.style.setOpacity(hint, 0);
-    }
   });
   
-  var isCtrlKeyDown = false;
   goog.events.listen(document, goog.events.EventType.KEYDOWN, function(event) {
     if (event.keyCode == 17) {
-      isCtrlKeyDown = true;
-      goog.style.setOpacity(hint, 0);
       goog.style.setOpacity(secondaryHint, 0.8); 
-
       goog.style.showElement(self._editCanvas, true);
-      
       window.setTimeout(function() {
         goog.style.setOpacity(secondaryHint, 0);
       }, 2000);
     }
   });
   
-  goog.events.listen(document, goog.events.EventType.KEYUP, function(event) {
-    isCtrlKeyDown = false;
-  });
-
   goog.events.listen(this._editCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
-    // if (isCtrlKeyDown) {
-      // goog.style.showElement(self._editCanvas, true);
-      // self._viewer.highlightAnnotation(undefined);
-      self._selector.startSelection(event.clientX, event.clientY);
-    // }
+    self._selector.startSelection(event.clientX, event.clientY);
   });
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
@@ -134,12 +114,9 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.editAnnotation = fu
     // TODO make editable - not just draw (selector implementation required)
     var g2d = this._editCanvas.getContext('2d');
     var shape = annotation.shapes[0];
-    
     var viewportShape = annotorious.shape.transform(shape, function(xy) { return self.fromItemCoordinates(xy); });
-    
     selector.drawShape(g2d, viewportShape);
   }
-
 
   var bounds = annotorious.shape.getBoundingRect(annotation.shapes[0]);
   var viewportBounds = annotorious.shape.transform(bounds, function(xy) { return self.fromItemCoordinates(xy); });
@@ -217,7 +194,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.getItem = function(
  * Standard Annotator method: highlightAnnotation
  */
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.highlightAnnotation = function(annotation) {
-
+  this._viewer.highlightAnnotation(annotation);
 }
 
 /**
@@ -231,7 +208,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.removeAnnotation = 
  * Standard Annotator method: removeHandler
  */
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.removeHandler = function(type, handler) {
-
+  this._eventBroker.removeHandler(type, handler);
 }
 
 /**
