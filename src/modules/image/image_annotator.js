@@ -39,10 +39,12 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   this._selectionEnabled = true;
 
   var img_bounds = goog.style.getBounds(image);
-  
   annotationLayer = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setStyle(annotationLayer, 'display', 'inline-block');
+
+  this._transferStyles(image, annotationLayer);
+
   goog.style.setSize(annotationLayer, img_bounds.width, img_bounds.height); 
   goog.dom.replaceNode(annotationLayer, image);
   goog.dom.appendChild(annotationLayer, image);
@@ -115,6 +117,43 @@ annotorious.modules.image.ImageAnnotator = function(image) {
     goog.style.showElement(self._editCanvas, false);
     self._currentSelector.stopSelection();
   });
+}
+
+/**
+ * Helper function to transfer relevant styles from the <img> to the annotation layer <div> element.
+ * @private
+ */
+annotorious.modules.image.ImageAnnotator.prototype._transferStyles = function(image, annotationLayer) {
+  var setReset = function(style, value) {
+    goog.style.setStyle(annotationLayer, style, value); 
+    goog.style.setStyle(image, style, 0);
+  }
+
+  var margin = goog.style.getMarginBox(image);
+  if (margin.top != 0)
+    setReset('margin-top', margin.top + 'px');
+
+  if (margin.right != 0)
+    setReset('margin-right', margin.right + 'px');
+
+  if (margin.bottom != 0)
+    setRest('margin-bottom', margin.bottom + 'px');
+ 
+  if (margin.left != 0)
+    setReset('margin-left', margin.left + 'px');
+
+  var padding = goog.style.getPaddingBox(image);
+  if (padding.top != 0)
+    setReset('padding-top', padding.top + 'px');
+
+  if (padding.right != 0)
+    setReset('padding-right', padding.right + 'px');
+
+  if (padding.bottom != 0)
+    setRest('padding-bottom', padding.bottom + 'px');
+ 
+  if (padding.left != 0)
+    setReset('padding-left', padding.left + 'px');
 }
 
 /**
