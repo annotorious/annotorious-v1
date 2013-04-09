@@ -101,9 +101,9 @@ annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotat
   this._overlays.push(overlay);
 
   goog.array.sort(this._overlays, function(a, b) {
-    var geomA = a.annotation.shapes[0].geometry;
-    var geomB = b.annotation.shapes[0].geometry;
-    return annotorious.geom.size(geomB) - annotorious.geom.size(geomA);
+    var shapeA = a.annotation.shapes[0];
+    var shapeB = b.annotation.shapes[0];
+    return annotorious.shape.getSize(shapeB) - annotorious.shape.getSize(shapeA);
   });
  
   var zIndex = 10000;
