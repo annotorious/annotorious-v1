@@ -20,6 +20,15 @@ annotorious.modules.openlayers.OpenLayersModule = function() {
   /** @private **/
   this._maps = [];
 }
+
+/**
+ * @private
+ */
+annotorious.modules.openlayers.OpenLayersModule.prototype._initPlugin = function(plugin, annotator) {
+  if (plugin.onInitAnnotator)
+    plugin.onInitAnnotator(annotator);
+}
+
   
 /**
  * Standard module method: init
@@ -46,7 +55,12 @@ annotorious.modules.openlayers.OpenLayersModule.prototype.addHandler = function(
  * Standard module method: addPlugin
  */
 annotorious.modules.openlayers.OpenLayersModule.prototype.addPlugin = function(plugin) {
-    
+  this._plugins.push(plugin);
+ 
+  var self = this;
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
+    self._initPlugin(plugin, annotator);
+  });    
 }
 
 /**
@@ -89,6 +103,7 @@ annotorious.modules.openlayers.OpenLayersModule.prototype.highlightAnnotation = 
  */
 annotorious.modules.openlayers.OpenLayersModule.prototype.makeAnnotatable = function(item) {
   var annotator = new annotorious.modules.openlayers.OpenLayersAnnotator(item);
+  var self = this;
   
   // Attach registered handlers
   goog.array.forEach(this._eventHandlers, function(eventHandler) {
@@ -97,11 +112,7 @@ annotorious.modules.openlayers.OpenLayersModule.prototype.makeAnnotatable = func
 
   // Callback to registered plugins
   goog.array.forEach(this._plugins, function(plugin) {
-    if (plugin.onInitPopup)
-      plugin.onInitPopup(annotator.getPopup());
-
-    if (plugin.onInitEditor)  
-      plugin.onInitEditor(annotator.getEditor());
+    self._initPlugin(plugin, annotator);
   });
     
   // TODO how do we identify a map in a unique way?
