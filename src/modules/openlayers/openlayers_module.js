@@ -21,30 +21,72 @@ annotorious.modules.openlayers.OpenLayersModule = function() {
   this._maps = [];
 }
   
+/**
+ * Standard module method: init
+ */
 annotorious.modules.openlayers.OpenLayersModule.prototype.init = function() {
 
 }
 
+/**
+ * Standard module method: addAnnotation
+ */
 annotorious.modules.openlayers.OpenLayersModule.prototype.addAnnotation = function(annotation) {
     
 }
 
+/**
+ * Standard module method: addHandler
+ */
 annotorious.modules.openlayers.OpenLayersModule.prototype.addHandler = function(type, handler) {
     
 }
 
+/**
+ * Standard module method: addPlugin
+ */
 annotorious.modules.openlayers.OpenLayersModule.prototype.addPlugin = function(plugin) {
     
 }
 
+/**
+ * Standard module method: annotatesItem
+ */
 annotorious.modules.openlayers.OpenLayersModule.prototype.annotatesItem = function(item) {
     
 }
 
+/**
+ * Standard module method: getActiveSelector
+ */
+annotorious.modules.openlayers.OpenLayersModule.prototype.getActiveSelector = function(item_url) {
+
+}
+
+/**
+ * Standard module method: getAnnotations
+ */
 annotorious.modules.openlayers.OpenLayersModule.prototype.getAnnotations = function(opt_item_url) {
     
 }
 
+/**
+ * Standard module method: getAvailableSelectors
+ */
+annotorious.modules.openlayers.OpenLayersModule.prototype.getAvailableSelectors = function(item_url) {
+
+}
+
+/**
+ * Standard module method: highlightAnnotation
+ */
+annotorious.modules.openlayers.OpenLayersModule.prototype.highlightAnnotation = function(annotation) {
+
+}
+
+/**
+ * Standard module method: makeAnnotatable
+ */
 annotorious.modules.openlayers.OpenLayersModule.prototype.makeAnnotatable = function(item) {
   var annotator = new annotorious.modules.openlayers.OpenLayersAnnotator(item);
   
@@ -67,22 +109,30 @@ annotorious.modules.openlayers.OpenLayersModule.prototype.makeAnnotatable = func
   this._maps.push(map);  
 }
 
+/**
+ * Standard module method: removeAnnotation
+ */
 annotorious.modules.openlayers.OpenLayersModule.prototype.removeAnnotation = function(annotation) {
 
 }
 
-annotorious.modules.openlayers.OpenLayersModule.prototype.highlightAnnotation = function(annotation) {
+/**
+ * Standard module method: setActiveSelector
+ */
+annotorious.modules.openlayers.OpenLayersModule.prototype.setActiveSelector = function(item_url, selector) {
 
 }
 
 /**
- * Enables (or disables) the ability to create new annotations on an annotatable image.
- * @param {boolean} enabled if <code>true</code> new annotations can be created
+ * Standard module method: setSelectionEnabled
  */
 annotorious.modules.openlayers.OpenLayersModule.prototype.setSelectionEnabled = function(enabled) {
 
 }
 
+/**
+ * Standard module method: supports
+ */
 annotorious.modules.openlayers.OpenLayersModule.prototype.supports = function(item) {
   return (item instanceof OpenLayers.Map);
 }

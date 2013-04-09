@@ -107,7 +107,7 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
     var bounds = event.viewportBounds;
     self.editor.setPosition({ x: bounds.left + self._image.offsetLeft,
-                               y: bounds.bottom + 4 + self._image.offsetTop });
+                              y: bounds.bottom + 4 + self._image.offsetTop });
     self.editor.open();
   });
   
@@ -117,6 +117,10 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   });
 }
 
+/**
+ * Standard Annotator method: edits the specified existing annotation.
+ * @param {annotorious.annotation.Annotation} annotation the annotation
+ */
 annotorious.modules.image.ImageAnnotator.prototype.editAnnotation = function(annotation) {
   // Step 1 - remove from viewer
   this._viewer.removeAnnotation(annotation);

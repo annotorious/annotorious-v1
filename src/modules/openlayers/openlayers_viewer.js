@@ -40,7 +40,7 @@ annotorious.modules.openlayers.Viewer = function(map, popup, annotator) {
       var div = self._currentlyHighlightedOverlay.marker.div;
       var pos = goog.style.getRelativePosition(div, self._map.div);
       var height = parseInt(goog.style.getStyle(div, 'height'), 10);
-      self._popup.setPosition(pos.x, pos.y + height + 5);
+      self._popup.setPosition({ x: pos.x, y: pos.y + height + 5 });
     }
   });
 
@@ -57,7 +57,7 @@ annotorious.modules.openlayers.Viewer.prototype._updateHighlight = function(new_
     var pos = goog.style.getRelativePosition(new_highlight.marker.div, this._map.div);
     var height = parseInt(goog.style.getStyle(new_highlight.marker.div, 'height'), 10);
     goog.style.setStyle(new_highlight.inner, 'border-color', '#fff000');
-    this._popup.show(new_highlight.annotation, pos.x, pos.y + height + 5);
+    this._popup.show(new_highlight.annotation, { x: pos.x, y: pos.y + height + 5 });
     this._currentlyHighlightedOverlay = new_highlight;
   } else {
     delete this._currentlyHighlightedOverlay;
