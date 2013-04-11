@@ -116,13 +116,12 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.editAnnotation = fu
     var shape = annotation.shapes[0];
     var viewportShape = annotorious.shape.transform(shape, function(xy) { return self.fromItemCoordinates(xy); });
     selector.drawShape(g2d, viewportShape);
-  }
 
-  var bounds = annotorious.shape.getBoundingRect(annotation.shapes[0]);
-  var viewportBounds = annotorious.shape.transform(bounds, function(xy) { return self.fromItemCoordinates(xy); });
-  this.editor.setPosition({ x: viewportBounds.x + this._div.offsetLeft,
+    var viewportBounds = annotorious.shape.getBoundingRect(viewportShape).geometry;
+    this.editor.setPosition({ x: viewportBounds.x + this._div.offsetLeft,
                             y: viewportBounds.y + viewportBounds.height + 4 + this._div.offsetTop });
-  this.editor.open(annotation);    
+    this.editor.open(annotation);   
+  }
 }
 
 /**
