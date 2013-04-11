@@ -132,4 +132,4 @@ annotorious.editor.Editor.prototype.getAnnotation = function() {
 
 // Export addField API method
 annotorious.editor.Editor.prototype['addField'] = annotorious.editor.Editor.prototype.addField;
-
+annotorious.editor.Editor.prototype['getAnnotation'] = annotorious.editor.Editor.prototype.getAnnotation;

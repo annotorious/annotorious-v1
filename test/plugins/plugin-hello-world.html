@@ -8,11 +8,11 @@
       annotorious.plugin.HelloWorld = function() { }
 
       annotorious.plugin.HelloWorld.prototype.onInitAnnotator = function(annotator) {
-        annotator.popup.addField(function(annotation) {
-          return '<em>Hello World: ' + annotation.text.length + '</em>';	
+        annotator.editor.element.addEventListener('keyup', function(event) {
+          var txt = annotator.editor.getAnnotation().text;
+          if (txt.length % 5 == 0)
+            console.log(txt);
         });
-
-        annotator.editor.addField('Hello World');
       }
 
       anno.addPlugin('HelloWorld', {});
