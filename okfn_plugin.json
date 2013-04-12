@@ -25,6 +25,7 @@
     "."
   ],
   "externs": [
+    "externs/api.js",
     "externs/okfn_annotator.js"
   ],
   "mode": "ADVANCED", // "ADVANCED"
