@@ -25,6 +25,9 @@ annotorious.editor.Editor = function(annotator, parentEl) {
   this._original_annotation;
 
   /** @private **/
+  this._current_annotation;
+
+  /** @private **/
   this._textarea = goog.dom.query('.annotorious-editor-text', this.element)[0];
 
   /** @private **/
@@ -77,6 +80,8 @@ annotorious.editor.Editor.prototype.addField = function(field) {
     fieldEl.innerHTML = field;
   } else if (goog.isFunction(field)) {
     this._extraFields.push({el: fieldEl, fn: field});
+  } else if (goog.dom.isElement(field)) {
+    goog.dom.appendChild(fieldEl, field);
   }
 
   goog.dom.insertSiblingBefore(fieldEl, this._btnContainer);
@@ -88,13 +93,25 @@ annotorious.editor.Editor.prototype.addField = function(field) {
  */
 annotorious.editor.Editor.prototype.open = function(opt_annotation) {
   this._original_annotation = opt_annotation;
+  this._current_annotation = opt_annotation;
+
   if (opt_annotation)
     this._textarea.value = opt_annotation.text;
 
   goog.style.showElement(this.element, true);
   this._textarea.focus();
 
-  // TODO update extra fields in case there is an existing annotation
+  // Update extra fields (if any)
+  goog.array.forEach(this._extraFields, function(field) {
+    var f = field.fn(opt_annotation);
+    
+    if (goog.isString(f))  {
+      field.el.innerHTML = f;
+    } else if (goog.dom.isElement(f)) {
+      goog.dom.removeChildren(field.el);
+      goog.dom.appendChild(field.el, f);
+    }
+  });
 }
 
 /**
@@ -122,12 +139,14 @@ annotorious.editor.Editor.prototype.getAnnotation = function() {
     return url;
   });
 
-  if (this._original_annotation) {
-    this._original_annotation.text = sanitized;
-    return this._original_annotation;
+  if (this._current_annotation) {
+    this._current_annotation.text = sanitized;
   } else {
-    return new annotorious.annotation.Annotation(this._item.src, sanitized, this._annotator.getActiveSelector().getShape());  
+    this._current_annotation = 
+      new annotorious.annotation.Annotation(this._item.src, sanitized, this._annotator.getActiveSelector().getShape());  
   }
+
+  return this._current_annotation;
 }
 
 // Export addField API method

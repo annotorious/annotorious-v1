@@ -105,6 +105,8 @@ annotorious.viewer.Popup.prototype.addField = function(field) {
     fieldEl.innerHTML = field;
   } else if (goog.isFunction(field)) {
     this._extraFields.push({el: fieldEl, fn: field});
+  } else if (goog.dom.isElement(field)) {
+    goog.dom.appendChild(fieldEl, field);
   }
 
   goog.dom.appendChild(this.element, fieldEl);
@@ -174,7 +176,14 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
 
     // Update extra fields (if any)
     goog.array.forEach(this._extraFields, function(field) {
-      field.el.innerHTML = field.fn(annotation);
+      var f = field.fn(annotation);
+      
+      if (goog.isString(f))  {
+        field.el.innerHTML = f;
+      } else if (goog.dom.isElement(f)) {
+        goog.dom.removeChildren(field.el);
+        goog.dom.appendChild(field.el, f);
+      }
     });
   }
 
