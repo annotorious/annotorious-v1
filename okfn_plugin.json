@@ -9,9 +9,11 @@
     "src/geometry/polygon.js",
     "src/geometry/rectangle.js",
     "src/geometry/shape.js",
+    "src/modules/image/image_annotator.js",
     "src/modules/image/image_viewer.js",
     "src/okfn/okfn_image_plugin.js",
     "src/okfn/okfn_popup.js",
+    "src/plugins/selection/polygon_selector.js",  
     "src/plugins/selection/rect_drag_selector.js",
     "src/annotation.js",
     "src/dom.js",
@@ -28,6 +30,6 @@
     "externs/api.js",
     "externs/okfn_annotator.js"
   ],
-  "mode": "ADVANCED", // "ADVANCED"
+  "mode": "RAW", // "ADVANCED"
   "level": "DEFAULT" // "VERBOSE"
 }

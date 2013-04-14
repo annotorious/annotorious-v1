@@ -12,12 +12,13 @@ goog.require('goog.dom.classes');
  * @param {Object} the base offset of the annotatable DOM element
  * @constructor
  */
-annotorious.okfn.Popup = function(image, eventBroker, okfnAnnotator, baseOffset) {  
+annotorious.okfn.Popup = function(image, okfnAnnotator, baseOffset) {  
   /** @private **/
   this._image = image;
 
   /** @private **/
-  this._eventBroker = eventBroker;
+  // TODO
+  this._eventBroker = undefined;
   
   /** @private **/ 
   this._okfnAnnotator = okfnAnnotator;

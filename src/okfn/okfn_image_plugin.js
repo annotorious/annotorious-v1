@@ -22,7 +22,8 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
  
   // Trying to re-use more from the standalone version
   // BEWARE this may get dirty (at first...)
-  var annotator = new annotorious.modules.image.ImageAnnotator(image);
+  var popup = new annotorious.okfn.Popup(image, okfnAnnotator, baseOffset);  
+  var annotator = new annotorious.modules.image.ImageAnnotator(image, popup);
   
   /*
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');

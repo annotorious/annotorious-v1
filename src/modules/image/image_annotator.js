@@ -14,7 +14,7 @@ goog.require('goog.style');
  * @param {element} image the image DOM element
  * @constructor
  */
-annotorious.modules.image.ImageAnnotator = function(image) {
+annotorious.modules.image.ImageAnnotator = function(image, opt_popup) {
   var annotationLayer, viewCanvas, hint;
 
   /** The editor for this annotator (public for use by plugins) **/
@@ -60,7 +60,10 @@ annotorious.modules.image.ImageAnnotator = function(image) {
   goog.style.showElement(this._editCanvas, false); 
   goog.dom.appendChild(annotationLayer, this._editCanvas);  
 
-  this.popup = new annotorious.viewer.Popup(annotationLayer, this);
+  if (opt_popup)
+    this.popup = opt_popup;
+  else
+    this.popup = new annotorious.viewer.Popup(annotationLayer, this);
 
   // TODO these should be plugins, not hardcoded!
   var default_selector = new annotorious.plugins.selection.RectDragSelector();
