@@ -65,15 +65,10 @@ annotorious.modules.image.ImageAnnotator = function(image, opt_popup) {
   else
     this.popup = new annotorious.viewer.Popup(annotationLayer, this);
 
-  // TODO these should be plugins, not hardcoded!
   var default_selector = new annotorious.plugins.selection.RectDragSelector();
   default_selector.init(this._editCanvas, this); 
   this._selectors.push(default_selector);
   this._currentSelector = default_selector;
-
-  var polygon_selector = new annotorious.plugins.selection.PolygonSelector();
-  polygon_selector.init(this._editCanvas, this);
-  this._selectors.push(polygon_selector);
 
   /** @private **/
   this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this.popup, this); 
@@ -219,7 +214,8 @@ annotorious.modules.image.ImageAnnotator.prototype.addHandler = function(type, h
  * @param {object} selector the selector object 
  */
 annotorious.modules.image.ImageAnnotator.prototype.addSelector = function(selector) {
-  // TODO implement
+  selector.init(this, this._editCanvas); 
+  this._selectors.push(selector);
 }
 
 /**
@@ -308,6 +304,9 @@ annotorious.modules.image.ImageAnnotator.prototype.setActiveSelector = function(
   this._currentSelector = goog.array.find(this._selectors, function(sel) {
     return sel.getName() == selector;
   });
+
+  if (!this._currentSelector)
+    console.log('WARNING: selector "' + selector + '" not available'); 
 }
 
 /**
@@ -347,3 +346,7 @@ annotorious.modules.image.ImageAnnotator.prototype.toItemCoordinates = function(
   var imgSize = goog.style.getSize(this._image);
   return { x: xy.x / imgSize.width, y: xy.y / imgSize.height };
 }
+
+annotorious.modules.image.ImageAnnotator.prototype['fireEvent'] = annotorious.modules.image.ImageAnnotator.prototype.fireEvent;
+annotorious.modules.image.ImageAnnotator.prototype['toItemCoordinates'] = annotorious.modules.image.ImageAnnotator.prototype.toItemCoordinates;
+

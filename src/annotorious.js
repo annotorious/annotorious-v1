@@ -87,6 +87,16 @@ annotorious.Annotorious.prototype.addPlugin = function(pluginName, opt_config_op
 }
 
 /**
+ * Somewhat experimental - adds a selector to a particular item
+ */
+annotorious.Annotorious.prototype.addSelector = function(item_url, selector) {
+  var module = this._getModuleForItemSrc(item_url);
+
+  if (module)
+    module.addSelector(item_url, selector);  
+}
+
+/**
  * Returns the name of the selector that is currently activated on a 
  * particular item.
  *
@@ -129,13 +139,6 @@ annotorious.Annotorious.prototype.getAnnotations = function(opt_item_url) {
 
 /**
  * Returns the list of available shape selectors for a particular item.
- *
- * !!!!!!!!!!!!!!!!!!!!
- * !!
- * !! TODO implement - currently doesn't return anything useful yet!!
- * !!
- * !!!!!!!!!!!!!!!!!!!!
- *
  * @param {string} the URL of the item to query for available selectors
  * @returns {List.<string>} the list of selector names
  */
@@ -236,6 +239,7 @@ window['anno'] = new annotorious.Annotorious();
 annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.prototype.addAnnotation;
 annotorious.Annotorious.prototype['addHandler'] = annotorious.Annotorious.prototype.addHandler;
 annotorious.Annotorious.prototype['addPlugin'] = annotorious.Annotorious.prototype.addPlugin;
+annotorious.Annotorious.prototype['addSelector'] = annotorious.Annotorious.prototype.addSelector;
 annotorious.Annotorious.prototype['getActiveSelector'] = annotorious.Annotorious.prototype.getActiveSelector;
 annotorious.Annotorious.prototype['getAnnotations'] = annotorious.Annotorious.prototype.getAnnotations;
 annotorious.Annotorious.prototype['getAvailableSelectors'] = annotorious.Annotorious.prototype.getAvailableSelectors;

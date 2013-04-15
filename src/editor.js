@@ -59,7 +59,6 @@ annotorious.editor.Editor = function(annotator, parentEl) {
       annotator.fireEvent(annotorious.events.EventType.ANNOTATION_UPDATED, annotation);
     else
       annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, annotation);      
-
     self.close();
   });
  

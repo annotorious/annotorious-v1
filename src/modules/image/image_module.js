@@ -192,6 +192,14 @@ annotorious.modules.image.ImageModule.prototype.addPlugin = function(plugin) {
   });
 }
 
+annotorious.modules.image.ImageModule.prototype.addSelector = function(item_url, selector) {
+  if (this.annotatesItem(item_url)) {
+    var annotator = this._annotators.get(item_url);
+    if (annotator)
+      return annotator.addSelector(selector);
+  }
+}
+
 /**
  * Standard module method: tests if this module is in charge of managing the
  * annotatable item with the specified URL.

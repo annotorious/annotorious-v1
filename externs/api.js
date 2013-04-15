@@ -7,7 +7,7 @@
 var Annotation = {  
 
   /** @type {string} source URL of the annotated object (e.g. image) **/
-  src   : {},
+  src : {},
   
   /** @type {string} source URL of the HTML document containing the annotated object **/
   context : {},
@@ -32,6 +32,24 @@ var Annotation = {
   }]
 };
 
+var Rect = {
+
+  x : {},
+
+  y : {},
+
+  width : {},
+
+  height : {}
+
+}
+
+var Polygon = {
+
+  points : {}
+
+}
+
 /**
  * Annotorious Plugin interface.
  * @interface
@@ -55,4 +73,34 @@ var Annotator = {
   editor : {}
 
 };
+
+var Selector = {
+
+  init : function() {},
+
+  getName : function() {},
+
+  getSupportedShapeType : function() {},
+
+  startSelection : function() {},
+
+  stopSelection : function() {},
+
+  getShape : function() {},
+
+  getViewportBounds : function() {},
+
+  drawShape : function() {}
+
+}
+
+var SelectionEvent = {
+
+  mouseEvent : {},
+
+  shape : {},
+
+  viewportBounds : {}
+
+}
 

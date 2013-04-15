@@ -1,24 +1,15 @@
-goog.provide('annotorious.plugins.selection.PolygonSelector');
-
-goog.require('goog.events');
-
 /**
  * A polygon drawing tool selector.
  * @constructor
  */
-annotorious.plugins.selection.PolygonSelector = function() { }
+PolygonSelector = function() { }
 
-/**
- * Initializes the selector.
- * @param {element} canvas the canvas to draw on
- * @param {object} annotator reference to the annotator
- */
-annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, annotator) {
-  /** @private **/
-  this._canvas = canvas;
-  
+PolygonSelector.prototype.init = function(annotator, canvas) {
   /** @private **/
   this._annotator = annotator;
+
+  /** @private **/
+  this._canvas = canvas;  
 
   /** @private **/
   this._g2d = canvas.getContext('2d');
@@ -46,7 +37,7 @@ annotorious.plugins.selection.PolygonSelector.prototype.init = function(canvas, 
  * Attaches MOUSEUP and MOUSEMOVE listeners to the editing canvas.
  * @private
  */
-annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = function() {
+PolygonSelector.prototype._attachListeners = function() {
   var self = this;  
 
   var refresh = function(last, highlight_last) {
@@ -57,9 +48,12 @@ annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = funct
     self._g2d.strokeStyle = '#000000';    
     self._g2d.beginPath();
     self._g2d.moveTo(self._anchor.x, self._anchor.y);
-    goog.array.forEach(self._points, function(pt) {
-      self._g2d.lineTo(pt.x, pt.y);
-    });
+    
+    // TODO replace with goog.array.forEach  
+    for (var i=0; i<self._points.length; i++) { 
+      self._g2d.lineTo(self._points[i].x, self._points[i].y);
+    };
+
     self._g2d.lineTo(last.x, last.y);
     self._g2d.stroke();
     
@@ -82,9 +76,11 @@ annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = funct
     self._g2d.strokeStyle = '#ffffff';
     self._g2d.beginPath();
     self._g2d.moveTo(self._anchor.x, self._anchor.y);
-    goog.array.forEach(self._points, function(pt) {
-      self._g2d.lineTo(pt.x, pt.y);
-    });
+
+    // TODO replace with goog.array.forEach
+    for (var i=0; i<self._points.length; i++) {
+      self._g2d.lineTo(self._points[i].x, self._points[i].y);
+    };
     self._g2d.lineTo(last.x, last.y);
     self._g2d.stroke();
 
@@ -105,19 +101,21 @@ annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = funct
     return (self._points.length > 1 && Math.abs(x - self._anchor.x) < 5 && Math.abs(y - self._anchor.y) < 5);
   };
 
-  this._mouseMoveListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
+  // this._mouseMoveListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
+  this._mouseMoveListener = this._canvas.addEventListener('mousemove', function(event) {
     if (self._enabled) {
       self._mouse = { x: event.offsetX, y: event.offsetY };
       refresh(self._mouse, isClosable(event.offsetX, event.offsetY));
     }
   });
 
-  this._mouseUpListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEUP, function(event) {
+  // this._mouseUpListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEUP, function(event) {
+  this._mouseUpListener = this._canvas.addEventListener('mouseup', function(event) {
     if (isClosable(event.offsetX, event.offsetY)) {
       self._enabled = false;
       refresh(self._anchor);
 
-      self._annotator.fireEvent(annotorious.events.EventType.SELECTION_COMPLETED,
+      self._annotator.fireEvent('onSelectionCompleted',
         { mouseEvent: event, shape: self.getShape(), viewportBounds: self.getViewportBounds() }); 
     } else {
       self._points.push({ x: event.offsetX, y: event.offsetY });
@@ -129,14 +127,14 @@ annotorious.plugins.selection.PolygonSelector.prototype._attachListeners = funct
  * Detaches MOUSEUP and MOUSEMOVE listeners from the editing canvas.
  * @private
  */
-annotorious.plugins.selection.PolygonSelector.prototype._detachListeners = function() {
+PolygonSelector.prototype._detachListeners = function() {
   if (this._mouseMoveListener) {
-    goog.events.unlistenByKey(this._mouseMoveListener);
+    // goog.events.unlistenByKey(this._mouseMoveListener);
     delete this._mouseMoveListener;
   }
 
   if (this._mouseUpListener) {
-    goog.events.unlistenByKey(this._mouseUpListener);
+    // goog.events.unlistenByKey(this._mouseUpListener);
     delete this._mouseUpListener;
   }
 }
@@ -145,7 +143,7 @@ annotorious.plugins.selection.PolygonSelector.prototype._detachListeners = funct
  * Selector API method: returns the selector name.
  * @returns the selector name
  */
-annotorious.plugins.selection.PolygonSelector.prototype.getName = function() {
+PolygonSelector.prototype.getName = function() {
   return 'polygon';
 }
 
@@ -156,8 +154,8 @@ annotorious.plugins.selection.PolygonSelector.prototype.getName = function() {
  *
  * @return the supported shape type
  */
-annotorious.plugins.selection.PolygonSelector.prototype.getSupportedShapeType = function() {
-  return annotorious.shape.ShapeType.POLYGON;
+PolygonSelector.prototype.getSupportedShapeType = function() {
+  return 'polygon';
 }
 
 /**
@@ -165,23 +163,22 @@ annotorious.plugins.selection.PolygonSelector.prototype.getSupportedShapeType = 
  * @param {number} x the X coordinate
  * @param {number} y the Y coordinate
  */
-annotorious.plugins.selection.PolygonSelector.prototype.startSelection = function(x, y) {
+PolygonSelector.prototype.startSelection = function(x, y) {
   this._enabled = true;
   this._attachListeners();
-  this._anchor = new annotorious.shape.geom.Point(x, y);
-  this._annotator.fireEvent(annotorious.events.EventType.SELECTION_STARTED, {
-    offsetX: x, offsetY: y});
+  this._anchor = { x: x, y: y };
+  this._annotator.fireEvent('onSelectionStarted', { offsetX: x, offsetY: y });
   
-  goog.style.setStyle(document.body, '-webkit-user-select', 'none');
+  // goog.style.setStyle(document.body, '-webkit-user-select', 'none');
 }
 
 /**
  * Selector API method: stops the selection.
  */
-annotorious.plugins.selection.PolygonSelector.prototype.stopSelection = function() {
+PolygonSelector.prototype.stopSelection = function() {
   this._detachListeners();
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
-  goog.style.setStyle(document.body, '-webkit-user-select', 'auto');
+  // goog.style.setStyle(document.body, '-webkit-user-select', 'auto');
   this._points = [];
 }
 
@@ -189,29 +186,33 @@ annotorious.plugins.selection.PolygonSelector.prototype.stopSelection = function
  * Selector API method: returns the currently edited shape.
  * @returns {annotorious.shape.Shape} the shape
  */
-annotorious.plugins.selection.PolygonSelector.prototype.getShape = function() {
+PolygonSelector.prototype.getShape = function() {
   var points = [];
   points.push(this._annotator.toItemCoordinates(this._anchor));
   
   var self = this;
-  goog.array.forEach(this._points, function(pt) {
-    points.push(self._annotator.toItemCoordinates(pt));
-  });
+  // goog.array.forEach(this._points, function(pt) {
+  for (var i=0; i<this._points.length; i++) {
+    points.push(self._annotator.toItemCoordinates(this._points[i]));
+  }
 
-  return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON, new annotorious.shape.geom.Polygon(points));
+  return { type: 'polygon', geometry: { points: points } };
 }
 
 /**
  * Selector API method: returns the bounds of the selected shape, in viewport (= pixel) coordinates.
  * @returns {object} the shape viewport bounds
  */
-annotorious.plugins.selection.PolygonSelector.prototype.getViewportBounds = function() {
+PolygonSelector.prototype.getViewportBounds = function() {
   var right = this._anchor.x;
   var left = this._anchor.x;
   var top = this._anchor.y;
   var bottom = this._anchor.y;
 
-  goog.array.forEach(this._points, function(pt) {
+  // TODO replace with goog.array.forEach
+  for (var i=0; i<this._points.length; i++) {
+    var pt = this._points[i];
+
     if (pt.x > right)
       right = pt.x;
 
@@ -223,15 +224,15 @@ annotorious.plugins.selection.PolygonSelector.prototype.getViewportBounds = func
 
     if (pt.y < top)
       top = pt.y;
-  });
+  };
 
-  return {top: top, right: right, bottom: bottom, left: left};
+  return { top: top, right: right, bottom: bottom, left: left };
 }
 
 /**
  * TODO not sure if this is really the best way/architecture to handle viewer shape drawing 
  */
-annotorious.plugins.selection.PolygonSelector.prototype.drawShape = function(g2d, shape, highlight) {
+PolygonSelector.prototype.drawShape = function(g2d, shape, highlight) {
   var color;
   if (highlight) {
     color = '#fff000';
@@ -244,7 +245,8 @@ annotorious.plugins.selection.PolygonSelector.prototype.drawShape = function(g2d
   // Outer line
   g2d.lineWidth = 1.3;
   g2d.strokeStyle = '#000000';
-  
+ 
+  /*
   var outline = annotorious.shape.expand(shape, 1.2).geometry.points;
   g2d.beginPath();
   g2d.moveTo(outline[0].x, outline[0].y);
@@ -253,6 +255,7 @@ annotorious.plugins.selection.PolygonSelector.prototype.drawShape = function(g2d
   }
   g2d.lineTo(outline[0].x, outline[0].y);
   g2d.stroke();
+  */
 
   // Inner line
   g2d.lineWidth = 1.2;
