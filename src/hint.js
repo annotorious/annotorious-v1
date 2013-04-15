@@ -5,7 +5,8 @@ goog.require('goog.events');
 goog.require('goog.style');
 goog.require('goog.dom.query');
 
-/**
+/** 
+ * The 'hint' GUI element.
  * @constructor
  */
 annotorious.hint.Hint = function(annotator, parent, opt_msg) {

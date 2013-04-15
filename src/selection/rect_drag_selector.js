@@ -3,7 +3,7 @@ goog.provide('annotorious.plugins.selection.RectDragSelector');
 goog.require('goog.events');
 
 /**
- * A simple click-and-drag-style selector for rectangular areas.
+ * The default selector: a simple click-and-drag rectangle selection tool.
  * @constructor
  */
 annotorious.plugins.selection.RectDragSelector = function() { }

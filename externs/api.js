@@ -30,8 +30,12 @@ var Annotation = {
     /** @type {Object} the shape geometry **/
     geometry : {}
   }]
+
 };
 
+/**
+ * Annotation shape type: Rectangle
+ */
 var Rect = {
 
   x : {},
@@ -44,6 +48,9 @@ var Rect = {
 
 }
 
+/**
+ * Annotation shape type: Polygon
+ */
 var Polygon = {
 
   points : {}
@@ -64,6 +71,9 @@ var Plugin = {
   
 };
 
+/**
+ * Annotator interface
+ */
 var Annotator = {
 
   /** @type {object} the popup used by this annotator **/
@@ -74,6 +84,9 @@ var Annotator = {
 
 };
 
+/**
+ * Selector interface
+ */
 var Selector = {
 
   init : function() {},
@@ -94,6 +107,9 @@ var Selector = {
 
 }
 
+/**
+ * Selection event
+ */
 var SelectionEvent = {
 
   mouseEvent : {},
@@ -103,4 +119,3 @@ var SelectionEvent = {
   viewportBounds : {}
 
 }
-

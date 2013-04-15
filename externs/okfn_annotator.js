@@ -5,6 +5,7 @@ var $ = {}
  * Externs definition for the OKFN Annotator class.
  */
 var Annotator = {
+
   /** Publish an event **/
   publish : function(type, event) {},
     
@@ -37,5 +38,6 @@ var Annotator = {
     annotation : {},
     show : function() {}
   }
+
 }
 

@@ -122,5 +122,3 @@ annotorious.shape.geom.Polygon.expandPolygon = function(points, delta) {
   
   return expanded;
 }
-
-
