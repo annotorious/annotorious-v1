@@ -18,14 +18,8 @@ goog.require('goog.style');
 annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var baseOffset = annotorious.dom.getOffset(okfnAnnotator.element[0].firstChild);
     
-  // var eventBroker = new annotorious.events.EventBroker();
+  var eventBroker = new annotorious.events.EventBroker();
  
-  // Trying to re-use more from the standalone version
-  // BEWARE this may get dirty (at first...)
-  var popup = new annotorious.okfn.Popup(image, okfnAnnotator, baseOffset);  
-  var annotator = new annotorious.modules.image.ImageAnnotator(image, popup);
-  
-  /*
   var annotationLayer = goog.dom.createDom('div', 'yuma-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setSize(annotationLayer, image.width, image.height); 
@@ -62,7 +56,6 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   eventBroker.getAvailableSelectors = function() {
     return [ selector ];
   };
-  */
 
   /** 
    * Checks if the OKFN Editor is currently 'owned' by this image. I.e. whether
@@ -81,9 +74,6 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   /**
    * Checks if the mouseover/out event happened inside the annotatable area. 
    * Unfortunately Annotator makes this task a little complex...
-   *
-   * TODO this needs to go into the popup implementation somehow...
-   *
    */                       
   var isMouseEventInside = function(event) {
     var relatedTarget = event.relatedTarget;
@@ -108,31 +98,26 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   };
  
   var self = this;  
-  // Once the isMouseEventInside function is in the popup, we can get rid of this special handling
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
     if (!isMouseEventInside(event))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
   });
   
-  // Once the isMouseEventInside function is in the popup, we can get rid of this special handling
   goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
     if (!isMouseEventInside(event))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
   });
 
-  // Once the isMouseEventInside function is in the popup, we can get rid of this special handling
   popup.addMouseOverHandler(function(event) {
     if (!isMouseEventInside(event))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
   });
 
-  // Once the isMouseEventInside function is in the popup, we can get rid of this special handling
   popup.addMouseOutHandler(function(event) { 
     if (!isMouseEventInside(event))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
   });
  
-  /*
   goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
     goog.style.showElement(editCanvas, true);
     viewer.highlightAnnotation(undefined);
@@ -147,7 +132,6 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   eventBroker.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, function() {
     goog.style.setOpacity(viewCanvas, 0.4);
   });
-  */
 
   /** Communication yuma -> okfn **/
   
