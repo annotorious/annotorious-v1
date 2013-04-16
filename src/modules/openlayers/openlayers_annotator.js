@@ -80,7 +80,8 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   });
   
   goog.events.listen(this._editCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
-    self._selector.startSelection(event.clientX, event.clientY);
+    var offset = goog.style.getClientPosition(self._div);
+    self._selector.startSelection(event.clientX - offset.x, event.clientY - offset.y);
   });
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {

@@ -38,7 +38,7 @@
       }
     </script>
     <style>
-      html, body, #map {
+      html, body {
         width:100%;
         height:100%;
         padding:0px;
@@ -46,19 +46,25 @@
         overflow:hidden;
       }
 
-      #annotate-button {
-        position:absolute;
-        top:20px;
-        right:20px;
-        z-index:99999;
-        width:150px;
-        height:60px;
+      .container {
+        background-color:#aaa;
+        width:100%;
+        height:100%;
+        padding:60px 40px; 
+      }
+
+      #map {
+        width:640px; 
+        height:400px;
+        background-color:#fff;
       }
     </style>
   </head>
 	  
   <body>
-    <div id="map"></div>
+    <div class="container">
+      <div id="map"></div>
+    </div>
   </body>
 </html>
 
