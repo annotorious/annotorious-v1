@@ -128,6 +128,22 @@ annotorious.shape.getBoundingRect = function(shape) {
 }
 
 /**
+ * Computes the angle between two vectors
+ */
+annotorious.shape.computeAngle = function(v1, opt_v2){
+  var magnitude = function(v) {
+    return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
+  }
+  
+  if (opt_v2) {
+    var scalar_product = v1.x * opt_v2.x + v1.y * opt_v2.y;
+    return Math.acos(scalar_product / (magnitude(v1) * magnitude(opt_v2)));
+  } else {
+    return Math.acos(v1.x / magnitude(v1));
+  }
+}
+
+/**
  * Computes the centroid coordinate for the specified shape.
  * @param {annotorious.shape.Shape} shape the shape
  * @returns {annotorious.shape.geom.Point} the centroid X/Y coordinate
@@ -153,8 +169,16 @@ annotorious.shape.getCentroid = function(shape) {
  */
 annotorious.shape.expand = function(shape, delta) {
   // TODO implement for RECTANGLE
+  var points = [];
+  var g = shape.geometry;
+  points.push({ x: g.x, y: g.y });
+  points.push({ x: g.x + g.width, y: g.y});
+  points.push({ x: g.x + g.width, y: g.y + g.height});
+  points.push({ x: g.x, y: g.y + g.height});
+  
   return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON,
-    new annotorious.shape.geom.Polygon(annotorious.shape.geom.Polygon.expandPolygon(shape.geometry.points, delta)));
+    // new annotorious.shape.geom.Polygon(annotorious.shape.geom.Polygon.expandPolygon(shape.geometry.points, delta)));
+    new annotorious.shape.geom.Polygon(annotorious.shape.geom.Polygon.expandPolygon(points, delta)));
  }
 
 /**

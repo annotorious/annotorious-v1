@@ -73,6 +73,22 @@ annotorious.shape.geom.Polygon.sign = function(number) {
  * @private
  */
 annotorious.shape.geom.Polygon._expandTriangle = function(points, delta) {
+  // Step 1: compute vectors for lines (12) and (23)
+  var v1 = { x: points[0].x - points[1].x, y: points[0].y - points[1].y };
+  var v2 = { x: points[2].x - points[1].x, y: points[2].y - points[1].y };
+  
+  // Step 2: compute angle between vectors
+  var alpha_half = annotorious.shape.computeAngle(v1, v2) / 2;
+
+  // Step 3: compute distance along mid-angle line
+  var offset = delta / Math.sin(alpha_half);
+  
+  // Compute angle of first line
+  var phi = annotorious.shape.computeAngle(v1) - alpha_half;
+  var offset_pt = { x: points[1].x + Math.cos(phi) * offset, y: points[1].y + Math.sin(phi) * offset };
+  
+  return [ points[0], offset_pt, points[2] ];
+  /* Step 4: compute coordinates at offset
   function shiftAlongAxis(px, centroid, delta) {
     var axis = { x: (px.x - centroid.x) , y: (px.y - centroid.y) };
     var sign_delta = annotorious.shape.geom.Polygon.sign(delta);
@@ -93,6 +109,8 @@ annotorious.shape.geom.Polygon._expandTriangle = function(points, delta) {
   }
     
   return expanded;
+  */
+
 }
 
 /**

@@ -198,7 +198,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = fun
 /**
  * TODO not sure if this is really the best way/architecture to handle viewer shape drawing 
  */
-annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2d, shape, highlight) {
+annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2d, shape, highlight) {  
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     var color, lineWidth;
     if (highlight) {
@@ -210,10 +210,21 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2
     }
 
     var geom = shape.geometry;
+    var outline = annotorious.shape.expand(shape, 1).geometry.points;
+    
     g2d.strokeStyle = '#000000';
     g2d.lineWidth = lineWidth;
     g2d.strokeRect(geom.x + 0.5, geom.y + 0.5, geom.width + 1, geom.height + 1);
     g2d.strokeStyle = color;
-    g2d.strokeRect(geom.x + 1.5, geom.y + 1.5, geom.width - 1, geom.height - 1);
+    // g2d.strokeRect(geom.x + 1.5, geom.y + 1.5, geom.width - 1, geom.height - 1);
+    
+    g2d.beginPath();
+    g2d.moveTo(outline[0].x + 0.5, outline[0].y + 0.5);
+    for (var i=1; i<outline.length; i++) {
+      g2d.lineTo(outline[i].x + 0.5, outline[i].y + 0.5);
+      console.log(outline[i]);
+    }
+    g2d.lineTo(outline[0].x + 0.5, outline[0].y + 0.5);
+    g2d.stroke();    
   }
 }
