@@ -42,7 +42,7 @@ annotorious.modules.image.ImageAnnotator = function(image, opt_popup) {
   annotationLayer = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setStyle(annotationLayer, 'display', 'inline-block');
-
+  
   this._transferStyles(image, annotationLayer);
 
   goog.style.setSize(annotationLayer, img_bounds.width, img_bounds.height); 
@@ -58,7 +58,7 @@ annotorious.modules.image.ImageAnnotator = function(image, opt_popup) {
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:img_bounds.width, height:img_bounds.height });
   goog.style.showElement(this._editCanvas, false); 
-  goog.dom.appendChild(annotationLayer, this._editCanvas);  
+  goog.dom.appendChild(annotationLayer, this._editCanvas);
 
   if (opt_popup)
     this.popup = opt_popup;
@@ -122,36 +122,26 @@ annotorious.modules.image.ImageAnnotator = function(image, opt_popup) {
  * @private
  */
 annotorious.modules.image.ImageAnnotator.prototype._transferStyles = function(image, annotationLayer) {
-  var setReset = function(style, value) {
-    goog.style.setStyle(annotationLayer, style, value); 
-    goog.style.setStyle(image, style, 0);
+  var transferMargin = function(direction, value) {
+    goog.style.setStyle(annotationLayer, 'margin-' + direction, value + 'px'); 
+    goog.style.setStyle(image, 'margin-' + direction, 0);
+    goog.style.setStyle(image, 'padding-' + direction, 0);
   }
 
   var margin = goog.style.getMarginBox(image);
-  if (margin.top != 0)
-    setReset('margin-top', margin.top + 'px');
-
-  if (margin.right != 0)
-    setReset('margin-right', margin.right + 'px');
-
-  if (margin.bottom != 0)
-    setRest('margin-bottom', margin.bottom + 'px');
- 
-  if (margin.left != 0)
-    setReset('margin-left', margin.left + 'px');
-
   var padding = goog.style.getPaddingBox(image);
-  if (padding.top != 0)
-    setReset('padding-top', padding.top + 'px');
+  
+  if (margin.top != 0 || padding.top != 0)
+    transferMargin('top', margin.top + padding.top);
 
-  if (padding.right != 0)
-    setReset('padding-right', padding.right + 'px');
+  if (margin.right != 0 || padding.right != 0)
+    transferMargin('right', margin.right + padding.right);
 
-  if (padding.bottom != 0)
-    setRest('padding-bottom', padding.bottom + 'px');
+  if (margin.bottom != 0 || padding.bottom != 0)
+    transferMargin('bottom', margin.bottom + padding.bottom);
  
-  if (padding.left != 0)
-    setReset('padding-left', padding.left + 'px');
+  if (margin.left != 0 || padding.left != 0)
+    transferMargin('left', margin.left + padding.left);
 }
 
 /**

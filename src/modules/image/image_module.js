@@ -196,7 +196,7 @@ annotorious.modules.image.ImageModule.prototype.addSelector = function(item_url,
   if (this.annotatesItem(item_url)) {
     var annotator = this._annotators.get(item_url);
     if (annotator)
-      return annotator.addSelector(selector);
+      annotator.addSelector(selector);
   }
 }
 
