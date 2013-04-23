@@ -154,7 +154,7 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
     // New annotation and position - reset
     this._currentAnnotation = annotation;
     if (annotation.text)
-      this._text.innerHTML = annotation.text;
+      this._text.innerHTML = annotation.text.replace(/\n/g, '<br/>');
     else
       this._text.innerHTML = '<span class="annotorious-popup-empty">No comment</span>';
 
