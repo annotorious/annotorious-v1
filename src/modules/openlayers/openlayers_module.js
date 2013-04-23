@@ -41,14 +41,24 @@ annotorious.modules.openlayers.OpenLayersModule.prototype.init = function() {
  * Standard module method: addAnnotation
  */
 annotorious.modules.openlayers.OpenLayersModule.prototype.addAnnotation = function(annotation) {
-    
+  // Basically identical to image module counterpart, sans the lazy loading
+  // TODO factor out into a common base class (with lazy loading support) and inherit! 
+  if (this.annotatesItem(annotation.src)) {
+    var annotator = this._annotators.get(annotation.src);
+    if (annotator)
+      annotator.addAnnotation(annotation, opt_replace)
+  }    
 }
 
 /**
  * Standard module method: addHandler
  */
 annotorious.modules.openlayers.OpenLayersModule.prototype.addHandler = function(type, handler) {
-    
+  // Basically identical to image module counterpart, sans the lazy loading
+  // TODO factor out into a common base class (with lazy loading support) and inherit! 
+  goog.array.forEach(this._annotators.getValues(), function(annotator, idx, array) {
+    annotator.addHandler(type, handler);
+  });
 }
 
 /**
