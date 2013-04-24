@@ -182,8 +182,6 @@ annotorious.modules.Module.prototype.setSelectionEnabled = function(enabled) {
  * @return {boolean} true if this module can provide annotation functionality for the item
  * @interface
  */
-annotorious.modules.Module.prototype.supports = function(item) {
-  /** implementation provided by subclass **/
-}
+annotorious.modules.Module.prototype.supports = goog.abstractMethod // This should be the proper Closure way to do it
 
 
