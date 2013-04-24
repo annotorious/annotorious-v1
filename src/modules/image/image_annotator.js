@@ -14,7 +14,7 @@ goog.require('goog.style');
  * @param {element} image the image DOM element
  * @constructor
  */
-annotorious.modules.image.ImageAnnotator = function(image, opt_popup) {
+annotorious.modules.image.ImageAnnotator = function(module, item, opt_popup) {
   var annotationLayer, viewCanvas, hint;
 
   /** The editor for this annotator (public for use by plugins) **/
@@ -23,8 +23,10 @@ annotorious.modules.image.ImageAnnotator = function(image, opt_popup) {
   /** The popup for this annotator (public for use by plugins) **/
   this.popup;
 
+  this._module = module;
+
   /** @private **/
-  this._image = image;
+  this._image = item;
   
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
@@ -38,16 +40,16 @@ annotorious.modules.image.ImageAnnotator = function(image, opt_popup) {
   /** @private **/
   this._selectionEnabled = true;
 
-  var img_bounds = goog.style.getBounds(image);
+  var img_bounds = goog.style.getBounds(item);
   annotationLayer = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(annotationLayer, 'position', 'relative');
   goog.style.setStyle(annotationLayer, 'display', 'inline-block');
   
-  this._transferStyles(image, annotationLayer);
+  this._transferStyles(item, annotationLayer);
 
   goog.style.setSize(annotationLayer, img_bounds.width, img_bounds.height); 
-  goog.dom.replaceNode(annotationLayer, image);
-  goog.dom.appendChild(annotationLayer, image);
+  goog.dom.replaceNode(annotationLayer, item);
+  goog.dom.appendChild(annotationLayer, item);
   
   viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:img_bounds.width, height:img_bounds.height });
@@ -258,7 +260,7 @@ annotorious.modules.image.ImageAnnotator.prototype.getAvailableSelectors = funct
  */
 annotorious.modules.image.ImageAnnotator.prototype.getItem = function() {
   // TODO include width and height
-  return { src: annotorious.modules.image.ImageModule.getItemURL(this._image) };
+  return { src: this._module.getItemURL(this._image) };
 }
 
 /**

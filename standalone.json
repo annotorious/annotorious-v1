@@ -9,6 +9,7 @@
     "src/geometry/polygon.js",
     "src/geometry/rectangle.js",
     "src/geometry/shape.js",
+    "src/modules/module.js",
     "src/modules/image/image_annotator.js",
     "src/modules/image/image_module.js",
     "src/modules/image/image_viewer.js",

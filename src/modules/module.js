@@ -1,31 +1,129 @@
+goog.provide('annotorious.modules.Module');
+
 /**
  * An 'abstract' (forgive my Java speak) module base class
  * @constructor
  */
-annotorious.modules.Module = function() {  
-  /** @private **/
+annotorious.modules.Module = function() { }
+
+/**
+ * @protected
+ */
+annotorious.modules.Module.prototype._init = function(all_items) {
+  /** @protected **/
   this._annotators = new goog.structs.Map();
   
-  /** @private **/
+  /** @protected **/
   this._eventHandlers = [];
 
-  /** @private **/
+  /** @protected **/
   this._plugins = [];
   
-  /** @private **/
+  /** @protected **/
   this._allItems = [];
   
-  /** @private **/
+  /** @protected **/
   this._itemsToLoad = [];
   
-  /** @private **/
+  /** @protected **/
   this._bufferedForAdding = [];
   
-  /** @private **/
+  /** @protected **/
   this._bufferedForRemoval = [];
 
-  /** @private **/
+  /** @protected **/
   this._isSelectionEnabled = true;
+
+  goog.array.extend(this._allItems, all_items);
+  goog.array.extend(this._itemsToLoad, all_items);  
+
+  // Make items in viewport annotatable
+  this._lazyLoad();
+  
+  // Attach a listener to make items annotatable as they scroll into view
+  var self = this;
+  var key = goog.events.listen(window, goog.events.EventType.SCROLL, function() {
+    if (self._itemsToLoad.length > 0)
+      self._lazyLoad();
+    else
+      goog.events.unlistenByKey(key);
+  });
+}
+
+/**
+ * @private
+ */
+annotorious.modules.Module.prototype._lazyLoad = function() {        
+  var self = this;
+  goog.array.forEach(this._itemsToLoad, function(item) {
+    if (annotorious.dom.isInViewport(item)) {
+      self._initAnnotator(item);
+    }
+  });
+}
+
+/**
+ * @private
+ */
+annotorious.modules.Module.prototype._initAnnotator = function(item) {
+  var self = this;
+
+  // Keep track of changes
+  var addedAnnotations = [];
+  var removedAnnotations = [];
+
+  var annotator = this.newAnnotator(item);
+
+  if (!this._isSelectionEnabled)
+    annotator.setSelectionEnabled(false);
+
+  var item_src = this.getItemURL(item);
+
+  // Attach handlers that are already registered
+  goog.array.forEach(this._eventHandlers, function(eventHandler) {
+    annotator.addHandler(eventHandler.type, eventHandler.handler);
+  });
+
+  // Callback to registered plugins
+  goog.array.forEach(this._plugins, function(plugin) {
+    self._initPlugin(plugin, annotator);
+  });
+            
+  // Cross-check with annotation add/remove buffers
+  goog.array.forEach(this._bufferedForAdding, function(annotation) {
+    if (annotation.src == image_src) {
+      annotator.addAnnotation(annotation);
+      addedAnnotations.push(annotation);
+    }
+  });
+      
+  goog.array.forEach(this._bufferedForRemoval, function(annotation) {
+    if (annotation.src == image_src) {
+      annotator.removeAnnotation(annotation);
+      removedAnnotations.push(annotation);
+    }
+  });
+
+  // Apply changes
+  goog.array.forEach(addedAnnotations, function(annotation) {
+    goog.array.remove(self._bufferedForAdding, annotation);
+  });
+  
+  goog.array.forEach(removedAnnotations, function(annotation) {
+    goog.array.remove(self._bufferedForRemoval, annotation);
+  });
+  
+  // Update _annotators and _imagesToLoad lists
+  this._annotators.set(item_src, annotator);
+  goog.array.remove(this._itemsToLoad, item);
+}
+
+/**
+ * @private
+ */
+annotorious.modules.Module.prototype._initPlugin = function(plugin, annotator) {
+  if (plugin.onInitAnnotator)
+    plugin.onInitAnnotator(annotator);
 }
 
 /**
@@ -47,6 +145,41 @@ annotorious.modules.Module.prototype.addAnnotation = function(annotation, opt_re
 }
 
 /**
+ * Standard module method: adds a lifecycle event handler to the image module.
+ * @param {yuma.events.EventType} type the event type
+ * @param {function} handler the handler function
+ */
+annotorious.modules.Module.prototype.addHandler = function(type, handler) {
+  goog.array.forEach(this._annotators.getValues(), function(annotator, idx, array) {
+    annotator.addHandler(type, handler);
+  });
+  
+  this._eventHandlers.push({ type: type, handler: handler });
+}
+
+/**
+ * Standard module method: adds a plugin to this module.
+ * @param {Plugin} plugin the plugin
+ */
+annotorious.modules.Module.prototype.addPlugin = function(plugin) {
+  this._plugins.push(plugin);
+  
+  var self = this;
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
+    self._initPlugin(plugin, annotator);
+  });
+}
+
+annotorious.modules.Module.prototype.addSelector = function(item_url, selector) {
+  if (this.annotatesItem(item_url)) {
+    var annotator = this._annotators.get(item_url);
+    if (annotator)
+      annotator.addSelector(selector);
+  }
+}
+
+
+/**
  * Standard module method: tests if this module is in charge of managing the
  * annotatable item with the specified URL.
  * @param {string} item_url the URL of the item
@@ -62,6 +195,19 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
     });
     
     return goog.isDefAndNotNull(item);
+  }
+}
+
+/**
+ * Returns the name of the selector that is currently activated on a 
+ * particular item.
+ * @param {string} the URL of the item to query for the active selector
+ */
+annotorious.modules.Module.prototype.getActiveSelector = function(item_url) {
+  if (this.annotatesItem(item_url)) {
+    var annotator = this._annotators.get(item_url);
+    if (annotator)
+      return annotator.getActiveSelector().getName();
   }
 }
 
@@ -182,6 +328,11 @@ annotorious.modules.Module.prototype.setSelectionEnabled = function(enabled) {
  * @return {boolean} true if this module can provide annotation functionality for the item
  * @interface
  */
-annotorious.modules.Module.prototype.supports = goog.abstractMethod // This should be the proper Closure way to do it
+annotorious.modules.Module.prototype.supports = goog.abstractMethod;
 
+annotorious.modules.Module.prototype.newAnnotator = goog.abstractMethod;
+
+annotorious.modules.Module.prototype.init = goog.abstractMethod;
+
+annotorious.modules.Module.prototype.getItemURL = goog.abstractMethod;
 

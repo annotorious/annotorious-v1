@@ -19,12 +19,9 @@
         };
 
         anno.addHandler('onAnnotationCreated', function(annotation) {
-          console.log('created');
+          console.log(annotation);
         });
 
-        anno.addHandler('onAnnotationUpdated', function(annotation) {
-          console.log('updated');
-        });
         anno.addAnnotation(annotation);
       }
     </script>
