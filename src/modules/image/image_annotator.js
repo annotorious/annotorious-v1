@@ -14,7 +14,7 @@ goog.require('goog.style');
  * @param {element} image the image DOM element
  * @constructor
  */
-annotorious.modules.image.ImageAnnotator = function(module, item, opt_popup) {
+annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
   var annotationLayer, viewCanvas, hint;
 
   /** The editor for this annotator (public for use by plugins) **/
@@ -22,8 +22,6 @@ annotorious.modules.image.ImageAnnotator = function(module, item, opt_popup) {
 
   /** The popup for this annotator (public for use by plugins) **/
   this.popup;
-
-  this._module = module;
 
   /** @private **/
   this._image = item;
@@ -260,7 +258,15 @@ annotorious.modules.image.ImageAnnotator.prototype.getAvailableSelectors = funct
  */
 annotorious.modules.image.ImageAnnotator.prototype.getItem = function() {
   // TODO include width and height
-  return { src: this._module.getItemURL(this._image) };
+  return { src: annotorious.modules.image.ImageAnnotator.getItemURL(this._image) };
+}
+
+annotorious.modules.image.ImageAnnotator.getItemURL = function(item) {
+  var src = item.getAttribute('data-original');
+  if (src)
+    return src;
+  else
+    return item.src;
 }
 
 /**

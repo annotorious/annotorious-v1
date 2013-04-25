@@ -1,41 +1,42 @@
 goog.provide('annotorious.modules.Module');
 
 /**
- * An 'abstract' (forgive my Java speak) module base class
+ * An base class for Annotorious Module implementations.
  * @constructor
  */
 annotorious.modules.Module = function() { }
 
 /**
+ * Initializes the module instance. Note that subclasses *must*
+ * call this method on initialization.
  * @protected
  */
 annotorious.modules.Module.prototype._init = function(all_items) {
-  /** @protected **/
+  /** @private **/
   this._annotators = new goog.structs.Map();
   
-  /** @protected **/
+  /** @private **/
   this._eventHandlers = [];
 
-  /** @protected **/
+  /** @private **/
   this._plugins = [];
   
-  /** @protected **/
+  /** @private **/
   this._allItems = [];
+  goog.array.extend(this._allItems, all_items);
   
-  /** @protected **/
+  /** @private **/
   this._itemsToLoad = [];
+  goog.array.extend(this._itemsToLoad, all_items); 
   
-  /** @protected **/
+  /** @private **/
   this._bufferedForAdding = [];
   
-  /** @protected **/
+  /** @private **/
   this._bufferedForRemoval = [];
 
-  /** @protected **/
+  /** @private **/
   this._isSelectionEnabled = true;
-
-  goog.array.extend(this._allItems, all_items);
-  goog.array.extend(this._itemsToLoad, all_items);  
 
   // Make items in viewport annotatable
   this._lazyLoad();

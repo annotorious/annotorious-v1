@@ -33,11 +33,7 @@ annotorious.modules.image.ImageModule.prototype.init = function() {
  * @inheritDoc
  */
 annotorious.modules.image.ImageModule.prototype.getItemURL = function(item) {
-  var src = item.getAttribute('data-original');
-  if (src)
-    return src;
-  else
-    return item.src;
+  return annotorious.modules.image.ImageAnnotator.getItemURL(item);
 }
 
 
@@ -56,6 +52,6 @@ annotorious.modules.image.ImageModule.prototype.supports = function(item) {
 }
 
 annotorious.modules.image.ImageModule.prototype.newAnnotator = function(item) {
-  return new annotorious.modules.image.ImageAnnotator(this, item);
+  return new annotorious.modules.image.ImageAnnotator(item);
 }
 

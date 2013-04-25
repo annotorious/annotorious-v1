@@ -30,7 +30,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     { width:image.width, height:image.height });
   goog.dom.appendChild(annotationLayer, viewCanvas);   
 
-  var popup = new annotorious.okfn.Popup(image, eventBroker, okfnAnnotator, baseOffset);
+  var popup = new annotorious.okfn.Popup(image, okfnAnnotator, eventBroker, baseOffset);
   
   var editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:image.width, height:image.height });
