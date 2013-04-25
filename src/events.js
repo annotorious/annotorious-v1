@@ -15,7 +15,7 @@ annotorious.events.EventBroker = function() {
 /**
  * Adds an event handler.
  * @param {annotorious.events.EventType} type the event type
- * @param {function} the handler function to add
+ * @param {function} handler the handler function to add
  */
 annotorious.events.EventBroker.prototype.addHandler = function(type, handler) {
   if (!this._handlers[type]) 
@@ -27,7 +27,7 @@ annotorious.events.EventBroker.prototype.addHandler = function(type, handler) {
 /**
  * Removes an event handler.
  * @param {annotorious.events.EventType} type the event type
- * @param {function} the handler function to remove
+ * @param {function} handler the handler function to remove
  */
 annotorious.events.EventBroker.prototype.removeHandler = function(type, handler) {
   var handlers = this._handlers[type];
@@ -38,7 +38,7 @@ annotorious.events.EventBroker.prototype.removeHandler = function(type, handler)
 /**
  * Fires an event, triggering execution of all registered handlers.
  * @param {annotorious.events.EventType} type the event type
- * @param {object} the event object
+ * @param {object} event the event object
  */
 annotorious.events.EventBroker.prototype.fireEvent = function(type, event) {
   var handlers = this._handlers[type];
@@ -50,7 +50,7 @@ annotorious.events.EventBroker.prototype.fireEvent = function(type, event) {
 }
 
 /**
- * Annotation lifecycle events
+ * Annotation lifecycle events.
  * @enum {string}
  */
 annotorious.events.EventType = {

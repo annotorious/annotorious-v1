@@ -1,5 +1,5 @@
 /**
- * Doesn't do much - except setting up the plugin namespace
+ * Doesn't do much. Just sets up the plugin namespace.
  */
 if (!window['annotorious'])
   window['annotorious'] = {};
