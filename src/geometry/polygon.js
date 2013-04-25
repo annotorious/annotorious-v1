@@ -1,7 +1,7 @@
 goog.provide('annotorious.shape.geom.Polygon');
 
 /**
- * A polygon geometry primitive.
+ * A polygon.
  * @param {Array.<annotorious.shape.geom.Point>} points the points
  * @constructor
  */
@@ -9,13 +9,15 @@ annotorious.shape.geom.Polygon = function(points) {
   this.points = points;
 }
 
+
 /** Polygon-specific helper functions & geometry computation utilities **/
+
 
 /**
  * Computes the area of a polygon. Note that the area can be <0, depending on the
- * clockwise/counterclockwise orientation of a polygon.
+ * clockwise/counterclockwise orientation of the polygon vertices!
  * @param {Array.<annotorious.shape.geom.Point>} points the points
- * @returns the area
+ * @return {number} the area
  */
 annotorious.shape.geom.Polygon.computeArea = function(points) {
     var area = 0.0;
@@ -30,17 +32,16 @@ annotorious.shape.geom.Polygon.computeArea = function(points) {
 }
 
 /**
- * Tests whether a polygon is oriented in clockwise or counterclockwise
- * direction.
+ * Tests if a polygon is oriented clockwise or counterclockwise.
  * @param {Array.<annotorious.shape.geom.Point>} points the points
- * @returns {boolean} true if the geometry is in clockwise orientation
+ * @return {boolean} true if the geometry is in clockwise orientation
  */
 annotorious.shape.geom.Polygon.isClockwise = function(points) {
   return annotorious.shape.geom.Polygon.computeArea(points) < 0;
 }
 
 /**
- * Computes the centroid coordinate for the specified polygon.
+ * Computes the centroid coordinate of a polygon.
  * @param {Array.<annotorious.shape.geom.Point>} points the points
  * @returns {annotorious.shape.geom.Point} the centroid X/Y coordinate
  */
@@ -61,23 +62,23 @@ annotorious.shape.geom.Polygon.computeCentroid = function(points) {
   return { x: Math.abs(x/f), y: Math.abs(y/f) }; 
 }
 
-annotorious.shape.geom.Polygon.sign = function(number) {
-  return number > 0 ? 1 : number < 0 ? -1 : 0;
-}
-
 /**
  * A simple triangle expansion algorithm that shifts triangle vertices in/outwards by a specified
  * delta, along the axis centroid->vertex. Used internally as a subroutine for polygon expansion.
  * @param {Array.<annotorious.shape.geom.Point>} points the points
- * @returns {Array.<annotorious.shape.geom.Point>} the expanded triangle
+ * @return {Array.<annotorious.shape.geom.Point>} the expanded triangle
  * @private
  */
 annotorious.shape.geom.Polygon._expandTriangle = function(points, delta) {
+  function signum(number) {
+    return number > 0 ? 1 : number < 0 ? -1 : 0;
+  }
+
   function shiftAlongAxis(px, centroid, delta) {
     var axis = { x: (px.x - centroid.x) , y: (px.y - centroid.y) };
-    var sign_delta = annotorious.shape.geom.Polygon.sign(delta);
-    var sign_x = annotorious.shape.geom.Polygon.sign(axis.x) * sign_delta;
-    var sign_y = annotorious.shape.geom.Polygon.sign(axis.y) * sign_delta;
+    var sign_delta = signum(delta);
+    var sign_x = signum(axis.x) * sign_delta;
+    var sign_y = signum(axis.y) * sign_delta;
   
     var dy = Math.sqrt(Math.pow(delta, 2) / (1 + Math.pow((axis.x / axis.y), 2)));
     var dx = (axis.x / axis.y) * dy;
@@ -96,10 +97,11 @@ annotorious.shape.geom.Polygon._expandTriangle = function(points, delta) {
 }
 
 /**
- * A simple polygon expansion algorithm that generates generates a series of triangles from the
- * polygon, and then applies annotorious.shape.geom.Polygon._expandTriangle.
+ * A simple polygon expansion algorithm that generates a series of triangles from 
+ * the polygon, and then subsequently applies the _expandTriangle method.
  * @param {Array.<annotorious.shape.geom.Point>} points the points
- * @returns {Array.<annotorious.shape.geom.Point>} the expanded polygon
+ * @param {number} delta the distance by which to expand
+ * @return {Array.<annotorious.shape.geom.Point>} the expanded polygon
  */
 annotorious.shape.geom.Polygon.expandPolygon = function(points, delta) {
   var sign = (annotorious.shape.geom.Polygon.isClockwise(points)) ? -1 : 1;

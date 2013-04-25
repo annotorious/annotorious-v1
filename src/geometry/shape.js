@@ -33,53 +33,55 @@ annotorious.shape.Units = {
   FRACTION: 'fraction'
 }
 
+
 /** Helper functions & geometry computation utilities **/
+
 
 /**
  * Checks whether a given shape intersects a point.
  * @param {annotorious.shape.Shape} shape the shape
  * @param {number} px the X coordinate
  * @param {nubmer} py the Y coordinate
- * @returns {boolean} true if the point intersects the shape
+ * @return {boolean} true if the point intersects the shape
  */
 annotorious.shape.intersects = function(shape, px, py) {
-    if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
-      if (px < shape.geometry.x)
-        return false;
+  if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
+    if (px < shape.geometry.x)
+      return false;
 
-      if (py < shape.geometry.y)
-        return false;
+    if (py < shape.geometry.y)
+      return false;
 
-      if (px > shape.geometry.x + shape.geometry.width)
-        return false;
+    if (px > shape.geometry.x + shape.geometry.width)
+      return false;
 
-      if (py > shape.geometry.y + shape.geometry.height)
-        return false;
+    if (py > shape.geometry.y + shape.geometry.height)
+      return false;
     
-      return true;
-    } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
-      var points = shape.geometry.points;
-      var inside = false;
+    return true;
+  } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
+    var points = shape.geometry.points;
+    var inside = false;
 
-      var j = points.length - 1;
-      for (var i=0; i<points.length; i++) {
-        if ((points[i].y > py) != (points[j].y > py) && 
-            (px < (points[j].x - points[i].x) * (py - points[i].y) / (points[j].y-points[i].y) + points[i].x)) {
-          inside = !inside;
-        }
-        j = i;
+    var j = points.length - 1;
+    for (var i=0; i<points.length; i++) {
+      if ((points[i].y > py) != (points[j].y > py) && 
+          (px < (points[j].x - points[i].x) * (py - points[i].y) / (points[j].y-points[i].y) + points[i].x)) {
+        inside = !inside;
       }
-
-      return inside;
+      j = i;
     }
+
+    return inside;
+  }
     
-    return false;
+  return false;
 }
 
 /**
- * Returns the size of a given shape.
+ * Returns the size of a shape.
  * @param {annotorious.shape.Shape} shape the shape
- * @returns {number} the size
+ * @return {number} the size
  */
 annotorious.shape.getSize = function(shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
@@ -91,9 +93,9 @@ annotorious.shape.getSize = function(shape) {
 }
 
 /**
- * Returns the bounding rectangle of a given shape.
+ * Returns the bounding rectangle of a shape.
  * @param {annotorious.shape.Shape} shape the shape
- * @returns {annotorious.shape.Shape} the bounding rectangle
+ * @return {annotorious.shape.Shape} the bounding rectangle
  */
 annotorious.shape.getBoundingRect = function(shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
@@ -144,26 +146,23 @@ annotorious.shape.getCentroid = function(shape) {
 }
 
 /**
- * A naive shape expansion algorithm, which shifts polygon vertices in/outwards by a specified
- * delta, along the axis centroid->vertex. Note that this is *NOT* real polygon buffering, and
- * only works perfectly for cases where the polygon is a triangle!
- *
- * // TODO add a polygon triangulation step: http://en.wikipedia.org/wiki/Polygon_triangulation
- * 
+ * Expands a shape by a specified delta.
+ * @param {annotorious.shape.Shape} shape the shape
+ * @param {number} delta the delta 
  */
 annotorious.shape.expand = function(shape, delta) {
-  // TODO implement for RECTANGLE
+  // TODO for the sake of completeness: implement for RECTANGLE
   return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON,
     new annotorious.shape.geom.Polygon(annotorious.shape.geom.Polygon.expandPolygon(shape.geometry.points, delta)));
  }
 
 /**
- * Transforms a shape from a source to a destination coordinate system. The transformation
- * is calculated using the transformationFn parameter, which must be a function(xy)
- * that transforms a single XY coordinate.
+ * Transforms a shape from a source coordinate system to a destination coordinate
+ * system. The transformation is calculated using the transformationFn parameter, 
+ * which must be a function(xy) that transforms a single XY coordinate.
  * @param {annotorious.shape.Shape} shape the shape to transform
  * @param {function} transformationFn the transformation function
- * @returns {annotorious.shape.Shape} the transformed shape
+ * @return {annotorious.shape.Shape} the transformed shape
  */
 annotorious.shape.transform = function(shape, transformationFn) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
@@ -189,7 +188,7 @@ annotorious.shape.transform = function(shape, transformationFn) {
  * way to do it. But we need a useful .toString kind-of fuctionality to use for hashtable
  * keys in the viewer!
  * @param {annotorious.shape.Shape} shape the shape
- * @returns {string} a 'hashcode' for the shape
+ * @return {string} a 'hashcode' for the shape
  */
 annotorious.shape.hashCode = function(shape) {
   return JSON.stringify(shape.geometry);

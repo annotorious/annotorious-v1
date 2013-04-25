@@ -1,7 +1,7 @@
 goog.provide('annotorious.shape.geom.Point');
 
 /**
- * A point geometry primitive.
+ * A point.
  * @param {number} x the x coordinate
  * @param {number} y the y coordinate
  * @constructor

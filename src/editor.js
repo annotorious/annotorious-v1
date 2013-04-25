@@ -68,8 +68,9 @@ annotorious.editor.Editor = function(annotator, parentEl) {
 }
 
 /**
- * Adds a field to the popup GUI widget. A field can be either a string (containing
- * HTML) or a function that takes an Annotation as argument and returns an (HTML) string.
+ * Adds a field to the editor GUI widget. A field can be either an (HTML) string, or
+ * a function that takes an Annotation as argument and returns an (HTML) string or
+ * a DOM element.
  * @param {string | function} field the field
  */
 annotorious.editor.Editor.prototype.addField = function(field) {
@@ -88,7 +89,7 @@ annotorious.editor.Editor.prototype.addField = function(field) {
 
 /**
  * Opens the edit form with an annotation.
- * @param {Annotation} opt_annotation the annotation to edit or undefined to create a new annotation
+ * @param {Annotation} opt_annotation the annotation to edit (or undefined)
  */
 annotorious.editor.Editor.prototype.open = function(opt_annotation) {
   this._original_annotation = opt_annotation;
@@ -103,7 +104,6 @@ annotorious.editor.Editor.prototype.open = function(opt_annotation) {
   // Update extra fields (if any)
   goog.array.forEach(this._extraFields, function(field) {
     var f = field.fn(opt_annotation);
-    
     if (goog.isString(f))  {
       field.el.innerHTML = f;
     } else if (goog.dom.isElement(f)) {
@@ -122,7 +122,7 @@ annotorious.editor.Editor.prototype.close = function() {
 }
 
 /**
- * (Re-)sets the position (i.e. CSS left/top value) of the editor element.
+ * Sets the position (i.e. CSS left/top value) of the editor element.
  * @param {annotorious.geom.Point} xy the viewport coordinate
  */
 annotorious.editor.Editor.prototype.setPosition = function(xy) {
@@ -130,8 +130,8 @@ annotorious.editor.Editor.prototype.setPosition = function(xy) {
 }
 
 /**
- * Gets the annotation that is the current state of the editor.
- * @return {annotorious.annotation.Annotation} the annotation
+ * Returns the annotation that is the current state of the editor.
+ * @return {Annotation} the annotation
  */
 annotorious.editor.Editor.prototype.getAnnotation = function() {
   var sanitized = goog.string.html.htmlSanitize(this._textarea.value, function(url) {
@@ -148,6 +148,6 @@ annotorious.editor.Editor.prototype.getAnnotation = function() {
   return this._current_annotation;
 }
 
-// Export addField API method
+/** API exports **/
 annotorious.editor.Editor.prototype['addField'] = annotorious.editor.Editor.prototype.addField;
 annotorious.editor.Editor.prototype['getAnnotation'] = annotorious.editor.Editor.prototype.getAnnotation;

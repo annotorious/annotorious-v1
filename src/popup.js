@@ -8,7 +8,7 @@ goog.require('goog.dom.query');
 /**
  * A popup bubble widget to show annotation details.
  * @param {element} parentEl the DOM element to attach to
- * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
+ * @param {object} annotator reference to the annotator
  * @constructor
  */
 annotorious.viewer.Popup = function(parentEl, annotator) {
@@ -94,8 +94,9 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
 }
 
 /**
- * Adds a field to the popup GUI widget. A field can be either a string (containing
- * HTML) or a function that takes an Annotation as argument and returns an (HTML) string.
+ * Adds a field to the popup GUI widget. A field can be either an (HTML) string, or
+ * a function that takes an Annotation as argument and returns an (HTML) string or
+ * a DOM element.
  * @param {string | function} field the field
  */
 annotorious.viewer.Popup.prototype.addField = function(field) {
@@ -144,8 +145,8 @@ annotorious.viewer.Popup.prototype.clearHideTimer = function() {
 
 /**
  * Show the popup, loaded with the specified annotation, at the specified coordinates.
- * @param {Object} annotation the annotation
- * @param {annotorious.geom.Point} xy the viewport coordinate
+ * @param {object} annotation the annotation
+ * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  */
 annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
   this.clearHideTimer();
@@ -177,7 +178,6 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
     // Update extra fields (if any)
     goog.array.forEach(this._extraFields, function(field) {
       var f = field.fn(annotation);
-      
       if (goog.isString(f))  {
         field.el.innerHTML = f;
       } else if (goog.dom.isElement(f)) {
@@ -193,11 +193,11 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
 
 /**
  * Set the position of the popup.
- * @param {annotorious.geom.Point} xy the viewport coordinate
+ * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  */
 annotorious.viewer.Popup.prototype.setPosition = function(xy) {
   goog.style.setPosition(this.element, new goog.math.Coordinate(xy.x, xy.y));
 }
 
-// Export addField method
+/** API exports **/
 annotorious.viewer.Popup.prototype['addField'] = annotorious.viewer.Popup.prototype.addField;

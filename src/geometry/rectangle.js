@@ -1,7 +1,7 @@
 goog.provide('annotorious.shape.geom.Rectangle');
 
 /**
- * A rectangle geometry primitive.
+ * A rectangle.
  * @param {number} x the anchor point x coordinate
  * @param {number} y the anchor point y coordinate
  * @param {number} width the rectangle width
@@ -9,7 +9,6 @@ goog.provide('annotorious.shape.geom.Rectangle');
  * @constructor
  */
 annotorious.shape.geom.Rectangle = function(x, y, width, height) {
-  // Normalize to positive width and height
   if (width > 0) {
     this.x = x;
     this.width = width;
