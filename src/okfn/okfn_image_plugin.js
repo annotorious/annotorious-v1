@@ -68,7 +68,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
     if (!annotation) 
       return false;
 
-    return annotation.url == image.src;
+    return annotation.src == image.src;
   };
  
   /**
@@ -136,7 +136,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   /** Communication yuma -> okfn **/
   
   eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {    
-    var annotation = { url: image.src, shapes: [event.shape] };
+    var annotation = { src: image.src, shapes: [event.shape] };
     okfnAnnotator.publish('beforeAnnotationCreated', annotation);
 	
     var imgOffset = annotorious.dom.getOffset(image);
@@ -174,24 +174,24 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
 
   okfnAnnotator.subscribe('annotationCreated', function(annotation) {
-    if (annotation.url == image.src) {
+    if (annotation.src == image.src) {
       selector.stopSelection();
-      if(annotation.url == image.src) {
-	viewer.addAnnotation(annotation);
+      if(annotation.src == image.src) {
+	viewer.addAnnotation(annotorious.annotation.Annotation.clone(annotation));
       }
     }
   });
   
   okfnAnnotator.subscribe('annotationsLoaded', function(annotations) {
     goog.array.forEach(annotations, function(annotation) {
-      if(annotation.url == image.src) {
+      if(annotation.src == image.src) {
 	viewer.addAnnotation(annotation);
       }
     });
   });
   
   okfnAnnotator.subscribe('annotationDeleted', function(annotation) {
-    if(annotation.url == image.src) {
+    if(annotation.src == image.src) {
       viewer.removeAnnotation(annotation);
     }
 

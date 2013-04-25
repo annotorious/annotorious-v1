@@ -74,7 +74,7 @@ annotorious.okfn.Popup.prototype.isViewerCurrentlyOwned = function() {
   if (annotations.length < 1)
     return false;
 
-  return annotations[0].url == this._image.src;
+  return annotations[0].src == this._image.src;
 }
 
 /**

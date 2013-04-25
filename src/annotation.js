@@ -14,3 +14,7 @@ annotorious.annotation.Annotation = function(src, text, shape) {
   this.shapes = [ shape ];
   this['context'] = document.URL; // Prevents dead code removal
 }
+
+annotorious.annotation.Annotation.clone = function(annotation) {
+  return new annotorious.annotation.Annotation(annotation.src, annotation.text, annotation.shapes[0]);
+}
