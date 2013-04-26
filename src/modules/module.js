@@ -9,9 +9,10 @@ annotorious.modules.Module = function() { }
 /**
  * Initializes the module instance. Note that subclasses *must*
  * ensure by themselves that this method is called on initialization.
+ * @param {Array.<object>} opt_predef_items any items that should be made annotatable immediately
  * @protected
  */
-annotorious.modules.Module.prototype._init = function(all_items) {
+annotorious.modules.Module.prototype._init = function(opt_predef_items) {
   /** @private **/
   this._annotators = new goog.structs.Map();
   
@@ -23,11 +24,13 @@ annotorious.modules.Module.prototype._init = function(all_items) {
   
   /** @private **/
   this._allItems = [];
-  goog.array.extend(this._allItems, all_items);
+  if (opt_predef_items)
+    goog.array.extend(this._allItems, opt_predef_items);
   
   /** @private **/
   this._itemsToLoad = [];
-  goog.array.extend(this._itemsToLoad, all_items); 
+  if (opt_predef_items)
+    goog.array.extend(this._itemsToLoad, opt_predef_items); 
   
   /** @private **/
   this._bufferedForAdding = [];

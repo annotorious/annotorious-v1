@@ -21,22 +21,22 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
   
-  var annotationLayer = goog.dom.createDom('div', 'annotorious-annotationlayer');
-  goog.style.setStyle(annotationLayer, 'position', 'relative');
-  goog.style.setSize(annotationLayer, width, height); 
-  goog.dom.replaceNode(annotationLayer, this._div);
-  goog.dom.appendChild(annotationLayer, this._div); 
+  this.element = goog.dom.createDom('div', 'annotorious-annotationlayer');
+  goog.style.setStyle(this.element, 'position', 'relative');
+  goog.style.setSize(this.element, width, height); 
+  goog.dom.replaceNode(this.element, this._div);
+  goog.dom.appendChild(this.element, this._div); 
 
   /** @private **/
-  var hint = new annotorious.hint.Hint(this, annotationLayer, 'Hold CTRL to Annotate');
+  var hint = new annotorious.hint.Hint(this, this.element, 'Hold CTRL to Annotate');
 
   var secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
   goog.style.setStyle(secondaryHint, 'z-index', 9998);
   goog.style.setOpacity(secondaryHint, 0); 
-  goog.dom.appendChild(annotationLayer, secondaryHint);
+  goog.dom.appendChild(this.element, secondaryHint);
   
   /** @private **/
-  this.popup = new annotorious.viewer.Popup(annotationLayer, this);
+  this.popup = new annotorious.viewer.Popup(this);
 
   /** @private **/
   this._viewer = new annotorious.modules.openlayers.Viewer(map, this.popup, this);
@@ -46,26 +46,26 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
     { width:width, height:height });
   goog.style.showElement(this._editCanvas, false);
   goog.style.setStyle(this._editCanvas, 'z-index', 9999);
-  goog.dom.appendChild(annotationLayer, this._editCanvas);  
+  goog.dom.appendChild(this.element, this._editCanvas);  
 
   /** @private **/
   this._selector = new annotorious.plugins.selection.RectDragSelector();
   this._selector.init(this._editCanvas, this); 
     
   /** @private **/
-  this.editor = new annotorious.editor.Editor(this, annotationLayer);
+  this.editor = new annotorious.editor.Editor(this);
   goog.style.setStyle(this.editor.element, 'z-index', 10000);
 
   var self = this;  
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
+  goog.events.listen(this.element, goog.events.EventType.MOUSEOVER, function(event) {
     var relatedTarget = event.relatedTarget;
-    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget))
+    if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget))
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
   });
   
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
+  goog.events.listen(this.element, goog.events.EventType.MOUSEOUT, function(event) {
     var relatedTarget = event.relatedTarget;
-    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget))
+    if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget))
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
   });
   
