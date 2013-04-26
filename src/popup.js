@@ -7,11 +7,10 @@ goog.require('goog.dom.query');
 
 /**
  * A popup bubble widget to show annotation details.
- * @param {element} parentEl the DOM element to attach to
  * @param {object} annotator reference to the annotator
  * @constructor
  */
-annotorious.viewer.Popup = function(parentEl, annotator) {
+annotorious.viewer.Popup = function(annotator) {
   this.element = goog.soy.renderAsElement(annotorious.templates.popup);
 
   /** @private **/
@@ -90,7 +89,7 @@ annotorious.viewer.Popup = function(parentEl, annotator) {
   goog.style.setOpacity(this._buttons, 0);
   goog.style.setOpacity(this.element, 0);
   goog.style.setStyle(this.element, 'pointer-events', 'none');
-  goog.dom.appendChild(parentEl, this.element);
+  goog.dom.appendChild(annotator.element, this.element);
 }
 
 /**

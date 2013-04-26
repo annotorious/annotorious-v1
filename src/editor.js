@@ -9,10 +9,9 @@ goog.require('goog.string.html.htmlSanitize');
 /**
  * Annotation edit form.
  * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
- * @param {element} parentEl the DOM element to attach the editor to
  * @constructor
  */
-annotorious.editor.Editor = function(annotator, parentEl) {
+annotorious.editor.Editor = function(annotator) {
   this.element = goog.soy.renderAsElement(annotorious.templates.editform);
   
   /** @private **/
@@ -63,7 +62,7 @@ annotorious.editor.Editor = function(annotator, parentEl) {
   });
  
   goog.style.showElement(this.element, false);
-  goog.dom.appendChild(parentEl, this.element);
+  goog.dom.appendChild(annotator.element, this.element);
   this._textarea.focus();
 }
 

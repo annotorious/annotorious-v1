@@ -9,14 +9,17 @@ goog.require('goog.math');
 goog.require('goog.style');
 
 /**
- * The ImageAnnotator is responsible for handling annotation functionality
- * on one image in the page.
- * @param {element} image the image DOM element
+ * The ImageAnnotator is responsible for one image in the page.
+ * @param {element} item the image DOM element
+ * @param {object} opt_popup a popup implementation to use instead of the default one
  * @constructor
  */
 annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
-  var annotationLayer, viewCanvas, hint;
-
+  var viewCanvas, hint;
+  
+  /** The container DOM element (DIV) for the annotation layer **/
+  this.element;
+  
   /** The editor for this annotator (public for use by plugins) **/
   this.editor;
 
@@ -25,6 +28,15 @@ annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
 
   /** @private **/
   this._image = item;
+  
+  /** @private **/
+  this._viewer;
+  
+  /** @private **/
+  this._editCanvas;
+  
+  /** @private **/
+  this._hint;
   
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
@@ -39,58 +51,51 @@ annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
   this._selectionEnabled = true;
 
   var img_bounds = goog.style.getBounds(item);
-  annotationLayer = goog.dom.createDom('div', 'annotorious-annotationlayer');
-  goog.style.setStyle(annotationLayer, 'position', 'relative');
-  goog.style.setStyle(annotationLayer, 'display', 'inline-block');
-  
-  this._transferStyles(item, annotationLayer);
+  this.element = goog.dom.createDom('div', 'annotorious-annotationlayer');
+  goog.style.setStyle(this.element, 'position', 'relative');
+  goog.style.setStyle(this.element, 'display', 'inline-block');
+  this._transferStyles(item, this.element);
 
-  goog.style.setSize(annotationLayer, img_bounds.width, img_bounds.height); 
-  goog.dom.replaceNode(annotationLayer, item);
-  goog.dom.appendChild(annotationLayer, item);
+  goog.style.setSize(this.element, img_bounds.width, img_bounds.height); 
+  goog.dom.replaceNode(this.element, item);
+  goog.dom.appendChild(this.element, item);
   
   viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:img_bounds.width, height:img_bounds.height });
   goog.dom.classes.add(viewCanvas, 'annotorious-item-unfocus');
-  goog.dom.appendChild(annotationLayer, viewCanvas);   
+  goog.dom.appendChild(this.element, viewCanvas);   
 
-  /** @private **/
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:img_bounds.width, height:img_bounds.height });
   goog.style.showElement(this._editCanvas, false); 
-  goog.dom.appendChild(annotationLayer, this._editCanvas);
+  goog.dom.appendChild(this.element, this._editCanvas);
 
   if (opt_popup)
     this.popup = opt_popup;
   else
-    this.popup = new annotorious.viewer.Popup(annotationLayer, this);
+    this.popup = new annotorious.viewer.Popup(this);
 
   var default_selector = new annotorious.plugins.selection.RectDragSelector();
   default_selector.init(this._editCanvas, this); 
   this._selectors.push(default_selector);
   this._currentSelector = default_selector;
 
-  /** @private **/
+  this.editor = new annotorious.editor.Editor(this);
   this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this.popup, this); 
-
-  this.editor = new annotorious.editor.Editor(this, annotationLayer);
-
-  /** @private **/
-  this._hint = new annotorious.hint.Hint(this, annotationLayer);
+  this._hint = new annotorious.hint.Hint(this, this.element);
   
-  var self = this;  
-
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
+  var self = this;
+  goog.events.listen(this.element, goog.events.EventType.MOUSEOVER, function(event) {
     var relatedTarget = event.relatedTarget;
-    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
+    if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
       goog.dom.classes.addRemove(viewCanvas, 'annotorious-item-unfocus', 'annotorious-item-focus');
     }
   });
   
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
+  goog.events.listen(this.element, goog.events.EventType.MOUSEOUT, function(event) {
     var relatedTarget = event.relatedTarget;
-    if (!relatedTarget || !goog.dom.contains(annotationLayer, relatedTarget)) {
+    if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
       goog.dom.classes.addRemove(viewCanvas, 'annotorious-item-focus', 'annotorious-item-unfocus');
     }
@@ -264,7 +269,9 @@ annotorious.modules.image.ImageAnnotator.prototype.getItem = function() {
 /**
  * Annotations should be bound to the URL defined in the 'data-original' attribute of
  * the image. Only if this attribute does not exist, they should be bound to the original
- * image SRC. This utility function returns the correct URL to bind to.
+ * image src. This utility function returns the correct URL to bind to.
+ * @param {element} item the image DOM element
+ * @return {string} the URL
  */
 annotorious.modules.image.ImageAnnotator.getItemURL = function(item) {
   var src = item.getAttribute('data-original');
@@ -350,6 +357,6 @@ annotorious.modules.image.ImageAnnotator.prototype.toItemCoordinates = function(
   return { x: xy.x / imgSize.width, y: xy.y / imgSize.height };
 }
 
+/** API exports **/
 annotorious.modules.image.ImageAnnotator.prototype['fireEvent'] = annotorious.modules.image.ImageAnnotator.prototype.fireEvent;
 annotorious.modules.image.ImageAnnotator.prototype['toItemCoordinates'] = annotorious.modules.image.ImageAnnotator.prototype.toItemCoordinates;
-
