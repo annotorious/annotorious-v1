@@ -261,6 +261,11 @@ annotorious.modules.image.ImageAnnotator.prototype.getItem = function() {
   return { src: annotorious.modules.image.ImageAnnotator.getItemURL(this._image) };
 }
 
+/**
+ * Annotations should be bound to the URL defined in the 'data-original' attribute of
+ * the image. Only if this attribute does not exist, they should be bound to the original
+ * image SRC. This utility function returns the correct URL to bind to.
+ */
 annotorious.modules.image.ImageAnnotator.getItemURL = function(item) {
   var src = item.getAttribute('data-original');
   if (src)
