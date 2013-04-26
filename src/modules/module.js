@@ -8,7 +8,7 @@ annotorious.modules.Module = function() { }
 
 /**
  * Initializes the module instance. Note that subclasses *must*
- * call this method on initialization.
+ * ensure by themselves that this method is called on initialization.
  * @protected
  */
 annotorious.modules.Module.prototype._init = function(all_items) {
@@ -128,8 +128,8 @@ annotorious.modules.Module.prototype._initPlugin = function(plugin, annotator) {
 }
 
 /**
- * Standard module method: adds an annotation.
- * @param {Annotation} the annotation
+ * Adds an annotation to an item managed by this module.
+ * @param {Annotation} annotation the annotation
  * @param {Annotation} opt_replace optionally, an existing annotation to replace
  */
 annotorious.modules.Module.prototype.addAnnotation = function(annotation, opt_replace) {
@@ -146,7 +146,7 @@ annotorious.modules.Module.prototype.addAnnotation = function(annotation, opt_re
 }
 
 /**
- * Standard module method: adds a lifecycle event handler to the image module.
+ * Adds a lifecycle event handler to this module.
  * @param {yuma.events.EventType} type the event type
  * @param {function} handler the handler function
  */
@@ -159,7 +159,7 @@ annotorious.modules.Module.prototype.addHandler = function(type, handler) {
 }
 
 /**
- * Standard module method: adds a plugin to this module.
+ * Adds a plugin to this module.
  * @param {Plugin} plugin the plugin
  */
 annotorious.modules.Module.prototype.addPlugin = function(plugin) {
@@ -171,6 +171,14 @@ annotorious.modules.Module.prototype.addPlugin = function(plugin) {
   });
 }
 
+/**
+ * Adds a selector to an item managed by this module.
+ *
+ * !! TEMPORARY !! 
+ *
+ * TODO selectors should be added to annotators directly, from within a plugin
+ * which will make this method unecessary
+ */
 annotorious.modules.Module.prototype.addSelector = function(item_url, selector) {
   if (this.annotatesItem(item_url)) {
     var annotator = this._annotators.get(item_url);
@@ -179,10 +187,8 @@ annotorious.modules.Module.prototype.addSelector = function(item_url, selector) 
   }
 }
 
-
 /**
- * Standard module method: tests if this module is in charge of managing the
- * annotatable item with the specified URL.
+ * Tests if this module is in charge of managing the item with the specified URL.
  * @param {string} item_url the URL of the item
  * @return {boolean} true if this module is in charge of the media
  */ 
@@ -200,9 +206,10 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
 }
 
 /**
- * Returns the name of the selector that is currently activated on a 
- * particular item.
- * @param {string} the URL of the item to query for the active selector
+ * Returns the name of the selector that is currently activated on the item
+ * with the specified URL (if managed by this module).
+ * @param {string} item_url the URL of the item to query for the active selector
+ * @return {string | undefined} the name of the active selector (or undefined)
  */
 annotorious.modules.Module.prototype.getActiveSelector = function(item_url) {
   if (this.annotatesItem(item_url)) {
@@ -210,12 +217,13 @@ annotorious.modules.Module.prototype.getActiveSelector = function(item_url) {
     if (annotator)
       return annotator.getActiveSelector().getName();
   }
+  return undefined;
 }
 
 /**
- * Standard module method: returns all annotations on the annotatable media with the specified
- * URL, or all annotations from this module in case no URL is specified.
- * @param {string | undefined} opt_media_url a media URL (optional)
+ * Returns all annotations on the item with the specified URL (if managed by this
+ * module) or all annotations from this module in case no URL is specified.
+ * @param {string | undefined} opt_item_url an item URL (optional)
  * @return {Array.<Annotation>} the annotations
  */
 annotorious.modules.Module.prototype.getAnnotations = function(opt_item_url) {
@@ -240,8 +248,8 @@ annotorious.modules.Module.prototype.getAnnotations = function(opt_item_url) {
 
 /**
  * Returns the list of available shape selectors for a particular item.
- * @param {string} the URL of the item to query for available selectors
- * @returns {List.<string>} the list of selector names
+ * @param {string} item_url the URL of the item to query for available selectors
+ * @returns {List.<string> | undefined} the list of selector names
  */
 annotorious.modules.Module.prototype.getAvailableSelectors = function(item_url) {
   if (this.annotatesItem(item_url)) {
@@ -252,10 +260,11 @@ annotorious.modules.Module.prototype.getAvailableSelectors = function(item_url) 
       });
     }
   }
+  return undefined;
 }
 
 /**
- * Standard module method: highlights the specified annotation.
+ * Highlights the specified annotation.
  * @param {Annotation} annotation the annotation
  */
 annotorious.modules.Module.prototype.highlightAnnotation = function(annotation) {
@@ -273,7 +282,7 @@ annotorious.modules.Module.prototype.highlightAnnotation = function(annotation) 
 }
 
 /**
- * Standard module method: Makes an item annotatable, if it is supported by this module.
+ * Makes an item annotatable, if it is supported by this module.
  * @param {object} item the annotatable item
  */
 annotorious.modules.Module.prototype.makeAnnotatable = function(item) {
@@ -284,7 +293,7 @@ annotorious.modules.Module.prototype.makeAnnotatable = function(item) {
 }
 
 /**
- * Standard module method: removes an annotation from the item with the specified src URL.
+ * Removes an annotation from the item with the specified URL.
  * @param {Annotation} annotation the annotation
  */
 annotorious.modules.Module.prototype.removeAnnotation = function(annotation) {
@@ -298,9 +307,9 @@ annotorious.modules.Module.prototype.removeAnnotation = function(annotation) {
 }
 
 /**
- * Standard module method: sets a specific selector on a particular item.
- * @param {string} the URL of the item on which to set the selector
- * @param {string} the name of the selector to set on the item
+ * Sets a specific selector on a particular item.
+ * @param {string} item_url the URL of the item on which to set the selector
+ * @param {string} selector the name of the selector to set on the item
  */
 annotorious.modules.Module.prototype.setActiveSelector = function(item_url, selector) {
   if (this.annotatesItem(item_url)) {
@@ -311,9 +320,8 @@ annotorious.modules.Module.prototype.setActiveSelector = function(item_url, sele
 }
 
 /**
- * Standard module method: enables (or disables) the ability to create new annotations
- * on an annotatable item.
- * @param {boolean} enabled if <code>true</code> new annotations can be created
+ * Enables (or disables) the ability to create new annotations on an item.
+ * @param {boolean} enabled if true new annotations can be created
  */
 annotorious.modules.Module.prototype.setSelectionEnabled = function(enabled) {
   this._isSelectionEnabled = enabled;
@@ -322,18 +330,34 @@ annotorious.modules.Module.prototype.setSelectionEnabled = function(enabled) {
   });
 }
 
+/** Methods that must be implemented by subclasses of annotorious.modules.Module **/
+
 /**
- * Standard module method: tests if this module is able to support annotation on the
- * specified item.
- * @param {object} item the item to test
- * @return {boolean} true if this module can provide annotation functionality for the item
- * @interface
+ * Returns the identifying URL of the specified item.
+ * @param {object} item the item.
+ * @return {string} the URL
  */
-annotorious.modules.Module.prototype.supports = goog.abstractMethod;
-
-annotorious.modules.Module.prototype.newAnnotator = goog.abstractMethod;
-
-annotorious.modules.Module.prototype.init = goog.abstractMethod;
-
 annotorious.modules.Module.prototype.getItemURL = goog.abstractMethod;
 
+/**
+ * This function is called from the framework when the module is initialized.
+ * Subclasses of annotorious.modules.Module must perform all subclass-specific
+ * initialization actions in this function, and then make sure this._init (note
+ * the leading _!) gets called with a list of all items that should be made
+ * annotatable immediately!
+ */
+annotorious.modules.Module.prototype.init = goog.abstractMethod;
+
+/**
+ * Returns a new annotator for the specified item.
+ * @param {object} item the item
+ * @return {object} an annotator for this item
+ */
+annotorious.modules.Module.prototype.newAnnotator = goog.abstractMethod;
+
+/**
+ * Tests if this module supports the specified item's media type.
+ * @param {object} item the item
+ * @return {boolean} true if this module supports the item
+ */
+annotorious.modules.Module.prototype.supports = goog.abstractMethod;
