@@ -76,6 +76,9 @@ var Plugin = {
  */
 var Annotator = {
 
+  /** @type {element} the annotator DOM element **/
+  element : {},
+
   /** @type {object} the popup used by this annotator **/
   popup : {},
 
