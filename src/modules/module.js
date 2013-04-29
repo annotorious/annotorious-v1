@@ -95,14 +95,14 @@ annotorious.modules.Module.prototype._initAnnotator = function(item) {
             
   // Cross-check with annotation add/remove buffers
   goog.array.forEach(this._bufferedForAdding, function(annotation) {
-    if (annotation.src == image_src) {
+    if (annotation.src == item_src) {
       annotator.addAnnotation(annotation);
       addedAnnotations.push(annotation);
     }
   });
       
   goog.array.forEach(this._bufferedForRemoval, function(annotation) {
-    if (annotation.src == image_src) {
+    if (annotation.src == item_src) {
       annotator.removeAnnotation(annotation);
       removedAnnotations.push(annotation);
     }
@@ -206,6 +206,14 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
     
     return goog.isDefAndNotNull(item);
   }
+}
+
+annotorious.modules.Module.prototype.disableSelection = function(opt_url_or_param_literal) {
+  // TODO implement
+}
+
+annotorious.modules.Module.prototype.enableSelection = function(opt_item_url) {
+  // TODO implement
 }
 
 /**
