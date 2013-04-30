@@ -88,12 +88,29 @@ annotorious.Annotorious.prototype.addPlugin = function(plugin_name, opt_config_o
 
 /**
  * Disables selection functionality globally or on a specific item. If selection is disabled,
- * this implies that creation of annotation is disabled! The (optional) argument can either 
- * be the URL of the item on which to disable selection, or an object literal with advanced
+ * this implies that creation of annotations is disabled!
+ * @param {string} opt_item_url the URL of a specific item on which to disable selection
+ */
+annotorious.Annotorious.prototype.disableSelection = function(opt_item_url) {
+  if (opt_item_url) {
+    var module = this._getModuleForItemSrc(opt_item_url);
+    if (module)
+      module.disableSelection(opt_item_url);
+  } else {
+    goog.array.forEach(this._modules, function(module) {
+      module.disableSelection();
+    });
+  }
+}
+
+/**
+ * Enables selection functionality globally or on a specific item. If selection is enabled,
+ * this implies that creation of annotations is enabled! The (optional) argument can either 
+ * be the URL of the item on which to enable selection, or an object literal with advanced
  * configuration options. This literal has the following form:
  * 
  * {
- *   ** URL of the item to disable selection for **
+ *   ** URL of the item to enable selection for **
  *   item_url: 
  *
  *   ** Flag indicating if selection should automatically disable after onAnnotationCreate **
@@ -105,7 +122,7 @@ annotorious.Annotorious.prototype.addPlugin = function(plugin_name, opt_config_o
  *
  * @param {string | object} opt_url_or_param_literal the item URL or parameter literal 
  */
-annotorious.Annotorious.prototype.disableSelection = function(opt_url_or_param_literal) {
+annotorious.Annotorious.prototype.enableSelection = function(opt_url_or_param_literal) {
   var item_url;
   if (goog.isString(opt_url_or_param_literal))
     item_url  = opt_url_or_param_literal;
@@ -115,27 +132,10 @@ annotorious.Annotorious.prototype.disableSelection = function(opt_url_or_param_l
   if (item_url) {
     var module = this._getModuleForItemSrc(item_url);
     if (module)
-      module.disableSelection(opt_url_or_param_literal);
+      module.enableSelection(opt_url_or_param_literal);
   } else {
     goog.array.forEach(this._modules, function(module) {
-      module.disableSelection(opt_url_or_param_literal);
-    });
-  }
-}
-
-/**
- * Enables selection functionality globally or on a specific item. If selection is enabled,
- * this implies that creation of annotations is enabled!
- * @param {string} opt_item_url the URL of a specific item on which to enable selection
- */
-annotorious.Annotorious.prototype.enableSelection = function(opt_item_url) {
-  if (opt_item_url) {
-    var module = this._getModuleForItemSrc(opt_item_url);
-    if (module)
-      module.enableSelection(opt_item_url);
-  } else {
-    goog.array.forEach(this._modules, function(module) {
-      module.enableSelection();
+      module.enableSelection(opt_url_or_param_literal);
     });
   }
 }

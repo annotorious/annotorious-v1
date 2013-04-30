@@ -208,12 +208,34 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
   }
 }
 
-annotorious.modules.Module.prototype.disableSelection = function(opt_url_or_param_literal) {
-  // TODO implement
+annotorious.modules.Module.prototype.disableSelection = function(opt_item_url) {
+  if (opt_item_url) {
+    var annotator = this._annotators.get(opt_item_url);
+    if (annotator)
+      annotator.disableSelection();
+  } else {
+    goog.array.forEach(this._annotators.getValues(), function(annotator) {
+      annotator.disableSelection();
+    });
+  }
 }
 
-annotorious.modules.Module.prototype.enableSelection = function(opt_item_url) {
-  // TODO implement
+annotorious.modules.Module.prototype.enableSelection = function(opt_url_or_param_literal) {
+  var item_url;
+  if (goog.isString(opt_url_or_param_literal))
+    item_url  = opt_url_or_param_literal;
+  else if (goog.isObject(opt_url_or_param_literal))
+    item_url = opt_url_or_param_literal.item_url;
+
+  if (item_url) {
+    var annotator = this._annotators.get(item_url);
+    if (annotator)
+      annotator.enableSelection(opt_url_or_param_literal);
+  } else {
+    goog.array.forEach(this._annotators.getValues(), function(annotator) {
+      annotator.enableSelection(opt_url_or_param_literal);
+    });
+  }
 }
 
 /**

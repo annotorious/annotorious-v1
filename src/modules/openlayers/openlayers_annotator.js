@@ -96,6 +96,17 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   });
 }
 
+annotorious.modules.openlayers.OpenLayersAnnotator.prototype.disableSelection = function() {
+  // TODO implement
+  console.log('disable selection');
+}
+
+annotorious.modules.openlayers.OpenLayersAnnotator.prototype.enableSelection = function(opt_param_literal) {
+  // TODO implement
+  console.log('enable selection');
+}
+
+
 /**
  * Standard Annotator method: editAnnotation
  */

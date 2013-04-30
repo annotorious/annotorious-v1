@@ -213,6 +213,17 @@ annotorious.modules.image.ImageAnnotator.prototype.addSelector = function(select
   this._selectors.push(selector);
 }
 
+annotorious.modules.image.ImageAnnotator.prototype.disableSelection = function() {
+  this._selectionEnabled = false;
+  this._hint.destroy();
+  delete this._hint;
+}
+
+annotorious.modules.image.ImageAnnotator.prototype.enableSelection = function(opt_param_literal) {
+  this._selectionEnabled = true;
+  // TODO if hint doesn't exist already, create
+}
+
 /**
  * Standard Annotator method: fire an event on this annotator's Event Broker.
  * @param {annotorious.events.EventType} type the event type
@@ -325,12 +336,10 @@ annotorious.modules.image.ImageAnnotator.prototype.setActiveSelector = function(
  * @param {boolean} enabled if <code>true</code> new annotations can be created
  */
 annotorious.modules.image.ImageAnnotator.prototype.setSelectionEnabled = function(enabled) {
-  this._selectionEnabled = enabled;
   if (enabled) {
-    // TODO if hint doesn't exist already, create
+    this.enableSelection();
   } else {
-    this._hint.destroy();
-    delete this._hint;
+    this.disableSelection();
   }
 }
 
