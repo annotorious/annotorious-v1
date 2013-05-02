@@ -6,7 +6,8 @@ goog.provide('annotorious.modules.openlayers.OpenLayersModule');
  * @constructor
  */
 annotorious.modules.openlayers.OpenLayersModule = function() { 
-  annotorious.modules.Module.call();  
+  annotorious.modules.Module.call();
+  this._initFields();
 }
 goog.inherits(annotorious.modules.openlayers.OpenLayersModule, annotorious.modules.Module);
 
