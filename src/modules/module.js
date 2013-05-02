@@ -7,12 +7,11 @@ goog.provide('annotorious.modules.Module');
 annotorious.modules.Module = function() { }
 
 /**
- * Initializes the module instance. Note that subclasses *must*
+ * Initializes the module instance's fields. Note that subclasses *must*
  * ensure by themselves that this method is called on initialization.
- * @param {Array.<object>} opt_predef_items any items that should be made annotatable immediately
  * @protected
  */
-annotorious.modules.Module.prototype._init = function(opt_predef_items) {
+annotorious.modules.Module.prototype._initFields = function() {
   /** @private **/
   this._annotators = new goog.structs.Map();
   
@@ -24,13 +23,9 @@ annotorious.modules.Module.prototype._init = function(opt_predef_items) {
   
   /** @private **/
   this._allItems = [];
-  if (opt_predef_items)
-    goog.array.extend(this._allItems, opt_predef_items);
   
   /** @private **/
   this._itemsToLoad = [];
-  if (opt_predef_items)
-    goog.array.extend(this._itemsToLoad, opt_predef_items); 
   
   /** @private **/
   this._bufferedForAdding = [];
@@ -40,6 +35,17 @@ annotorious.modules.Module.prototype._init = function(opt_predef_items) {
 
   /** @private **/
   this._isSelectionEnabled = true;
+}
+
+/**
+ * 
+ */
+annotorious.modules.Module.prototype._init = function(opt_predef_items) {
+  if (opt_predef_items)
+    goog.array.extend(this._allItems, opt_predef_items);
+  
+  if (opt_predef_items)
+    goog.array.extend(this._itemsToLoad, opt_predef_items); 
 
   // Make items in viewport annotatable
   this._lazyLoad();

@@ -11,7 +11,8 @@ goog.require('goog.structs.Map');
  * @constructor
  */
 annotorious.modules.image.ImageModule = function() { 
-  annotorious.modules.Module.call();  
+  annotorious.modules.Module.call();
+  this._initFields();
 }
 goog.inherits(annotorious.modules.image.ImageModule, annotorious.modules.Module);
   
