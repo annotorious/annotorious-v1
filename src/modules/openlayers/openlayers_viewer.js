@@ -13,12 +13,12 @@ goog.require('goog.events.MouseWheelHandler');
  * @param {annotorious.modules.openlayers.OpenLayersAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.modules.openlayers.Viewer = function(map, popup, annotator) {
+annotorious.modules.openlayers.Viewer = function(map, annotator) {
   /** @private **/
   this._map = map;
 
   /** @private **/
-  this._popup = popup;
+  this._popup = annotator.popup;
   goog.style.setStyle(this._popup.element, 'z-index', 99000);
   
   /** @private **/

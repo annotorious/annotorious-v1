@@ -27,19 +27,19 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   goog.dom.replaceNode(this.element, this._div);
   goog.dom.appendChild(this.element, this._div); 
 
-  /** @private **/
-  var hint = new annotorious.hint.Hint(this, this.element, 'Hold CTRL to Annotate');
+  // var hint = new annotorious.hint.Hint(this, this.element, 'Hold CTRL to Annotate');
 
-  var secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
-  goog.style.setStyle(secondaryHint, 'z-index', 9998);
-  goog.style.setOpacity(secondaryHint, 0); 
-  goog.dom.appendChild(this.element, secondaryHint);
+  /** @private **/
+  this._secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
+  goog.style.setStyle(this._secondaryHint, 'z-index', 9998);
+  goog.style.setOpacity(this._secondaryHint, 0); 
+  goog.dom.appendChild(this.element, this._secondaryHint);
   
   /** @private **/
   this.popup = new annotorious.viewer.Popup(this);
 
   /** @private **/
-  this._viewer = new annotorious.modules.openlayers.Viewer(map, this.popup, this);
+  this._viewer = new annotorious.modules.openlayers.Viewer(map, this);
 
   /** @private **/
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
@@ -52,6 +52,12 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   this._selector = new annotorious.plugins.selection.RectDragSelector();
   this._selector.init(this._editCanvas, this); 
     
+  /** @private **/
+  this._auto_disable = false;
+
+  /** @private **/
+  this._disable_callback = undefined;
+
   /** @private **/
   this.editor = new annotorious.editor.Editor(this);
   goog.style.setStyle(this.editor.element, 'z-index', 10000);
@@ -67,16 +73,6 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget))
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
-  });
-  
-  goog.events.listen(document, goog.events.EventType.KEYDOWN, function(event) {
-    if (event.keyCode == 17) {
-      goog.style.setOpacity(secondaryHint, 0.8); 
-      goog.style.showElement(self._editCanvas, true);
-      window.setTimeout(function() {
-        goog.style.setOpacity(secondaryHint, 0);
-      }, 2000);
-    }
   });
   
   goog.events.listen(this._editCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
@@ -102,8 +98,23 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.disableSelection = 
 }
 
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.enableSelection = function(opt_param_literal) {
-  // TODO implement
-  console.log('enable selection');
+  var self = this;
+  goog.style.setOpacity(this._secondaryHint, 0.8); 
+  goog.style.showElement(this._editCanvas, true);
+  window.setTimeout(function() {
+    goog.style.setOpacity(self._secondaryHint, 0);
+  }, 2000);
+
+  // auto_disable?
+  if (opt_param_literal) {
+    this._auto_disable = opt_param_literal['auto_disable'];
+    if (this._auto_disable) {
+      if (opt_param_literal['callback'])
+        this._disable_callback = opt_param_literal['callback'];
+    }
+  } else {
+    this._auto_disable = false;
+  }
 }
 
 
@@ -240,7 +251,12 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.setSelectionEnabled
  * Standard Annotator method: stopSelection
  */
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.stopSelection = function(original_annotation) {
-   goog.style.showElement(this._editCanvas, false);
+   if (this._auto_disable) {
+     goog.style.showElement(this._editCanvas, false);
+     if (this._disable_callback)
+       this._disable_callback();
+   }
+
    this._selector.stopSelection();
    
    // If this was an edit of an annotation (rather than creation of a new one) re-add to viewer!
