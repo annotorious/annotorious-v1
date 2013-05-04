@@ -27,8 +27,6 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   goog.dom.replaceNode(this.element, this._div);
   goog.dom.appendChild(this.element, this._div); 
 
-  // var hint = new annotorious.hint.Hint(this, this.element, 'Hold CTRL to Annotate');
-
   /** @private **/
   this._secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
   goog.style.setStyle(this._secondaryHint, 'z-index', 9998);
@@ -81,6 +79,8 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   });
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
+    goog.style.setStyle(self._editCanvas, 'pointer-events', 'none');
+
     var bounds = event.viewportBounds;
     self.editor.setPosition({ x: bounds.left + self._div.offsetLeft,
                               y: bounds.bottom + 4 + self._div.offsetTop });
@@ -98,6 +98,8 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.disableSelection = 
 }
 
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.enableSelection = function(opt_param_literal) {
+  goog.style.setStyle(this._editCanvas, 'pointer-events', 'auto');
+
   var self = this;
   goog.style.setOpacity(this._secondaryHint, 0.8); 
   goog.style.showElement(this._editCanvas, true);
