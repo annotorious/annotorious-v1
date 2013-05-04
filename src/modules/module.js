@@ -136,6 +136,28 @@ annotorious.modules.Module.prototype._initPlugin = function(plugin, annotator) {
     plugin.onInitAnnotator(annotator);
 }
 
+annotorious.modules.Module.prototype.activateSelector = function(opt_item_url_or_callback, opt_callback) {
+  var item_url = undefined,
+      callback = undefined;
+
+  if (goog.isString(opt_item_url_or_callback)) {
+    item_url = opt_item_url_or_callback;
+    callback = opt_callback;
+  } else if (goog.isFunction(opt_item_url_or_callback)) {
+    callback = opt_item_url_or_callback;
+  }
+
+  if (item_url) {
+    var annotator = this._annotators.get(item_url);
+    if (annotator)
+      annotator.activateSelector(callback);
+  } else {
+    goog.array.forEach(this._annotators.getValues(), function(annotator) {
+      annotator.activateSelector(callback);
+    });
+  }
+}
+
 /**
  * Adds an annotation to an item managed by this module.
  * @param {Annotation} annotation the annotation
@@ -214,32 +236,26 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
   }
 }
 
-annotorious.modules.Module.prototype.disableSelection = function(opt_item_url) {
+annotorious.modules.Module.prototype.hideSelectionWidget = function(opt_item_url) {
   if (opt_item_url) {
     var annotator = this._annotators.get(opt_item_url);
     if (annotator)
-      annotator.disableSelection();
+      annotator.hideSelectionWidget();
   } else {
     goog.array.forEach(this._annotators.getValues(), function(annotator) {
-      annotator.disableSelection();
+      annotator.hideSelectionWidget();
     });
   }
 }
 
-annotorious.modules.Module.prototype.enableSelection = function(opt_url_or_param_literal) {
-  var item_url;
-  if (goog.isString(opt_url_or_param_literal))
-    item_url  = opt_url_or_param_literal;
-  else if (goog.isObject(opt_url_or_param_literal))
-    item_url = opt_url_or_param_literal.item_url;
-
-  if (item_url) {
-    var annotator = this._annotators.get(item_url);
+annotorious.modules.Module.prototype.showSelectionWidget = function(opt_item_url) {
+  if (opt_item_url) {
+    var annotator = this._annotators.get(opt_item_url);
     if (annotator)
-      annotator.enableSelection(opt_url_or_param_literal);
+      annotator.showSelectionWidget();
   } else {
     goog.array.forEach(this._annotators.getValues(), function(annotator) {
-      annotator.enableSelection(opt_url_or_param_literal);
+      annotator.showSelectionWidget();
     });
   }
 }
@@ -356,17 +372,6 @@ annotorious.modules.Module.prototype.setActiveSelector = function(item_url, sele
     if (annotator)
       annotator.setActiveSelector(selector);
   }
-}
-
-/**
- * Enables (or disables) the ability to create new annotations on an item.
- * @param {boolean} enabled if true new annotations can be created
- */
-annotorious.modules.Module.prototype.setSelectionEnabled = function(enabled) {
-  this._isSelectionEnabled = enabled;
-  goog.array.forEach(this._annotators.getValues(), function(annotator) {
-    annotator.setSelectionEnabled(enabled);
-  });
 }
 
 /** Methods that must be implemented by subclasses of annotorious.modules.Module **/

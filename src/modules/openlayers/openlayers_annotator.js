@@ -51,10 +51,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   this._selector.init(this._editCanvas, this); 
     
   /** @private **/
-  this._auto_disable = false;
-
-  /** @private **/
-  this._disable_callback = undefined;
+  this._stop_selection_callback = undefined;
 
   /** @private **/
   this.editor = new annotorious.editor.Editor(this);
@@ -92,31 +89,26 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   });
 }
 
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.disableSelection = function() {
-  // TODO implement
-  console.log('disable selection');
+annotorious.modules.openlayers.OpenLayersAnnotator.prototype.showSelectionWidget = function() {
+  // Does not have any effect at the moment
 }
 
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.enableSelection = function(opt_param_literal) {
+annotorious.modules.openlayers.OpenLayersAnnotator.prototype.hideSelectionWidget = function() {
+  // Does not have any effect at the moment
+}
+
+annotorious.modules.openlayers.OpenLayersAnnotator.prototype.activateSelector = function(callback) {
   goog.style.setStyle(this._editCanvas, 'pointer-events', 'auto');
 
   var self = this;
-  goog.style.setOpacity(this._secondaryHint, 0.8); 
   goog.style.showElement(this._editCanvas, true);
+  goog.style.setOpacity(this._secondaryHint, 0.8); 
   window.setTimeout(function() {
     goog.style.setOpacity(self._secondaryHint, 0);
   }, 2000);
 
-  // auto_disable?
-  if (opt_param_literal) {
-    this._auto_disable = opt_param_literal['auto_disable'];
-    if (this._auto_disable) {
-      if (opt_param_literal['callback'])
-        this._disable_callback = opt_param_literal['callback'];
-    }
-  } else {
-    this._auto_disable = false;
-  }
+  if (callback)
+    this._stop_selection_callback = callback;
 }
 
 
@@ -243,20 +235,13 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.setActiveSelector =
 }
 
 /**
- * Standard Annotator method: setSelectionEnabled
- */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.setSelectionEnabled = function(enabled) {
-
-}
-
-/**
  * Standard Annotator method: stopSelection
  */
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.stopSelection = function(original_annotation) {
-   if (this._auto_disable) {
-     goog.style.showElement(this._editCanvas, false);
-     if (this._disable_callback)
-       this._disable_callback();
+   goog.style.showElement(this._editCanvas, false);
+   if (this._stop_selection_callback) {
+     this._stop_selection_callback();
+     delete this._stop_selection_callback;
    }
 
    this._selector.stopSelection();

@@ -110,14 +110,6 @@ var Selector = {
 
 }
 
-var SelectorConfig = {
-
-  auto_disable : {},
-
-  callback : function() {}
-
-}
-
 /**
  * Selection event
  */

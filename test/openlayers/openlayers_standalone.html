@@ -22,9 +22,9 @@
       function annotate() {
         var button = document.getElementById('btnAnnotate');
         button.disabled = true;
-        anno.enableSelection({auto_disable: true, callback: function() {
+        anno.activateSelector(function() {
           button.disabled = false;
-        }});
+        });
       }
 
       window.onload = function() {    	
