@@ -56,19 +56,16 @@ annotorious.modules.Module.prototype._getSettings = function(item_url) {
 }
 
 /**
- * 
+ * @private
  */
 annotorious.modules.Module.prototype._init = function(opt_predef_items) {
-  if (opt_predef_items)
+  if (opt_predef_items) {
     goog.array.extend(this._allItems, opt_predef_items);
-  
-  if (opt_predef_items)
     goog.array.extend(this._itemsToLoad, opt_predef_items); 
+  }
 
-  // Make items in viewport annotatable
   this._lazyLoad();
   
-  // Attach a listener to make items annotatable as they scroll into view
   var self = this;
   var key = goog.events.listen(window, goog.events.EventType.SCROLL, function() {
     if (self._itemsToLoad.length > 0)
@@ -95,14 +92,12 @@ annotorious.modules.Module.prototype._lazyLoad = function() {
  */
 annotorious.modules.Module.prototype._initAnnotator = function(item) {
   var self = this;
+  var annotator = this.newAnnotator(item);
+  var item_src = this.getItemURL(item);
 
   // Keep track of changes
   var addedAnnotations = [];
   var removedAnnotations = [];
-
-  var annotator = this.newAnnotator(item);
-
-  var item_src = this.getItemURL(item);
 
   // Attach handlers that are already registered
   goog.array.forEach(this._eventHandlers, function(eventHandler) {
@@ -217,8 +212,7 @@ annotorious.modules.Module.prototype.addAnnotation = function(annotation, opt_re
 annotorious.modules.Module.prototype.addHandler = function(type, handler) {
   goog.array.forEach(this._annotators.getValues(), function(annotator, idx, array) {
     annotator.addHandler(type, handler);
-  });
-  
+  }); 
   this._eventHandlers.push({ type: type, handler: handler });
 }
 
