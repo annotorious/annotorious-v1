@@ -34,7 +34,25 @@ annotorious.modules.Module.prototype._initFields = function() {
   this._bufferedForRemoval = [];
 
   /** @private **/
-  this._isSelectionEnabled = true;
+  this._cachedGlobalSettings = { hide_selection_widget: false, hide_annotations: false };
+
+  /** @private **/
+  this._cachedItemSettings = new goog.structs.Map();
+}
+
+/**
+ * Returns the settings for the specified annotator. If there is no cached settings object yet,
+ * a new one will be created (initialized with defaults).
+ * @param {string} item_url the URL of the item controlled by the annotator
+ * @private
+ */
+annotorious.modules.Module.prototype._getSettings = function(item_url) {
+  var settings = this._cachedSettings(item_url);
+  if (!settings) {
+    settings = { hide_selection_widget: false, hide_annotations: false };
+    settings.set(item_url, settings);
+  }
+  return settings;
 }
 
 /**
@@ -84,9 +102,6 @@ annotorious.modules.Module.prototype._initAnnotator = function(item) {
 
   var annotator = this.newAnnotator(item);
 
-  if (!this._isSelectionEnabled)
-    annotator.setSelectionEnabled(false);
-
   var item_src = this.getItemURL(item);
 
   // Attach handlers that are already registered
@@ -122,6 +137,24 @@ annotorious.modules.Module.prototype._initAnnotator = function(item) {
   goog.array.forEach(removedAnnotations, function(annotation) {
     goog.array.remove(self._bufferedForRemoval, annotation);
   });
+
+  // Apply cached settings
+  var settings = this._cachedItemSettings.get(item_src);
+  if (settings) {
+    if (settings.hide_selection_widget)
+      annotator.hideSelectionWidget();
+
+    if (settings.hide_annotations)
+      annotator.hideAnnotations();
+
+    this._cachedItemSettings.remove(item_src);
+  } else {
+    if (this._cachedGlobalSettings.hide_selection_widget)
+      annotator.hideSelectionWidget();
+
+    if (this._cachedGlobalSettings.hide_annotations)
+      annotator.hideAnnotations();
+  }
   
   // Update _annotators and _imagesToLoad lists
   this._annotators.set(item_src, annotator);
@@ -237,32 +270,45 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
 }
 
 annotorious.modules.Module.prototype.hideAnnotations = function(opt_item_url) {
-  // TODO implement
-  // TODO make sure this method is lazy-loading-compatible  
+  this._setAnnotationVisibility(opt_item_url, false);
 }
 
 annotorious.modules.Module.prototype.hideSelectionWidget = function(opt_item_url) {
-  // TODO make this method lazy-loading-compatible
-  if (opt_item_url) {
-    var annotator = this._annotators.get(opt_item_url);
-    if (annotator)
-      annotator.hideSelectionWidget();
-  } else {
-    goog.array.forEach(this._annotators.getValues(), function(annotator) {
-      annotator.hideSelectionWidget();
-    });
-  }
+  this._setSelectionWidgetVisibility(opt_item_url, false);
 }
 
 annotorious.modules.Module.prototype.showSelectionWidget = function(opt_item_url) {
-  // TODO make this method lazy-loading-compatible
+  this._setSelectionWidgetVisibility(opt_item_url, true);
+}
+
+annotorious.modules.Module.prototype._setSelectionWidgetVisibility = function(opt_item_url, visibility) {
   if (opt_item_url) {
     var annotator = this._annotators.get(opt_item_url);
-    if (annotator)
-      annotator.showSelectionWidget();
+    if (annotator) {
+      // Item URL is provided, and item is loaded - set directly
+      if (visibility)
+        annotator.showSelectionWidget();
+      else 
+        annotator.hideSelectionWidget();
+    } else {
+      // Item URL is provided, but item not yet loaded - cache for later
+      this._getSettings(opt_item_url).hide_selection_widget = visibility;
+    }
   } else {
+    // Item URL is not provided - update all annotators...
     goog.array.forEach(this._annotators.getValues(), function(annotator) {
-      annotator.showSelectionWidget();
+      if (visibility)
+        annotator.showSelectionWidget();
+      else 
+        annotator.hideSelectionWidget();
+    });
+
+    // ...cache global settings...
+    this._cachedGlobalSettings.hide_selection_widget = visibility;
+
+    // ...and update all cached item settings
+    goog.array.forEach(this._cachedItemSettings.getValues(), function(settings) {
+      settings.hide_selection_widget = visibility;
     });
   }
 }
@@ -369,8 +415,39 @@ annotorious.modules.Module.prototype.removeAnnotation = function(annotation) {
 }
 
 annotorious.modules.Module.prototype.showAnnotations = function(opt_item_url) {
-  // TODO implement
-  // TODO make sure this method is lazy-loading-compatible
+  this._setAnnotationVisibility(opt_item_url, true);
+}
+
+annotorious.modules.Module.prototype._setAnnotationVisibility = function(opt_item_url, visibility) {
+  if (opt_item_url) {
+    var annotator = this._annotators.get(opt_item_url);
+    if (annotator) {
+      // Item URL is provided, and item is loaded - set directly
+      if (visibility)
+        annotator.showAnnotations();
+      else 
+        annotator.hideAnnotations();
+    } else {
+      // Item URL is provided, but item not yet loaded - cache for later
+      this._getSettings(opt_item_url).hide_annotations = visibility;
+    }
+  } else {
+    // Item URL is not provided - update all annotators...
+    goog.array.forEach(this._annotators.getValues(), function(annotator) {
+      if (visibility)
+        annotator.showSelectionWidget();
+      else
+        annotator.hideAnnotations();
+    });
+
+    // ...cache global settings...
+    this._cachedGlobalSettings.hide_annotations = visibility;
+
+    // ...and update all cached item settings
+    goog.array.forEach(this._cachedItemSettings.getValues(), function(settings) {
+      settings.hide_annotations = visibility;
+    });
+  }
 }
 
 /**
