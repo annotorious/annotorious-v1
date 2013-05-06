@@ -236,7 +236,13 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
   }
 }
 
+annotorious.modules.Module.prototype.hideAnnotations = function(opt_item_url) {
+  // TODO implement
+  // TODO make sure this method is lazy-loading-compatible  
+}
+
 annotorious.modules.Module.prototype.hideSelectionWidget = function(opt_item_url) {
+  // TODO make this method lazy-loading-compatible
   if (opt_item_url) {
     var annotator = this._annotators.get(opt_item_url);
     if (annotator)
@@ -249,6 +255,7 @@ annotorious.modules.Module.prototype.hideSelectionWidget = function(opt_item_url
 }
 
 annotorious.modules.Module.prototype.showSelectionWidget = function(opt_item_url) {
+  // TODO make this method lazy-loading-compatible
   if (opt_item_url) {
     var annotator = this._annotators.get(opt_item_url);
     if (annotator)
@@ -359,6 +366,11 @@ annotorious.modules.Module.prototype.removeAnnotation = function(annotation) {
     else
       this._bufferedForRemoval.push(annotation);
   }
+}
+
+annotorious.modules.Module.prototype.showAnnotations = function(opt_item_url) {
+  // TODO implement
+  // TODO make sure this method is lazy-loading-compatible
 }
 
 /**

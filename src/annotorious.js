@@ -127,7 +127,9 @@ annotorious.Annotorious.prototype.addPlugin = function(plugin_name, opt_config_o
 annotorious.Annotorious.prototype.getActiveSelector = function(item_url) {
   var module = this._getModuleForItemSrc(item_url);
   if (module)
-    return module.getActiveSelector(item_url);  
+    return module.getActiveSelector(item_url);
+  else
+    return undefined;
 }
 
 /**
@@ -160,7 +162,25 @@ annotorious.Annotorious.prototype.getAnnotations = function(opt_item_url) {
 annotorious.Annotorious.prototype.getAvailableSelectors = function(item_url) {
   var module = this._getModuleForItemSrc(item_url);
   if (module)
-    return module.getAvailableSelectors(item_url);  
+    return module.getAvailableSelectors(item_url);
+  else
+    return [];
+}
+
+/**
+ * Hides existing annotations on all, or a specific item.
+ * @param {string} opt_item_url the URL of the item
+ */
+annotorious.Annotorious.prototype.hideAnnotations = function(opt_item_url) {
+  if (opt_item_url) {
+    var module = this._getModuleForItemSrc(opt_item_url);
+    if (module)
+      module.hideAnnotations(opt_item_url);
+  } else {
+    goog.array.forEach(this._modules, function(module) {
+      module.hideAnnotations();
+    });
+  }
 }
 
 /**
@@ -277,6 +297,22 @@ annotorious.Annotorious.prototype.setSelectionEnabled = function(enabled) {
 }
 
 /**
+ * Shows existing annotations on all, or a specific item.
+ * @param {string} opt_item_url the URL of the item
+ */
+annotorious.Annotorious.prototype.showAnnotations = function(opt_item_url) {
+  if (opt_item_url) {
+    var module = this._getModuleForItemSrc(opt_item_url);
+    if (module)
+      module.showAnnotations(opt_item_url);
+  } else {
+    goog.array.forEach(this._modules, function(module) {
+      module.showAnnotations();
+    });
+  } 
+}
+
+/**
  * Shows the selection widget, thus enabling users to create new annotations.
  * The selection widget can be made visible on a specific item or globally, on all
  * annotatable items on the page.
@@ -304,12 +340,14 @@ annotorious.Annotorious.prototype['addSelector'] = annotorious.Annotorious.proto
 annotorious.Annotorious.prototype['getActiveSelector'] = annotorious.Annotorious.prototype.getActiveSelector;
 annotorious.Annotorious.prototype['getAnnotations'] = annotorious.Annotorious.prototype.getAnnotations;
 annotorious.Annotorious.prototype['getAvailableSelectors'] = annotorious.Annotorious.prototype.getAvailableSelectors;
+annotorious.Annotorious.prototype['hideAnnotations'] = annotorious.Annotorious.prototype.hideAnnotations;
 annotorious.Annotorious.prototype['hideSelectionWidget'] = annotorious.Annotorious.prototype.hideSelectionWidget;
 annotorious.Annotorious.prototype['highlightAnnotation'] = annotorious.Annotorious.prototype.highlightAnnotation;
 annotorious.Annotorious.prototype['makeAnnotatable'] = annotorious.Annotorious.prototype.makeAnnotatable;
 annotorious.Annotorious.prototype['removeAll'] = annotorious.Annotorious.prototype.removeAll;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
 annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious.prototype.setActiveSelector;
+annotorious.Annotorious.prototype['showAnnotations'] = annotorious.Annotorious.prototype.showAnnotations;
 annotorious.Annotorious.prototype['showSelectionWidget'] = annotorious.Annotorious.prototype.showSelectionWidget;
 
 /** @deprecated **/
