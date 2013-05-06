@@ -51,6 +51,39 @@ annotorious.Annotorious.prototype._getModuleForItemSrc = function(item_src) {
 }
 
 /**
+ * 'Manually' actives the selector, bypassing the selection widget. Note: this also
+ * works when the selection widget is hidden. Primary use case for this is for developers
+ * who want to build their own selector widgets or 'Create Annotation' buttons.
+ * The selector can be activated on a specific item or globally, on all items (which 
+ * serves mainly as a shortcut for pages where there is only one annotatable item).
+ * The function can take a callback function as parameter, which will be called when the
+ * selector is deactivated by the user.
+ * @param {string | function} opt_item_url_or_callback the URL of the item, or a callback function
+ * @param {function} opt_callback a callback function (if the first parameter was a URL)
+ */
+annotorious.Annotorious.prototype.activateSelector = function(opt_item_url_or_callback, opt_callback) {
+  var item_url = undefined,
+      callback = undefined;
+
+  if (goog.isString(opt_item_url_or_callback)) {
+    item_url = opt_item_url_or_callback;
+    callback = opt_callback;
+  } else if (goog.isFunction(opt_item_url_or_callback)) {
+    callback = opt_item_url_or_callback;
+  }
+
+  if (item_url) {
+    var module = this._getModuleForItemSrc(item_url);
+    if (module)
+      module.activateSelector(item_url, callback);
+  } else {
+    goog.array.forEach(this._modules, function(module) {
+      module.activateSelector(callback);
+    });
+  }
+}
+
+/**
  * Adds an annotation to an item on the page.
  * @param {Annotation} annotation the annotation
  * @param {Annotation} opt_replace optionally, an existing annotation to replace
@@ -83,60 +116,6 @@ annotorious.Annotorious.prototype.addPlugin = function(plugin_name, opt_config_o
     this._plugins.push(new window['annotorious']['plugin'][plugin_name](opt_config_options));  
   } catch (error) {
     console.log('Could not load plugin: ' + plugin_name);
-  }
-}
-
-/**
- * Disables selection functionality globally or on a specific item. If selection is disabled,
- * this implies that creation of annotations is disabled!
- * @param {string} opt_item_url the URL of a specific item on which to disable selection
- */
-annotorious.Annotorious.prototype.disableSelection = function(opt_item_url) {
-  if (opt_item_url) {
-    var module = this._getModuleForItemSrc(opt_item_url);
-    if (module)
-      module.disableSelection(opt_item_url);
-  } else {
-    goog.array.forEach(this._modules, function(module) {
-      module.disableSelection();
-    });
-  }
-}
-
-/**
- * Enables selection functionality globally or on a specific item. If selection is enabled,
- * this implies that creation of annotations is enabled! The (optional) argument can either 
- * be the URL of the item on which to enable selection, or an object literal with advanced
- * configuration options. This literal has the following form:
- * 
- * {
- *   ** URL of the item to enable selection for **
- *   item_url: 
- *
- *   ** Flag indicating if selection should automatically disable after onAnnotationCreate **
- *   auto_disable: {string}, 
- *
- *   ** a callback function to execute after auto-disabling **
- *   callback: {function} 
- * }
- *
- * @param {string | object} opt_url_or_param_literal the item URL or parameter literal 
- */
-annotorious.Annotorious.prototype.enableSelection = function(opt_url_or_param_literal) {
-  var item_url;
-  if (goog.isString(opt_url_or_param_literal))
-    item_url  = opt_url_or_param_literal;
-  else if (goog.isObject(opt_url_or_param_literal))
-    item_url = opt_url_or_param_literal.item_url;
-
-  if (item_url) {
-    var module = this._getModuleForItemSrc(item_url);
-    if (module)
-      module.enableSelection(opt_url_or_param_literal);
-  } else {
-    goog.array.forEach(this._modules, function(module) {
-      module.enableSelection(opt_url_or_param_literal);
-    });
   }
 }
 
@@ -182,6 +161,24 @@ annotorious.Annotorious.prototype.getAvailableSelectors = function(item_url) {
   var module = this._getModuleForItemSrc(item_url);
   if (module)
     return module.getAvailableSelectors(item_url);  
+}
+
+/**
+ * Hides the selection widget, thus preventing users from creating new annotations.
+ * The selection widget can be hidden on a specific item or globally, on all annotatable
+ * items on the page.
+ * @param {string} opt_item_url the URL of the item on which to hide the selection widget
+ */
+annotorious.Annotorious.prototype.hideSelectionWidget = function(opt_item_url) {
+  if (opt_item_url) {
+    var module = this._getModuleForItemSrc(opt_item_url);
+    if (module)
+      module.hideSelectionWidget(opt_item_url);
+  } else {
+    goog.array.forEach(this._modules, function(module) {
+      module.hideSelectionWidget();
+    });
+  }
 }
 
 /**
@@ -270,27 +267,50 @@ annotorious.Annotorious.prototype.setActiveSelector = function(item_url, selecto
 /**
  * Enables (or disables) the ability to create new annotations on an annotatable item.
  * @param {boolean} enabled if true, new annotations can be created
+ * @deprecated will be removed in v1.0!
  */
 annotorious.Annotorious.prototype.setSelectionEnabled = function(enabled) {
-  goog.array.forEach(this._modules, function(module) {
-    module.setSelectionEnabled(enabled);
-  });
+  if (enabled)
+    this.showSelectionWidget();
+  else
+    this.hideSelectionWidget();
+}
+
+/**
+ * Shows the selection widget, thus enabling users to create new annotations.
+ * The selection widget can be made visible on a specific item or globally, on all
+ * annotatable items on the page.
+ * @param {string} opt_item_url the URL of the item on which to show the selection widget 
+ */
+annotorious.Annotorious.prototype.showSelectionWidget = function(opt_item_url) {
+  if (opt_item_url) {
+    var module = this._getModuleForItemSrc(item_url);
+    if (module)
+      module.showSelectionWidget(opt_item_url);
+  } else {
+    goog.array.forEach(this._modules, function(module) {
+      module.showSelectionWidget();
+    });
+  }
 }
 
 /** API exports **/
 window['anno'] = new annotorious.Annotorious();
+annotorious.Annotorious.prototype['activateSelector'] = annotorious.Annotorious.prototype.activateSelector;
 annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.prototype.addAnnotation;
 annotorious.Annotorious.prototype['addHandler'] = annotorious.Annotorious.prototype.addHandler;
 annotorious.Annotorious.prototype['addPlugin'] = annotorious.Annotorious.prototype.addPlugin;
 annotorious.Annotorious.prototype['addSelector'] = annotorious.Annotorious.prototype.addSelector;
-annotorious.Annotorious.prototype['disableSelection'] = annotorious.Annotorious.prototype.disableSelection;
-annotorious.Annotorious.prototype['enableSelection'] = annotorious.Annotorious.prototype.enableSelection;
 annotorious.Annotorious.prototype['getActiveSelector'] = annotorious.Annotorious.prototype.getActiveSelector;
 annotorious.Annotorious.prototype['getAnnotations'] = annotorious.Annotorious.prototype.getAnnotations;
 annotorious.Annotorious.prototype['getAvailableSelectors'] = annotorious.Annotorious.prototype.getAvailableSelectors;
+annotorious.Annotorious.prototype['hideSelectionWidget'] = annotorious.Annotorious.prototype.hideSelectionWidget;
 annotorious.Annotorious.prototype['highlightAnnotation'] = annotorious.Annotorious.prototype.highlightAnnotation;
 annotorious.Annotorious.prototype['makeAnnotatable'] = annotorious.Annotorious.prototype.makeAnnotatable;
 annotorious.Annotorious.prototype['removeAll'] = annotorious.Annotorious.prototype.removeAll;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
 annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious.prototype.setActiveSelector;
+annotorious.Annotorious.prototype['showSelectionWidget'] = annotorious.Annotorious.prototype.showSelectionWidget;
+
+/** @deprecated **/
 annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;
