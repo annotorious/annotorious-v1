@@ -89,8 +89,7 @@ annotorious.Annotorious.prototype.activateSelector = function(opt_item_url_or_ca
  * @param {Annotation} opt_replace optionally, an existing annotation to replace
  */
 annotorious.Annotorious.prototype.addAnnotation = function(annotation, opt_replace) {
-  var module = this._getModuleForItemSrc(annotation.src);
-  
+  var module = this._getModuleForItemSrc(annotation.src); 
   if (module)
     module.addAnnotation(annotation, opt_replace);
 }
@@ -287,7 +286,10 @@ annotorious.Annotorious.prototype.setActiveSelector = function(item_url, selecto
 /**
  * Enables (or disables) the ability to create new annotations on an annotatable item.
  * @param {boolean} enabled if true, new annotations can be created
+ *
+ * !!!!
  * @deprecated will be removed in v1.0!
+ * !!!!
  */
 annotorious.Annotorious.prototype.setSelectionEnabled = function(enabled) {
   if (enabled)
@@ -336,7 +338,6 @@ annotorious.Annotorious.prototype['activateSelector'] = annotorious.Annotorious.
 annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.prototype.addAnnotation;
 annotorious.Annotorious.prototype['addHandler'] = annotorious.Annotorious.prototype.addHandler;
 annotorious.Annotorious.prototype['addPlugin'] = annotorious.Annotorious.prototype.addPlugin;
-annotorious.Annotorious.prototype['addSelector'] = annotorious.Annotorious.prototype.addSelector;
 annotorious.Annotorious.prototype['getActiveSelector'] = annotorious.Annotorious.prototype.getActiveSelector;
 annotorious.Annotorious.prototype['getAnnotations'] = annotorious.Annotorious.prototype.getAnnotations;
 annotorious.Annotorious.prototype['getAvailableSelectors'] = annotorious.Annotorious.prototype.getAvailableSelectors;
@@ -349,6 +350,9 @@ annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.
 annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious.prototype.setActiveSelector;
 annotorious.Annotorious.prototype['showAnnotations'] = annotorious.Annotorious.prototype.showAnnotations;
 annotorious.Annotorious.prototype['showSelectionWidget'] = annotorious.Annotorious.prototype.showSelectionWidget;
+
+/** !!! TEMPORARY **/
+annotorious.Annotorious.prototype['addSelector'] = annotorious.Annotorious.prototype.addSelector;
 
 /** @deprecated **/
 annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;

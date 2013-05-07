@@ -17,6 +17,9 @@ annotorious.modules.openlayers.Viewer = function(map, annotator) {
   /** @private **/
   this._map = map;
 
+  /** @private **/  
+  this._map_bounds = goog.style.getBounds(annotator.element);
+      
   /** @private **/
   this._popup = annotator.popup;
   goog.style.setStyle(this._popup.element, 'z-index', 99000);
@@ -33,14 +36,11 @@ annotorious.modules.openlayers.Viewer = function(map, annotator) {
   /** @private **/
   this._boxesLayer = new OpenLayers.Layer.Boxes('Annotorious'); // TODO make configurable
   this._map.addLayer(this._boxesLayer);
-
+  
   var self = this;
   this._map.events.register('move', this._map, function() {
-    if (self._currentlyHighlightedOverlay) {
-      var div = self._currentlyHighlightedOverlay.marker.div;
-      var pos = goog.style.getRelativePosition(div, self._map.div);
-      var height = parseInt(goog.style.getStyle(div, 'height'), 10);
-      self._popup.setPosition({ x: pos.x, y: pos.y + height + 5 });
+    if (self._currentlyHighlightedOverlay) {      
+      self._popup.setPosition(self._place_popup());
     }
   });
 
@@ -52,13 +52,35 @@ annotorious.modules.openlayers.Viewer = function(map, annotator) {
   });
 }
 
+annotorious.modules.openlayers.Viewer.prototype._place_popup = function() {
+    // We don't need to compute these on ever move
+    // TODO only compute these on highlight change
+    var annotation_div = this._currentlyHighlightedOverlay.marker.div;
+    var annotation_height = parseInt(goog.style.getStyle(annotation_div, 'height'), 10);
+
+    var popup_bounds = goog.style.getBounds(this._popup.element);
+    var popup_pos = goog.style.getRelativePosition(annotation_div, this._map.div);
+    popup_pos.y = popup_pos.y + annotation_height + 5;
+    
+    if (popup_pos.x < 0)
+      popup_pos.x = 0;
+      
+    if (popup_pos.x + popup_bounds.width > this._map_bounds.width)
+      popup_pos.x = this._map_bounds.width - popup_bounds.width;
+      
+    if (popup_pos.y + popup_bounds.height > this._map_bounds.height)
+      popup_pos.y = this._map_bounds.height - popup_bounds.height;
+    
+    return popup_pos;
+  }
+
 annotorious.modules.openlayers.Viewer.prototype._updateHighlight = function(new_highlight, previous_highlight) {
   if (new_highlight) {
     var pos = goog.style.getRelativePosition(new_highlight.marker.div, this._map.div);
     var height = parseInt(goog.style.getStyle(new_highlight.marker.div, 'height'), 10);
     goog.style.setStyle(new_highlight.inner, 'border-color', '#fff000');
-    this._popup.show(new_highlight.annotation, { x: pos.x, y: pos.y + height + 5 });
     this._currentlyHighlightedOverlay = new_highlight;
+    this._popup.show(new_highlight.annotation, this._place_popup());
   } else {
     delete this._currentlyHighlightedOverlay;
   }
