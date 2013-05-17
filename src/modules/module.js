@@ -11,7 +11,7 @@ annotorious.modules.Module = function() { }
  * ensure by themselves that this method is called on initialization.
  * @protected
  */
-annotorious.modules.Module.prototype._initFields = function() {
+annotorious.modules.Module.prototype._initFields = function(opt_preload) {
   /** @private **/
   this._annotators = new goog.structs.Map();
   
@@ -19,11 +19,8 @@ annotorious.modules.Module.prototype._initFields = function() {
   this._eventHandlers = [];
 
   /** @private **/
-  this._plugins = [];
-  
-  /** @private **/
-  this._allItems = [];
-  
+  this._plugins = []; 
+
   /** @private **/
   this._itemsToLoad = [];
   
@@ -38,6 +35,9 @@ annotorious.modules.Module.prototype._initFields = function() {
 
   /** @private **/
   this._cachedItemSettings = new goog.structs.Map();
+
+  /** @private **/
+  this._preLoad = opt_preload;
 }
 
 /**
@@ -53,38 +53,6 @@ annotorious.modules.Module.prototype._getSettings = function(item_url) {
     settings.set(item_url, settings);
   }
   return settings;
-}
-
-/**
- * @private
- */
-annotorious.modules.Module.prototype._init = function(opt_predef_items) {
-  if (opt_predef_items) {
-    goog.array.extend(this._allItems, opt_predef_items);
-    goog.array.extend(this._itemsToLoad, opt_predef_items); 
-  }
-
-  this._lazyLoad();
-  
-  var self = this;
-  var key = goog.events.listen(window, goog.events.EventType.SCROLL, function() {
-    if (self._itemsToLoad.length > 0)
-      self._lazyLoad();
-    else
-      goog.events.unlistenByKey(key);
-  });
-}
-
-/**
- * @private
- */
-annotorious.modules.Module.prototype._lazyLoad = function() {        
-  var self = this;
-  goog.array.forEach(this._itemsToLoad, function(item) {
-    if (annotorious.dom.isInViewport(item)) {
-      self._initAnnotator(item);
-    }
-  });
 }
 
 /**
@@ -151,7 +119,7 @@ annotorious.modules.Module.prototype._initAnnotator = function(item) {
       annotator.hideAnnotations();
   }
   
-  // Update _annotators and _imagesToLoad lists
+  // Update _annotators and _itemsToLoad lists
   this._annotators.set(item_src, annotator);
   goog.array.remove(this._itemsToLoad, item);
 }
@@ -162,6 +130,33 @@ annotorious.modules.Module.prototype._initAnnotator = function(item) {
 annotorious.modules.Module.prototype._initPlugin = function(plugin, annotator) {
   if (plugin.onInitAnnotator)
     plugin.onInitAnnotator(annotator);
+}
+
+/**
+ * @private
+ */
+annotorious.modules.Module.prototype._lazyLoad = function() {     
+  var self = this;
+  goog.array.forEach(this._itemsToLoad, function(item) {
+    if (annotorious.dom.isInViewport(item)) {
+      self._initAnnotator(item);
+    }
+  });
+}
+
+annotorious.modules.Module.prototype.init = function() {
+  if (this._preLoad)
+    goog.array.extend(this._itemsToLoad, this._preLoad()); 
+
+  this._lazyLoad();
+  
+  var self = this;
+  var key = goog.events.listen(window, goog.events.EventType.SCROLL, function() {
+    if (self._itemsToLoad.length > 0)
+      self._lazyLoad();
+    else
+      goog.events.unlistenByKey(key);
+  });
 }
 
 annotorious.modules.Module.prototype.activateSelector = function(opt_item_url_or_callback, opt_callback) {
@@ -388,10 +383,8 @@ annotorious.modules.Module.prototype.highlightAnnotation = function(annotation) 
  * @param {object} item the annotatable item
  */
 annotorious.modules.Module.prototype.makeAnnotatable = function(item) {
-  if (this.supports(item)) {
-    this._allItems.push(item);
+  if (this.supports(item))
     this._initAnnotator(item);
-  }
 }
 
 /**
@@ -465,15 +458,6 @@ annotorious.modules.Module.prototype.setActiveSelector = function(item_url, sele
  * @return {string} the URL
  */
 annotorious.modules.Module.prototype.getItemURL = goog.abstractMethod;
-
-/**
- * This function is called from the framework when the module is initialized.
- * Subclasses of annotorious.modules.Module must perform all subclass-specific
- * initialization actions in this function, and then make sure this._init (note
- * the leading _!) gets called with a list of all items that should be made
- * annotatable immediately!
- */
-annotorious.modules.Module.prototype.init = goog.abstractMethod;
 
 /**
  * Returns a new annotator for the specified item.

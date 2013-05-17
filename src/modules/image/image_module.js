@@ -12,19 +12,16 @@ goog.require('goog.structs.Map');
  */
 annotorious.modules.image.ImageModule = function() { 
   annotorious.modules.Module.call();
-  this._initFields();
+  var self = this;
+  this._initFields(function() {
+    return goog.dom.query('img.annotatable', document);
+  });
 }
 goog.inherits(annotorious.modules.image.ImageModule, annotorious.modules.Module);
   
 /** @inheritDoc **/
 annotorious.modules.image.ImageModule.prototype.getItemURL = function(item) {
   return annotorious.modules.image.ImageAnnotator.getItemURL(item);
-}
-
-/** @inheritDoc **/
-annotorious.modules.image.ImageModule.prototype.init = function() {
-  var annotatableImages = goog.dom.query('img.annotatable', document);
-  this._init(annotatableImages);
 }
 
 /** @inheritDoc **/

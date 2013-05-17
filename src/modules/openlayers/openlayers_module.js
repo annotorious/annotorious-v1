@@ -18,11 +18,6 @@ annotorious.modules.openlayers.OpenLayersModule.prototype.getItemURL = function(
 }
 
 /** @inheritDoc **/
-annotorious.modules.openlayers.OpenLayersModule.prototype.init = function() {
-  this._init();
-}
-
-/** @inheritDoc **/
 annotorious.modules.openlayers.OpenLayersModule.prototype.newAnnotator = function(item) {
   return new annotorious.modules.openlayers.OpenLayersAnnotator(item);
 }
