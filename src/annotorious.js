@@ -57,7 +57,7 @@ annotorious.Annotorious.prototype._getModuleForItemSrc = function(item_src) {
  * The selector can be activated on a specific item or globally, on all items (which 
  * serves mainly as a shortcut for pages where there is only one annotatable item).
  * The function can take a callback function as parameter, which will be called when the
- * selector is deactivated by the user.
+ * selector is deactivated again.
  * @param {string | function} opt_item_url_or_callback the URL of the item, or a callback function
  * @param {function} opt_callback a callback function (if the first parameter was a URL)
  */
@@ -267,7 +267,6 @@ annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
  */
 annotorious.Annotorious.prototype.addSelector = function(item_url, selector) {
   var module = this._getModuleForItemSrc(item_url);
-
   if (module)
     module.addSelector(item_url, selector);  
 }

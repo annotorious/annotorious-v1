@@ -1,18 +1,13 @@
 goog.provide('annotorious.modules.image.ImageModule');
 
-goog.require('goog.dom');
-goog.require('goog.array');
-goog.require('goog.events');
-goog.require('goog.structs.Map');
-
 /**
- * The Image Module scans the page for images marked with an 'annotatable'
- * CSS class, and attaches an ImageAnnotator to each one.
+ * The Image Module implements annotation functionality for <IMG>
+ * elements. On page load, it also scans the page for images marked
+ * with an 'annotatable' CSS class, and makes those annotatable automatically.
  * @constructor
  */
 annotorious.modules.image.ImageModule = function() { 
   annotorious.modules.Module.call();
-  var self = this;
   this._initFields(function() {
     return goog.dom.query('img.annotatable', document);
   });

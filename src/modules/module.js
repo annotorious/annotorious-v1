@@ -1,17 +1,27 @@
 goog.provide('annotorious.modules.Module');
 
+goog.require('goog.dom');
+goog.require('goog.array');
+goog.require('goog.events');
+goog.require('goog.structs.Map');
+
 /**
- * An base class for Annotorious Module implementations.
+ * A base class for Annotorious Module implementations.
  * @constructor
  */
 annotorious.modules.Module = function() { }
 
 /**
- * Initializes the module instance's fields. Note that subclasses *must*
- * ensure by themselves that this method is called on initialization.
+ * Initializes the module instance's fields. Note that subclasses to Module
+ * MUST ensure by themselves that this method is called on initialization (i.e.
+ * in their constructor)!
+ * opt_preload_fn is an optional parameter: if provided, it must be a function
+ * that returns a list of annotatable items. These will be put into the lazy
+ * load queue and made annotatable when they appear on screen.
+ * @param {function} a function providing a list of pre-loadable items
  * @protected
  */
-annotorious.modules.Module.prototype._initFields = function(opt_preload) {
+annotorious.modules.Module.prototype._initFields = function(opt_preload_fn) {
   /** @private **/
   this._annotators = new goog.structs.Map();
   
@@ -37,12 +47,12 @@ annotorious.modules.Module.prototype._initFields = function(opt_preload) {
   this._cachedItemSettings = new goog.structs.Map();
 
   /** @private **/
-  this._preLoad = opt_preload;
+  this._preLoad = opt_preload_fn;
 }
 
 /**
- * Returns the settings for the specified annotator. If there is no cached settings object yet,
- * a new one will be created (initialized with defaults).
+ * Returns the settings for the specified annotator. If there are no cached settings
+ * object yet, new settings will be created (initialized with defaults).
  * @param {string} item_url the URL of the item controlled by the annotator
  * @private
  */
@@ -144,21 +154,83 @@ annotorious.modules.Module.prototype._lazyLoad = function() {
   });
 }
 
-annotorious.modules.Module.prototype.init = function() {
-  if (this._preLoad)
-    goog.array.extend(this._itemsToLoad, this._preLoad()); 
+/**
+ * @private
+ */
+annotorious.modules.Module.prototype._setAnnotationVisibility = function(opt_item_url, visibility) {
+  if (opt_item_url) {
+    var annotator = this._annotators.get(opt_item_url);
+    if (annotator) {
+      // Item URL is provided, and item is loaded - set directly
+      if (visibility)
+        annotator.showAnnotations();
+      else 
+        annotator.hideAnnotations();
+    } else {
+      // Item URL is provided, but item not yet loaded - cache for later
+      this._getSettings(opt_item_url).hide_annotations = visibility;
+    }
+  } else {
+    // Item URL is not provided - update all annotators...
+    goog.array.forEach(this._annotators.getValues(), function(annotator) {
+      if (visibility)
+        annotator.showSelectionWidget();
+      else
+        annotator.hideAnnotations();
+    });
 
-  this._lazyLoad();
-  
-  var self = this;
-  var key = goog.events.listen(window, goog.events.EventType.SCROLL, function() {
-    if (self._itemsToLoad.length > 0)
-      self._lazyLoad();
-    else
-      goog.events.unlistenByKey(key);
-  });
+    // ...cache global settings...
+    this._cachedGlobalSettings.hide_annotations = visibility;
+
+    // ...and update all cached item settings
+    goog.array.forEach(this._cachedItemSettings.getValues(), function(settings) {
+      settings.hide_annotations = visibility;
+    });
+  }
 }
 
+/**
+ * @private
+ */
+annotorious.modules.Module.prototype._setSelectionWidgetVisibility = function(opt_item_url, visibility) {
+  if (opt_item_url) {
+    var annotator = this._annotators.get(opt_item_url);
+    if (annotator) {
+      // Item URL is provided, and item is loaded - set directly
+      if (visibility)
+        annotator.showSelectionWidget();
+      else 
+        annotator.hideSelectionWidget();
+    } else {
+      // Item URL is provided, but item not yet loaded - cache for later
+      this._getSettings(opt_item_url).hide_selection_widget = visibility;
+    }
+  } else {
+    // Item URL is not provided - update all annotators...
+    goog.array.forEach(this._annotators.getValues(), function(annotator) {
+      if (visibility)
+        annotator.showSelectionWidget();
+      else 
+        annotator.hideSelectionWidget();
+    });
+
+    // ...cache global settings...
+    this._cachedGlobalSettings.hide_selection_widget = visibility;
+
+    // ...and update all cached item settings
+    goog.array.forEach(this._cachedItemSettings.getValues(), function(settings) {
+      settings.hide_selection_widget = visibility;
+    });
+  }
+}
+
+/**
+ * 'Manually' actives the selector, bypassing the selection widget. The function can take
+ * a callback function as parameter, which will be called when the selector is deactivated 
+ * again.
+ * @param {string | function} opt_item_url_or_callback the URL of the item, or a callback function
+ * @param {function} opt_callback a callback function (if the first parameter was a URL)
+ */
 annotorious.modules.Module.prototype.activateSelector = function(opt_item_url_or_callback, opt_callback) {
   var item_url = undefined,
       callback = undefined;
@@ -217,7 +289,6 @@ annotorious.modules.Module.prototype.addHandler = function(type, handler) {
  */
 annotorious.modules.Module.prototype.addPlugin = function(plugin) {
   this._plugins.push(plugin);
-  
   var self = this;
   goog.array.forEach(this._annotators.getValues(), function(annotator) {
     self._initPlugin(plugin, annotator);
@@ -255,50 +326,6 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
     });
     
     return goog.isDefAndNotNull(item);
-  }
-}
-
-annotorious.modules.Module.prototype.hideAnnotations = function(opt_item_url) {
-  this._setAnnotationVisibility(opt_item_url, false);
-}
-
-annotorious.modules.Module.prototype.hideSelectionWidget = function(opt_item_url) {
-  this._setSelectionWidgetVisibility(opt_item_url, false);
-}
-
-annotorious.modules.Module.prototype.showSelectionWidget = function(opt_item_url) {
-  this._setSelectionWidgetVisibility(opt_item_url, true);
-}
-
-annotorious.modules.Module.prototype._setSelectionWidgetVisibility = function(opt_item_url, visibility) {
-  if (opt_item_url) {
-    var annotator = this._annotators.get(opt_item_url);
-    if (annotator) {
-      // Item URL is provided, and item is loaded - set directly
-      if (visibility)
-        annotator.showSelectionWidget();
-      else 
-        annotator.hideSelectionWidget();
-    } else {
-      // Item URL is provided, but item not yet loaded - cache for later
-      this._getSettings(opt_item_url).hide_selection_widget = visibility;
-    }
-  } else {
-    // Item URL is not provided - update all annotators...
-    goog.array.forEach(this._annotators.getValues(), function(annotator) {
-      if (visibility)
-        annotator.showSelectionWidget();
-      else 
-        annotator.hideSelectionWidget();
-    });
-
-    // ...cache global settings...
-    this._cachedGlobalSettings.hide_selection_widget = visibility;
-
-    // ...and update all cached item settings
-    goog.array.forEach(this._cachedItemSettings.getValues(), function(settings) {
-      settings.hide_selection_widget = visibility;
-    });
   }
 }
 
@@ -361,6 +388,23 @@ annotorious.modules.Module.prototype.getAvailableSelectors = function(item_url) 
 }
 
 /**
+ * Hides existing annotations on all, or a specific item.
+ * @param {string} opt_item_url the URL of the item
+ */
+annotorious.modules.Module.prototype.hideAnnotations = function(opt_item_url) {
+  this._setAnnotationVisibility(opt_item_url, false);
+}
+
+/**
+ * Hides the selection widget, thus preventing users from creating new annotations.
+ * The selection widget can be hidden on a specific item or all.
+ * @param {string} opt_item_url the URL of the item on which to hide the selection widget
+ */
+annotorious.modules.Module.prototype.hideSelectionWidget = function(opt_item_url) {
+  this._setSelectionWidgetVisibility(opt_item_url, false);
+}
+
+/**
  * Highlights the specified annotation.
  * @param {Annotation} annotation the annotation
  */
@@ -376,6 +420,24 @@ annotorious.modules.Module.prototype.highlightAnnotation = function(annotation) 
       annotator.highlightAnnotation();
     });
   }
+}
+
+/**
+ * Lifecycle method: called by Annotorious on module initialization.
+ */
+annotorious.modules.Module.prototype.init = function() {
+  if (this._preLoad)
+    goog.array.extend(this._itemsToLoad, this._preLoad()); 
+
+  this._lazyLoad();
+  
+  var self = this;
+  var key = goog.events.listen(window, goog.events.EventType.SCROLL, function() {
+    if (self._itemsToLoad.length > 0)
+      self._lazyLoad();
+    else
+      goog.events.unlistenByKey(key);
+  });
 }
 
 /**
@@ -401,42 +463,6 @@ annotorious.modules.Module.prototype.removeAnnotation = function(annotation) {
   }
 }
 
-annotorious.modules.Module.prototype.showAnnotations = function(opt_item_url) {
-  this._setAnnotationVisibility(opt_item_url, true);
-}
-
-annotorious.modules.Module.prototype._setAnnotationVisibility = function(opt_item_url, visibility) {
-  if (opt_item_url) {
-    var annotator = this._annotators.get(opt_item_url);
-    if (annotator) {
-      // Item URL is provided, and item is loaded - set directly
-      if (visibility)
-        annotator.showAnnotations();
-      else 
-        annotator.hideAnnotations();
-    } else {
-      // Item URL is provided, but item not yet loaded - cache for later
-      this._getSettings(opt_item_url).hide_annotations = visibility;
-    }
-  } else {
-    // Item URL is not provided - update all annotators...
-    goog.array.forEach(this._annotators.getValues(), function(annotator) {
-      if (visibility)
-        annotator.showSelectionWidget();
-      else
-        annotator.hideAnnotations();
-    });
-
-    // ...cache global settings...
-    this._cachedGlobalSettings.hide_annotations = visibility;
-
-    // ...and update all cached item settings
-    goog.array.forEach(this._cachedItemSettings.getValues(), function(settings) {
-      settings.hide_annotations = visibility;
-    });
-  }
-}
-
 /**
  * Sets a specific selector on a particular item.
  * @param {string} item_url the URL of the item on which to set the selector
@@ -448,6 +474,23 @@ annotorious.modules.Module.prototype.setActiveSelector = function(item_url, sele
     if (annotator)
       annotator.setActiveSelector(selector);
   }
+}
+
+/**
+ * Shows existing annotations on all, or a specific item.
+ * @param {string} opt_item_url the URL of the item
+ */
+annotorious.modules.Module.prototype.showAnnotations = function(opt_item_url) {
+  this._setAnnotationVisibility(opt_item_url, true);
+}
+
+/**
+ * Shows the selection widget, thus enabling users to create new annotations.
+ * The selection widget can be made visible on a specific item or all.
+ * @param {string} opt_item_url the URL of the item on which to show the selection widget 
+ */
+annotorious.modules.Module.prototype.showSelectionWidget = function(opt_item_url) {
+  this._setSelectionWidgetVisibility(opt_item_url, true);
 }
 
 /** Methods that must be implemented by subclasses of annotorious.modules.Module **/
