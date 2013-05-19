@@ -150,7 +150,39 @@ annotorious.modules.image.ImageAnnotator.prototype._transferStyles = function(im
 }
 
 /**
- * Standard Annotator method: edits the specified existing annotation.
+ * NOT NEEDED/SUPPORTED on ImageAnnotator.
+ */
+annotorious.modules.image.ImageAnnotator.prototype.activateSelector = function(callback) { }
+
+/**
+ * Adds an annotation to this annotator's viewer.
+ * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {Annotation} opt_replace optionally, an existing annotation to replace
+ */
+annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(annotation, opt_replace) {
+  this._viewer.addAnnotation(annotation, opt_replace);
+}
+
+/**
+ * Adds a lifecycle event handler to this annotator's Event Broker.
+ * @param {annotorious.events.EventType} type the event type
+ * @param {function} the handler function
+ */
+annotorious.modules.image.ImageAnnotator.prototype.addHandler = function(type, handler) {
+  this._eventBroker.addHandler(type, handler);  
+}
+
+/**
+ * Adds a selector.
+ * @param {object} selector the selector object 
+ */
+annotorious.modules.image.ImageAnnotator.prototype.addSelector = function(selector) {
+  selector.init(this, this._editCanvas); 
+  this._selectors.push(selector);
+}
+
+/**
+ * Edits the specified existing annotation.
  * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.image.ImageAnnotator.prototype.editAnnotation = function(annotation) {
@@ -187,34 +219,7 @@ annotorious.modules.image.ImageAnnotator.prototype.editAnnotation = function(ann
 }
 
 /**
- * Standard Annotator method: adds annotation to this annotator's viewer.
- * @param {annotorious.annotation.Annotation} annotation the annotation
- * @param {Annotation} opt_replace optionally, an existing annotation to replace
- */
-annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(annotation, opt_replace) {
-  this._viewer.addAnnotation(annotation, opt_replace);
-}
-
-/**
- * Standard Annotator method: adds a lifecycle event handler to this annotator's Event Broker.
- * @param {annotorious.events.EventType} type the event type
- * @param {function} the handler function
- */
-annotorious.modules.image.ImageAnnotator.prototype.addHandler = function(type, handler) {
-  this._eventBroker.addHandler(type, handler);  
-}
-
-/**
- * Standard Annotator method: adds a selector.
- * @param {object} selector the selector object 
- */
-annotorious.modules.image.ImageAnnotator.prototype.addSelector = function(selector) {
-  selector.init(this, this._editCanvas); 
-  this._selectors.push(selector);
-}
-
-/**
- * Standard Annotator method: fire an event on this annotator's Event Broker.
+ * Fire an event on this annotator's Event Broker.
  * @param {annotorious.events.EventType} type the event type
  * @param {object} the event object
  */
@@ -223,7 +228,7 @@ annotorious.modules.image.ImageAnnotator.prototype.fireEvent = function(type, ev
 }
 
 /**
- * Standard Annotator method: converts the specified viewport coordinate to the
+ * Converts the specified viewport coordinate to the
  * coordinate system used by the annotatable item.
  * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  * @returns the corresponding item coordinate
@@ -234,7 +239,7 @@ annotorious.modules.image.ImageAnnotator.prototype.fromItemCoordinates = functio
 }
 
 /**
- * Standard Annotator method: returns the currently active selector.
+ * Returns the currently active selector.
  * @returns {object} the currently active selector
  */
 annotorious.modules.image.ImageAnnotator.prototype.getActiveSelector = function() {
@@ -242,7 +247,7 @@ annotorious.modules.image.ImageAnnotator.prototype.getActiveSelector = function(
 }
 
 /**
- * Standard Annotator method: returns all annotations on the annotatable media.
+ * Returns all annotations on the annotatable media.
  * @returns {Array.<Annotation>} the annotations
  */
 annotorious.modules.image.ImageAnnotator.prototype.getAnnotations = function() {
@@ -250,7 +255,7 @@ annotorious.modules.image.ImageAnnotator.prototype.getAnnotations = function() {
 }
 
 /**
- * Standard Annotator method: returns the available selectors for this item.
+ * Returns the available selectors for this item.
  * @returns {Array.<object>} the list of selectors
  */
 annotorious.modules.image.ImageAnnotator.prototype.getAvailableSelectors = function() {
@@ -258,7 +263,7 @@ annotorious.modules.image.ImageAnnotator.prototype.getAvailableSelectors = funct
 }
 
 /**
- * Standard Annotator method: returns the image that this annotator is responsible for.
+ * Returns the image that this annotator is responsible for.
  * @returns {element} the image
  */
 annotorious.modules.image.ImageAnnotator.prototype.getItem = function() {
@@ -267,9 +272,10 @@ annotorious.modules.image.ImageAnnotator.prototype.getItem = function() {
 }
 
 /**
- * Annotations should be bound to the URL defined in the 'data-original' attribute of
- * the image. Only if this attribute does not exist, they should be bound to the original
- * image src. This utility function returns the correct URL to bind to.
+ * Helper function that returns the 'URL' of the image. Normally, this will be the
+ * 'src' attribute of the <img> tag. But to provide more flexiblity, it is possible to 
+ * override this value using the 'data-original' attribute. Only if this attribute 
+ * does not exist, the real 'src' will be returned.
  * @param {element} item the image DOM element
  * @return {string} the URL
  */
@@ -282,7 +288,23 @@ annotorious.modules.image.ImageAnnotator.getItemURL = function(item) {
 }
 
 /**
- * Standard Annotator method: highlights the specified annotation.
+ * Hides annotations (and all other Annotorious elements).
+ */
+annotorious.modules.image.ImageAnnotator.prototype.hideAnnotations = function() {
+  goog.style.showElement(this.element, false);
+}
+
+/**
+ * Hides the selection widget, thus preventing users from creating new annotations.
+ */
+annotorious.modules.image.ImageAnnotator.prototype.hideSelectionWidget = function() {
+  this._selectionEnabled = false;
+  this._hint.destroy();
+  delete this._hint;
+}
+
+/**
+ * Highlights the specified annotation.
  * @param {Annotation} the annotation
  */
 annotorious.modules.image.ImageAnnotator.prototype.highlightAnnotation = function(annotation) {
@@ -290,7 +312,7 @@ annotorious.modules.image.ImageAnnotator.prototype.highlightAnnotation = functio
 }
 
 /**
- * Standard Annotator method: removes an annotation from this annotator's viewer.
+ * Removes an annotation from this annotator's viewer.
  * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.image.ImageAnnotator.prototype.removeAnnotation = function(annotation) {
@@ -298,7 +320,7 @@ annotorious.modules.image.ImageAnnotator.prototype.removeAnnotation = function(a
 }
 
 /**
- * Standard Annotator method: removes a lifecycle event handler to this annotator's Event Broker.
+ * Removes a lifecycle event handler to this annotator's Event Broker.
  * @param {annotorious.events.EventType} type the event type
  * @param {function} the handler function
  */
@@ -307,7 +329,7 @@ annotorious.modules.image.ImageAnnotator.prototype.removeHandler = function(type
 }
 
 /**
- * Standard Annotator method: sets the active selector for this item to the specified selector.
+ * Sets the active selector for this item to the specified selector.
  * @param {object} the selector object
  */
 annotorious.modules.image.ImageAnnotator.prototype.setActiveSelector = function(selector) {
@@ -319,23 +341,23 @@ annotorious.modules.image.ImageAnnotator.prototype.setActiveSelector = function(
     console.log('WARNING: selector "' + selector + '" not available'); 
 }
 
+/**
+ * Shows annotations (and all other Annotorious elements).
+ */
+annotorious.modules.image.ImageAnnotator.prototype.showAnnotations = function() {
+  goog.style.showElement(this.element, true);
+}
+
+/**
+ * Shows the selection widget, thus enabling users to create new annotations.
+ */
 annotorious.modules.image.ImageAnnotator.prototype.showSelectionWidget = function() {
   this._selectionEnabled = true;
   // TODO if hint doesn't exist already, create
 }
 
-annotorious.modules.image.ImageAnnotator.prototype.hideSelectionWidget = function() {
-  this._selectionEnabled = false;
-  this._hint.destroy();
-  delete this._hint;
-}
-
-annotorious.modules.image.ImageAnnotator.prototype.activateSelector = function(callback) {
-  // Does not have any effect at the moment
-}
-
 /**
- * Standard Annotator method: stops the selection (if any).
+ * Stops the selection (if any).
  */
 annotorious.modules.image.ImageAnnotator.prototype.stopSelection = function(original_annotation) {
    goog.style.showElement(this._editCanvas, false);
@@ -347,7 +369,7 @@ annotorious.modules.image.ImageAnnotator.prototype.stopSelection = function(orig
 }
 
 /**
- * Standard Annotator method: converts the specified coordinate from the
+ * Converts the specified coordinate from the
  * coordinate system used by the annotatable item to viewport coordinates.
  * @param {annotorious.shape.geom.Point} xy the item coordinate
  * @returns the corresponding viewport coordinate
