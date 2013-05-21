@@ -15,7 +15,7 @@ goog.require('goog.style');
  * @constructor
  */
 annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
-  var viewCanvas, hint;
+  var hint;
   
   /** The container DOM element (DIV) for the annotation layer **/
   this.element;
@@ -60,10 +60,10 @@ annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
   goog.dom.replaceNode(this.element, item);
   goog.dom.appendChild(this.element, item);
   
-  viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
+  this._viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:img_bounds.width, height:img_bounds.height });
-  goog.dom.classes.add(viewCanvas, 'annotorious-item-unfocus');
-  goog.dom.appendChild(this.element, viewCanvas);   
+  goog.dom.classes.add(this._viewCanvas, 'annotorious-item-unfocus');
+  goog.dom.appendChild(this.element, this._viewCanvas);   
 
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:img_bounds.width, height:img_bounds.height });
@@ -81,7 +81,7 @@ annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
   this._currentSelector = default_selector;
 
   this.editor = new annotorious.editor.Editor(this);
-  this._viewer = new annotorious.modules.image.Viewer(viewCanvas, this.popup, this); 
+  this._viewer = new annotorious.modules.image.Viewer(this._viewCanvas, this.popup, this); 
   this._hint = new annotorious.hint.Hint(this, this.element);
   
   var self = this;
@@ -89,7 +89,7 @@ annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
-      goog.dom.classes.addRemove(viewCanvas, 'annotorious-item-unfocus', 'annotorious-item-focus');
+      goog.dom.classes.addRemove(self._viewCanvas, 'annotorious-item-unfocus', 'annotorious-item-focus');
     }
   });
   
@@ -97,11 +97,11 @@ annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
-      goog.dom.classes.addRemove(viewCanvas, 'annotorious-item-focus', 'annotorious-item-unfocus');
+      goog.dom.classes.addRemove(self._viewCanvas, 'annotorious-item-focus', 'annotorious-item-unfocus');
     }
   });
 
-  goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
+  goog.events.listen(this._viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
     if (self._selectionEnabled) {
       goog.style.showElement(self._editCanvas, true);
       self._viewer.highlightAnnotation(undefined);
@@ -291,7 +291,7 @@ annotorious.modules.image.ImageAnnotator.getItemURL = function(item) {
  * Hides annotations (and all other Annotorious elements).
  */
 annotorious.modules.image.ImageAnnotator.prototype.hideAnnotations = function() {
-  goog.style.showElement(this.element, false);
+  goog.style.showElement(this._viewCanvas, false);
 }
 
 /**
@@ -345,7 +345,7 @@ annotorious.modules.image.ImageAnnotator.prototype.setActiveSelector = function(
  * Shows annotations (and all other Annotorious elements).
  */
 annotorious.modules.image.ImageAnnotator.prototype.showAnnotations = function() {
-  goog.style.showElement(this.element, true);
+  goog.style.showElement(this._viewCanvas, true);
 }
 
 /**
