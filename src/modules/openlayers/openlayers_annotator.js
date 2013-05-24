@@ -166,7 +166,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.addSelector = funct
  * Standard Annotator method: fireEvent
  */
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.fireEvent = function(type, event) {
-  this._eventBroker.fireEvent(type, event);
+  return this._eventBroker.fireEvent(type, event);
 }
 
 /**

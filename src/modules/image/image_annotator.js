@@ -224,7 +224,7 @@ annotorious.modules.image.ImageAnnotator.prototype.editAnnotation = function(ann
  * @param {object} the event object
  */
 annotorious.modules.image.ImageAnnotator.prototype.fireEvent = function(type, event) {
-  this._eventBroker.fireEvent(type, event);
+  return this._eventBroker.fireEvent(type, event);
 }
 
 /**

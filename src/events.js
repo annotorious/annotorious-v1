@@ -37,16 +37,27 @@ annotorious.events.EventBroker.prototype.removeHandler = function(type, handler)
 
 /**
  * Fires an event, triggering execution of all registered handlers.
+ * Event handlers may optionally return a boolean value to indicate whether
+ * further steps following the event should be canceled (e.g. in case of 
+ * annotation removal). If there is no return value (or the return value is
+ * 'true'), no action will be taken by Annotorious. 
  * @param {annotorious.events.EventType} type the event type
  * @param {object} event the event object
+ * @return {boolean} the 'cancel event' flag
  */
 annotorious.events.EventBroker.prototype.fireEvent = function(type, event) {
+  var cancelEvent = false;
+
   var handlers = this._handlers[type];
   if (handlers) {
     goog.array.forEach(handlers, function(handler, idx, array) {
-      handler(event);
+      var retVal = handler(event);
+      if (goog.isDef(retVal) && !retVal)
+        cancelEvent = true;
     });
   }    
+
+  return cancelEvent;
 }
 
 /**
@@ -96,9 +107,14 @@ annotorious.events.EventType = {
   SELECTION_CHANGED: 'onSelectionChanged',
 
   /**
-   * The annotation popup widget was hidden
+   * The annotation popup widget is about to hide
    */
   BEFORE_POPUP_HIDE: 'beforePopupHide',
+
+  /**
+   * The annotation is about to be removed
+   */
+  BEFORE_ANNOTATION_REMOVED: 'beforeAnnotationRemoved',
 
   /**
    * An annotation was removed

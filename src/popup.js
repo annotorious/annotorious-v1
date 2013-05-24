@@ -64,10 +64,13 @@ annotorious.viewer.Popup = function(annotator) {
   });
 
   goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
-    goog.style.setOpacity(self.element, 0);
-    goog.style.setStyle(self.element, 'pointer-events', 'none');
-    annotator.fireEvent(annotorious.events.EventType.ANNOTATION_REMOVED, self._currentAnnotation);
-    annotator.removeAnnotation(self._currentAnnotation);
+    var cancelEvent = annotator.fireEvent(annotorious.events.EventType.BEFORE_ANNOTATION_REMOVED, self._currentAnnotation);
+    if (!cancelEvent) {
+      goog.style.setOpacity(self.element, 0);
+      goog.style.setStyle(self.element, 'pointer-events', 'none');
+      annotator.fireEvent(annotorious.events.EventType.ANNOTATION_REMOVED, self._currentAnnotation);
+      annotator.removeAnnotation(self._currentAnnotation);
+    }
   });
   
   goog.events.listen(this.element, goog.events.EventType.MOUSEOVER, function(event) {
