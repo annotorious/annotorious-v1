@@ -152,43 +152,22 @@ annotorious.viewer.Popup.prototype.clearHideTimer = function() {
  */
 annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
   this.clearHideTimer();
-  
-  if (annotation && xy) {
-    // New annotation and position - reset
-    this._currentAnnotation = annotation;
-    if (annotation.text)
-      this._text.innerHTML = annotation.text.replace(/\n/g, '<br/>');
-    else
-      this._text.innerHTML = '<span class="annotorious-popup-empty">No comment</span>';
 
-    if (('editable' in annotation) && annotation.editable == false)
-      goog.style.showElement(this._buttons, false);
-    else
-      goog.style.showElement(this._buttons, true);
-
+  if (xy)
     this.setPosition(xy);
-    
-    if (this._buttonHideTimer)
-      window.clearTimeout(this._buttonHideTimer);
+
+  if (annotation)
+    this.setAnnotation(annotation);
+
+  if (this._buttonHideTimer)
+    window.clearTimeout(this._buttonHideTimer);
       
-    goog.style.setOpacity(this._buttons, 0.9);
-    var self = this;
-    this._buttonHideTimer = window.setTimeout(function() {
-      goog.style.setOpacity(self._buttons, 0);
-    }, 1000);
-
-    // Update extra fields (if any)
-    goog.array.forEach(this._extraFields, function(field) {
-      var f = field.fn(annotation);
-      if (goog.isString(f))  {
-        field.el.innerHTML = f;
-      } else if (goog.dom.isElement(f)) {
-        goog.dom.removeChildren(field.el);
-        goog.dom.appendChild(field.el, f);
-      }
-    });
-  }
-
+  goog.style.setOpacity(this._buttons, 0.9);
+  var self = this;
+  this._buttonHideTimer = window.setTimeout(function() {
+    goog.style.setOpacity(self._buttons, 0);
+  }, 1000);
+  
   goog.style.setOpacity(this.element, 0.9);
   goog.style.setStyle(this.element, 'pointer-events', 'auto');
 }
@@ -199,6 +178,34 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
  */
 annotorious.viewer.Popup.prototype.setPosition = function(xy) {
   goog.style.setPosition(this.element, new goog.math.Coordinate(xy.x, xy.y));
+}
+
+/**
+ * Set the annotation for the popup.
+ * @param {Annotation} annotation the annotation
+ */
+annotorious.viewer.Popup.prototype.setAnnotation = function(annotation) {
+  this._currentAnnotation = annotation;
+  if (annotation.text)
+    this._text.innerHTML = annotation.text.replace(/\n/g, '<br/>');
+  else
+    this._text.innerHTML = '<span class="annotorious-popup-empty">No comment</span>';
+
+  if (('editable' in annotation) && annotation.editable == false)
+    goog.style.showElement(this._buttons, false);
+  else
+    goog.style.showElement(this._buttons, true);
+  
+  // Update extra fields (if any)
+  goog.array.forEach(this._extraFields, function(field) {
+    var f = field.fn(annotation);
+    if (goog.isString(f))  {
+      field.el.innerHTML = f;
+    } else if (goog.dom.isElement(f)) {
+      goog.dom.removeChildren(field.el);
+      goog.dom.appendChild(field.el, f);
+    }
+  });
 }
 
 /** API exports **/

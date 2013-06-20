@@ -39,9 +39,8 @@ annotorious.modules.openlayers.Viewer = function(map, annotator) {
   
   var self = this;
   this._map.events.register('move', this._map, function() {
-    if (self._currentlyHighlightedOverlay) {      
-      self._popup.setPosition(self._place_popup());
-    }
+    if (self._currentlyHighlightedOverlay)
+      self._place_popup();
   });
 
   annotator.addHandler(annotorious.events.EventType.BEFORE_POPUP_HIDE, function() {
@@ -52,27 +51,52 @@ annotorious.modules.openlayers.Viewer = function(map, annotator) {
   });
 }
 
+/**
+ * Resets the position of the popup, without changing the annotation.
+ */
 annotorious.modules.openlayers.Viewer.prototype._place_popup = function() {
-    // We don't need to compute these on ever move
-    // TODO only compute these on highlight change
-    var annotation_div = this._currentlyHighlightedOverlay.marker.div;
-    var annotation_height = parseInt(goog.style.getStyle(annotation_div, 'height'), 10);
+  // Compute correct annotation bounds, relative to map
+  var annotation_div = this._currentlyHighlightedOverlay.marker.div;
+  var annotation_dim = goog.style.getBounds(annotation_div);
+  var annotation_pos = goog.style.getRelativePosition(annotation_div, this._map.div);
+  var annotation_bounds = { top: annotation_pos.y, 
+                            left: annotation_pos.x, 
+                            width: annotation_dim.width, 
+                            height: annotation_dim.height };
 
-    var popup_bounds = goog.style.getBounds(this._popup.element);
-    var popup_pos = goog.style.getRelativePosition(annotation_div, this._map.div);
-    popup_pos.y = popup_pos.y + annotation_height + 5;
-    
-    if (popup_pos.x < 0)
-      popup_pos.x = 0;
-      
-    if (popup_pos.x + popup_bounds.width > this._map_bounds.width)
-      popup_pos.x = this._map_bounds.width - popup_bounds.width;
-      
-    if (popup_pos.y + popup_bounds.height > this._map_bounds.height)
-      popup_pos.y = this._map_bounds.height - popup_bounds.height;
-    
-    return popup_pos;
+  // Popup width & height
+  var popup_bounds = goog.style.getBounds(this._popup.element);
+
+  var popup_pos = { y: annotation_bounds.top + annotation_bounds.height + 5 };
+  if (annotation_bounds.left + popup_bounds.width > this._map_bounds.width) {
+    goog.dom.classes.addRemove(this._popup.element, 'top-left', 'top-right');
+    popup_pos.x = (annotation_bounds.left + annotation_bounds.width) - popup_bounds.width;
+  } else {
+    goog.dom.classes.addRemove(this._popup.element, 'top-right', 'top-left');
+    popup_pos.x = annotation_bounds.left;
   }
+
+  if (popup_pos.x < 0)
+    popup_pos.x = 0;
+
+  if (popup_pos.x + popup_bounds.width > this._map_bounds.width)
+    popup_pos.x = this._map_bounds.width - popup_bounds.width;
+     
+  if (popup_pos.y + popup_bounds.height > this._map_bounds.height)
+    popup_pos.y = this._map_bounds.height - popup_bounds.height;
+
+  this._popup.setPosition(popup_pos);    
+}
+
+/**
+ * Shows the popup with a new annotation.
+ * @param {Annotation} annotation the annotation
+ */
+annotorious.modules.openlayers.Viewer.prototype._show_popup = function(annotation) {
+  this._popup.setAnnotation(annotation);
+  this._place_popup();
+  this._popup.show();
+}
 
 annotorious.modules.openlayers.Viewer.prototype._updateHighlight = function(new_highlight, previous_highlight) {
   if (new_highlight) {
@@ -80,7 +104,7 @@ annotorious.modules.openlayers.Viewer.prototype._updateHighlight = function(new_
     var height = parseInt(goog.style.getStyle(new_highlight.marker.div, 'height'), 10);
     goog.style.setStyle(new_highlight.inner, 'border-color', '#fff000');
     this._currentlyHighlightedOverlay = new_highlight;
-    this._popup.show(new_highlight.annotation, this._place_popup());
+    this._show_popup(new_highlight.annotation);
   } else {
     delete this._currentlyHighlightedOverlay;
   }
