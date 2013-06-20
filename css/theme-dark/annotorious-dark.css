@@ -99,7 +99,7 @@
   background-color:transparent;
 }
 
-.annotorious-popup:after,.annotorious-editor:after {
+.top-left:after, .annotorious-editor:after {
   content:url(Indicator.png);
   position:absolute;
   left:15px;
@@ -108,6 +108,17 @@
   width:19px;
   display:block;
 }
+
+.top-right:after {
+  content:url(Indicator.png);
+  position:absolute;
+  right:15px;
+  top:-14px;
+  height:18px;
+  width:19px;
+  display:block;  
+}
+
 
 .annotorious-popup-buttons {
   float:right;
@@ -317,17 +328,12 @@
   line-height: normal;
   font-family:Arial, Verdana, Sans;
   font-size:16px;
-  color:#000;
-  background-color:#fff;
+  color:#fff;
+  background-color:rgba(0,0,0,0.7);
   margin:0px;
   padding:9px;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   -khtml-border-radius: 5px;
-}
-
-.annotorious-ol-hint-secondary {
-  background-color:rgba(0,0,0,0.7);
-  color:#fff;
 }
