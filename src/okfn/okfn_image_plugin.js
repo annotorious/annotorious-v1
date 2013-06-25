@@ -46,7 +46,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, eventBroker);
 
   var selector = new annotorious.plugins.selection.RectDragSelector();
-  selector.init(editCanvas, eventBroker, viewer, popup);
+  selector.init(editCanvas, eventBroker);
 
     
   var hint = new annotorious.hint.Hint(eventBroker, annotationLayer);
@@ -63,6 +63,21 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   eventBroker.getAvailableSelectors = function() {
     return [ selector ];
   };
+
+  /**
+   * Returns the top z-index annotation based on x and y coordinates
+   * @param x for viewport x axis value
+   * @param y for viewport y axis value
+   * @returns annotation object
+   */
+  eventBroker.topAnnotationAt = function(x, y) {
+    return viewer.topAnnotationAt(x, y);
+  }
+  
+  eventBroker.highlightAnnotation = function(annotation) {
+    viewer.highlightAnnotation(annotation);
+  }
+  
 
   /** 
    * Checks if the OKFN Editor is currently 'owned' by this image. I.e. whether

@@ -15,14 +15,12 @@ annotorious.plugins.selection.RectDragSelector = function() { }
  * @param {element} canvas the canvas to draw on
  * @param {object} annotator reference to the annotator
  */
-annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator, viewer, popup) {
+annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator) {
   /** @private **/
   this._canvas = canvas;
   
   /** @private **/
   this._annotator = annotator;
-  
-  this.popup = popup;
 
   /** @private **/
   this._g2d = canvas.getContext('2d');
@@ -42,8 +40,6 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas,
 
   /** @private **/
   this._mouseUpListener;
-
-  this.viewer = viewer;
 }
 
 /**
@@ -97,7 +93,9 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_CANCELED);
       
       // TODO dup code from image_viewer line 269
-      annotation = self.viewer.topAnnotationAt(points.x, points.y);
+      //annotation = self.viewer.topAnnotationAt(points.x, points.y);
+      annotation = self._annotator.topAnnotationAt(points.x, points.y);
+      
       
       if (annotation) {
         annotorious.events.dispatch({
@@ -105,9 +103,9 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
           name: "annotoriousSelectsAnnotation",
           data: annotation
         });
-        self.viewer.highlightAnnotation(annotation);
+
+        self._annotator.highlightAnnotation(annotation);
       }
-     
     }
   });
 }
