@@ -2,6 +2,8 @@ var hasTouch = 'ontouchstart' in window;
 
 goog.provide('annotorious.humanEvents');
 goog.require('goog.events.EventType');
+goog.require('goog.dom');
+goog.require('goog.dom.classes');
   
 annotorious.humanEvents = {
   DOWN: (hasTouch) ? goog.events.EventType.TOUCHSTART : goog.events.EventType.MOUSEDOWN,
@@ -16,4 +18,7 @@ annotorious.humanEvents.hasTouch = hasTouch;
 
 annotorious.humanEvents.dispatchType = (hasTouch) ? "TouchEvent" : "MouseEvent";
 annotorious.humanEvents.initType = (hasTouch) ? "initTouchEvent" : "initMouseEvent";
-  
+
+if (hasTouch) {
+  goog.dom.classes.add(document.getElementsByTagName("html")[0], "hasTouch");
+}
