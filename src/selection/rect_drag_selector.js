@@ -92,10 +92,7 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
     } else {
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_CANCELED);
       
-      // TODO dup code from image_viewer line 269
-      //annotation = self.viewer.topAnnotationAt(points.x, points.y);
-      annotation = self._annotator.topAnnotationAt(points.x, points.y);
-      
+      annotation = self._annotator.topAnnotationAt(points.x, points.y);      
       
       if (annotation) {
         annotorious.events.dispatch({
