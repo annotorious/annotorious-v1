@@ -15,9 +15,11 @@ annotorious.plugins.selection.RectDragSelector = function() { }
  * @param {element} canvas the canvas to draw on
  * @param {object} annotator reference to the annotator
  */
-annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator) {
+annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator, viewer) {
   /** @private **/
   this._canvas = canvas;
+  
+  this.viewer = viewer;
   
   /** @private **/
   this._annotator = annotator;
@@ -101,7 +103,7 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
           data: annotation
         });
 
-        self._annotator.highlightAnnotation(annotation);
+        self.viewer.highlightAnnotation(annotation);
       }
     }
   });
