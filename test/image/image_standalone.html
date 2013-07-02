@@ -4,12 +4,6 @@
     <link rel="stylesheet" href="../../css/theme-dark/annotorious-dark.css" type="text/css" />
     <script src="http://localhost:9810/compile?id=annotorious"></script>
     <script>
-      anno.addHandler('beforeAnnotationRemoved', function(annotation) {
-        // WARNING: this will cancel all remove events
-        // No annotation can be deleted as long as this always returns false
-        return false;
-      });
-
       window.onload = function() {
         anno.makeAnnotatable(document.getElementById('ptolemy'));
 

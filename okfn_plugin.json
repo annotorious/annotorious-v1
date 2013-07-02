@@ -30,6 +30,6 @@
     "externs/api.js",
     "externs/okfn_annotator.js"
   ],
-  "mode": "RAW", // "ADVANCED"
+  "mode": "ADVANCED", // "ADVANCED"
   "level": "DEFAULT" // "VERBOSE"
 }

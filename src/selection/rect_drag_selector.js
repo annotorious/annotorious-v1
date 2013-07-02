@@ -1,5 +1,3 @@
-var humanEvents = annotorious.humanEvents;
-
 goog.provide('annotorious.plugins.selection.RectDragSelector');
 
 goog.require('goog.events');
@@ -52,7 +50,7 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
   var self = this;  
   var canvas = this._canvas;
   
-  this._mouseMoveListener = goog.events.listen(this._canvas, humanEvents.MOVE, function(event) {
+  this._mouseMoveListener = goog.events.listen(this._canvas, annotorious.humanEvents.MOVE, function(event) {
     var points = annotorious.events.sanitizeCoordinates(event, canvas);
     if (self._enabled) {
       self._opposite = { x: points.x, y: points.y };
@@ -78,7 +76,7 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
     }
   });
 
-  this._mouseUpListener = goog.events.listen(canvas, humanEvents.UP, function(event) {
+  this._mouseUpListener = goog.events.listen(canvas, annotorious.humanEvents.UP, function(event) {
     var points = annotorious.events.sanitizeCoordinates(event, canvas);
     var annotation;
     var shape, bbox;

@@ -23,6 +23,7 @@
     "src/editor.js",
     "src/events.js",
     "src/hint.js",
+    "src/humanEventTypes.js",
     "src/plugin.js",
     "src/popup.js",
 
