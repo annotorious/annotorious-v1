@@ -23,8 +23,8 @@ annotorious.events.sanitizeCoordinates = function(event, parent) {
   
   if (!event.offsetX || !event.offsetY && event.event_.changedTouches) {
     points = {
-      x: event.event_.changedTouches[0].pageX - offset(parent).left,
-      y: event.event_.changedTouches[0].pageY - offset(parent).top
+      x: event.event_.changedTouches[0].clientX - offset(parent).left,
+      y: event.event_.changedTouches[0].clientY - offset(parent).top
     };
   } else {
     points = {
