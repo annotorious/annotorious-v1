@@ -1,3 +1,5 @@
+var humanEvents = annotorious.humanEvents;
+
 goog.provide('annotorious.plugins.selection.RectDragSelector');
 
 goog.require('goog.events');
@@ -13,9 +15,11 @@ annotorious.plugins.selection.RectDragSelector = function() { }
  * @param {element} canvas the canvas to draw on
  * @param {object} annotator reference to the annotator
  */
-annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator) {
+annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator, viewer) {
   /** @private **/
   this._canvas = canvas;
+  
+  this.viewer = viewer;
   
   /** @private **/
   this._annotator = annotator;
@@ -44,13 +48,16 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas,
  * Attaches MOUSEUP and MOUSEMOVE listeners to the editing canvas.
  * @private
  */
-annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = function() {
+annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = function(startPoint) {
   var self = this;  
-  this._mouseMoveListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
+  var canvas = this._canvas;
+  
+  this._mouseMoveListener = goog.events.listen(this._canvas, humanEvents.MOVE, function(event) {
+    var points = annotorious.events.sanitizeCoordinates(event, canvas);
     if (self._enabled) {
-      self._opposite = { x: event.offsetX, y: event.offsetY };
+      self._opposite = { x: points.x, y: points.y };
 
-      self._g2d.clearRect(0, 0, self._canvas.width, self._canvas.height);
+      self._g2d.clearRect(0, 0, canvas.width, canvas.height);
       
       var width = self._opposite.x - self._anchor.x;
       var height = self._opposite.y - self._anchor.y;
@@ -71,14 +78,33 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
     }
   });
 
-  this._mouseUpListener = goog.events.listen(this._canvas, goog.events.EventType.MOUSEUP, function(event) {
+  this._mouseUpListener = goog.events.listen(canvas, humanEvents.UP, function(event) {
+    var points = annotorious.events.sanitizeCoordinates(event, canvas);
+    var annotation;
+    var shape, bbox;
+    var shape = self.getShape();
+    
+    event = (event.event_) ? event.event_ : event;
+    
     self._enabled = false;
     var shape = self.getShape();
     if (shape) {
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_COMPLETED,
         { mouseEvent: event, shape: shape, viewportBounds: self.getViewportBounds() }); 
     } else {
-      self._annotator.fireEvent(annotorious.events.EventType.SELECTION_CANCELED); 
+      self._annotator.fireEvent(annotorious.events.EventType.SELECTION_CANCELED);
+      
+      annotation = self._annotator.topAnnotationAt(points.x, points.y);      
+      
+      if (annotation) {
+        annotorious.events.dispatch({
+          element: document,
+          name: "annotoriousSelectsAnnotation",
+          data: annotation
+        });
+
+        self.viewer.highlightAnnotation(annotation);
+      }
     }
   });
 }
@@ -124,8 +150,12 @@ annotorious.plugins.selection.RectDragSelector.prototype.getSupportedShapeType =
  * @param {number} y the Y coordinate
  */
 annotorious.plugins.selection.RectDragSelector.prototype.startSelection = function(x, y) {
+  var startPoint = {
+    x: x,
+    y: y
+  };
   this._enabled = true;
-  this._attachListeners();
+  this._attachListeners(startPoint);
   this._anchor = new annotorious.shape.geom.Point(x, y);
   this._annotator.fireEvent(annotorious.events.EventType.SELECTION_STARTED, {
     offsetX: x, offsetY: y});

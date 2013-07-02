@@ -1,3 +1,5 @@
+var humanEvents = annotorious.humanEvents;
+
 goog.provide('annotorious.okfn.ImagePlugin');
 
 goog.require('goog.array');
@@ -34,13 +36,18 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   var editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:image.width, height:image.height });
-  goog.style.showElement(editCanvas, false); 
+    
+  if (!annotorious.humanEvents.hasTouch) {
+    goog.style.showElement(editCanvas, false);
+  }
+  
   goog.dom.appendChild(annotationLayer, editCanvas);  
 
-  var selector = new annotorious.plugins.selection.RectDragSelector();
-  selector.init(editCanvas, eventBroker);
-
   var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, eventBroker);
+
+  var selector = new annotorious.plugins.selection.RectDragSelector();
+  selector.init(editCanvas, eventBroker, viewer);
+
     
   var hint = new annotorious.hint.Hint(eventBroker, annotationLayer);
   
@@ -56,6 +63,16 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   eventBroker.getAvailableSelectors = function() {
     return [ selector ];
   };
+
+  /**
+   * Returns the top z-index annotation based on x and y coordinates
+   * @param x for viewport x axis value
+   * @param y for viewport y axis value
+   * @returns annotation object
+   */
+  eventBroker.topAnnotationAt = function(x, y) {
+    return viewer.topAnnotationAt(x, y);
+  }
 
   /** 
    * Checks if the OKFN Editor is currently 'owned' by this image. I.e. whether
@@ -76,34 +93,38 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
    * Unfortunately Annotator makes this task a little complex...
    */                       
   var isMouseEventInside = function(event) {
-    var relatedTarget = event.relatedTarget;
+    var isMouseInside = false, relatedTarget = event.relatedTarget || false;
     
     // No related target - mouse was inside the annotationLayer on page load
     if (!relatedTarget)
-      return true;  
+      isMouseInside = true;  
 
     // Related target is a child of the annotation layer - inside
     if (goog.dom.contains(annotationLayer, relatedTarget))
-      return true;
+      isMouseInside = true;
 
     // Related target is part of the Annotator editor - inside
     if (goog.dom.contains(okfnAnnotator.editor.element[0], relatedTarget) && isEditorCurrentlyOwned())
-      return true;
+      isMouseInside = true;
 
     // Related target is part of the Annotator popup - inside
     if (goog.dom.contains(okfnAnnotator.viewer.element[0], relatedTarget) && popup.isViewerCurrentlyOwned())
-      return true;
+      isMouseInside = true;
+    
+    if (event.event_ && event.event_.touches) {
+      isMouseInside = false;
+    }
 
-    return false;
+    return isMouseInside;
   };
  
   var self = this;  
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOVER, function(event) {
+  goog.events.listen(annotationLayer, humanEvents.OVER, function(event) {
     if (!isMouseEventInside(event))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
   });
   
-  goog.events.listen(annotationLayer, goog.events.EventType.MOUSEOUT, function(event) {
+  goog.events.listen(annotationLayer, humanEvents.OUT, function(event) {
     if (!isMouseEventInside(event))
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
   });
@@ -118,10 +139,14 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
   });
  
-  goog.events.listen(viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
+  goog.events.listen(( (annotorious.humanEvents.hasTouch) ? editCanvas : viewCanvas ), humanEvents.DOWN, function(event) {
+    var points = annotorious.events.sanitizeCoordinates(event, viewCanvas);
+
+    event.preventDefault();
     goog.style.showElement(editCanvas, true);
+
     viewer.highlightAnnotation(undefined);
-    selector.startSelection(event.offsetX, event.offsetY);
+    selector.startSelection(points.x, points.y);
   });
   
   eventBroker.addHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM, function() {
@@ -149,7 +174,10 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
 
   eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
-    goog.style.showElement(editCanvas, false);
+    if (!annotorious.humanEvents.hasTouch) {
+      goog.style.showElement(editCanvas, false);
+    }
+    
     selector.stopSelection();
   });
   
@@ -200,7 +228,10 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
   
   okfnAnnotator.subscribe('annotationEditorHidden', function(editor) {
-    goog.style.showElement(editCanvas, false);
+    if (!annotorious.humanEvents.hasTouch) {
+      goog.style.showElement(editCanvas, false);
+    }
+    
     selector.stopSelection();
     
     // TODO workaround before we have decent 'edit' behavior in Annotorious standalone!

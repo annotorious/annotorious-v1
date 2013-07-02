@@ -5,6 +5,7 @@
     "goog.dom.ASSUME_STANDARDS_MODE": true
   },
   "inputs": [
+    "src/humanEventTypes.js",
     "src/geometry/point.js",
     "src/geometry/polygon.js",
     "src/geometry/rectangle.js",
@@ -29,6 +30,6 @@
     "externs/api.js",
     "externs/okfn_annotator.js"
   ],
-  "mode": "ADVANCED", // "ADVANCED"
+  "mode": "RAW", // "ADVANCED"
   "level": "DEFAULT" // "VERBOSE"
 }
