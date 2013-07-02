@@ -1,3 +1,4 @@
+var humanEvents = annotorious.humanEvents;
 goog.provide('annotorious.okfn.Popup');
 
 goog.require('goog.array');
@@ -38,7 +39,7 @@ annotorious.okfn.Popup = function(image, okfnAnnotator, eventBroker, baseOffset)
   this._mouseoutHandlers = [];
 
   var self = this;
-  goog.events.listen(this._okfnAnnotator.viewer.element[0], goog.events.EventType.MOUSEOVER, function(event) {
+  goog.events.listen(this._okfnAnnotator.viewer.element[0], humanEvents.OVER, function(event) {
     if (self.isViewerCurrentlyOwned()) {
       self.clearHideTimer()
       goog.array.forEach(self._mouseoverHandlers, function(handler) {
@@ -47,7 +48,7 @@ annotorious.okfn.Popup = function(image, okfnAnnotator, eventBroker, baseOffset)
     }
   });
   
-  goog.events.listen(this._okfnAnnotator.viewer.element[0], goog.events.EventType.MOUSEOUT, function(event) {
+  goog.events.listen(this._okfnAnnotator.viewer.element[0], humanEvents.OUT, function(event) {
     if (self.isViewerCurrentlyOwned()) {
       okfnAnnotator.clearViewerHideTimer(); // Switch off Annotator's own fade out
       self.startHideTimer();

@@ -269,3 +269,17 @@
 .annotorious-ol-hint-secondary {
   background-color:#fff000;
 }
+
+canvas {
+  z-index: 2;
+}
+
+canvas.hidden {
+  z-index: -1;
+  visibility: hidden;
+}
+  
+html.hasTouch .annotator-viewer li .annotator-controls, 
+html.hasTouch .annotator-viewer li .annotator-controls {
+  opacity: 1;
+}
