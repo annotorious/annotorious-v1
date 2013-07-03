@@ -255,6 +255,16 @@ annotorious.modules.image.ImageAnnotator.prototype.getAnnotations = function() {
 }
 
 /**
+ * Returns the annotations at the specified client X/Y coordinates.
+ * @param {number} cx the client X coordinate
+ * @param {number} cy the client Y coordinate
+ * @return {Array.<annotorious.annotation.Annotation>} the annotations sorted by size, smallest first
+ */
+annotorious.modules.image.ImageAnnotator.prototype.getAnnotationsAt = function(cx, cy) {
+  return goog.array.clone(this._viewer.getAnnotationsAt(x, y));
+}
+
+/**
  * Returns the available selectors for this item.
  * @returns {Array.<object>} the list of selectors
  */

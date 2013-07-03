@@ -13,11 +13,9 @@ annotorious.plugins.selection.RectDragSelector = function() { }
  * @param {element} canvas the canvas to draw on
  * @param {object} annotator reference to the annotator
  */
-annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator, viewer) {
+annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator) {
   /** @private **/
   this._canvas = canvas;
-  
-  this.viewer = viewer;
   
   /** @private **/
   this._annotator = annotator;
@@ -78,30 +76,20 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
 
   this._mouseUpListener = goog.events.listen(canvas, annotorious.humanEvents.UP, function(event) {
     var points = annotorious.events.sanitizeCoordinates(event, canvas);
-    var annotation;
-    var shape, bbox;
     var shape = self.getShape();
-    
     event = (event.event_) ? event.event_ : event;
     
     self._enabled = false;
-    var shape = self.getShape();
     if (shape) {
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_COMPLETED,
         { mouseEvent: event, shape: shape, viewportBounds: self.getViewportBounds() }); 
     } else {
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_CANCELED);
-      
-      annotation = self._annotator.topAnnotationAt(points.x, points.y);      
-      
-      if (annotation) {
-        annotorious.events.dispatch({
-          element: document,
-          name: "annotoriousSelectsAnnotation",
-          data: annotation
-        });
-
-        self.viewer.highlightAnnotation(annotation);
+      if (annotorious.humanEvents.hasTouch) {
+        // In touch mode, we use this to "relay" the selection event
+        var annotations = self._annotator.getAnnotationsAt(points.x, points.y);
+        if (annotations.length > 0)
+          self._annotator.highlightAnnotation(annotations[0]);
       }
     }
   });

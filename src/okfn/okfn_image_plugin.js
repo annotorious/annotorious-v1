@@ -3,6 +3,7 @@ var humanEvents = annotorious.humanEvents;
 goog.provide('annotorious.okfn.ImagePlugin');
 
 goog.require('goog.array');
+goog.require('goog.object');
 goog.require('goog.soy');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
@@ -63,6 +64,10 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   eventBroker.getAvailableSelectors = function() {
     return [ selector ];
   };
+  
+  eventBroker.highlightAnnotation = function(annotation) {
+    viewer.highlightAnnotation(annotation);
+  }
 
   /**
    * Returns the top z-index annotation based on x and y coordinates
@@ -70,8 +75,8 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
    * @param y for viewport y axis value
    * @returns annotation object
    */
-  eventBroker.topAnnotationAt = function(x, y) {
-    return viewer.topAnnotationAt(x, y);
+  eventBroker.getAnnotationsAt = function(x, y) {
+    return viewer.getAnnotationsAt(x, y);
   }
 
   /** 
@@ -166,7 +171,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
 	
     var imgOffset = annotorious.dom.getOffset(image);
     var geometry = event.shape.geometry; 
-    var x = geometry.x + imgOffset.left - baseOffset.left + 16;
+    var x = geometry.x + imgOffset.left - baseOffset.left + window.pageXOffset + 16;
     var y = geometry.y + geometry.height + imgOffset.top + window.pageYOffset - baseOffset.top + 5;
     
     okfnAnnotator.showEditor(annotation, {top: window.pageYOffset - baseOffset.top, left: 0});
@@ -204,9 +209,8 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   okfnAnnotator.subscribe('annotationCreated', function(annotation) {
     if (annotation.src == image.src) {
       selector.stopSelection();
-      if(annotation.src == image.src) {
-	viewer.addAnnotation(annotorious.annotation.Annotation.clone(annotation));
-      }
+      if(annotation.src == image.src)
+	viewer.addAnnotation(goog.object.clone(annotation));
     }
   });
   

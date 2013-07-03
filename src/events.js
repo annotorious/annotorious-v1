@@ -40,7 +40,7 @@ annotorious.events.sanitizeCoordinates = function(event, parent) {
   *
   * To create native DOM events
   * @param options, the options of the event the type of event triggered.
-  */
+  *
 annotorious.events.dispatch = function(options) {
   var event, eventName = options.name;
   type = options.type || "HTMLEvents";
@@ -49,6 +49,7 @@ annotorious.events.dispatch = function(options) {
   event.data = options.data || {};
   options.element.dispatchEvent(event);
 };
+*/
 
 /**
  * Adds an event handler.

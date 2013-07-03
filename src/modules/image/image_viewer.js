@@ -172,9 +172,9 @@ annotorious.modules.image.Viewer.prototype.getHighlightedAnnotation = function()
  * @param {number} py the Y coordinates
  */
 annotorious.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
-  var annotationsAt = this.annotationsAt(px, py);
-  if (annotationsAt.length > 0) {
-    return annotationsAt[0];
+  var annotations = this.getAnnotationsAt(px, py);
+  if (annotations.length > 0) {
+    return annotations[0];
   } else {
     return undefined;
   }
@@ -186,7 +186,7 @@ annotorious.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
  * @param {number} py the Y coordinate
  * @return {Array.<annotorious.annotation.Annotation>} the annotations sorted by size, smallest first
  */
-annotorious.modules.image.Viewer.prototype.annotationsAt = function(px, py) {
+annotorious.modules.image.Viewer.prototype.getAnnotationsAt = function(px, py) {
   // TODO for large numbers of annotations, we can optimize this
   // using a tree- or grid-like data structure instead of a list
   var intersectedAnnotations = [];
