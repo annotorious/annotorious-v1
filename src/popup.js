@@ -68,8 +68,8 @@ annotorious.viewer.Popup = function(annotator) {
     if (!cancelEvent) {
       goog.style.setOpacity(self.element, 0);
       goog.style.setStyle(self.element, 'pointer-events', 'none');
-      annotator.fireEvent(annotorious.events.EventType.ANNOTATION_REMOVED, self._currentAnnotation);
       annotator.removeAnnotation(self._currentAnnotation);
+      annotator.fireEvent(annotorious.events.EventType.ANNOTATION_REMOVED, self._currentAnnotation);
     }
   });
   
