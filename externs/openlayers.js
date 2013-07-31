@@ -3,7 +3,10 @@
  */
 var OpenLayers = {
     
-  /** Bounds class **/
+  /**
+   * Bounds class
+   * @constructor
+   */
   Bounds: function(left, bottom, right, top) {},
     
   /** Layer namespace **/
@@ -42,7 +45,10 @@ var OpenLayers = {
     }  
   },
   
-  /** Pixel class **/
+  /**
+   * Pixel class
+   * @constructor
+   */
   Pixel: function(x ,y) {}
   
 }

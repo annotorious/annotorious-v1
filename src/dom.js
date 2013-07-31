@@ -5,8 +5,8 @@ goog.provide('annotorious.dom');
 
 /**
  * Computes the absolute top/left offset of a DOM element relative to the document.
- * @param {element} el the DOM element
- * @return {object} an object containing the offset { top, left }
+ * @param {Element} el the DOM element
+ * @return {Object} an object containing the offset { top, left }
  */
 annotorious.dom.getOffset = function(el) {
   var _x = 0;
@@ -23,7 +23,7 @@ annotorious.dom.getOffset = function(el) {
 /**
  * Checks whether a certain DOM element is (partly) within the current viewport.
  * Cf. http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
- * @param {element} el the DOM element to check for visibility
+ * @param {Element} el the DOM element to check for visibility
  * @return {boolean} true if the element is within the current viewport
  */
 annotorious.dom.isInViewport = function(el) {
@@ -48,11 +48,11 @@ annotorious.dom.isInViewport = function(el) {
 
 /**
  * Adds an additional handler function to window.onload, without overwriting existing ones.
- * @param {function} fn the handler function to add
+ * @param {Function} fn the handler function to add
  */
 annotorious.dom.addOnLoadHandler = function(fn) {
   if (window.addEventListener)
-    window.addEventListener('load', fn);
+    window.addEventListener('load', fn, false);
   else if (window.attachEvent) 
     window.attachEvent('onload', fn);
 }

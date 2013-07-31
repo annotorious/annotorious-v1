@@ -8,8 +8,7 @@ goog.require('goog.events.MouseWheelHandler');
 /**
  * The OpenLayers viewer wraps an OpenLayers Box Marker layer to display annotations inside
  * of Box markers.
- * @param {object} map the OpenLayers map
- * @param {annotorious.viewer.Popup} the popup to use in this viewer
+ * @param {Object} map the OpenLayers map
  * @param {annotorious.modules.openlayers.OpenLayersAnnotator} annotator reference to the annotator
  * @constructor
  */
@@ -90,7 +89,7 @@ annotorious.modules.openlayers.Viewer.prototype._place_popup = function() {
 
 /**
  * Shows the popup with a new annotation.
- * @param {Annotation} annotation the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.openlayers.Viewer.prototype._show_popup = function(annotation) {
   this._popup.setAnnotation(annotation);
@@ -98,6 +97,10 @@ annotorious.modules.openlayers.Viewer.prototype._show_popup = function(annotatio
   this._popup.show();
 }
 
+/**
+ * @param {Object=} new_highlight the overlay to highlight
+ * @param {Object=} previous_highlight the overlay previously highlighted
+ */
 annotorious.modules.openlayers.Viewer.prototype._updateHighlight = function(new_highlight, previous_highlight) {
   if (new_highlight) {
     var pos = goog.style.getRelativePosition(new_highlight.marker.div, this._map.div);
@@ -116,7 +119,7 @@ annotorious.modules.openlayers.Viewer.prototype._updateHighlight = function(new_
 
 /**
  * Adds an annotation to the viewer.
- * @param {annotorious.annotation.Annotation} the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotation) {
   var geometry = annotation.shapes[0].geometry;
@@ -163,7 +166,7 @@ annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotat
 
 /**
  * Removes an annotation from the viewer.
- * @param {annotorious.annotation.Annotation} the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.openlayers.Viewer.prototype.removeAnnotation = function(annotation) {
   var overlay = goog.array.find(this._overlays, function(overlay) {
@@ -178,7 +181,7 @@ annotorious.modules.openlayers.Viewer.prototype.removeAnnotation = function(anno
 
 /**
  * Returns all annotations in this viewer.
- * @return {Array.<Annotation>} the annotations
+ * @return {Array.<annotorious.annotation.Annotation>} the annotations
  */
 annotorious.modules.openlayers.Viewer.prototype.getAnnotations = function() {
 

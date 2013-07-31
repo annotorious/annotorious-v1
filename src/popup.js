@@ -7,7 +7,7 @@ goog.require('goog.dom.query');
 
 /**
  * A popup bubble widget to show annotation details.
- * @param {object} annotator reference to the annotator
+ * @param {Object} annotator reference to the annotator
  * @constructor
  */
 annotorious.viewer.Popup = function(annotator) {
@@ -85,7 +85,7 @@ annotorious.viewer.Popup = function(annotator) {
     self.startHideTimer();
   });
 
-  annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_MEDIA, function(event) {
+  annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, function(event) {
     self.startHideTimer();
   });
     
@@ -99,7 +99,7 @@ annotorious.viewer.Popup = function(annotator) {
  * Adds a field to the popup GUI widget. A field can be either an (HTML) string, or
  * a function that takes an Annotation as argument and returns an (HTML) string or
  * a DOM element.
- * @param {string | function} field the field
+ * @param {string | Function} field the field
  */
 annotorious.viewer.Popup.prototype.addField = function(field) {
   var fieldEl = goog.dom.createDom('div', 'annotorious-popup-field');
@@ -147,7 +147,7 @@ annotorious.viewer.Popup.prototype.clearHideTimer = function() {
 
 /**
  * Show the popup, loaded with the specified annotation, at the specified coordinates.
- * @param {object} annotation the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  */
 annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
@@ -182,7 +182,7 @@ annotorious.viewer.Popup.prototype.setPosition = function(xy) {
 
 /**
  * Set the annotation for the popup.
- * @param {Annotation} annotation the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.viewer.Popup.prototype.setAnnotation = function(annotation) {
   this._currentAnnotation = annotation;

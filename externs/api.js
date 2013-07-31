@@ -2,7 +2,6 @@
 
 /**
  * Annotorious annotation interface.
- * @interface
  */
 var Annotation = {  
 
@@ -36,7 +35,7 @@ var Annotation = {
 /**
  * Annotation shape type: Rectangle
  */
-var Rect = {
+var Rectangle = {
 
   x : {},
 
@@ -59,14 +58,13 @@ var Polygon = {
 
 /**
  * Annotorious Plugin interface.
- * @interface
  */
-var Plugin = {
+var AnnotoriousPlugin = {
 
-  /** @type {function} called on plugin initialization **/
+  /** @type {Function} called on plugin initialization **/
   initPlugin : function(anno) {},
 
-  /** @type {function} called on initialization of a Popup element **/
+  /** @type {Function} called on initialization of a Popup element **/
   onInitAnnotator : function(annotator) {}
   
 };
@@ -76,13 +74,13 @@ var Plugin = {
  */
 var Annotator = {
 
-  /** @type {element} the annotator DOM element **/
+  /** @type {Element} the annotator DOM element **/
   element : {},
 
-  /** @type {object} the popup used by this annotator **/
+  /** @type {Object} the popup used by this annotator **/
   popup : {},
 
-  /** @type {object} the editor used by this annotator **/
+  /** @type {Object} the editor used by this annotator **/
   editor : {}
 
 };
@@ -122,3 +120,9 @@ var SelectionEvent = {
   viewportBounds : {}
 
 }
+
+/**
+ * To prevent 'variable is undeclared' errors in dev mode
+ */
+var console = {}
+var JSON = {}

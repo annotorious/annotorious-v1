@@ -7,6 +7,9 @@ goog.require('goog.dom.query');
 
 /** 
  * The 'hint' GUI element.
+ * @param {Object} annotator the annotator
+ * @param {Element} parent the parent DOM element
+ * @param {string=} opt_msg the message to display as hint
  * @constructor
  */
 annotorious.hint.Hint = function(annotator, parent, opt_msg) {

@@ -1,10 +1,14 @@
 goog.provide('annotorious.modules.image.ImageModule');
 
+goog.require('annotorious.modules.Module');
+goog.require('annotorious.modules.image.ImageAnnotator');
+
 /**
  * The Image Module implements annotation functionality for <IMG>
  * elements. On page load, it also scans the page for images marked
  * with an 'annotatable' CSS class, and makes those annotatable automatically.
  * @constructor
+ * @extends annotorious.modules.Module
  */
 annotorious.modules.image.ImageModule = function() { 
   annotorious.modules.Module.call();

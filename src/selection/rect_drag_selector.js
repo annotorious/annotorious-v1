@@ -1,6 +1,7 @@
 goog.provide('annotorious.plugins.selection.RectDragSelector');
 
 goog.require('goog.events');
+goog.require('annotorious.humanEvents');
 
 /**
  * The default selector: a simple click-and-drag rectangle selection tool.
@@ -10,8 +11,8 @@ annotorious.plugins.selection.RectDragSelector = function() { }
 
 /**
  * Initializes the selector.
- * @param {element} canvas the canvas to draw on
- * @param {object} annotator reference to the annotator
+ * @param {Element} canvas the canvas to draw on
+ * @param {Object} annotator reference to the annotator
  */
 annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator) {
   /** @private **/
@@ -107,7 +108,7 @@ annotorious.plugins.selection.RectDragSelector.prototype._detachListeners = func
 
   if (this._mouseUpListener) {
     goog.events.unlistenByKey(this._mouseUpListener);
-    delete this._UpListener;
+    delete this._mouseUpListener;
   }
 }
 
@@ -161,7 +162,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.stopSelection = functio
 
 /**
  * Selector API method: returns the currently edited shape.
- * @returns {annotorious.shape.Shape} the shape
+ * @return {annotorious.shape.Shape | undefined} the shape
  */
 annotorious.plugins.selection.RectDragSelector.prototype.getShape = function() {
   if (this._opposite && 
@@ -187,7 +188,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.getShape = function() {
 
 /**
  * Selector API method: returns the bounds of the selected shape, in viewport (= pixel) coordinates.
- * @returns {object} the shape viewport bounds
+ * @returns {Object} the shape viewport bounds
  */
 annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = function() {
   var right, left;
@@ -212,7 +213,10 @@ annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = fun
 }
 
 /**
- * TODO not sure if this is really the best way/architecture to handle viewer shape drawing 
+ * TODO not sure if this is really the best way/architecture to handle viewer shape drawing
+ * @param {Object} g2d graphics context
+ * @param {annotorious.shape.Shape} shape the shape to draw
+ * @param {boolean=} highlight if true, shape will be drawn highlighted
  */
 annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2d, shape, highlight) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {

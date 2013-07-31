@@ -8,8 +8,8 @@ goog.require('goog.dom.query');
 /**
  * The image viewer - the central entity that manages annotations 
  * displayed for one image.
- * @param {element} canvas the canvas element 
- * @param {annotorious.viewer.Popup} the popup to use in this viewer
+ * @param {Element} canvas the canvas element 
+ * @param {annotorious.viewer.Popup} popup the popup to use in this viewer
  * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
@@ -91,8 +91,8 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
 
 /**
  * Adds an annotation to the viewer.
- * @param {annotorious.annotation.Annotation} the annotation
- * @param {Annotation} opt_replace optionally, an existing annotation to replace
+ * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.annotation.Annotation=} opt_replace optionally, an existing annotation to replace
  */
 annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation, opt_replace) {
   // Remove opt_replace, if specified
@@ -123,7 +123,7 @@ annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation, 
 
 /**
  * Removes an annotation from the viewer.
- * @param {annotorious.annotation.Annotation} the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotation) {
   if (annotation == this._currentAnnotation)
@@ -136,7 +136,7 @@ annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotatio
 
 /**
  * Returns all annotations in this viewer.
- * @return {Array.<Annotation>} the annotations
+ * @return {Array.<annotorious.annotation.Annotation>} the annotations
  */
 annotorious.modules.image.Viewer.prototype.getAnnotations = function() {
   return goog.array.clone(this._annotations) 
@@ -160,7 +160,7 @@ annotorious.modules.image.Viewer.prototype.highlightAnnotation = function(opt_an
 
 /**
  * Returns the currently highlighted annotation (or 'undefined' if none).
- * @returns {object} the currently highlighted annotation
+ * @returns {Object} the currently highlighted annotation
  */
 annotorious.modules.image.Viewer.prototype.getHighlightedAnnotation = function() {
   return this._currentAnnotation;
@@ -199,7 +199,7 @@ annotorious.modules.image.Viewer.prototype.getAnnotationsAt = function(px, py) {
   });
 
   goog.array.sort(intersectedAnnotations, function(a, b) {
-    return annotorious.shape.getSize(a.shapes[0]) > annotorious.shape.getSize(b.shapes[0]);
+    return  annotorious.shape.getSize(a.shapes[0]) - annotorious.shape.getSize(b.shapes[0]);
   });
   
   return intersectedAnnotations;
@@ -238,6 +238,8 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
 }
 
 /**
+ * @param {annotorious.shape.Shape} shape the shape
+ * @param {boolean=} highlight set true to highlight the shape
  * @private
  */
 annotorious.modules.image.Viewer.prototype._draw = function(shape, highlight) {
@@ -266,7 +268,7 @@ annotorious.modules.image.Viewer.prototype._redraw = function() {
     var shape = this._shapes[annotorious.shape.hashCode(this._currentAnnotation.shapes[0])];
     this._draw(shape, true);
     var bbox = annotorious.shape.getBoundingRect(shape).geometry;
-    this._popup.show(this._currentAnnotation, { x: bbox.x, y: bbox.y + bbox.height + 5 });
+    this._popup.show(this._currentAnnotation, new annotorious.shape.geom.Point(bbox.x, bbox.y + bbox.height + 5));
 
     // TODO Orientation check - what if the popup would be outside the viewport?
   }

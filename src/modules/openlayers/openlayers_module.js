@@ -1,9 +1,13 @@
 goog.provide('annotorious.modules.openlayers.OpenLayersModule');
 
+goog.require('annotorious.modules.Module');
+goog.require('annotorious.modules.openlayers.OpenLayersAnnotator');
+
 /**
  * The OpenLayers Module provides annotation functionality for embedded
  * Web maps built with the OpenLayers Web mapping framework.
  * @constructor
+ * @extends annotorious.modules.Module
  */
 annotorious.modules.openlayers.OpenLayersModule = function() { 
   annotorious.modules.Module.call();

@@ -1,10 +1,13 @@
 goog.provide('annotorious.shape');
 
+goog.require('annotorious.shape.geom.Polygon');
+goog.require('annotorious.shape.geom.Rectangle');
+
 /**
  * A shape. Consists of descriptive shape metadata, plus the actual shape geometry.
  * @param {annotorious.shape.ShapeType} type the shape type
  * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle | annotorious.shape.geom.Polygon} geometry the geometry
- * @param {annotorious.shape.Units} units geometry measurement units
+ * @param {annotorious.shape.Units=} units geometry measurement units
  * @constructor
  */
 annotorious.shape.Shape = function(type, geometry, units) {
@@ -41,7 +44,7 @@ annotorious.shape.Units = {
  * Checks whether a given shape intersects a point.
  * @param {annotorious.shape.Shape} shape the shape
  * @param {number} px the X coordinate
- * @param {nubmer} py the Y coordinate
+ * @param {number} py the Y coordinate
  * @return {boolean} true if the point intersects the shape
  */
 annotorious.shape.intersects = function(shape, px, py) {
@@ -95,7 +98,7 @@ annotorious.shape.getSize = function(shape) {
 /**
  * Returns the bounding rectangle of a shape.
  * @param {annotorious.shape.Shape} shape the shape
- * @return {annotorious.shape.Shape} the bounding rectangle
+ * @return {annotorious.shape.Shape | undefined} the bounding rectangle
  */
 annotorious.shape.getBoundingRect = function(shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
@@ -132,12 +135,12 @@ annotorious.shape.getBoundingRect = function(shape) {
 /**
  * Computes the centroid coordinate for the specified shape.
  * @param {annotorious.shape.Shape} shape the shape
- * @returns {annotorious.shape.geom.Point} the centroid X/Y coordinate
+ * @returns {annotorious.shape.geom.Point | undefined} the centroid X/Y coordinate
  */
 annotorious.shape.getCentroid = function(shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     var rect = shape.geometry;
-    return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+    return new annotorious.shape.geom.Point(rect.x + rect.width / 2, rect.y + rect.height / 2);
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
     return annotorious.shape.geom.Polygon.computeCentroid( shape.geometry.points);
   }
@@ -161,8 +164,8 @@ annotorious.shape.expand = function(shape, delta) {
  * system. The transformation is calculated using the transformationFn parameter, 
  * which must be a function(xy) that transforms a single XY coordinate.
  * @param {annotorious.shape.Shape} shape the shape to transform
- * @param {function} transformationFn the transformation function
- * @return {annotorious.shape.Shape} the transformed shape
+ * @param {Function} transformationFn the transformation function
+ * @return {annotorious.shape.Shape | undefined} the transformed shape
  */
 annotorious.shape.transform = function(shape, transformationFn) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {

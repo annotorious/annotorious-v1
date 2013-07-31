@@ -2,6 +2,8 @@ goog.provide('annotorious.modules.openlayers.OpenLayersAnnotator');
 
 goog.require('goog.dom');
 goog.require('goog.style');
+goog.require('annotorious.templates.openlayers');
+goog.require('annotorious.modules.openlayers.Viewer');
 
 /**
  * The OpenLayersAnnotator is responsible for handling annotation functionality
@@ -15,8 +17,8 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   
   /** @private **/
   this._div = map.div;
-  var width = parseInt(goog.style.getComputedStyle(this._div, 'width'));
-  var height = parseInt(goog.style.getComputedStyle(this._div, 'height'));
+  var width = parseInt(goog.style.getComputedStyle(this._div, 'width'), 10);
+  var height = parseInt(goog.style.getComputedStyle(this._div, 'height'), 10);
   
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
@@ -79,8 +81,8 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
     goog.style.setStyle(self._editCanvas, 'pointer-events', 'none');
 
     var bounds = event.viewportBounds;
-    self.editor.setPosition({ x: bounds.left + self._div.offsetLeft,
-                              y: bounds.bottom + 4 + self._div.offsetTop });
+    self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left + self._div.offsetLeft,
+                                                             bounds.bottom + 4 + self._div.offsetTop));
     self.editor.open();    
   });
 
@@ -114,6 +116,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.activateSelector = 
 
 /**
  * Standard Annotator method: editAnnotation
+ * @suppress {checkTypes}
  */
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.editAnnotation = function(annotation) {
   // Step 1 - remove from viewer
@@ -135,8 +138,8 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.editAnnotation = fu
     selector.drawShape(g2d, viewportShape);
 
     var viewportBounds = annotorious.shape.getBoundingRect(viewportShape).geometry;
-    this.editor.setPosition({ x: viewportBounds.x + this._div.offsetLeft,
-                            y: viewportBounds.y + viewportBounds.height + 4 + this._div.offsetTop });
+    this.editor.setPosition(new annotorious.shape.geom.Point(viewportBounds.x + this._div.offsetLeft,
+                                                             viewportBounds.y + viewportBounds.height + 4 + this._div.offsetTop));
     this.editor.open(annotation);   
   }
 }
@@ -236,6 +239,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.setActiveSelector =
 
 /**
  * Standard Annotator method: stopSelection
+ * @param {annotorious.annotation.Annotation=} original_annotation the original annotation being edited (if any)
  */
 annotorious.modules.openlayers.OpenLayersAnnotator.prototype.stopSelection = function(original_annotation) {
    goog.style.showElement(this._editCanvas, false);

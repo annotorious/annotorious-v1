@@ -1,6 +1,7 @@
+goog.provide('annotorious.humanEvents');
+
 var hasTouch = 'ontouchstart' in window;
 
-goog.provide('annotorious.humanEvents');
 goog.require('goog.events.EventType');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');

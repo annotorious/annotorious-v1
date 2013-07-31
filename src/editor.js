@@ -5,10 +5,11 @@ goog.require('goog.dom');
 goog.require('goog.dom.query');
 goog.require('goog.style');
 goog.require('goog.string.html.htmlSanitize');
+goog.require('annotorious.templates');
 
 /**
  * Annotation edit form.
- * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
+ * @param {Object} annotator reference to the annotator
  * @constructor
  */
 annotorious.editor.Editor = function(annotator) {
@@ -70,7 +71,7 @@ annotorious.editor.Editor = function(annotator) {
  * Adds a field to the editor GUI widget. A field can be either an (HTML) string, or
  * a function that takes an Annotation as argument and returns an (HTML) string or
  * a DOM element.
- * @param {string | function} field the field
+ * @param {string | Function} field the field
  */
 annotorious.editor.Editor.prototype.addField = function(field) {
   var fieldEl = goog.dom.createDom('div', 'annotorious-editor-field');
@@ -88,7 +89,7 @@ annotorious.editor.Editor.prototype.addField = function(field) {
 
 /**
  * Opens the edit form with an annotation.
- * @param {Annotation} opt_annotation the annotation to edit (or undefined)
+ * @param {annotorious.annotation.Annotation=} opt_annotation the annotation to edit (or undefined)
  */
 annotorious.editor.Editor.prototype.open = function(opt_annotation) {
   this._original_annotation = opt_annotation;
@@ -122,7 +123,7 @@ annotorious.editor.Editor.prototype.close = function() {
 
 /**
  * Sets the position (i.e. CSS left/top value) of the editor element.
- * @param {annotorious.geom.Point} xy the viewport coordinate
+ * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  */
 annotorious.editor.Editor.prototype.setPosition = function(xy) {
   goog.style.setPosition(this.element, xy.x, xy.y);
@@ -130,7 +131,7 @@ annotorious.editor.Editor.prototype.setPosition = function(xy) {
 
 /**
  * Returns the annotation that is the current state of the editor.
- * @return {Annotation} the annotation
+ * @return {annotorious.annotation.Annotation} the annotation
  */
 annotorious.editor.Editor.prototype.getAnnotation = function() {
   var sanitized = goog.string.html.htmlSanitize(this._textarea.value, function(url) {

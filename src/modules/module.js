@@ -5,6 +5,8 @@ goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.structs.Map');
 
+goog.require('annotorious.annotation.Annotation');
+
 /**
  * A base class for Annotorious Module implementations.
  * @constructor
@@ -18,7 +20,7 @@ annotorious.modules.Module = function() { }
  * opt_preload_fn is an optional parameter: if provided, it must be a function
  * that returns a list of annotatable items. These will be put into the lazy
  * load queue and made annotatable when they appear on screen.
- * @param {function} a function providing a list of pre-loadable items
+ * @param {Function=} opt_preload_fn a function providing a list of pre-loadable items
  * @protected
  */
 annotorious.modules.Module.prototype._initFields = function(opt_preload_fn) {
@@ -55,9 +57,10 @@ annotorious.modules.Module.prototype._initFields = function(opt_preload_fn) {
  * object yet, new settings will be created (initialized with defaults).
  * @param {string} item_url the URL of the item controlled by the annotator
  * @private
+ * @suppress {missingProperties}
  */
 annotorious.modules.Module.prototype._getSettings = function(item_url) {
-  var settings = this._cachedSettings(item_url);
+  var settings = this._cachedItemSettings(item_url);
   if (!settings) {
     settings = { hide_selection_widget: false, hide_annotations: false };
     settings.set(item_url, settings);
@@ -228,8 +231,8 @@ annotorious.modules.Module.prototype._setSelectionWidgetVisibility = function(op
  * 'Manually' actives the selector, bypassing the selection widget. The function can take
  * a callback function as parameter, which will be called when the selector is deactivated 
  * again.
- * @param {string | function} opt_item_url_or_callback the URL of the item, or a callback function
- * @param {function} opt_callback a callback function (if the first parameter was a URL)
+ * @param {string | Function} opt_item_url_or_callback the URL of the item, or a callback function
+ * @param {Function} opt_callback a callback function (if the first parameter was a URL)
  */
 annotorious.modules.Module.prototype.activateSelector = function(opt_item_url_or_callback, opt_callback) {
   var item_url = undefined,
@@ -255,8 +258,8 @@ annotorious.modules.Module.prototype.activateSelector = function(opt_item_url_or
 
 /**
  * Adds an annotation to an item managed by this module.
- * @param {Annotation} annotation the annotation
- * @param {Annotation} opt_replace optionally, an existing annotation to replace
+ * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.annotation.Annotation} opt_replace optionally, an existing annotation to replace
  */
 annotorious.modules.Module.prototype.addAnnotation = function(annotation, opt_replace) {
   if (this.annotatesItem(annotation.src)) {
@@ -273,8 +276,8 @@ annotorious.modules.Module.prototype.addAnnotation = function(annotation, opt_re
 
 /**
  * Adds a lifecycle event handler to this module.
- * @param {yuma.events.EventType} type the event type
- * @param {function} handler the handler function
+ * @param {annotorious.events.EventType} type the event type
+ * @param {Function} handler the handler function
  */
 annotorious.modules.Module.prototype.addHandler = function(type, handler) {
   goog.array.forEach(this._annotators.getValues(), function(annotator, idx, array) {
@@ -348,7 +351,7 @@ annotorious.modules.Module.prototype.getActiveSelector = function(item_url) {
  * Returns all annotations on the item with the specified URL (if managed by this
  * module) or all annotations from this module in case no URL is specified.
  * @param {string | undefined} opt_item_url an item URL (optional)
- * @return {Array.<Annotation>} the annotations
+ * @return {Array.<annotorious.annotation.Annotation>} the annotations
  */
 annotorious.modules.Module.prototype.getAnnotations = function(opt_item_url) {
   if (opt_item_url) {
@@ -373,7 +376,7 @@ annotorious.modules.Module.prototype.getAnnotations = function(opt_item_url) {
 /**
  * Returns the list of available shape selectors for a particular item.
  * @param {string} item_url the URL of the item to query for available selectors
- * @returns {List.<string> | undefined} the list of selector names
+ * @returns {Array.<string> | undefined} the list of selector names
  */
 annotorious.modules.Module.prototype.getAvailableSelectors = function(item_url) {
   if (this.annotatesItem(item_url)) {
@@ -406,7 +409,7 @@ annotorious.modules.Module.prototype.hideSelectionWidget = function(opt_item_url
 
 /**
  * Highlights the specified annotation.
- * @param {Annotation} annotation the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.Module.prototype.highlightAnnotation = function(annotation) {
   if (annotation) {
@@ -442,7 +445,7 @@ annotorious.modules.Module.prototype.init = function() {
 
 /**
  * Makes an item annotatable, if it is supported by this module.
- * @param {object} item the annotatable item
+ * @param {Object} item the annotatable item
  */
 annotorious.modules.Module.prototype.makeAnnotatable = function(item) {
   if (this.supports(item))
@@ -451,7 +454,7 @@ annotorious.modules.Module.prototype.makeAnnotatable = function(item) {
 
 /**
  * Removes an annotation from the item with the specified URL.
- * @param {Annotation} annotation the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.Module.prototype.removeAnnotation = function(annotation) {
   if (this.annotatesItem(annotation.src)) {
@@ -497,21 +500,21 @@ annotorious.modules.Module.prototype.showSelectionWidget = function(opt_item_url
 
 /**
  * Returns the identifying URL of the specified item.
- * @param {object} item the item.
+ * @param {Element} item the item.
  * @return {string} the URL
  */
 annotorious.modules.Module.prototype.getItemURL = goog.abstractMethod;
 
 /**
  * Returns a new annotator for the specified item.
- * @param {object} item the item
- * @return {object} an annotator for this item
+ * @param {Element} item the item
+ * @return {Object} an annotator for this item
  */
 annotorious.modules.Module.prototype.newAnnotator = goog.abstractMethod;
 
 /**
  * Tests if this module supports the specified item's media type.
- * @param {object} item the item
+ * @param {Object} item the item
  * @return {boolean} true if this module supports the item
  */
 annotorious.modules.Module.prototype.supports = goog.abstractMethod;

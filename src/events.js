@@ -14,8 +14,8 @@ annotorious.events.EventBroker = function() {
 /**
   *
   * To get screen coordinates while taking into consideration mobile and the offset of the screen
-  * @param event, the DOM Event object
-  * @param the parent element that triggers the event
+  * @param {Object} event the DOM Event object
+  * @param {Element} parent the parent element that triggers the event
   */
 annotorious.events.sanitizeCoordinates = function(event, parent) {
   var points = false;
@@ -37,24 +37,9 @@ annotorious.events.sanitizeCoordinates = function(event, parent) {
 };
 
 /**
-  *
-  * To create native DOM events
-  * @param options, the options of the event the type of event triggered.
-  *
-annotorious.events.dispatch = function(options) {
-  var event, eventName = options.name;
-  type = options.type || "HTMLEvents";
-  event = document.createEvent("HTMLEvents");
-  event.initEvent(eventName);
-  event.data = options.data || {};
-  options.element.dispatchEvent(event);
-};
-*/
-
-/**
  * Adds an event handler.
  * @param {annotorious.events.EventType} type the event type
- * @param {function} handler the handler function to add
+ * @param {Function} handler the handler function to add
  */
 annotorious.events.EventBroker.prototype.addHandler = function(type, handler) {
   if (!this._handlers[type]) 
@@ -66,7 +51,7 @@ annotorious.events.EventBroker.prototype.addHandler = function(type, handler) {
 /**
  * Removes an event handler.
  * @param {annotorious.events.EventType} type the event type
- * @param {function} handler the handler function to remove
+ * @param {Function} handler the handler function to remove
  */
 annotorious.events.EventBroker.prototype.removeHandler = function(type, handler) {
   var handlers = this._handlers[type];
@@ -81,16 +66,16 @@ annotorious.events.EventBroker.prototype.removeHandler = function(type, handler)
  * annotation removal). If there is no return value (or the return value is
  * 'true'), no action will be taken by Annotorious. 
  * @param {annotorious.events.EventType} type the event type
- * @param {object} event the event object
+ * @param {Object=} opt_event the event object
  * @return {boolean} the 'cancel event' flag
  */
-annotorious.events.EventBroker.prototype.fireEvent = function(type, event) {
+annotorious.events.EventBroker.prototype.fireEvent = function(type, opt_event) {
   var cancelEvent = false;
 
   var handlers = this._handlers[type];
   if (handlers) {
     goog.array.forEach(handlers, function(handler, idx, array) {
-      var retVal = handler(event);
+      var retVal = handler(opt_event);
       if (goog.isDef(retVal) && !retVal)
         cancelEvent = true;
     });

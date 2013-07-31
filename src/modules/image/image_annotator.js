@@ -7,11 +7,17 @@ goog.require('goog.dom.query');
 goog.require('goog.events');
 goog.require('goog.math');
 goog.require('goog.style');
+goog.require('annotorious.modules.image.Viewer');
+goog.require('annotorious.templates.image');
+goog.require('annotorious.viewer');
+goog.require('annotorious.editor');
+goog.require('annotorious.hint');
+goog.require('annotorious.plugins.selection.RectDragSelector');
 
 /**
  * The ImageAnnotator is responsible for one image in the page.
- * @param {element} item the image DOM element
- * @param {object} opt_popup a popup implementation to use instead of the default one
+ * @param {Element} item the image DOM element
+ * @param {annotorious.viewer.Popup=} opt_popup a popup implementation to use instead of the default one
  * @constructor
  */
 annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
@@ -111,8 +117,8 @@ annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
 
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
     var bounds = event.viewportBounds;
-    self.editor.setPosition({ x: bounds.left + self._image.offsetLeft,
-                              y: bounds.bottom + 4 + self._image.offsetTop });
+    self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left + self._image.offsetLeft,
+                                                            bounds.bottom + 4 + self._image.offsetTop));
     self.editor.open();
   });
   
@@ -157,7 +163,7 @@ annotorious.modules.image.ImageAnnotator.prototype.activateSelector = function(c
 /**
  * Adds an annotation to this annotator's viewer.
  * @param {annotorious.annotation.Annotation} annotation the annotation
- * @param {Annotation} opt_replace optionally, an existing annotation to replace
+ * @param {annotorious.annotation.Annotation=} opt_replace optionally, an existing annotation to replace
  */
 annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(annotation, opt_replace) {
   this._viewer.addAnnotation(annotation, opt_replace);
@@ -166,7 +172,7 @@ annotorious.modules.image.ImageAnnotator.prototype.addAnnotation = function(anno
 /**
  * Adds a lifecycle event handler to this annotator's Event Broker.
  * @param {annotorious.events.EventType} type the event type
- * @param {function} the handler function
+ * @param {Function} handler the handler function
  */
 annotorious.modules.image.ImageAnnotator.prototype.addHandler = function(type, handler) {
   this._eventBroker.addHandler(type, handler);  
@@ -174,7 +180,7 @@ annotorious.modules.image.ImageAnnotator.prototype.addHandler = function(type, h
 
 /**
  * Adds a selector.
- * @param {object} selector the selector object 
+ * @param {Object} selector the selector object 
  */
 annotorious.modules.image.ImageAnnotator.prototype.addSelector = function(selector) {
   selector.init(this, this._editCanvas); 
@@ -210,18 +216,18 @@ annotorious.modules.image.ImageAnnotator.prototype.editAnnotation = function(ann
   
   var bounds = annotorious.shape.getBoundingRect(annotation.shapes[0]).geometry;
   var anchor = (annotation.shapes[0].units == 'pixel') ?
-    ({ x: bounds.x, y: bounds.y + bounds.height }) :
-    this.fromItemCoordinates({ x: bounds.x, y: bounds.y + bounds.height });   
+    new annotorious.shape.geom.Point(bounds.x, bounds.y + bounds.height) :
+    this.fromItemCoordinates(new annotorious.shape.geom.Point(bounds.x, bounds.y + bounds.height));   
   
-  this.editor.setPosition({ x: anchor.x + this._image.offsetLeft,
-                            y: anchor.y + 4 + this._image.offsetTop });
+  this.editor.setPosition(new annotorious.shape.geom.Point(anchor.x + this._image.offsetLeft,
+                                                           anchor.y + 4 + this._image.offsetTop));
   this.editor.open(annotation);  
 }
 
 /**
  * Fire an event on this annotator's Event Broker.
  * @param {annotorious.events.EventType} type the event type
- * @param {object} the event object
+ * @param {Object} event the event object
  */
 annotorious.modules.image.ImageAnnotator.prototype.fireEvent = function(type, event) {
   return this._eventBroker.fireEvent(type, event);
@@ -240,7 +246,7 @@ annotorious.modules.image.ImageAnnotator.prototype.fromItemCoordinates = functio
 
 /**
  * Returns the currently active selector.
- * @returns {object} the currently active selector
+ * @returns {Object} the currently active selector
  */
 annotorious.modules.image.ImageAnnotator.prototype.getActiveSelector = function() {
   return this._currentSelector;
@@ -248,7 +254,7 @@ annotorious.modules.image.ImageAnnotator.prototype.getActiveSelector = function(
 
 /**
  * Returns all annotations on the annotatable media.
- * @returns {Array.<Annotation>} the annotations
+ * @returns {Array.<annotorious.annotation.Annotation>} the annotations
  */
 annotorious.modules.image.ImageAnnotator.prototype.getAnnotations = function() {
   return this._viewer.getAnnotations();
@@ -261,12 +267,12 @@ annotorious.modules.image.ImageAnnotator.prototype.getAnnotations = function() {
  * @return {Array.<annotorious.annotation.Annotation>} the annotations sorted by size, smallest first
  */
 annotorious.modules.image.ImageAnnotator.prototype.getAnnotationsAt = function(cx, cy) {
-  return goog.array.clone(this._viewer.getAnnotationsAt(x, y));
+  return goog.array.clone(this._viewer.getAnnotationsAt(cx, cy));
 }
 
 /**
  * Returns the available selectors for this item.
- * @returns {Array.<object>} the list of selectors
+ * @returns {Array.<Object>} the list of selectors
  */
 annotorious.modules.image.ImageAnnotator.prototype.getAvailableSelectors = function() {
   return this._selectors;
@@ -274,7 +280,7 @@ annotorious.modules.image.ImageAnnotator.prototype.getAvailableSelectors = funct
 
 /**
  * Returns the image that this annotator is responsible for.
- * @returns {element} the image
+ * @returns {Object} the image
  */
 annotorious.modules.image.ImageAnnotator.prototype.getItem = function() {
   // TODO include width and height
@@ -286,7 +292,7 @@ annotorious.modules.image.ImageAnnotator.prototype.getItem = function() {
  * 'src' attribute of the <img> tag. But to provide more flexiblity, it is possible to 
  * override this value using the 'data-original' attribute. Only if this attribute 
  * does not exist, the real 'src' will be returned.
- * @param {element} item the image DOM element
+ * @param {Element} item the image DOM element
  * @return {string} the URL
  */
 annotorious.modules.image.ImageAnnotator.getItemURL = function(item) {
@@ -315,7 +321,7 @@ annotorious.modules.image.ImageAnnotator.prototype.hideSelectionWidget = functio
 
 /**
  * Highlights the specified annotation.
- * @param {Annotation} the annotation
+ * @param {annotorious.annotation.Annotation} annotation the annotation
  */
 annotorious.modules.image.ImageAnnotator.prototype.highlightAnnotation = function(annotation) {
   this._viewer.highlightAnnotation(annotation);
@@ -332,7 +338,7 @@ annotorious.modules.image.ImageAnnotator.prototype.removeAnnotation = function(a
 /**
  * Removes a lifecycle event handler to this annotator's Event Broker.
  * @param {annotorious.events.EventType} type the event type
- * @param {function} the handler function
+ * @param {Function} handler the handler function
  */
 annotorious.modules.image.ImageAnnotator.prototype.removeHandler = function(type, handler) {
   this._eventBroker.removeHandler(type, handler);
@@ -340,7 +346,7 @@ annotorious.modules.image.ImageAnnotator.prototype.removeHandler = function(type
 
 /**
  * Sets the active selector for this item to the specified selector.
- * @param {object} the selector object
+ * @param {Object} selector the selector object
  */
 annotorious.modules.image.ImageAnnotator.prototype.setActiveSelector = function(selector) {
   this._currentSelector = goog.array.find(this._selectors, function(sel) {
@@ -368,14 +374,15 @@ annotorious.modules.image.ImageAnnotator.prototype.showSelectionWidget = functio
 
 /**
  * Stops the selection (if any).
+ * @param {annotorious.annotation.Annotation=} opt_original_annotation the original annotation being edited (if any)
  */
-annotorious.modules.image.ImageAnnotator.prototype.stopSelection = function(original_annotation) {
+annotorious.modules.image.ImageAnnotator.prototype.stopSelection = function(opt_original_annotation) {
    goog.style.showElement(this._editCanvas, false);
    this._currentSelector.stopSelection();
    
    // If this was an edit of an annotation (rather than creation of a new one) re-add to viewer!
-   if (original_annotation)
-     this._viewer.addAnnotation(original_annotation);
+   if (opt_original_annotation)
+     this._viewer.addAnnotation(opt_original_annotation);
 }
 
 /**

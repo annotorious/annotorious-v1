@@ -5,39 +5,18 @@
     "goog.dom.ASSUME_STANDARDS_MODE": true
   },
   "inputs": [
-    "src/geometry/point.js",
-    "src/geometry/polygon.js",
-    "src/geometry/rectangle.js",
-    "src/geometry/shape.js",
-    "src/modules/module.js",
-    "src/modules/image/image_annotator.js",
-    "src/modules/image/image_module.js",
-    "src/modules/image/image_viewer.js",
-    "src/modules/openlayers/openlayers_annotator.js",
-    "src/modules/openlayers/openlayers_module.js",
-    "src/modules/openlayers/openlayers_viewer.js",
-    "src/selection/rect_drag_selector.js",
-    "src/annotation.js",    
-    "src/annotorious.js",
-    "src/dom.js",
-    "src/editor.js",
-    "src/events.js",
-    "src/hint.js",
-    "src/humanEventTypes.js",
-    "src/plugin.js",
-    "src/popup.js",
-
-    "templates/core_elements.soy",
-    "templates/image_elements.soy",
-    "templates/openlayers_elements.soy"
+    "src/annotorious.js"
   ],
   "paths": [
-    "."
+    "src",
+    "templates"
   ],
   "externs": [
     "externs/api.js",
     "externs/openlayers.js"
   ],
   "mode": "ADVANCED", // "RAW" or "ADVANCED"
-  "level": "DEFAULT" // "DEFAULT" or "VERBOSE"
+  "level": "DEFAULT", // "DEFAULT" or "VERBOSE"
+  "pretty-print": false,
+  "debug": false
 }

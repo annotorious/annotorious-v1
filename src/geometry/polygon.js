@@ -1,5 +1,7 @@
 goog.provide('annotorious.shape.geom.Polygon');
 
+goog.require('annotorious.shape.geom.Point');
+
 /**
  * A polygon.
  * @param {Array.<annotorious.shape.geom.Point>} points the points
@@ -59,7 +61,7 @@ annotorious.shape.geom.Polygon.computeCentroid = function(points) {
   }
 
   f = annotorious.shape.geom.Polygon.computeArea(points) * 6;
-  return { x: Math.abs(x/f), y: Math.abs(y/f) }; 
+  return new annotorious.shape.geom.Point(Math.abs(x/f), Math.abs(y/f)); 
 }
 
 /**
