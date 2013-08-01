@@ -177,7 +177,7 @@ annotorious.modules.Module.prototype._setAnnotationVisibility = function(opt_ite
     // Item URL is not provided - update all annotators...
     goog.array.forEach(this._annotators.getValues(), function(annotator) {
       if (visibility)
-        annotator.showSelectionWidget();
+        annotator.showAnnotations();
       else
         annotator.hideAnnotations();
     });

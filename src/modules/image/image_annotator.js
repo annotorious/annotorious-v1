@@ -315,8 +315,10 @@ annotorious.modules.image.ImageAnnotator.prototype.hideAnnotations = function() 
  */
 annotorious.modules.image.ImageAnnotator.prototype.hideSelectionWidget = function() {
   this._selectionEnabled = false;
-  this._hint.destroy();
-  delete this._hint;
+  if (this._hint) {
+    this._hint.destroy();
+    delete this._hint;
+  }
 }
 
 /**
@@ -368,8 +370,9 @@ annotorious.modules.image.ImageAnnotator.prototype.showAnnotations = function() 
  * Shows the selection widget, thus enabling users to create new annotations.
  */
 annotorious.modules.image.ImageAnnotator.prototype.showSelectionWidget = function() {
-  this._selectionEnabled = true;
-  // TODO if hint doesn't exist already, create
+  this._selectionEnabled = true;  
+  if (!this._hint)
+    this._hint = new annotorious.hint.Hint(this, this.element);
 }
 
 /**
