@@ -6,7 +6,7 @@
   },
   "inputs": [
     "src/annotorious.js",
-    "src/plugin.js" // TO set up the plugin namespace
+    "src/plugin.js" // to set up the plugin namespace
   ],
   "paths": [
     "src",

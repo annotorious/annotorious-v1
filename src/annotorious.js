@@ -125,6 +125,23 @@ annotorious.Annotorious.prototype.addPlugin = function(plugin_name, opt_config_o
 }
 
 /**
+ * Destroys the annotator on a specific item, or all, removing annotation functionality.
+ * @param {string=} opt_item_url the URL of the item from which to destroy annotation functionality
+ */
+annotorious.Annotorious.prototype.destroy = function(opt_item_url) {
+  if (opt_item_url) {
+    var module = this._getModuleForItemSrc(opt_item_url);
+    if (module) {
+      // TODO call destroy on module
+    }
+  } else {
+    goog.array.forEach(this._modules, function(module) {
+      // TODO call destroy on module
+    });
+  }  
+}
+
+/**
  * Returns the name of the selector that is currently activated on a 
  * particular item.
  * @param {string} item_url the URL of the item to query for the active selector
