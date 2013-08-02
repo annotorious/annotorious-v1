@@ -71,10 +71,15 @@ annotorious.modules.Module.prototype._getSettings = function(item_url) {
 /**
  * @private
  */
-annotorious.modules.Module.prototype._initAnnotator = function(item) {
+annotorious.modules.Module.prototype._initAnnotator = function(item) {  
   var self = this;
-  var annotator = this.newAnnotator(item);
   var item_src = this.getItemURL(item);
+
+  // Guard condition: don't make items annotatable if they already are  
+  if (this._annotators.get(item_src))
+    return;
+
+  var annotator = this.newAnnotator(item);
 
   // Keep track of changes
   var addedAnnotations = [];
