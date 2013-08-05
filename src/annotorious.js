@@ -271,7 +271,8 @@ annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
  */
 annotorious.Annotorious.prototype.reset = function(annotation) {
   goog.array.forEach(this._modules, function(module) {
-    module.reset();
+    module.destroy();
+    module.init();
   });
 }
 

@@ -71,10 +71,15 @@ annotorious.modules.Module.prototype._getSettings = function(item_url) {
 /**
  * @private
  */
-annotorious.modules.Module.prototype._initAnnotator = function(item) {
+annotorious.modules.Module.prototype._initAnnotator = function(item) {  
   var self = this;
-  var annotator = this.newAnnotator(item);
   var item_src = this.getItemURL(item);
+
+  // Guard condition: don't make items annotatable if they already are  
+  if (this._annotators.get(item_src))
+    return;
+
+  var annotator = this.newAnnotator(item);
 
   // Keep track of changes
   var addedAnnotations = [];
@@ -333,6 +338,16 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
 }
 
 /**
+ * Destroys all annotators managed by this module.
+ */
+annotorious.modules.Module.prototype.destroy = function() {
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
+    annotator.destroy();
+  }); 
+  this._annotators.clear();
+}
+
+/**
  * Returns the name of the selector that is currently activated on the item
  * with the specified URL (if managed by this module).
  * @param {string} item_url the URL of the item to query for the active selector
@@ -464,21 +479,6 @@ annotorious.modules.Module.prototype.removeAnnotation = function(annotation) {
     else
       this._bufferedForRemoval.push(annotation);
   }
-}
-
-/**
- * Resets annotation functionality on this page. After the reset, annotation
- * functionality will be reomved from all items. Images with the 'annotatable'
- * CSS class will have been re-initialized (i.e. they will be annotatable, with
- * a fresh annotator).
- */
-annotorious.modules.Module.prototype.reset = function() {
-  goog.array.forEach(this._annotators.getValues(), function(annotator) {
-    annotator.destroy();
-  }); 
-  this._annotators.clear();
-
-  // TODO re-init
 }
 
 /**
