@@ -1,6 +1,7 @@
 goog.provide('annotorious.editor');
 
 goog.require('goog.soy');
+goog.require('goog.ui.Textarea');
 goog.require('goog.dom');
 goog.require('goog.dom.query');
 goog.require('goog.style');
@@ -28,7 +29,7 @@ annotorious.editor.Editor = function(annotator) {
   this._current_annotation;
 
   /** @private **/
-  this._textarea = goog.dom.query('.annotorious-editor-text', this.element)[0];
+  this._textarea = new goog.ui.Textarea('');
 
   /** @private **/
   this._btnCancel = goog.dom.query('.annotorious-editor-button-cancel', this.element)[0];
@@ -61,14 +62,10 @@ annotorious.editor.Editor = function(annotator) {
       annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, annotation);      
     self.close();
   });
-
-  goog.events.listen(this._textarea, goog.events.EventType.KEYUP, function(event) {
-    // TODO check whether editor window should be resized
-  });
  
   goog.style.showElement(this.element, false);
   goog.dom.appendChild(annotator.element, this.element);
-  this._textarea.focus();
+  this._textarea.decorate(goog.dom.query('.annotorious-editor-text', this.element)[0]);
 }
 
 /**
@@ -100,11 +97,11 @@ annotorious.editor.Editor.prototype.open = function(opt_annotation) {
   this._current_annotation = opt_annotation;
 
   if (opt_annotation)
-    this._textarea.value = opt_annotation.text;
+    this._textarea.setValue(opt_annotation.text);
 
   goog.style.showElement(this.element, true);
-  this._textarea.focus();
-
+  this._textarea.getElement().focus();
+  
   // Update extra fields (if any)
   goog.array.forEach(this._extraFields, function(field) {
     var f = field.fn(opt_annotation);
@@ -122,7 +119,7 @@ annotorious.editor.Editor.prototype.open = function(opt_annotation) {
  */
 annotorious.editor.Editor.prototype.close = function() {
   goog.style.showElement(this.element, false);
-  this._textarea.value = "";
+  this._textarea.setValue('');
 }
 
 /**
@@ -138,7 +135,7 @@ annotorious.editor.Editor.prototype.setPosition = function(xy) {
  * @return {annotorious.annotation.Annotation} the annotation
  */
 annotorious.editor.Editor.prototype.getAnnotation = function() {
-  var sanitized = goog.string.html.htmlSanitize(this._textarea.value, function(url) {
+  var sanitized = goog.string.html.htmlSanitize(this._textarea.getValue(), function(url) {
     return url;
   });
 
