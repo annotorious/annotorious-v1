@@ -467,6 +467,21 @@ annotorious.modules.Module.prototype.removeAnnotation = function(annotation) {
 }
 
 /**
+ * Resets annotation functionality on this page. After the reset, annotation
+ * functionality will be reomved from all items. Images with the 'annotatable'
+ * CSS class will have been re-initialized (i.e. they will be annotatable, with
+ * a fresh annotator).
+ */
+annotorious.modules.Module.prototype.reset = function() {
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
+    annotator.destroy();
+  }); 
+  this._annotators.clear();
+
+  // TODO re-init
+}
+
+/**
  * Sets a specific selector on a particular item.
  * @param {string} item_url the URL of the item on which to set the selector
  * @param {string} selector the name of the selector to set on the item

@@ -34,6 +34,9 @@ annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
 
   /** @private **/
   this._image = item;
+
+  /** @private **/
+  this._original_bufferspace = { padding: item.style.padding, margin: item.style.margin }
   
   /** @private **/
   this._viewer;
@@ -56,12 +59,12 @@ annotorious.modules.image.ImageAnnotator = function(item, opt_popup) {
   /** @private **/
   this._selectionEnabled = true;
 
-  var img_bounds = goog.style.getBounds(item);
   this.element = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(this.element, 'position', 'relative');
   goog.style.setStyle(this.element, 'display', 'inline-block');
   this._transferStyles(item, this.element);
 
+  var img_bounds = goog.style.getBounds(item);
   goog.style.setSize(this.element, img_bounds.width, img_bounds.height); 
   goog.dom.replaceNode(this.element, item);
   goog.dom.appendChild(this.element, item);
@@ -185,6 +188,16 @@ annotorious.modules.image.ImageAnnotator.prototype.addHandler = function(type, h
 annotorious.modules.image.ImageAnnotator.prototype.addSelector = function(selector) {
   selector.init(this, this._editCanvas); 
   this._selectors.push(selector);
+}
+
+/**
+ * Destroys this annotator instance.
+ */
+annotorious.modules.image.ImageAnnotator.prototype.destroy = function() {
+  var img = this._image;
+  img.style.margin = this._original_bufferspace.margin;
+  img.style.padding = this._original_bufferspace.padding;
+  goog.dom.replaceNode(img, this.element);
 }
 
 /**

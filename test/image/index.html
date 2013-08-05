@@ -64,9 +64,11 @@
         to start plovr.
       </p>
       
+      <button onclick="anno.makeAnnotatable(document.getElementById('hallstatt'));">Add</button> <button onclick="anno.reset()">Remove</button>
+
       <h2>Test Images</h2>
       <div style="float:right; margin:0px 0px 10px 20px;">
-        <img data-original="http://www.example.com/image.jpg" src="640px-Hallstatt.jpg" style="margin:40px 0px 0px 0px; padding:0px 0px 0px 35px;" class="annotatable">
+        <img id="hallstatt" data-original="http://www.example.com/image.jpg" src="640px-Hallstatt.jpg" style="margin:40px 0px 0px 0px; padding:0px 0px 0px 35px;">
         <p class="image-caption">
           Hallstatt, Austria. By Nick Csakany, 2007. Public Domain. Source:
           <a href="http://commons.wikimedia.org/wiki/File:Hallstatt_300.jpg">Wikimedia
@@ -122,7 +124,7 @@
       </p>
       <p style="clear:both;"></p>
       <div style="float:left; clear:both; text-align:center; margin:0px 20px 10px 0px;">
-        <img src="630px-Ptolemaic-Map.jpg" class="annotatable"/>
+        <img src="630px-Ptolemaic-Map.jpg" />
         <p class="image-caption">
           Ptolemaic Map, 16th century. Public Domain. Source:
           <a href="http://commons.wikimedia.org/wiki/File:PtolemaicMap.jpg">Wikimedia

@@ -61,6 +61,10 @@ annotorious.editor.Editor = function(annotator) {
       annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, annotation);      
     self.close();
   });
+
+  goog.events.listen(this._textarea, goog.events.EventType.KEYUP, function(event) {
+    // TODO check whether editor window should be resized
+  });
  
   goog.style.showElement(this.element, false);
   goog.dom.appendChild(annotator.element, this.element);

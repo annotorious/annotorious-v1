@@ -125,24 +125,6 @@ annotorious.Annotorious.prototype.addPlugin = function(plugin_name, opt_config_o
 }
 
 /**
- * Destroys the annotator on a specific item, or all, removing annotation functionality.
- * @param {string=} opt_item_url the URL of the item from which to destroy annotation functionality
- *
-annotorious.Annotorious.prototype.destroy = function(opt_item_url) {
-  if (opt_item_url) {
-    var module = this._getModuleForItemSrc(opt_item_url);
-    if (module) {
-      // TODO call destroy on module
-    }
-  } else {
-    goog.array.forEach(this._modules, function(module) {
-      // TODO call destroy on module
-    });
-  }  
-}
-*/
-
-/**
  * Returns the name of the selector that is currently activated on a 
  * particular item.
  * @param {string} item_url the URL of the item to query for the active selector
@@ -282,6 +264,18 @@ annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
 }
 
 /**
+ * Resets annotation functionality on this page. After the reset, annotation
+ * functionality will be reomved from all items. Images with the 'annotatable'
+ * CSS class will have been re-initialized (i.e. they will be annotatable, with
+ * a fresh annotator).
+ */
+annotorious.Annotorious.prototype.reset = function(annotation) {
+  goog.array.forEach(this._modules, function(module) {
+    module.reset();
+  });
+}
+
+/**
  * Adds a selector to a particular item.
  *
  * !! TEMPORARY !! 
@@ -370,6 +364,7 @@ annotorious.Annotorious.prototype['highlightAnnotation'] = annotorious.Annotorio
 annotorious.Annotorious.prototype['makeAnnotatable'] = annotorious.Annotorious.prototype.makeAnnotatable;
 annotorious.Annotorious.prototype['removeAll'] = annotorious.Annotorious.prototype.removeAll;
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
+annotorious.Annotorious.prototype['reset'] = annotorious.Annotorious.prototype.reset;
 annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious.prototype.setActiveSelector;
 annotorious.Annotorious.prototype['showAnnotations'] = annotorious.Annotorious.prototype.showAnnotations;
 annotorious.Annotorious.prototype['showSelectionWidget'] = annotorious.Annotorious.prototype.showSelectionWidget;
