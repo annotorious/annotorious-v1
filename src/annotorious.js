@@ -20,7 +20,7 @@ annotorious.Annotorious = function() {
   /** @private **/
   this._modules = [ new annotorious.modules.image.ImageModule() ];
   
-  if (annotorious.modules.openlayers.OpenLayersModule)
+  if (window['OpenLayers'])
     this._modules.push(new annotorious.modules.openlayers.OpenLayersModule());
   
   /** @private **/
@@ -122,6 +122,25 @@ annotorious.Annotorious.prototype.addPlugin = function(plugin_name, opt_config_o
   } catch (error) {
     console.log('Could not load plugin: ' + plugin_name);
   }
+}
+
+/**
+ * Destroys annotation functionality on an item, or all items on the page. Note
+ * that this method differs from anno.reset() in so far as class="annotatable"
+ * attributes are not re-evaluated! What is destroyed, stays destroyed - until
+ * made annotatable again via anno.makeAnnotatable().
+ * @param {string=} opt_item_url the URL of the item on which to destroy annotation functionality
+ */
+annotorious.Annotorious.prototype.destroy = function(opt_item_url) {
+  if (opt_item_url) {
+    var module = this._getModuleForItemSrc(opt_item_url);
+    if (module)
+      module.destroy(opt_item_url);
+  } else {
+    goog.array.forEach(this._modules, function(module) {
+      module.destroy();
+    });
+  }  
 }
 
 /**
@@ -349,3 +368,5 @@ annotorious.Annotorious.prototype.showSelectionWidget = function(opt_item_url) {
     });
   }
 }
+
+window['anno'] = new annotorious.Annotorious();

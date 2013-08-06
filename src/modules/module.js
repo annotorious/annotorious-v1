@@ -338,13 +338,20 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
 }
 
 /**
- * Destroys all annotators managed by this module.
+ * Destroys the annotator on the specified item, or all annotators managed by this module.
+ * @param {string=} opt_item_url the URL of the item on which to destroy the annotator.
  */
-annotorious.modules.Module.prototype.destroy = function() {
-  goog.array.forEach(this._annotators.getValues(), function(annotator) {
-    annotator.destroy();
-  }); 
-  this._annotators.clear();
+annotorious.modules.Module.prototype.destroy = function(opt_item_url) {
+  if (opt_item_url) {
+    var annotator = this._annotators.get(opt_item_url);
+    if (annotator)
+      annotator.destroy();
+  } else {
+    goog.array.forEach(this._annotators.getValues(), function(annotator) {
+      annotator.destroy();
+    }); 
+    this._annotators.clear();
+  }
 }
 
 /**
