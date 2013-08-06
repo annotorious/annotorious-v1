@@ -66,6 +66,10 @@ annotorious.editor.Editor = function(annotator) {
   goog.style.showElement(this.element, false);
   goog.dom.appendChild(annotator.element, this.element);
   this._textarea.decorate(goog.dom.query('.annotorious-editor-text', this.element)[0]);
+  
+  annotorious.dom.makeHResizable(this.element, function() {
+    self._textarea.resize();
+  });
 }
 
 /**

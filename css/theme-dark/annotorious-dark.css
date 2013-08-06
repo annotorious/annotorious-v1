@@ -234,8 +234,10 @@
   border:none;
   background-color:#383838;
   line-height:150%;
-  margin:10px 10px 4px;
+  margin:10px 0px 4px 0px;
+  padding:0px 10px;
   min-height:50px;
+  width:100%;
   min-width:200px;
   outline:none;
   font-family:Verdana,Arial;
@@ -245,6 +247,7 @@
   text-shadow:none;
   overflow-y:auto;
   display:block;
+  resize:none;
 }
 
 .annotorious-editor-text a:hover {

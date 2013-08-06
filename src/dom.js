@@ -3,6 +3,8 @@
  */
 goog.provide('annotorious.dom');
 
+goog.require('goog.fx.Dragger');
+
 /**
  * Computes the absolute top/left offset of a DOM element relative to the document.
  * @param {Element} el the DOM element
@@ -55,5 +57,32 @@ annotorious.dom.addOnLoadHandler = function(fn) {
     window.addEventListener('load', fn, false);
   else if (window.attachEvent) 
     window.attachEvent('onload', fn);
+}
+
+/**
+ * Makes a DIV element resizable into horizontal direction.
+ * @param {Element} div the DIV to make h-resizable
+ * @param {Function=} opt_callback an optional function to be notified on resize
+ */
+annotorious.dom.makeHResizable = function(div, opt_callback) {
+  var handle = goog.dom.createElement('div');
+  goog.style.setStyle(handle, 'position', 'absolute');
+  goog.style.setStyle(handle, 'top', '0px');
+  goog.style.setStyle(handle, 'right', '0px');
+  goog.style.setStyle(handle, 'width', '5px');
+  goog.style.setStyle(handle, 'height', '100%');
+  goog.style.setStyle(handle, 'cursor', 'e-resize');
+  goog.dom.appendChild(div, handle);
+  
+  var div_border = goog.style.getBorderBox(div);
+  var width_limit = goog.style.getBounds(div).width - div_border.right - div_border.left;
+
+  var dragger = new goog.fx.Dragger(handle);  
+  dragger.setLimits(new goog.math.Rect(width_limit, 0, 800, 0));
+  dragger.defaultAction = function(x) {
+    goog.style.setStyle(div, 'width', x + 'px');
+    if (opt_callback)
+      opt_callback();
+  };
 }
 
