@@ -5,7 +5,7 @@
     "goog.dom.ASSUME_STANDARDS_MODE": true
   },
   "inputs": [
-    "src/annotorious.js",
+    "src/anno.js",
     "src/plugin.js" // to set up the plugin namespace
   ],
   "paths": [
