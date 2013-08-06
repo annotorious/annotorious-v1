@@ -121,8 +121,3 @@ var SelectionEvent = {
 
 }
 
-/**
- * To prevent 'variable is undeclared' errors in dev mode
- */
-var console = {}
-var JSON = {}

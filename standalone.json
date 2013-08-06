@@ -14,7 +14,9 @@
   ],
   "externs": [
     "externs/api.js",
-    "externs/openlayers.js"
+    "externs/openlayers.js",
+    "//json.js",
+    "//webkit_console.js"
   ],
   "mode": "ADVANCED", // "RAW" or "ADVANCED"
   "level": "DEFAULT", // "DEFAULT" or "VERBOSE"
