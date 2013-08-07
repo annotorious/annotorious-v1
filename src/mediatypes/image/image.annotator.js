@@ -77,7 +77,9 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
 
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:img_bounds.width, height:img_bounds.height });
-  goog.style.showElement(this._editCanvas, false); 
+
+  if (annotorious.events.ui.hasMouse)
+    goog.style.showElement(this._editCanvas, false); 
   goog.dom.appendChild(this.element, this._editCanvas);
 
   if (opt_popup)
@@ -95,7 +97,7 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
   this._hint = new annotorious.Hint(this, this.element);
   
   var self = this;
-  goog.events.listen(this.element, goog.events.EventType.MOUSEOVER, function(event) {
+  goog.events.listen(this.element, annotorious.events.ui.EventType.OVER, function(event) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
@@ -103,7 +105,7 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
     }
   });
   
-  goog.events.listen(this.element, goog.events.EventType.MOUSEOUT, function(event) {
+  goog.events.listen(this.element, annotorious.events.ui.EventType.OUT, function(event) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
       self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
@@ -111,11 +113,14 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
     }
   });
 
-  goog.events.listen(this._viewCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
+  var activeCanvas = (annotorious.events.ui.hasTouch) ? this._editCanvas : this._viewCanvas;
+  goog.events.listen(activeCanvas, annotorious.events.ui.EventType.DOWN, function(event) {
     if (self._selectionEnabled) {
       goog.style.showElement(self._editCanvas, true);
       self._viewer.highlightAnnotation(undefined);
-      self._currentSelector.startSelection(event.offsetX, event.offsetY);
+
+      var coords = annotorious.events.ui.sanitizeCoordinates(event, self._editCanvas);
+      self._currentSelector.startSelection(coords.x, coords.y);
     }
   });
 
@@ -127,7 +132,8 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
   });
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
-    goog.style.showElement(self._editCanvas, false);
+    if (annotorious.events.ui.hasMouse)
+      goog.style.showElement(self._editCanvas, false);
     self._currentSelector.stopSelection();
   });
 }
@@ -394,7 +400,9 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.showSelectionWidget = func
  * @param {annotorious.Annotation=} opt_original_annotation the original annotation being edited (if any)
  */
 annotorious.mediatypes.image.ImageAnnotator.prototype.stopSelection = function(opt_original_annotation) {
-   goog.style.showElement(this._editCanvas, false);
+   if (annotorious.events.ui.hasMouse)
+     goog.style.showElement(this._editCanvas, false);
+
    this._currentSelector.stopSelection();
    
    // If this was an edit of an annotation (rather than creation of a new one) re-add to viewer!

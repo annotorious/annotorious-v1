@@ -6,6 +6,8 @@ goog.require('goog.events.EventType');
 
 annotorious.events.ui.hasTouch = 'ontouchstart' in window;
 
+annotorious.events.ui.hasMouse = !annotorious.events.ui.hasTouch; // Just for readability
+
 /**
  * Human interface events.
  * @enum {string}
