@@ -25,3 +25,10 @@ annotorious.Annotorious.prototype['addSelector'] = annotorious.Annotorious.proto
 
 /** @deprecated **/
 annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;
+
+/** Sets up the plugin namespace */
+if (!window['annotorious'])
+  window['annotorious'] = {};
+
+if (!window['annotorious']['plugin'])
+  window['annotorious']['plugin'] = {}
