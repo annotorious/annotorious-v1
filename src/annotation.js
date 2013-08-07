@@ -1,4 +1,4 @@
-goog.provide('annotorious.annotation.Annotation');
+goog.provide('annotorious.Annotation');
 
 goog.require('annotorious.shape');
 
@@ -9,7 +9,7 @@ goog.require('annotorious.shape');
  * @param {annotorious.shape.Shape} shape the annotated fragment shape
  * @constructor
  */
-annotorious.annotation.Annotation = function(src, text, shape) {
+annotorious.Annotation = function(src, text, shape) {
   this.src = src;
   this.text = text;
   this.shapes = [ shape ];

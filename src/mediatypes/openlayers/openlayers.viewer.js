@@ -1,18 +1,15 @@
-goog.provide('annotorious.modules.openlayers.Viewer');
+goog.provide('annotorious.mediatypes.openlayers.Viewer');
 
-goog.require('goog.style');
-goog.require('goog.events');
-goog.require('goog.dom.classes');
 goog.require('goog.events.MouseWheelHandler');
 
 /**
  * The OpenLayers viewer wraps an OpenLayers Box Marker layer to display annotations inside
  * of Box markers.
  * @param {Object} map the OpenLayers map
- * @param {annotorious.modules.openlayers.OpenLayersAnnotator} annotator reference to the annotator
+ * @param {annotorious.mediatypes.openlayers.OpenLayersAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.modules.openlayers.Viewer = function(map, annotator) {
+annotorious.mediatypes.openlayers.Viewer = function(map, annotator) {
   /** @private **/
   this._map = map;
 
@@ -53,7 +50,7 @@ annotorious.modules.openlayers.Viewer = function(map, annotator) {
 /**
  * Resets the position of the popup, without changing the annotation.
  */
-annotorious.modules.openlayers.Viewer.prototype._place_popup = function() {
+annotorious.mediatypes.openlayers.Viewer.prototype._place_popup = function() {
   // Compute correct annotation bounds, relative to map
   var annotation_div = this._currentlyHighlightedOverlay.marker.div;
   var annotation_dim = goog.style.getBounds(annotation_div);
@@ -89,9 +86,9 @@ annotorious.modules.openlayers.Viewer.prototype._place_popup = function() {
 
 /**
  * Shows the popup with a new annotation.
- * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.modules.openlayers.Viewer.prototype._show_popup = function(annotation) {
+annotorious.mediatypes.openlayers.Viewer.prototype._show_popup = function(annotation) {
   this._popup.setAnnotation(annotation);
   this._place_popup();
   this._popup.show();
@@ -101,7 +98,7 @@ annotorious.modules.openlayers.Viewer.prototype._show_popup = function(annotatio
  * @param {Object=} new_highlight the overlay to highlight
  * @param {Object=} previous_highlight the overlay previously highlighted
  */
-annotorious.modules.openlayers.Viewer.prototype._updateHighlight = function(new_highlight, previous_highlight) {
+annotorious.mediatypes.openlayers.Viewer.prototype._updateHighlight = function(new_highlight, previous_highlight) {
   if (new_highlight) {
     var pos = goog.style.getRelativePosition(new_highlight.marker.div, this._map.div);
     var height = parseInt(goog.style.getStyle(new_highlight.marker.div, 'height'), 10);
@@ -119,9 +116,9 @@ annotorious.modules.openlayers.Viewer.prototype._updateHighlight = function(new_
 
 /**
  * Adds an annotation to the viewer.
- * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotation) {
+annotorious.mediatypes.openlayers.Viewer.prototype.addAnnotation = function(annotation) {
   var geometry = annotation.shapes[0].geometry;
   var marker =
     new OpenLayers.Marker.Box(new OpenLayers.Bounds(geometry.x, geometry.y, geometry.x + geometry.width, geometry.y + geometry.height));
@@ -166,9 +163,9 @@ annotorious.modules.openlayers.Viewer.prototype.addAnnotation = function(annotat
 
 /**
  * Removes an annotation from the viewer.
- * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.modules.openlayers.Viewer.prototype.removeAnnotation = function(annotation) {
+annotorious.mediatypes.openlayers.Viewer.prototype.removeAnnotation = function(annotation) {
   var overlay = goog.array.find(this._overlays, function(overlay) {
     return overlay.annotation == annotation;
   }); 
@@ -181,18 +178,18 @@ annotorious.modules.openlayers.Viewer.prototype.removeAnnotation = function(anno
 
 /**
  * Returns all annotations in this viewer.
- * @return {Array.<annotorious.annotation.Annotation>} the annotations
+ * @return {Array.<annotorious.Annotation>} the annotations
  */
-annotorious.modules.openlayers.Viewer.prototype.getAnnotations = function() {
+annotorious.mediatypes.openlayers.Viewer.prototype.getAnnotations = function() {
 
 }
 
 /**
  * Highlights a particular annotation in the viewer, or de-highlights (if that's a
  * word...) all, if no annotation is passed to the method.
- * @param {annotorious.annotation.Annotation | undefined} opt_annotation the annotation
+ * @param {annotorious.Annotation | undefined} opt_annotation the annotation
  */
-annotorious.modules.openlayers.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
+annotorious.mediatypes.openlayers.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
   if (opt_annotation) {
     // TODO
   } else {

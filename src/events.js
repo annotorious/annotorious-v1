@@ -11,30 +11,6 @@ annotorious.events.EventBroker = function() {
   /** @private **/
   this._handlers = [];
 }
-/**
-  *
-  * To get screen coordinates while taking into consideration mobile and the offset of the screen
-  * @param {Object} event the DOM Event object
-  * @param {Element} parent the parent element that triggers the event
-  */
-annotorious.events.sanitizeCoordinates = function(event, parent) {
-  var points = false;
-  var offset = annotorious.dom.getOffset;
-  
-  if (!event.offsetX || !event.offsetY && event.event_.changedTouches) {
-    points = {
-      x: event.event_.changedTouches[0].clientX - offset(parent).left,
-      y: event.event_.changedTouches[0].clientY - offset(parent).top
-    };
-  } else {
-    points = {
-      x: event.offsetX,
-      y: event.offsetY
-    };
-  }
-  
-  return points;
-};
 
 /**
  * Adds an event handler.

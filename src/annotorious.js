@@ -1,13 +1,12 @@
-goog.provide('annotorious.Annotorious');
-
+goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.query');
-goog.require('goog.array');
+
 goog.require('annotorious.dom');
 goog.require('annotorious.events');
-goog.require('annotorious.modules.Module');
-goog.require('annotorious.modules.image.ImageModule');
-goog.require('annotorious.modules.openlayers.OpenLayersModule');
+goog.require('annotorious.mediatypes.Module');
+goog.require('annotorious.mediatypes.image.ImageModule');
+goog.require('annotorious.mediatypes.openlayers.OpenLayersModule');
 
 /**
  * The main entrypoint to the application. The Annotorious class is instantiated exactly once,
@@ -18,10 +17,10 @@ goog.require('annotorious.modules.openlayers.OpenLayersModule');
  */
 annotorious.Annotorious = function() {
   /** @private **/
-  this._modules = [ new annotorious.modules.image.ImageModule() ];
+  this._modules = [ new annotorious.mediatypes.image.ImageModule() ];
   
   if (window['OpenLayers'])
-    this._modules.push(new annotorious.modules.openlayers.OpenLayersModule());
+    this._modules.push(new annotorious.mediatypes.openlayers.OpenLayersModule());
   
   /** @private **/
   this._plugins = [];
@@ -91,8 +90,8 @@ annotorious.Annotorious.prototype.activateSelector = function(opt_item_url_or_ca
 
 /**
  * Adds an annotation to an item on the page.
- * @param {annotorious.annotation.Annotation} annotation the annotation
- * @param {annotorious.annotation.Annotation} opt_replace optionally, an existing annotation to replace
+ * @param {annotorious.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} opt_replace optionally, an existing annotation to replace
  */
 annotorious.Annotorious.prototype.addAnnotation = function(annotation, opt_replace) {
   var module = this._getModuleForItemSrc(annotation.src); 
@@ -160,7 +159,7 @@ annotorious.Annotorious.prototype.getActiveSelector = function(item_url) {
  * Returns all annotations on the annotatable item with the specified URL, or
  * all annotations on the page in case no URL is specified.
  * @param {string | undefined} opt_item_url an item URL (optional)
- * @return {Array.<annotorious.annotation.Annotation>} the annotations
+ * @return {Array.<annotorious.Annotation>} the annotations
  */
 annotorious.Annotorious.prototype.getAnnotations = function(opt_item_url) {
   if (opt_item_url) {
@@ -227,7 +226,7 @@ annotorious.Annotorious.prototype.hideSelectionWidget = function(opt_item_url) {
 
 /**
  * Highlights the specified annotation.
- * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} annotation the annotation
  */
 annotorious.Annotorious.prototype.highlightAnnotation = function(annotation) {
   if (annotation) {
@@ -274,7 +273,7 @@ annotorious.Annotorious.prototype.removeAll = function(opt_item_url) {
 
 /**
  * Removes an annotation from an item on the page.
- * @param {annotorious.annotation.Annotation} annotation the annotation to remove
+ * @param {annotorious.Annotation} annotation the annotation to remove
  */
 annotorious.Annotorious.prototype.removeAnnotation = function(annotation) {
   var module = this._getModuleForItemSrc(annotation.src);

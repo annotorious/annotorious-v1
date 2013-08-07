@@ -1,5 +1,3 @@
-goog.require('annotorious.Annotorious');
-
 /** API exports **/
 annotorious.Annotorious.prototype['activateSelector'] = annotorious.Annotorious.prototype.activateSelector;
 annotorious.Annotorious.prototype['addAnnotation'] = annotorious.Annotorious.prototype.addAnnotation;
@@ -20,15 +18,15 @@ annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious
 annotorious.Annotorious.prototype['showAnnotations'] = annotorious.Annotorious.prototype.showAnnotations;
 annotorious.Annotorious.prototype['showSelectionWidget'] = annotorious.Annotorious.prototype.showSelectionWidget;
 
-/** !!! TEMPORARY **/
-annotorious.Annotorious.prototype['addSelector'] = annotorious.Annotorious.prototype.addSelector;
-
-/** @deprecated **/
-annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;
-
 /** Sets up the plugin namespace */
 if (!window['annotorious'])
   window['annotorious'] = {};
 
 if (!window['annotorious']['plugin'])
   window['annotorious']['plugin'] = {}
+
+/** !!! TEMPORARY **/
+annotorious.Annotorious.prototype['addSelector'] = annotorious.Annotorious.prototype.addSelector;
+
+/** @deprecated **/
+annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;

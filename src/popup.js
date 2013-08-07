@@ -1,16 +1,16 @@
-goog.provide('annotorious.viewer');
+goog.provide('annotorious.Popup');
 
-goog.require('goog.style');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
+goog.require('goog.style');
 
 /**
  * A popup bubble widget to show annotation details.
  * @param {Object} annotator reference to the annotator
  * @constructor
  */
-annotorious.viewer.Popup = function(annotator) {
+annotorious.Popup = function(annotator) {
   this.element = goog.soy.renderAsElement(annotorious.templates.popup);
 
   /** @private **/
@@ -101,7 +101,7 @@ annotorious.viewer.Popup = function(annotator) {
  * a DOM element.
  * @param {string | Function} field the field
  */
-annotorious.viewer.Popup.prototype.addField = function(field) {
+annotorious.Popup.prototype.addField = function(field) {
   var fieldEl = goog.dom.createDom('div', 'annotorious-popup-field');
   
   if (goog.isString(field))  {
@@ -118,7 +118,7 @@ annotorious.viewer.Popup.prototype.addField = function(field) {
 /**
  * Start the popup hide timer.
  */
-annotorious.viewer.Popup.prototype.startHideTimer = function() {
+annotorious.Popup.prototype.startHideTimer = function() {
   this._cancelHide = false;
   if (!this._popupHideTimer) {
     var self = this;
@@ -137,7 +137,7 @@ annotorious.viewer.Popup.prototype.startHideTimer = function() {
 /**
  * Clear the popup hide timer.
  */
-annotorious.viewer.Popup.prototype.clearHideTimer = function() {
+annotorious.Popup.prototype.clearHideTimer = function() {
   this._cancelHide = true;
   if (this._popupHideTimer) {
     window.clearTimeout(this._popupHideTimer);
@@ -147,10 +147,10 @@ annotorious.viewer.Popup.prototype.clearHideTimer = function() {
 
 /**
  * Show the popup, loaded with the specified annotation, at the specified coordinates.
- * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} annotation the annotation
  * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  */
-annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
+annotorious.Popup.prototype.show = function(annotation, xy) {
   this.clearHideTimer();
 
   if (xy)
@@ -176,15 +176,15 @@ annotorious.viewer.Popup.prototype.show = function(annotation, xy) {
  * Set the position of the popup.
  * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  */
-annotorious.viewer.Popup.prototype.setPosition = function(xy) {
+annotorious.Popup.prototype.setPosition = function(xy) {
   goog.style.setPosition(this.element, new goog.math.Coordinate(xy.x, xy.y));
 }
 
 /**
  * Set the annotation for the popup.
- * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.viewer.Popup.prototype.setAnnotation = function(annotation) {
+annotorious.Popup.prototype.setAnnotation = function(annotation) {
   this._currentAnnotation = annotation;
   if (annotation.text)
     this._text.innerHTML = annotation.text.replace(/\n/g, '<br/>');
@@ -209,4 +209,4 @@ annotorious.viewer.Popup.prototype.setAnnotation = function(annotation) {
 }
 
 /** API exports **/
-annotorious.viewer.Popup.prototype['addField'] = annotorious.viewer.Popup.prototype.addField;
+annotorious.Popup.prototype['addField'] = annotorious.Popup.prototype.addField;

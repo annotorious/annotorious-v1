@@ -1,9 +1,9 @@
-goog.provide('annotorious.hint');
+goog.provide('annotorious.Hint');
 
-goog.require('goog.soy');
-goog.require('goog.events');
-goog.require('goog.style');
 goog.require('goog.dom.query');
+goog.require('goog.events');
+goog.require('goog.soy');
+goog.require('goog.style');
 
 /** 
  * The 'hint' GUI element.
@@ -12,7 +12,7 @@ goog.require('goog.dom.query');
  * @param {string=} opt_msg the message to display as hint
  * @constructor
  */
-annotorious.hint.Hint = function(annotator, parent, opt_msg) {
+annotorious.Hint = function(annotator, parent, opt_msg) {
   var self = this;
 
   if (!opt_msg)
@@ -58,7 +58,7 @@ annotorious.hint.Hint = function(annotator, parent, opt_msg) {
  * and MOUSE_OUT_OF_ANNOTATABLE_ITEM handlers to the annototator instance.
  * @private
  */
-annotorious.hint.Hint.prototype._attachListeners = function() {
+annotorious.Hint.prototype._attachListeners = function() {
   var self = this;
 
   this._mouseOverListener = goog.events.listen(this._icon, goog.events.EventType.MOUSEOVER, function(event) {
@@ -79,7 +79,7 @@ annotorious.hint.Hint.prototype._attachListeners = function() {
  * Detaches MOUSEUP and MOUSEMOVE listeners from the editing canvas.
  * @private
  */
-annotorious.hint.Hint.prototype._detachListeners = function() {
+annotorious.Hint.prototype._detachListeners = function() {
   goog.events.unlistenByKey(this._mouseOverListener);
   goog.events.unlistenByKey(this._mouseOutListener);
   this._annotator.removeHandler(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM, this._overItemHandler);
@@ -89,7 +89,7 @@ annotorious.hint.Hint.prototype._detachListeners = function() {
 /**
  * Shows the hint.
  */
-annotorious.hint.Hint.prototype.show = function() {
+annotorious.Hint.prototype.show = function() {
   window.clearTimeout(this._hideTimer);
   goog.style.setOpacity(this._message, 0.8);
 
@@ -102,7 +102,7 @@ annotorious.hint.Hint.prototype.show = function() {
 /**
  * Hides the hint, leaving only the Annotorious feather icon.
  */
-annotorious.hint.Hint.prototype.hide = function() {
+annotorious.Hint.prototype.hide = function() {
   window.clearTimeout(this._hideTimer);
   goog.style.setOpacity(this._message, 0);
 }
@@ -110,13 +110,11 @@ annotorious.hint.Hint.prototype.hide = function() {
 /**
  * Destroys the hint element, removing it from the DOM.
  */
-annotorious.hint.Hint.prototype.destroy = function() {
+annotorious.Hint.prototype.destroy = function() {
   this._detachListeners();
-
   delete this._mouseOverListener;
   delete this._mouseOutListener;
   delete this._overItemHandler;
   delete this._outOfItemHandler;
-
   goog.dom.removeNode(this.element);
 }

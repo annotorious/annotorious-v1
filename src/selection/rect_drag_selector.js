@@ -1,7 +1,8 @@
 goog.provide('annotorious.plugins.selection.RectDragSelector');
 
 goog.require('goog.events');
-goog.require('annotorious.humanEvents');
+
+goog.require('annotorious.events.ui');
 
 /**
  * The default selector: a simple click-and-drag rectangle selection tool.
@@ -49,8 +50,8 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
   var self = this;  
   var canvas = this._canvas;
   
-  this._mouseMoveListener = goog.events.listen(this._canvas, annotorious.humanEvents.MOVE, function(event) {
-    var points = annotorious.events.sanitizeCoordinates(event, canvas);
+  this._mouseMoveListener = goog.events.listen(this._canvas, annotorious.events.ui.EventType.MOVE, function(event) {
+    var points = annotorious.events.ui.sanitizeCoordinates(event, canvas);
     if (self._enabled) {
       self._opposite = { x: points.x, y: points.y };
 
@@ -75,8 +76,8 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
     }
   });
 
-  this._mouseUpListener = goog.events.listen(canvas, annotorious.humanEvents.UP, function(event) {
-    var points = annotorious.events.sanitizeCoordinates(event, canvas);
+  this._mouseUpListener = goog.events.listen(canvas, annotorious.events.ui.EventType.UP, function(event) {
+    var points = annotorious.events.ui.sanitizeCoordinates(event, canvas);
     var shape = self.getShape();
     event = (event.event_) ? event.event_ : event;
     
@@ -87,7 +88,7 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
         { mouseEvent: event, shape: shape, viewportBounds: self.getViewportBounds() }); 
     } else {
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_CANCELED);
-      if (annotorious.humanEvents.hasTouch) {
+      if (annotorious.events.ui.hasTouch) {
         // In touch mode, we use this to "relay" the selection event
         var annotations = self._annotator.getAnnotationsAt(points.x, points.y);
         if (annotations.length > 0)

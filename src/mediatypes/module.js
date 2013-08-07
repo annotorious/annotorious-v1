@@ -1,29 +1,31 @@
-goog.provide('annotorious.modules.Module');
+goog.provide('annotorious.mediatypes.Module');
 
-goog.require('goog.dom');
 goog.require('goog.array');
+goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.structs.Map');
 
-goog.require('annotorious.annotation.Annotation');
+goog.require('annotorious.Annotation');
 
 /**
  * A base class for Annotorious Module implementations.
  * @constructor
  */
-annotorious.modules.Module = function() { }
+annotorious.mediatypes.Module = function() { }
 
 /**
  * Initializes the module instance's fields. Note that subclasses to Module
  * MUST ensure by themselves that this method is called on initialization (i.e.
  * in their constructor)!
+ *
  * opt_preload_fn is an optional parameter: if provided, it must be a function
  * that returns a list of annotatable items. These will be put into the lazy
  * load queue and made annotatable when they appear on screen.
+ *
  * @param {Function=} opt_preload_fn a function providing a list of pre-loadable items
  * @protected
  */
-annotorious.modules.Module.prototype._initFields = function(opt_preload_fn) {
+annotorious.mediatypes.Module.prototype._initFields = function(opt_preload_fn) {
   /** @private **/
   this._annotators = new goog.structs.Map();
   
@@ -59,7 +61,7 @@ annotorious.modules.Module.prototype._initFields = function(opt_preload_fn) {
  * @private
  * @suppress {missingProperties}
  */
-annotorious.modules.Module.prototype._getSettings = function(item_url) {
+annotorious.mediatypes.Module.prototype._getSettings = function(item_url) {
   var settings = this._cachedItemSettings(item_url);
   if (!settings) {
     settings = { hide_selection_widget: false, hide_annotations: false };
@@ -71,7 +73,7 @@ annotorious.modules.Module.prototype._getSettings = function(item_url) {
 /**
  * @private
  */
-annotorious.modules.Module.prototype._initAnnotator = function(item) {  
+annotorious.mediatypes.Module.prototype._initAnnotator = function(item) {  
   var self = this;
   var item_src = this.getItemURL(item);
 
@@ -145,7 +147,7 @@ annotorious.modules.Module.prototype._initAnnotator = function(item) {
 /**
  * @private
  */
-annotorious.modules.Module.prototype._initPlugin = function(plugin, annotator) {
+annotorious.mediatypes.Module.prototype._initPlugin = function(plugin, annotator) {
   if (plugin.onInitAnnotator)
     plugin.onInitAnnotator(annotator);
 }
@@ -153,7 +155,7 @@ annotorious.modules.Module.prototype._initPlugin = function(plugin, annotator) {
 /**
  * @private
  */
-annotorious.modules.Module.prototype._lazyLoad = function() {     
+annotorious.mediatypes.Module.prototype._lazyLoad = function() {     
   var self = this;
   goog.array.forEach(this._itemsToLoad, function(item) {
     if (annotorious.dom.isInViewport(item)) {
@@ -165,7 +167,7 @@ annotorious.modules.Module.prototype._lazyLoad = function() {
 /**
  * @private
  */
-annotorious.modules.Module.prototype._setAnnotationVisibility = function(opt_item_url, visibility) {
+annotorious.mediatypes.Module.prototype._setAnnotationVisibility = function(opt_item_url, visibility) {
   if (opt_item_url) {
     var annotator = this._annotators.get(opt_item_url);
     if (annotator) {
@@ -200,7 +202,7 @@ annotorious.modules.Module.prototype._setAnnotationVisibility = function(opt_ite
 /**
  * @private
  */
-annotorious.modules.Module.prototype._setSelectionWidgetVisibility = function(opt_item_url, visibility) {
+annotorious.mediatypes.Module.prototype._setSelectionWidgetVisibility = function(opt_item_url, visibility) {
   if (opt_item_url) {
     var annotator = this._annotators.get(opt_item_url);
     if (annotator) {
@@ -239,7 +241,7 @@ annotorious.modules.Module.prototype._setSelectionWidgetVisibility = function(op
  * @param {string | Function} opt_item_url_or_callback the URL of the item, or a callback function
  * @param {Function} opt_callback a callback function (if the first parameter was a URL)
  */
-annotorious.modules.Module.prototype.activateSelector = function(opt_item_url_or_callback, opt_callback) {
+annotorious.mediatypes.Module.prototype.activateSelector = function(opt_item_url_or_callback, opt_callback) {
   var item_url = undefined,
       callback = undefined;
 
@@ -263,10 +265,10 @@ annotorious.modules.Module.prototype.activateSelector = function(opt_item_url_or
 
 /**
  * Adds an annotation to an item managed by this module.
- * @param {annotorious.annotation.Annotation} annotation the annotation
- * @param {annotorious.annotation.Annotation} opt_replace optionally, an existing annotation to replace
+ * @param {annotorious.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} opt_replace optionally, an existing annotation to replace
  */
-annotorious.modules.Module.prototype.addAnnotation = function(annotation, opt_replace) {
+annotorious.mediatypes.Module.prototype.addAnnotation = function(annotation, opt_replace) {
   if (this.annotatesItem(annotation.src)) {
     var annotator = this._annotators.get(annotation.src);
     if (annotator) {
@@ -284,7 +286,7 @@ annotorious.modules.Module.prototype.addAnnotation = function(annotation, opt_re
  * @param {annotorious.events.EventType} type the event type
  * @param {Function} handler the handler function
  */
-annotorious.modules.Module.prototype.addHandler = function(type, handler) {
+annotorious.mediatypes.Module.prototype.addHandler = function(type, handler) {
   goog.array.forEach(this._annotators.getValues(), function(annotator, idx, array) {
     annotator.addHandler(type, handler);
   }); 
@@ -295,7 +297,7 @@ annotorious.modules.Module.prototype.addHandler = function(type, handler) {
  * Adds a plugin to this module.
  * @param {Plugin} plugin the plugin
  */
-annotorious.modules.Module.prototype.addPlugin = function(plugin) {
+annotorious.mediatypes.Module.prototype.addPlugin = function(plugin) {
   this._plugins.push(plugin);
   var self = this;
   goog.array.forEach(this._annotators.getValues(), function(annotator) {
@@ -311,7 +313,7 @@ annotorious.modules.Module.prototype.addPlugin = function(plugin) {
  * TODO selectors should be added to annotators directly, from within a plugin
  * which will make this method unecessary
  */
-annotorious.modules.Module.prototype.addSelector = function(item_url, selector) {
+annotorious.mediatypes.Module.prototype.addSelector = function(item_url, selector) {
   if (this.annotatesItem(item_url)) {
     var annotator = this._annotators.get(item_url);
     if (annotator)
@@ -324,7 +326,7 @@ annotorious.modules.Module.prototype.addSelector = function(item_url, selector) 
  * @param {string} item_url the URL of the item
  * @return {boolean} true if this module is in charge of the media
  */ 
-annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
+annotorious.mediatypes.Module.prototype.annotatesItem = function(item_url) {
   if (this._annotators.containsKey(item_url)) {
     return true;
   } else {
@@ -341,7 +343,7 @@ annotorious.modules.Module.prototype.annotatesItem = function(item_url) {
  * Destroys the annotator on the specified item, or all annotators managed by this module.
  * @param {string=} opt_item_url the URL of the item on which to destroy the annotator.
  */
-annotorious.modules.Module.prototype.destroy = function(opt_item_url) {
+annotorious.mediatypes.Module.prototype.destroy = function(opt_item_url) {
   if (opt_item_url) {
     var annotator = this._annotators.get(opt_item_url);
     if (annotator)
@@ -360,7 +362,7 @@ annotorious.modules.Module.prototype.destroy = function(opt_item_url) {
  * @param {string} item_url the URL of the item to query for the active selector
  * @return {string | undefined} the name of the active selector (or undefined)
  */
-annotorious.modules.Module.prototype.getActiveSelector = function(item_url) {
+annotorious.mediatypes.Module.prototype.getActiveSelector = function(item_url) {
   if (this.annotatesItem(item_url)) {
     var annotator = this._annotators.get(item_url);
     if (annotator)
@@ -373,9 +375,9 @@ annotorious.modules.Module.prototype.getActiveSelector = function(item_url) {
  * Returns all annotations on the item with the specified URL (if managed by this
  * module) or all annotations from this module in case no URL is specified.
  * @param {string | undefined} opt_item_url an item URL (optional)
- * @return {Array.<annotorious.annotation.Annotation>} the annotations
+ * @return {Array.<annotorious.Annotation>} the annotations
  */
-annotorious.modules.Module.prototype.getAnnotations = function(opt_item_url) {
+annotorious.mediatypes.Module.prototype.getAnnotations = function(opt_item_url) {
   if (opt_item_url) {
     var annotator = this._annotators.get(opt_item_url);
     if (annotator) {
@@ -400,7 +402,7 @@ annotorious.modules.Module.prototype.getAnnotations = function(opt_item_url) {
  * @param {string} item_url the URL of the item to query for available selectors
  * @returns {Array.<string> | undefined} the list of selector names
  */
-annotorious.modules.Module.prototype.getAvailableSelectors = function(item_url) {
+annotorious.mediatypes.Module.prototype.getAvailableSelectors = function(item_url) {
   if (this.annotatesItem(item_url)) {
     var annotator = this._annotators.get(item_url);
     if (annotator) {
@@ -416,7 +418,7 @@ annotorious.modules.Module.prototype.getAvailableSelectors = function(item_url) 
  * Hides existing annotations on all, or a specific item.
  * @param {string} opt_item_url the URL of the item
  */
-annotorious.modules.Module.prototype.hideAnnotations = function(opt_item_url) {
+annotorious.mediatypes.Module.prototype.hideAnnotations = function(opt_item_url) {
   this._setAnnotationVisibility(opt_item_url, false);
 }
 
@@ -425,15 +427,15 @@ annotorious.modules.Module.prototype.hideAnnotations = function(opt_item_url) {
  * The selection widget can be hidden on a specific item or all.
  * @param {string} opt_item_url the URL of the item on which to hide the selection widget
  */
-annotorious.modules.Module.prototype.hideSelectionWidget = function(opt_item_url) {
+annotorious.mediatypes.Module.prototype.hideSelectionWidget = function(opt_item_url) {
   this._setSelectionWidgetVisibility(opt_item_url, false);
 }
 
 /**
  * Highlights the specified annotation.
- * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.modules.Module.prototype.highlightAnnotation = function(annotation) {
+annotorious.mediatypes.Module.prototype.highlightAnnotation = function(annotation) {
   if (annotation) {
     if (this.annotatesItem(annotation.src)) {
       var annotator = this._annotators.get(annotation.src);
@@ -450,7 +452,7 @@ annotorious.modules.Module.prototype.highlightAnnotation = function(annotation) 
 /**
  * Lifecycle method: called by Annotorious on module initialization.
  */
-annotorious.modules.Module.prototype.init = function() {
+annotorious.mediatypes.Module.prototype.init = function() {
   if (this._preLoad)
     goog.array.extend(this._itemsToLoad, this._preLoad()); 
 
@@ -469,16 +471,16 @@ annotorious.modules.Module.prototype.init = function() {
  * Makes an item annotatable, if it is supported by this module.
  * @param {Object} item the annotatable item
  */
-annotorious.modules.Module.prototype.makeAnnotatable = function(item) {
+annotorious.mediatypes.Module.prototype.makeAnnotatable = function(item) {
   if (this.supports(item))
     this._initAnnotator(item);
 }
 
 /**
  * Removes an annotation from the item with the specified URL.
- * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.modules.Module.prototype.removeAnnotation = function(annotation) {
+annotorious.mediatypes.Module.prototype.removeAnnotation = function(annotation) {
   if (this.annotatesItem(annotation.src)) {
     var annotator = this._annotators.get(annotation.src);
     if (annotator)
@@ -493,7 +495,7 @@ annotorious.modules.Module.prototype.removeAnnotation = function(annotation) {
  * @param {string} item_url the URL of the item on which to set the selector
  * @param {string} selector the name of the selector to set on the item
  */
-annotorious.modules.Module.prototype.setActiveSelector = function(item_url, selector) {
+annotorious.mediatypes.Module.prototype.setActiveSelector = function(item_url, selector) {
   if (this.annotatesItem(item_url)) {
     var annotator = this._annotators.get(item_url);
     if (annotator)
@@ -505,7 +507,7 @@ annotorious.modules.Module.prototype.setActiveSelector = function(item_url, sele
  * Shows existing annotations on all, or a specific item.
  * @param {string} opt_item_url the URL of the item
  */
-annotorious.modules.Module.prototype.showAnnotations = function(opt_item_url) {
+annotorious.mediatypes.Module.prototype.showAnnotations = function(opt_item_url) {
   this._setAnnotationVisibility(opt_item_url, true);
 }
 
@@ -514,7 +516,7 @@ annotorious.modules.Module.prototype.showAnnotations = function(opt_item_url) {
  * The selection widget can be made visible on a specific item or all.
  * @param {string} opt_item_url the URL of the item on which to show the selection widget 
  */
-annotorious.modules.Module.prototype.showSelectionWidget = function(opt_item_url) {
+annotorious.mediatypes.Module.prototype.showSelectionWidget = function(opt_item_url) {
   this._setSelectionWidgetVisibility(opt_item_url, true);
 }
 
@@ -525,18 +527,18 @@ annotorious.modules.Module.prototype.showSelectionWidget = function(opt_item_url
  * @param {Element} item the item.
  * @return {string} the URL
  */
-annotorious.modules.Module.prototype.getItemURL = goog.abstractMethod;
+annotorious.mediatypes.Module.prototype.getItemURL = goog.abstractMethod;
 
 /**
  * Returns a new annotator for the specified item.
  * @param {Element} item the item
  * @return {Object} an annotator for this item
  */
-annotorious.modules.Module.prototype.newAnnotator = goog.abstractMethod;
+annotorious.mediatypes.Module.prototype.newAnnotator = goog.abstractMethod;
 
 /**
  * Tests if this module supports the specified item's media type.
  * @param {Object} item the item
  * @return {boolean} true if this module supports the item
  */
-annotorious.modules.Module.prototype.supports = goog.abstractMethod;
+annotorious.mediatypes.Module.prototype.supports = goog.abstractMethod;

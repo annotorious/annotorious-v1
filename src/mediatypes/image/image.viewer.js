@@ -1,19 +1,14 @@
-goog.provide('annotorious.modules.image.Viewer');
-
-goog.require('goog.soy');
-goog.require('goog.events');
-goog.require('goog.dom.classes');
-goog.require('goog.dom.query');
+goog.provide('annotorious.mediatypes.image.Viewer');
 
 /**
  * The image viewer - the central entity that manages annotations 
  * displayed for one image.
  * @param {Element} canvas the canvas element 
- * @param {annotorious.viewer.Popup} popup the popup to use in this viewer
- * @param {annotorious.modules.image.ImageAnnotator} annotator reference to the annotator
+ * @param {annotorious.Popup} popup the popup to use in this viewer
+ * @param {annotorious.mediatypes.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
+annotorious.mediatypes.image.Viewer = function(canvas, popup, annotator) {
   /** @private **/
   this._canvas = canvas;
 
@@ -91,10 +86,10 @@ annotorious.modules.image.Viewer = function(canvas, popup, annotator) {
 
 /**
  * Adds an annotation to the viewer.
- * @param {annotorious.annotation.Annotation} annotation the annotation
- * @param {annotorious.annotation.Annotation=} opt_replace optionally, an existing annotation to replace
+ * @param {annotorious.Annotation} annotation the annotation
+ * @param {annotorious.Annotation=} opt_replace optionally, an existing annotation to replace
  */
-annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation, opt_replace) {
+annotorious.mediatypes.image.Viewer.prototype.addAnnotation = function(annotation, opt_replace) {
   // Remove opt_replace, if specified
   if (opt_replace) {
     if (opt_replace == this._currentAnnotation)
@@ -123,9 +118,9 @@ annotorious.modules.image.Viewer.prototype.addAnnotation = function(annotation, 
 
 /**
  * Removes an annotation from the viewer.
- * @param {annotorious.annotation.Annotation} annotation the annotation
+ * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotation) {
+annotorious.mediatypes.image.Viewer.prototype.removeAnnotation = function(annotation) {
   if (annotation == this._currentAnnotation)
     delete this._currentAnnotation;
    
@@ -136,18 +131,18 @@ annotorious.modules.image.Viewer.prototype.removeAnnotation = function(annotatio
 
 /**
  * Returns all annotations in this viewer.
- * @return {Array.<annotorious.annotation.Annotation>} the annotations
+ * @return {Array.<annotorious.Annotation>} the annotations
  */
-annotorious.modules.image.Viewer.prototype.getAnnotations = function() {
+annotorious.mediatypes.image.Viewer.prototype.getAnnotations = function() {
   return goog.array.clone(this._annotations) 
 }
 
 /**
  * Highlights a particular annotation in the viewer, or de-highlights (if that's a
  * word...) all, if no annotation is passed to the method.
- * @param {annotorious.annotation.Annotation | undefined} opt_annotation the annotation
+ * @param {annotorious.Annotation | undefined} opt_annotation the annotation
  */
-annotorious.modules.image.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
+annotorious.mediatypes.image.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
   this._currentAnnotation = opt_annotation;
 
   if (opt_annotation)
@@ -162,7 +157,7 @@ annotorious.modules.image.Viewer.prototype.highlightAnnotation = function(opt_an
  * Returns the currently highlighted annotation (or 'undefined' if none).
  * @returns {Object} the currently highlighted annotation
  */
-annotorious.modules.image.Viewer.prototype.getHighlightedAnnotation = function() {
+annotorious.mediatypes.image.Viewer.prototype.getHighlightedAnnotation = function() {
   return this._currentAnnotation;
 }
 
@@ -171,7 +166,7 @@ annotorious.modules.image.Viewer.prototype.getHighlightedAnnotation = function()
  * @param {number} px the X coordinate
  * @param {number} py the Y coordinates
  */
-annotorious.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
+annotorious.mediatypes.image.Viewer.prototype.topAnnotationAt = function(px, py) {
   var annotations = this.getAnnotationsAt(px, py);
   if (annotations.length > 0) {
     return annotations[0];
@@ -184,9 +179,9 @@ annotorious.modules.image.Viewer.prototype.topAnnotationAt = function(px, py) {
  * Returns the annotations at the specified X/Y coordinates.
  * @param {number} px the X coordinate
  * @param {number} py the Y coordinate
- * @return {Array.<annotorious.annotation.Annotation>} the annotations sorted by size, smallest first
+ * @return {Array.<annotorious.Annotation>} the annotations sorted by size, smallest first
  */
-annotorious.modules.image.Viewer.prototype.getAnnotationsAt = function(px, py) {
+annotorious.mediatypes.image.Viewer.prototype.getAnnotationsAt = function(px, py) {
   // TODO for large numbers of annotations, we can optimize this
   // using a tree- or grid-like data structure instead of a list
   var intersectedAnnotations = [];
@@ -208,7 +203,7 @@ annotorious.modules.image.Viewer.prototype.getAnnotationsAt = function(px, py) {
 /**
  * @private
  */
-annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
+annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function(event) {
   var topAnnotation = this.topAnnotationAt(event.offsetX, event.offsetY);
     
   // TODO remove code duplication
@@ -242,7 +237,7 @@ annotorious.modules.image.Viewer.prototype._onMouseMove = function(event) {
  * @param {boolean=} highlight set true to highlight the shape
  * @private
  */
-annotorious.modules.image.Viewer.prototype._draw = function(shape, highlight) {
+annotorious.mediatypes.image.Viewer.prototype._draw = function(shape, highlight) {
   var selector = goog.array.find(this._annotator.getAvailableSelectors(), function(selector) {
     return selector.getSupportedShapeType() == shape.type;
   });  
@@ -256,7 +251,7 @@ annotorious.modules.image.Viewer.prototype._draw = function(shape, highlight) {
 /**
  * @private
  */
-annotorious.modules.image.Viewer.prototype._redraw = function() {
+annotorious.mediatypes.image.Viewer.prototype._redraw = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
   var self = this;

@@ -1,11 +1,12 @@
-goog.provide('annotorious.editor');
+goog.provide('annotorious.Editor');
 
-goog.require('goog.soy');
-goog.require('goog.ui.Textarea');
 goog.require('goog.dom');
 goog.require('goog.dom.query');
-goog.require('goog.style');
+goog.require('goog.soy');
 goog.require('goog.string.html.htmlSanitize');
+goog.require('goog.style');
+goog.require('goog.ui.Textarea');
+
 goog.require('annotorious.templates');
 
 /**
@@ -13,7 +14,7 @@ goog.require('annotorious.templates');
  * @param {Object} annotator reference to the annotator
  * @constructor
  */
-annotorious.editor.Editor = function(annotator) {
+annotorious.Editor = function(annotator) {
   this.element = goog.soy.renderAsElement(annotorious.templates.editform);
   
   /** @private **/
@@ -66,10 +67,7 @@ annotorious.editor.Editor = function(annotator) {
   goog.style.showElement(this.element, false);
   goog.dom.appendChild(annotator.element, this.element);
   this._textarea.decorate(goog.dom.query('.annotorious-editor-text', this.element)[0]);
-  
-  annotorious.dom.makeHResizable(this.element, function() {
-    self._textarea.resize();
-  });
+  annotorious.dom.makeHResizable(this.element, function() { self._textarea.resize(); });
 }
 
 /**
@@ -78,7 +76,7 @@ annotorious.editor.Editor = function(annotator) {
  * a DOM element.
  * @param {string | Function} field the field
  */
-annotorious.editor.Editor.prototype.addField = function(field) {
+annotorious.Editor.prototype.addField = function(field) {
   var fieldEl = goog.dom.createDom('div', 'annotorious-editor-field');
   
   if (goog.isString(field))  {
@@ -94,9 +92,9 @@ annotorious.editor.Editor.prototype.addField = function(field) {
 
 /**
  * Opens the edit form with an annotation.
- * @param {annotorious.annotation.Annotation=} opt_annotation the annotation to edit (or undefined)
+ * @param {annotorious.Annotation=} opt_annotation the annotation to edit (or undefined)
  */
-annotorious.editor.Editor.prototype.open = function(opt_annotation) {
+annotorious.Editor.prototype.open = function(opt_annotation) {
   this._original_annotation = opt_annotation;
   this._current_annotation = opt_annotation;
 
@@ -121,7 +119,7 @@ annotorious.editor.Editor.prototype.open = function(opt_annotation) {
 /**
  * Closes the editor.
  */
-annotorious.editor.Editor.prototype.close = function() {
+annotorious.Editor.prototype.close = function() {
   goog.style.showElement(this.element, false);
   this._textarea.setValue('');
 }
@@ -130,15 +128,15 @@ annotorious.editor.Editor.prototype.close = function() {
  * Sets the position (i.e. CSS left/top value) of the editor element.
  * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  */
-annotorious.editor.Editor.prototype.setPosition = function(xy) {
+annotorious.Editor.prototype.setPosition = function(xy) {
   goog.style.setPosition(this.element, xy.x, xy.y);
 }
 
 /**
  * Returns the annotation that is the current state of the editor.
- * @return {annotorious.annotation.Annotation} the annotation
+ * @return {annotorious.Annotation} the annotation
  */
-annotorious.editor.Editor.prototype.getAnnotation = function() {
+annotorious.Editor.prototype.getAnnotation = function() {
   var sanitized = goog.string.html.htmlSanitize(this._textarea.getValue(), function(url) {
     return url;
   });
@@ -147,12 +145,12 @@ annotorious.editor.Editor.prototype.getAnnotation = function() {
     this._current_annotation.text = sanitized;
   } else {
     this._current_annotation = 
-      new annotorious.annotation.Annotation(this._item.src, sanitized, this._annotator.getActiveSelector().getShape());  
+      new annotorious.Annotation(this._item.src, sanitized, this._annotator.getActiveSelector().getShape());  
   }
 
   return this._current_annotation;
 }
 
 /** API exports **/
-annotorious.editor.Editor.prototype['addField'] = annotorious.editor.Editor.prototype.addField;
-annotorious.editor.Editor.prototype['getAnnotation'] = annotorious.editor.Editor.prototype.getAnnotation;
+annotorious.Editor.prototype['addField'] = annotorious.Editor.prototype.addField;
+annotorious.Editor.prototype['getAnnotation'] = annotorious.Editor.prototype.getAnnotation;

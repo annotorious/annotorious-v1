@@ -1,9 +1,7 @@
-goog.provide('annotorious.modules.openlayers.OpenLayersAnnotator');
+goog.provide('annotorious.mediatypes.openlayers.OpenLayersAnnotator');
 
-goog.require('goog.dom');
-goog.require('goog.style');
 goog.require('annotorious.templates.openlayers');
-goog.require('annotorious.modules.openlayers.Viewer');
+goog.require('annotorious.mediatypes.openlayers.Viewer');
 
 /**
  * The OpenLayersAnnotator is responsible for handling annotation functionality
@@ -11,7 +9,7 @@ goog.require('annotorious.modules.openlayers.Viewer');
  * @param {OpenLayers.Map} map the OpenLayers map
  * @constructor
  */
-annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   /** @private **/
   this._map = map;
   
@@ -36,10 +34,10 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   goog.dom.appendChild(this.element, this._secondaryHint);
   
   /** @private **/
-  this.popup = new annotorious.viewer.Popup(this);
+  this.popup = new annotorious.Popup(this);
 
   /** @private **/
-  this._viewer = new annotorious.modules.openlayers.Viewer(map, this);
+  this._viewer = new annotorious.mediatypes.openlayers.Viewer(map, this);
 
   /** @private **/
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
@@ -56,7 +54,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   this._stop_selection_callback = undefined;
 
   /** @private **/
-  this.editor = new annotorious.editor.Editor(this);
+  this.editor = new annotorious.Editor(this);
   goog.style.setStyle(this.editor.element, 'z-index', 10000);
 
   var self = this;  
@@ -91,15 +89,15 @@ annotorious.modules.openlayers.OpenLayersAnnotator = function(map) {
   });
 }
 
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.showSelectionWidget = function() {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.showSelectionWidget = function() {
   // Does not have any effect at the moment
 }
 
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.hideSelectionWidget = function() {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.hideSelectionWidget = function() {
   // Does not have any effect at the moment
 }
 
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.activateSelector = function(callback) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.activateSelector = function(callback) {
   goog.style.setStyle(this._editCanvas, 'pointer-events', 'auto');
 
   var self = this;
@@ -118,7 +116,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.activateSelector = 
  * Standard Annotator method: editAnnotation
  * @suppress {checkTypes}
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.editAnnotation = function(annotation) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.editAnnotation = function(annotation) {
   // Step 1 - remove from viewer
   this._viewer.removeAnnotation(annotation);
 
@@ -147,35 +145,35 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.editAnnotation = fu
 /**
  * Standard Annotator method: addAnnotation
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.addAnnotation = function(annotation) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.addAnnotation = function(annotation) {
   this._viewer.addAnnotation(annotation);
 }
 
 /**
  * Standard Annotator method: addHandler
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.addHandler = function(type, handler) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.addHandler = function(type, handler) {
   this._eventBroker.addHandler(type, handler);  
 }
 
 /**
  * Standard Annotator method: addSelector
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.addSelector = function(selector) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.addSelector = function(selector) {
 
 }
 
 /**
  * Standard Annotator method: fireEvent
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.fireEvent = function(type, event) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.fireEvent = function(type, event) {
   return this._eventBroker.fireEvent(type, event);
 }
 
 /**
  * Standard Annotator method: fromItemCoordinates
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
   var pxCoords = this._map.getViewPortPxFromLonLat(new OpenLayers.LonLat(itemCoords.x, itemCoords.y));
   return { x: pxCoords.x, y: pxCoords.y };
 }
@@ -183,28 +181,28 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.fromItemCoordinates
 /**
  * Standard Annotator method: getActiveSelector
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.getActiveSelector = function() {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getActiveSelector = function() {
   return this._selector;
 }
 
 /**
  * Standard Annotator method: getAnnotations
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.getAnnotations = function() {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getAnnotations = function() {
 
 }
 
 /**
  * Standard Annotator method: getAvailableSelectors
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.getAvailableSelectors = function() {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getAvailableSelectors = function() {
 
 }
 
 /**
  * Standard Annotator method: getItem
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.getItem = function() {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getItem = function() {
   // TODO implement something decent!
   return {src: "map://openlayers/something"};
 }
@@ -212,36 +210,36 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.getItem = function(
 /**
  * Standard Annotator method: highlightAnnotation
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.highlightAnnotation = function(annotation) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.highlightAnnotation = function(annotation) {
   this._viewer.highlightAnnotation(annotation);
 }
 
 /**
  * Standard Annotator method: removeAnnotation
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.removeAnnotation = function(annotation) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.removeAnnotation = function(annotation) {
   this._viewer.removeAnnotation(annotation);
 }
 
 /**
  * Standard Annotator method: removeHandler
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.removeHandler = function(type, handler) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.removeHandler = function(type, handler) {
   this._eventBroker.removeHandler(type, handler);
 }
 
 /**
  * Standard Annotator method: setActiveSelector
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.setActiveSelector = function(selector) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.setActiveSelector = function(selector) {
 
 }
 
 /**
  * Standard Annotator method: stopSelection
- * @param {annotorious.annotation.Annotation=} original_annotation the original annotation being edited (if any)
+ * @param {annotorious.Annotation=} original_annotation the original annotation being edited (if any)
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.stopSelection = function(original_annotation) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.stopSelection = function(original_annotation) {
    goog.style.showElement(this._editCanvas, false);
    if (this._stop_selection_callback) {
      this._stop_selection_callback();
@@ -258,7 +256,7 @@ annotorious.modules.openlayers.OpenLayersAnnotator.prototype.stopSelection = fun
 /**
  * Standard Annotator method: toItemCoordinates
  */
-annotorious.modules.openlayers.OpenLayersAnnotator.prototype.toItemCoordinates = function(xy) {
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.toItemCoordinates = function(xy) {
   var itemCoords = this._map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x, xy.y));
   return { x: itemCoords.lon, y: itemCoords.lat };
 }
