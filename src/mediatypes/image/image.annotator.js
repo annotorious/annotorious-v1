@@ -72,7 +72,8 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
   
   this._viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:img_bounds.width, height:img_bounds.height });
-  goog.dom.classes.add(this._viewCanvas, 'annotorious-item-unfocus');
+  if (annotorious.events.ui.hasMouse)
+    goog.dom.classes.add(this._viewCanvas, 'annotorious-item-unfocus');
   goog.dom.appendChild(this.element, this._viewCanvas);   
 
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
@@ -97,21 +98,24 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
   this._hint = new annotorious.Hint(this, this.element);
   
   var self = this;
-  goog.events.listen(this.element, annotorious.events.ui.EventType.OVER, function(event) {
-    var relatedTarget = event.relatedTarget;
-    if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
-      self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
-      goog.dom.classes.addRemove(self._viewCanvas, 'annotorious-item-unfocus', 'annotorious-item-focus');
-    }
-  });
+
+  if (annotorious.events.ui.hasMouse) {
+    goog.events.listen(this.element, annotorious.events.ui.EventType.OVER, function(event) {
+      var relatedTarget = event.relatedTarget;
+      if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
+        self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
+        goog.dom.classes.addRemove(self._viewCanvas, 'annotorious-item-unfocus', 'annotorious-item-focus');
+      }
+    });
   
-  goog.events.listen(this.element, annotorious.events.ui.EventType.OUT, function(event) {
-    var relatedTarget = event.relatedTarget;
-    if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
-      self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
-      goog.dom.classes.addRemove(self._viewCanvas, 'annotorious-item-focus', 'annotorious-item-unfocus');
-    }
-  });
+    goog.events.listen(this.element, annotorious.events.ui.EventType.OUT, function(event) {
+      var relatedTarget = event.relatedTarget;
+      if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
+        self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
+        goog.dom.classes.addRemove(self._viewCanvas, 'annotorious-item-focus', 'annotorious-item-unfocus');
+      }
+    });
+  }
 
   var activeCanvas = (annotorious.events.ui.hasTouch) ? this._editCanvas : this._viewCanvas;
   goog.events.listen(activeCanvas, annotorious.events.ui.EventType.DOWN, function(event) {
