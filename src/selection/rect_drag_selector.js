@@ -88,12 +88,11 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
         { mouseEvent: event, shape: shape, viewportBounds: self.getViewportBounds() }); 
     } else {
       self._annotator.fireEvent(annotorious.events.EventType.SELECTION_CANCELED);
-      if (annotorious.events.ui.hasTouch) {
-        // In touch mode, we use this to "relay" the selection event
-        var annotations = self._annotator.getAnnotationsAt(points.x, points.y);
-        if (annotations.length > 0)
-          self._annotator.highlightAnnotation(annotations[0]);
-      }
+
+      // On cancel, we "relay" the selection event to the annotator
+      var annotations = self._annotator.getAnnotationsAt(points.x, points.y);
+      if (annotations.length > 0)
+        self._annotator.highlightAnnotation(annotations[0]);
     }
   });
 }
