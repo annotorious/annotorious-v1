@@ -40,7 +40,7 @@ annotorious.mediatypes.image.Viewer = function(canvas, popup, annotator) {
   this._keepHighlighted = false;
 
   var self = this; 
-  goog.events.listen(this._canvas, goog.events.EventType.MOUSEMOVE, function(event) {
+  goog.events.listen(this._canvas, annotorious.events.ui.EventType.MOVE, function(event) {
     if (self._eventsEnabled) {
       self._onMouseMove(event);
     } else {
