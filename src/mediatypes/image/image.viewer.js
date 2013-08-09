@@ -151,6 +151,7 @@ annotorious.mediatypes.image.Viewer.prototype.highlightAnnotation = function(opt
     this._popup.startHideTimer();
     
   this._redraw();
+  this._eventsEnabled = true;
 }
 
 /**
@@ -210,7 +211,7 @@ annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function(event) {
 
   var self = this;
   if (topAnnotation) {
-    this._keepHighlighted = false;
+    this._keepHighlighted = topAnnotation == this._currentAnnotation;
 
     if (!this._currentAnnotation) {
       // Mouse moved into annotation from empty space - highlight immediately
