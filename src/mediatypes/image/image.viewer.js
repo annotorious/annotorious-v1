@@ -195,7 +195,9 @@ annotorious.mediatypes.image.Viewer.prototype.getAnnotationsAt = function(px, py
   });
 
   goog.array.sort(intersectedAnnotations, function(a, b) {
-    return  annotorious.shape.getSize(a.shapes[0]) - annotorious.shape.getSize(b.shapes[0]);
+    var shape_a = self._shapes[annotorious.shape.hashCode(a.shapes[0])];
+    var shape_b = self._shapes[annotorious.shape.hashCode(b.shapes[0])];
+    return  annotorious.shape.getSize(shape_a) - annotorious.shape.getSize(shape_b);
   });
   
   return intersectedAnnotations;
@@ -211,7 +213,7 @@ annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function(event) {
 
   var self = this;
   if (topAnnotation) {
-    this._keepHighlighted = topAnnotation == this._currentAnnotation;
+    this._keepHighlighted = this._keepHighlighted && (topAnnotation == this._currentAnnotation);
 
     if (!this._currentAnnotation) {
       // Mouse moved into annotation from empty space - highlight immediately
