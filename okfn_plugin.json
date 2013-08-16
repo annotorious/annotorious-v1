@@ -5,19 +5,19 @@
     "goog.dom.ASSUME_STANDARDS_MODE": true
   },
   "inputs": [
-    "src/humanEventTypes.js",
-    "src/geometry/point.js",
-    "src/geometry/polygon.js",
-    "src/geometry/rectangle.js",
-    "src/geometry/shape.js",
-    "src/modules/image/image_annotator.js",
-    "src/modules/image/image_viewer.js",
+    "src/shape/point.js",
+    "src/shape/polygon.js",
+    "src/shape/rectangle.js",
+    "src/shape/shape.js",
+    "src/mediatypes/image/image.annotator.js",
+    "src/mediatypes/image/image.viewer.js",
     "src/okfn/okfn_image_plugin.js",
     "src/okfn/okfn_popup.js",
     "src/selection/rect_drag_selector.js",
     "src/annotation.js",
     "src/dom.js",
     "src/events.js",
+    "src/events.ui.js",
     "src/hint.js",
 
     "templates/core_elements.soy",
@@ -27,9 +27,13 @@
     "."
   ],
   "externs": [
-    "externs/api.js",
-    "externs/okfn_annotator.js"
+    "externs/api.externs.js",
+    "externs/okfn_annotator.externs.js",
+    "//json.js",
+    "//webkit_console.js"
   ],
-  "mode": "ADVANCED", // "ADVANCED"
-  "level": "DEFAULT" // "VERBOSE"
+  "mode": "ADVANCED",      // "RAW" or "ADVANCED"
+  "level": "DEFAULT",      // "DEFAULT" or "VERBOSE"
+  "pretty-print": false,
+  "debug": false
 }

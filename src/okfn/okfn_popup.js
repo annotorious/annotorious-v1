@@ -1,4 +1,5 @@
-var humanEvents = annotorious.humanEvents;
+// var humanEvents = annotorious.events.ui.EventType;
+
 goog.provide('annotorious.okfn.Popup');
 
 goog.require('goog.array');
@@ -151,8 +152,9 @@ annotorious.okfn.Popup.prototype.show = function(annotation, xy) {
 
 /**
  * Set the position of the popup.
- * @param {annotorious.geom.Point} xy the viewport coordinate (relative to the image)
+ * @param {number} x the viewport X coordinate (relative to the image)
+ * @param {number} y the viewport Y coordinate (relative to the image)
  */
 annotorious.okfn.Popup.prototype.setPosition = function(x, y) {
-  goog.style.setPosition(this._okfnAnnotator.viewer.element[0], xy.x, xy.y);  
+  goog.style.setPosition(this._okfnAnnotator.viewer.element[0], x, y);  
 }

@@ -1,4 +1,4 @@
-var humanEvents = annotorious.humanEvents;
+var humanEvents = annotorious.events.ui.EventType;
 
 goog.provide('annotorious.okfn.ImagePlugin');
 
@@ -14,7 +14,7 @@ goog.require('goog.style');
 
 /**
  * Implementation of the Yuma image plugin for OKFN Annotator.
- * @param {element} image the image to be annotated
+ * @param {Element} image the image to be annotated
  * @param {Object} okfnAnnotator reference to the OKFN Annotator instance
  * @constructor
  */
@@ -38,19 +38,19 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   var editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:image.width, height:image.height });
     
-  if (!annotorious.humanEvents.hasTouch) {
+  if (!annotorious.events.ui.hasTouch) {
     goog.style.showElement(editCanvas, false);
   }
   
   goog.dom.appendChild(annotationLayer, editCanvas);  
 
-  var viewer = new annotorious.modules.image.Viewer(viewCanvas, popup, eventBroker);
+  var viewer = new annotorious.mediatypes.image.Viewer(viewCanvas, popup, eventBroker);
 
   var selector = new annotorious.plugins.selection.RectDragSelector();
   selector.init(editCanvas, eventBroker, viewer);
 
     
-  var hint = new annotorious.hint.Hint(eventBroker, annotationLayer);
+  var hint = new annotorious.Hint(eventBroker, annotationLayer);
   
   // TODO clean up this mess
   eventBroker.toItemCoordinates = function(coords) {
@@ -144,8 +144,8 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
       eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
   });
  
-  goog.events.listen(( (annotorious.humanEvents.hasTouch) ? editCanvas : viewCanvas ), humanEvents.DOWN, function(event) {
-    var points = annotorious.events.sanitizeCoordinates(event, viewCanvas);
+  goog.events.listen(( (annotorious.events.ui.hasTouch) ? editCanvas : viewCanvas ), humanEvents.DOWN, function(event) {
+    var points = annotorious.events.ui.sanitizeCoordinates(event, viewCanvas);
 
     event.preventDefault();
     goog.style.showElement(editCanvas, true);
@@ -179,7 +179,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
 
   eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
-    if (!annotorious.humanEvents.hasTouch) {
+    if (!annotorious.events.ui.hasTouch) {
       goog.style.showElement(editCanvas, false);
     }
     
@@ -232,7 +232,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   });
   
   okfnAnnotator.subscribe('annotationEditorHidden', function(editor) {
-    if (!annotorious.humanEvents.hasTouch) {
+    if (!annotorious.events.ui.hasTouch) {
       goog.style.showElement(editCanvas, false);
     }
     
