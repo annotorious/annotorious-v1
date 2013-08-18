@@ -155,13 +155,13 @@ annotorious.mediatypes.Module.prototype._initPlugin = function(plugin, annotator
 /**
  * @private
  */
-annotorious.mediatypes.Module.prototype._lazyLoad = function() {     
-  var self = this;
-  goog.array.forEach(this._itemsToLoad, function(item) {
-    if (annotorious.dom.isInViewport(item)) {
-      self._initAnnotator(item);
-    }
-  });
+annotorious.mediatypes.Module.prototype._lazyLoad = function() {
+  var item, i;
+  for (i=this._itemsToLoad.length; i>0; i--) {
+    item = this._itemsToLoad[i - 1];
+    if (annotorious.dom.isInViewport(item))
+      this._initAnnotator(item);
+  }
 }
 
 /**
