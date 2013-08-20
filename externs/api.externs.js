@@ -121,3 +121,19 @@ var SelectionEvent = {
 
 }
 
+/**
+ * Popup API
+ */
+var Popup = {
+
+  startHideTimer : function() {},
+
+  clearHideTimer : function() {},
+
+  show : function() {},
+
+  setPosition : function() {},
+
+  setAnnotation : function() {}
+ 
+}

@@ -4,16 +4,12 @@ goog.provide('annotorious.mediatypes.image.Viewer');
  * The image viewer - the central entity that manages annotations 
  * displayed for one image.
  * @param {Element} canvas the canvas element 
- * @param {annotorious.Popup} popup the popup to use in this viewer
  * @param {annotorious.mediatypes.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.mediatypes.image.Viewer = function(canvas, popup, annotator) {
+annotorious.mediatypes.image.Viewer = function(canvas, annotator) {
   /** @private **/
   this._canvas = canvas;
-
-  /** @private **/
-  this._popup = popup;
   
   /** @private **/
   this._annotator = annotator;
@@ -73,7 +69,7 @@ annotorious.mediatypes.image.Viewer = function(canvas, popup, annotator) {
       } else {
         if (self._currentAnnotation) {
           // Annotation under mouse is the same - just keep showing the popup
-          self._popup.clearHideTimer();
+          self._annotator.popup.clearHideTimer();
         }
       }
     } else {
@@ -148,7 +144,7 @@ annotorious.mediatypes.image.Viewer.prototype.highlightAnnotation = function(opt
   if (opt_annotation)
     this._keepHighlighted = true;
   else
-    this._popup.startHideTimer();
+    this._annotator.popup.startHideTimer();
     
   this._redraw();
   this._eventsEnabled = true;
@@ -224,13 +220,13 @@ annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function(event) {
     } else if (this._currentAnnotation != topAnnotation) {
       // Mouse changed from one annotation to another one
       this._eventsEnabled = false;
-      this._popup.startHideTimer();
+      this._annotator.popup.startHideTimer();
     }
   } else if (!this._keepHighlighted) {
     if (this._currentAnnotation) {
       // Mouse moved out of an annotation, into empty space  
       this._eventsEnabled = false;
-      this._popup.startHideTimer();
+      this._annotator.popup.startHideTimer();
     }
   }
 }
@@ -266,7 +262,7 @@ annotorious.mediatypes.image.Viewer.prototype._redraw = function() {
     var shape = this._shapes[annotorious.shape.hashCode(this._currentAnnotation.shapes[0])];
     this._draw(shape, true);
     var bbox = annotorious.shape.getBoundingRect(shape).geometry;
-    this._popup.show(this._currentAnnotation, new annotorious.shape.geom.Point(bbox.x, bbox.y + bbox.height + 5));
+    this._annotator.popup.show(this._currentAnnotation, new annotorious.shape.geom.Point(bbox.x, bbox.y + bbox.height + 5));
 
     // TODO Orientation check - what if the popup would be outside the viewport?
   }
