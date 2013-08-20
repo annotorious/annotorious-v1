@@ -132,7 +132,7 @@ annotorious.Popup.prototype.startHideTimer = function() {
         goog.style.setOpacity(self._buttons, 0.9);
         delete self._popupHideTimer;
       }
-    }, 300);
+    }, 150);
   }
 }
 
