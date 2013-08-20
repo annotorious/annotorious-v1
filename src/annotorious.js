@@ -117,7 +117,20 @@ annotorious.Annotorious.prototype.addHandler = function(type, handler) {
  */
 annotorious.Annotorious.prototype.addPlugin = function(plugin_name, opt_config_options) {
   try {
-    this._plugins.push(new window['annotorious']['plugin'][plugin_name](opt_config_options));  
+    var plugin = new window['annotorious']['plugin'][plugin_name](opt_config_options);
+
+    if (document.readyState == 'complete') {
+      // Document loaded -- init immediately
+      if (plugin.initPlugin)
+        plugin.initPlugin(this);
+        
+      goog.array.forEach(this._modules, function(module) {
+        module.addPlugin(plugin);
+      });      
+    } else {
+      // Document not loaded yet -- defer init
+      this._plugins.push(plugin);  
+    }
   } catch (error) {
     console.log('Could not load plugin: ' + plugin_name);
   }
@@ -292,20 +305,6 @@ annotorious.Annotorious.prototype.reset = function(annotation) {
     module.destroy();
     module.init();
   });
-}
-
-/**
- * Adds a selector to a particular item.
- *
- * !! TEMPORARY !! 
- *
- * TODO selectors should be added to annotators directly, from within a plugin
- * which will make this method unecessary
- */
-annotorious.Annotorious.prototype.addSelector = function(item_url, selector) {
-  var module = this._getModuleForItemSrc(item_url);
-  if (module)
-    module.addSelector(item_url, selector);  
 }
 
 /**

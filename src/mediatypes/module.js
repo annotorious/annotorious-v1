@@ -306,22 +306,6 @@ annotorious.mediatypes.Module.prototype.addPlugin = function(plugin) {
 }
 
 /**
- * Adds a selector to an item managed by this module.
- *
- * !! TEMPORARY !! 
- *
- * TODO selectors should be added to annotators directly, from within a plugin
- * which will make this method unecessary
- */
-annotorious.mediatypes.Module.prototype.addSelector = function(item_url, selector) {
-  if (this.annotatesItem(item_url)) {
-    var annotator = this._annotators.get(item_url);
-    if (annotator)
-      annotator.addSelector(selector);
-  }
-}
-
-/**
  * Tests if this module is in charge of managing the item with the specified URL.
  * @param {string} item_url the URL of the item
  * @return {boolean} true if this module is in charge of the media

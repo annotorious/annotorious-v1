@@ -374,7 +374,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.removeHandler = function(t
  * Sets the active selector for this item to the specified selector.
  * @param {Object} selector the selector object
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.setActiveSelector = function(selector) {
+annotorious.mediatypes.image.ImageAnnotator.prototype.setCurrentSelector = function(selector) {
   this._currentSelector = goog.array.find(this._selectors, function(sel) {
     return sel.getName() == selector;
   });
@@ -426,5 +426,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.toItemCoordinates = functi
 }
 
 /** API exports **/
+annotorious.mediatypes.image.ImageAnnotator.prototype['addSelector'] = annotorious.mediatypes.image.ImageAnnotator.prototype.addSelector;
 annotorious.mediatypes.image.ImageAnnotator.prototype['fireEvent'] = annotorious.mediatypes.image.ImageAnnotator.prototype.fireEvent;
+annotorious.mediatypes.image.ImageAnnotator.prototype['setCurrentSelector'] = annotorious.mediatypes.image.ImageAnnotator.prototype.setCurrentSelector;
 annotorious.mediatypes.image.ImageAnnotator.prototype['toItemCoordinates'] = annotorious.mediatypes.image.ImageAnnotator.prototype.toItemCoordinates;

@@ -25,8 +25,5 @@ if (!window['annotorious'])
 if (!window['annotorious']['plugin'])
   window['annotorious']['plugin'] = {}
 
-/** !!! TEMPORARY **/
-annotorious.Annotorious.prototype['addSelector'] = annotorious.Annotorious.prototype.addSelector;
-
 /** @deprecated **/
 annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;
