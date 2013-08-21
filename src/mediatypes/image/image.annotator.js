@@ -126,9 +126,9 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
       goog.style.showElement(self._editCanvas, true);      
       self._currentSelector.startSelection(coords.x, coords.y);
     } else {
-      var annotations = self.getAnnotationsAt(coords.x, coords.y);
+      var annotations = self._viewer.getAnnotationsAt(coords.x, coords.y);
       if (annotations.length > 0)
-        self.highlightAnnotation(annotations[0]);
+        self._viewer.highlightAnnotation(annotations[0]);
     }
   });
 
