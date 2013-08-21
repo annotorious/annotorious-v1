@@ -8,7 +8,7 @@ Annotorious is an Open Source image annotation toolkit written in JavaScript. On
 Instructions on getting started using Annotorious on your own Web pages are [on the project Website](http://annotorious.github.com/getting-started.html) or
 [on the Wiki](annotorious/wiki/Getting-Started). Instructions on using it as a plugin to the
 [Annotator](http://okfnlabs.org/annotator/) Web annotation system are [here](http://annotorious.github.com/plug-outs/okfn-annotator.html).
-If you require professional support, or have special integration or feature requirements, you are welcome to [contact us directly](mailto:rainer.simon@ait.ac.at).
+If you require support, get in touch [via our Google Group](http://groups.google.com/d/forum/annotorious).
 
 ## Getting Involved
 
