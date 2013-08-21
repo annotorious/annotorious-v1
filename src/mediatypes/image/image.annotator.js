@@ -119,12 +119,16 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
 
   var activeCanvas = (annotorious.events.ui.hasTouch) ? this._editCanvas : this._viewCanvas;
   goog.events.listen(activeCanvas, annotorious.events.ui.EventType.DOWN, function(event) {
-    if (self._selectionEnabled) {
-      goog.style.showElement(self._editCanvas, true);
-      self._viewer.highlightAnnotation(undefined);
+    var coords = annotorious.events.ui.sanitizeCoordinates(event, activeCanvas);
+    self._viewer.highlightAnnotation(undefined);
 
-      var coords = annotorious.events.ui.sanitizeCoordinates(event, self._editCanvas);
+    if (self._selectionEnabled) {
+      goog.style.showElement(self._editCanvas, true);      
       self._currentSelector.startSelection(coords.x, coords.y);
+    } else {
+      var annotations = self.getAnnotationsAt(coords.x, coords.y);
+      if (annotations.length > 0)
+        self.highlightAnnotation(annotations[0]);
     }
   });
 
