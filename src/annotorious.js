@@ -317,6 +317,22 @@ annotorious.Annotorious.prototype.setActiveSelector = function(item_url, selecto
   if (module)
     module.setActiveSelector(item_url, selector);  
 }
+ 
+/**
+ * Sets system-wide properties. The 'props' object is a key/value hash and
+ * supports the following properties:
+ * 
+ * stroke: stroke color for annotation and selection shapes
+ * outline: outline color for annotation and selection shapes
+ * hi_stroke: stroke color for highlighted annotation shapes
+ * 
+ * @param {Object} props the properties object
+ */
+annotorious.Annotorious.prototype.setProperties = function(props) {
+  goog.array.forEach(this._modules, function(module) {
+    module.setProperties(props);
+  });  
+}
 
 /**
  * Enables (or disables) the ability to create new annotations on an annotatable item.

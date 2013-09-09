@@ -488,6 +488,16 @@ annotorious.mediatypes.Module.prototype.setActiveSelector = function(item_url, s
 }
 
 /**
+ * Sets the properties on this module.
+ * @param {Object} props the properties object
+ */
+annotorious.mediatypes.Module.prototype.setProperties = function(props) {
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
+    annotator.setProperties(props);
+  });
+}
+
+/**
  * Shows existing annotations on all, or a specific item.
  * @param {string} opt_item_url the URL of the item
  */

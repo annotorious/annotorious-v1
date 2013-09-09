@@ -388,6 +388,18 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setCurrentSelector = funct
 }
 
 /**
+ * Set the properties on this annotator. (Currently, we only have properties
+ * affecting the selectors).
+ * @param {Object} props the properties object
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function(props) {
+  goog.array.forEach(this._selectors, function(selector) {
+    selector.setProperties(props);
+  });
+  this._viewer.redraw();
+}
+
+/**
  * Shows annotations (and all other Annotorious elements).
  */
 annotorious.mediatypes.image.ImageAnnotator.prototype.showAnnotations = function() {

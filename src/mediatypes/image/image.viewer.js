@@ -60,7 +60,7 @@ annotorious.mediatypes.image.Viewer = function(canvas, annotator) {
           
       if (previousAnnotation != self._currentAnnotation) {
         // Annotation under mouse has changed in the mean time - redraw
-        self._redraw();
+        self.redraw();
         self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATION,
           { annotation: previousAnnotation, mouseEvent: self._cachedMouseEvent });
   
@@ -75,7 +75,7 @@ annotorious.mediatypes.image.Viewer = function(canvas, annotator) {
     } else {
       // Popup is hiding and mouse events are enabled? Must be because 
       // the mouse is outside the annotatable media! Redraw.
-      self._redraw();
+      self.redraw();
     }
   });
 }
@@ -109,7 +109,7 @@ annotorious.mediatypes.image.Viewer.prototype.addAnnotation = function(annotatio
     this._shapes[annotorious.shape.hashCode(annotation.shapes[0])] = viewportShape;
   }
 
-  this._redraw();
+  this.redraw();
 }
 
 /**
@@ -122,7 +122,7 @@ annotorious.mediatypes.image.Viewer.prototype.removeAnnotation = function(annota
    
   goog.array.remove(this._annotations, annotation);
   delete this._shapes[annotorious.shape.hashCode(annotation.shapes[0])];
-  this._redraw();
+  this.redraw();
 }
 
 /**
@@ -146,7 +146,7 @@ annotorious.mediatypes.image.Viewer.prototype.highlightAnnotation = function(opt
   else
     this._annotator.popup.startHideTimer();
     
-  this._redraw();
+  this.redraw();
   this._eventsEnabled = true;
 }
 
@@ -214,7 +214,7 @@ annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function(event) {
     if (!this._currentAnnotation) {
       // Mouse moved into annotation from empty space - highlight immediately
       this._currentAnnotation = topAnnotation;
-      this._redraw();
+      this.redraw();
       this._annotator.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATION,
         { annotation: this._currentAnnotation, mouseEvent: event });   
     } else if (this._currentAnnotation != topAnnotation) {
@@ -250,7 +250,7 @@ annotorious.mediatypes.image.Viewer.prototype._draw = function(shape, highlight)
 /**
  * @private
  */
-annotorious.mediatypes.image.Viewer.prototype._redraw = function() {
+annotorious.mediatypes.image.Viewer.prototype.redraw = function() {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
   var self = this;
