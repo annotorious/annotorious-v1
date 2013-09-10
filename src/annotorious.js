@@ -321,10 +321,12 @@ annotorious.Annotorious.prototype.setActiveSelector = function(item_url, selecto
 /**
  * Sets system-wide properties. The 'props' object is a key/value hash and
  * supports the following properties:
- * 
+ *
+ * outline: outline color for annotation and selection shapes 
  * stroke: stroke color for annotation and selection shapes
- * outline: outline color for annotation and selection shapes
+ * fill: fill color for annotation and selection shapes
  * hi_stroke: stroke color for highlighted annotation shapes
+ * hi_fill: fill color for highlighted annotation shapes
  * 
  * @param {Object} props the properties object
  */

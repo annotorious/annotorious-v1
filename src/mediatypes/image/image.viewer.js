@@ -255,7 +255,8 @@ annotorious.mediatypes.image.Viewer.prototype.redraw = function() {
 
   var self = this;
   goog.array.forEach(this._annotations, function(annotation) {
-    self._draw(self._shapes[annotorious.shape.hashCode(annotation.shapes[0])]);
+	if (annotation != self._currentAnnotation)
+      self._draw(self._shapes[annotorious.shape.hashCode(annotation.shapes[0])]);
   });
     
   if (this._currentAnnotation) {
