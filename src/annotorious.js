@@ -94,6 +94,7 @@ annotorious.Annotorious.prototype.activateSelector = function(opt_item_url_or_ca
  * @param {annotorious.Annotation} opt_replace optionally, an existing annotation to replace
  */
 annotorious.Annotorious.prototype.addAnnotation = function(annotation, opt_replace) {
+  annotorious.Annotation.normalizePath(annotation);
   var module = this._getModuleForItemSrc(annotation.src); 
   if (module)
     module.addAnnotation(annotation, opt_replace);

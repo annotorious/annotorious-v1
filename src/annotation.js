@@ -15,3 +15,14 @@ annotorious.Annotation = function(src, text, shape) {
   this.shapes = [ shape ];
   this['context'] = document.URL; // Prevents dead code removal
 }
+
+/**
+ * @param {annotorious.Annotation} annotation
+ */
+annotorious.Annotation.normalizePath = function(annotation) {
+  if (annotation.src.indexOf('http://') != 0) {
+	var link = document.createElement('a');
+    link.href = annotation.src;
+    annotation.src = link.protocol + '//' + link.host + link.pathname;
+  }
+}
