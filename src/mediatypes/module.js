@@ -46,9 +46,12 @@ annotorious.mediatypes.Module.prototype._initFields = function(opt_preload_fn) {
 
   /** @private **/
   this._cachedGlobalSettings = { hide_selection_widget: false, hide_annotations: false };
-
+  
   /** @private **/
   this._cachedItemSettings = new goog.structs.Map();
+
+  /** @private **/
+  this._cachedProperties = undefined;
 
   /** @private **/
   this._preLoad = opt_preload_fn;
@@ -74,8 +77,8 @@ annotorious.mediatypes.Module.prototype._getSettings = function(item_url) {
  * @private
  */
 annotorious.mediatypes.Module.prototype._initAnnotator = function(item) {  
-  var self = this;
-  var item_src = this.getItemURL(item);
+  var self = this,
+      item_src = this.getItemURL(item);
 
   // Guard condition: don't make items annotatable if they already are  
   if (this._annotators.get(item_src))
@@ -121,7 +124,7 @@ annotorious.mediatypes.Module.prototype._initAnnotator = function(item) {
     goog.array.remove(self._bufferedForRemoval, annotation);
   });
 
-  // Apply cached settings
+  // Apply cached settings & properties
   var settings = this._cachedItemSettings.get(item_src);
   if (settings) {
     if (settings.hide_selection_widget)
@@ -138,6 +141,8 @@ annotorious.mediatypes.Module.prototype._initAnnotator = function(item) {
     if (this._cachedGlobalSettings.hide_annotations)
       annotator.hideAnnotations();
   }
+  if (this._cachedProperties)
+    annotator.setProperties(this._cachedProperties);
   
   // Update _annotators and _itemsToLoad lists
   this._annotators.set(item_src, annotator);
@@ -485,6 +490,18 @@ annotorious.mediatypes.Module.prototype.setActiveSelector = function(item_url, s
     if (annotator)
       annotator.setActiveSelector(selector);
   }
+}
+
+/**
+ * Sets the properties on this module.
+ * @param {Object} props the properties object
+ */
+annotorious.mediatypes.Module.prototype.setProperties = function(props) {
+  // TODO these should merge with the existing props rather than replace them!
+  this._cachedProperties = props;
+  goog.array.forEach(this._annotators.getValues(), function(annotator) {
+    annotator.setProperties(props);
+  });
 }
 
 /**

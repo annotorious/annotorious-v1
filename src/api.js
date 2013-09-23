@@ -15,6 +15,7 @@ annotorious.Annotorious.prototype['removeAll'] = annotorious.Annotorious.prototy
 annotorious.Annotorious.prototype['removeAnnotation'] = annotorious.Annotorious.prototype.removeAnnotation;
 annotorious.Annotorious.prototype['reset'] = annotorious.Annotorious.prototype.reset;
 annotorious.Annotorious.prototype['setActiveSelector'] = annotorious.Annotorious.prototype.setActiveSelector;
+annotorious.Annotorious.prototype['setProperties'] = annotorious.Annotorious.prototype.setProperties;
 annotorious.Annotorious.prototype['showAnnotations'] = annotorious.Annotorious.prototype.showAnnotations;
 annotorious.Annotorious.prototype['showSelectionWidget'] = annotorious.Annotorious.prototype.showSelectionWidget;
 

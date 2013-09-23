@@ -17,6 +17,21 @@ annotorious.plugins.selection.RectDragSelector = function() { }
  */
 annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator) {
   /** @private **/
+  this._OUTLINE = '#000000';
+
+  /** @private **/
+  this._STROKE = '#ffffff';
+  
+  /** @private **/
+  this._FILL = undefined;
+  
+  /** @private **/
+  this._HI_STROKE = '#fff000';
+  
+  /** @private **/
+  this._HI_FILL = undefined;
+	
+  /** @private **/
   this._canvas = canvas;
   
   /** @private **/
@@ -60,9 +75,9 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
       var width = self._opposite.x - self._anchor.x;
       var height = self._opposite.y - self._anchor.y;
       
-      self._g2d.strokeStyle = '#000000';
+      self._g2d.strokeStyle = self._OUTLINE;
       self._g2d.strokeRect(self._anchor.x + 0.5, self._anchor.y + 0.5, width, height);
-      self._g2d.strokeStyle = '#ffffff';
+      self._g2d.strokeStyle = self._STROKE;
 
       if (width > 0 && height > 0) {
         self._g2d.strokeRect(self._anchor.x + 1.5, self._anchor.y + 1.5, width - 2, height - 2);
@@ -130,6 +145,26 @@ annotorious.plugins.selection.RectDragSelector.prototype.getName = function() {
  */
 annotorious.plugins.selection.RectDragSelector.prototype.getSupportedShapeType = function() {
   return annotorious.shape.ShapeType.RECTANGLE;
+}
+
+/**
+ * Sets the properties on this selector.
+ */
+annotorious.plugins.selection.RectDragSelector.prototype.setProperties = function(props) {  
+  if (props['outline'])
+    this._OUTLINE = props['outline'];
+
+  if (props['stroke'])
+    this._STROKE = props['stroke'];
+ 
+  if (props['fill'])
+    this._FILL = props['fill'];  
+    
+  if (props['hi_stroke'])
+    this._HI_STROKE = props['hi_stroke'];
+
+  if (props['hi_fill'])
+    this._HI_FILL = props['hi_fill'];
 }
 
 /**
@@ -220,21 +255,33 @@ annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = fun
  * @param {boolean=} highlight if true, shape will be drawn highlighted
  */
 annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2d, shape, highlight) {
+  var geom, stroke, fill;
+  
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
-    var color, lineWidth;
     if (highlight) {
-      color = '#fff000';
-      lineWidth = 1.2;
+      g2d.lineWidth = 1.2;
+      stroke = this._HI_STROKE;
+      fill = this._HI_FILL;
     } else {
-      color = '#ffffff';
-      lineWidth = 1;
+      g2d.lineWidth = 1;
+      stroke = this._STROKE;
+      fill = this._FILL;
     }
 
-    var geom = shape.geometry;
-    g2d.strokeStyle = '#000000';
-    g2d.lineWidth = lineWidth;
+    geom = shape.geometry;
+
+    // Outline
+    g2d.strokeStyle = this._OUTLINE;      
     g2d.strokeRect(geom.x + 0.5, geom.y + 0.5, geom.width + 1, geom.height + 1);
-    g2d.strokeStyle = color;
+
+    // Stroke
+    g2d.strokeStyle = stroke;
     g2d.strokeRect(geom.x + 1.5, geom.y + 1.5, geom.width - 1, geom.height - 1);
+ 
+    // Fill   
+    if (fill) {
+      g2d.fillStyle = fill;
+      g2d.fillRect(geom.x + 1.5, geom.y + 1.5, geom.width - 1, geom.height - 1);
+    }
   }
 }
