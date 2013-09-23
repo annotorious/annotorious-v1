@@ -86,3 +86,18 @@ annotorious.dom.makeHResizable = function(div, opt_callback) {
   };
 }
 
+/**
+ * A utility method that transforms a relative URL to an absolute URL.
+ * This function is safe to use with all URLs: if an absolute URL is passed
+ * as a parameter, it will remain unchanged.
+ * @param {String} url the URL
+ */
+annotorious.dom.toAbsoluteURL = function(url) {
+  if (url.indexOf('http://') == 0) {
+    return url;
+  } else {
+	var link = document.createElement('a');
+    link.href = url;
+    return link.protocol + '//' + link.host + link.pathname;
+  }
+}

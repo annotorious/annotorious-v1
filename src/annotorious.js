@@ -94,7 +94,9 @@ annotorious.Annotorious.prototype.activateSelector = function(opt_item_url_or_ca
  * @param {annotorious.Annotation} opt_replace optionally, an existing annotation to replace
  */
 annotorious.Annotorious.prototype.addAnnotation = function(annotation, opt_replace) {
-  annotorious.Annotation.normalizePath(annotation);
+  // Convert relative URLs to absolutes
+  annotation.src = annotorious.dom.toAbsoluteURL(annotation.src)
+  
   var module = this._getModuleForItemSrc(annotation.src); 
   if (module)
     module.addAnnotation(annotation, opt_replace);
