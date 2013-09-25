@@ -21,12 +21,16 @@
         anno.addAnnotation(annotation);
         
         anno.setProperties({
-		  outline: '#00f',
-		  stroke: '#ff0000', 
-		  fill: 'rgba(255, 0, 0, 0.3)',
-		  hi_stroke: '#00ff00',
-		  hi_fill: 'rgba(0, 255, 0, 0.3)'
-		})
+		      outline: '#00f',
+		      stroke: '#ff0000', 
+		      fill: 'rgba(255, 0, 0, 0.3)',
+		      hi_stroke: '#00ff00',
+		      hi_fill: 'rgba(0, 255, 0, 0.3)'
+		    });
+        
+        anno.hideSelectionWidget(document.getElementById('hallstatt').src);
+        anno.hideSelectionWidget('http://example.com/define-custom-urls-like-so');
+        anno.hideSelectionWidget(document.getElementById('hallstatt').map);
       }
     </script>
     <style>
@@ -132,7 +136,7 @@
       </p>
       <p style="clear:both;"></p>
       <div style="float:left; clear:both; text-align:center; margin:0px 20px 10px 0px;">
-        <img id="ptolemy" src="630px-Ptolemaic-Map.jpg" class="annotatable"/>
+        <img id="map" src="630px-Ptolemaic-Map.jpg" class="annotatable"/>
         <p class="image-caption">
           Ptolemaic Map, 16th century. Public Domain. Source:
           <a href="http://commons.wikimedia.org/wiki/File:PtolemaicMap.jpg">Wikimedia

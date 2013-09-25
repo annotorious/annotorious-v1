@@ -195,11 +195,11 @@ annotorious.mediatypes.Module.prototype._setAnnotationVisibility = function(opt_
     });
 
     // ...cache global settings...
-    this._cachedGlobalSettings.hide_annotations = visibility;
+    this._cachedGlobalSettings.hide_annotations = !visibility;
 
     // ...and update all cached item settings
     goog.array.forEach(this._cachedItemSettings.getValues(), function(settings) {
-      settings.hide_annotations = visibility;
+      settings.hide_annotations = !visibility;
     });
   }
 }
@@ -230,11 +230,11 @@ annotorious.mediatypes.Module.prototype._setSelectionWidgetVisibility = function
     });
 
     // ...cache global settings...
-    this._cachedGlobalSettings.hide_selection_widget = visibility;
+    this._cachedGlobalSettings.hide_selection_widget = !visibility;
 
     // ...and update all cached item settings
     goog.array.forEach(this._cachedItemSettings.getValues(), function(settings) {
-      settings.hide_selection_widget = visibility;
+      settings.hide_selection_widget = !visibility;
     });
   }
 }
