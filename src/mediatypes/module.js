@@ -68,7 +68,7 @@ annotorious.mediatypes.Module.prototype._getSettings = function(item_url) {
   var settings = this._cachedItemSettings.get(item_url);
   if (!settings) {
     settings = { hide_selection_widget: false, hide_annotations: false };
-    settings.set(item_url, settings);
+    this._cachedItemSettings.set(item_url, settings);
   }
   return settings;
 }
