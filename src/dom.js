@@ -93,7 +93,7 @@ annotorious.dom.makeHResizable = function(div, opt_callback) {
  * @param {String} url the URL
  */
 annotorious.dom.toAbsoluteURL = function(url) {
-  if (url.indexOf('http://') == 0) {
+  if (url.indexOf('://') > 0) {
     return url;
   } else {
 	var link = document.createElement('a');
