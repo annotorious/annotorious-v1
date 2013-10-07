@@ -18,7 +18,7 @@
     "//json.js",
     "//webkit_console.js"
   ],
-  "mode": "ADVANCED",      // "RAW" or "ADVANCED"
+  "mode": "RAW",      // "RAW" or "ADVANCED"
   "level": "DEFAULT",      // "DEFAULT" or "VERBOSE"
   "pretty-print": false,
   "debug": false
