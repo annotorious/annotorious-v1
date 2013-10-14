@@ -15,7 +15,7 @@ annotorious.plugins.selection.RectDragSelector = function() { }
  * @param {Element} canvas the canvas to draw on
  * @param {Object} annotator reference to the annotator
  */
-annotorious.plugins.selection.RectDragSelector.prototype.init = function(canvas, annotator) {
+annotorious.plugins.selection.RectDragSelector.prototype.init = function(annotator, canvas) {
   /** @private **/
   this._OUTLINE = '#000000';
 

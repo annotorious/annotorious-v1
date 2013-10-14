@@ -89,7 +89,7 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
     this.popup = new annotorious.Popup(this);
 
   var default_selector = new annotorious.plugins.selection.RectDragSelector();
-  default_selector.init(this._editCanvas, this); 
+  default_selector.init(this, this._editCanvas); 
   this._selectors.push(default_selector);
   this._currentSelector = default_selector;
 
