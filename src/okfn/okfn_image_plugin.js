@@ -44,7 +44,7 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   
   goog.dom.appendChild(annotationLayer, editCanvas);  
 
-  var viewer = new annotorious.mediatypes.image.Viewer(viewCanvas, popup, eventBroker);
+  var viewer = new annotorious.mediatypes.image.Viewer(viewCanvas, eventBroker);
 
   var selector = new annotorious.plugins.selection.RectDragSelector();
   selector.init(editCanvas, eventBroker, viewer);
@@ -68,6 +68,8 @@ annotorious.okfn.ImagePlugin = function(image, okfnAnnotator) {
   eventBroker.highlightAnnotation = function(annotation) {
     viewer.highlightAnnotation(annotation);
   }
+  
+  eventBroker.popup = popup; 
 
   /**
    * Returns the top z-index annotation based on x and y coordinates
