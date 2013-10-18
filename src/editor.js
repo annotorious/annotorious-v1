@@ -93,8 +93,9 @@ annotorious.Editor.prototype.addField = function(field) {
 /**
  * Opens the edit form with an annotation.
  * @param {annotorious.Annotation=} opt_annotation the annotation to edit (or undefined)
+ * @param {Object=} opt_event the event, if any 
  */
-annotorious.Editor.prototype.open = function(opt_annotation) {
+annotorious.Editor.prototype.open = function(opt_annotation, opt_event) {
   this._original_annotation = opt_annotation;
   this._current_annotation = opt_annotation;
 

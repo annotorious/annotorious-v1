@@ -15,18 +15,19 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   
   /** @private **/
   this._div = map.div;
-  var width = parseInt(goog.style.getComputedStyle(this._div, 'width'), 10);
-  var height = parseInt(goog.style.getComputedStyle(this._div, 'height'), 10);
   
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
   
   this.element = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(this.element, 'position', 'relative');
-  goog.style.setSize(this.element, width, height); 
-  goog.dom.replaceNode(this.element, this._div);
-  goog.dom.appendChild(this.element, this._div); 
-
+  console.log(this._div);
+  // console.log(getComputedStyle(this._div).getPropertyValue('width'));
+  console.log(this._div.currentStyle.width);
+  
+  goog.style.setStyle(this.element, 'width', this._div.style.width);
+  goog.style.setStyle(this.element, 'height', this._div.style.height);
+  
   /** @private **/
   this._secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
   goog.style.setStyle(this._secondaryHint, 'z-index', 9998);
@@ -41,10 +42,25 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
 
   /** @private **/
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
-    { width:width, height:height });
+    { width:'0', height:'0' });
   goog.style.showElement(this._editCanvas, false);
   goog.style.setStyle(this._editCanvas, 'z-index', 9999);
   goog.dom.appendChild(this.element, this._editCanvas);  
+  
+  var self = this,
+      updateCanvasSize = function() {
+        var width = parseInt(goog.style.getComputedStyle(self._div, 'width'), 10),
+            height = parseInt(goog.style.getComputedStyle(self._div, 'height'), 10);
+
+        // goog.style.setSize(self.element, width, height); 
+        goog.style.setSize(self._editCanvas, width, height);
+        self._editCanvas.width = width;
+        self._editCanvas.height = height;
+      };
+  
+  updateCanvasSize();
+  goog.dom.replaceNode(this.element, this._div);
+  goog.dom.appendChild(this.element, this._div); 
 
   /** @private **/
   this._selector = new annotorious.plugins.selection.RectDragSelector();
@@ -57,7 +73,11 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   this.editor = new annotorious.Editor(this);
   goog.style.setStyle(this.editor.element, 'z-index', 10000);
 
-  var self = this;  
+  if (window.addEventListener)
+    window.addEventListener('resize', updateCanvasSize, false);
+  else if (window.attachEvent) 
+    window.attachEvent('onresize', updateCanvasSize);  
+
   goog.events.listen(this.element, goog.events.EventType.MOUSEOVER, function(event) {
     var relatedTarget = event.relatedTarget;
     if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget))

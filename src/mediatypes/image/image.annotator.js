@@ -136,7 +136,7 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
     var bounds = event.viewportBounds;
     self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left + self._image.offsetLeft,
                                                             bounds.bottom + 4 + self._image.offsetTop));
-    self.editor.open();
+    self.editor.open(undefined, event);
   });
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
