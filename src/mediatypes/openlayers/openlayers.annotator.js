@@ -19,16 +19,18 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
   
-  this.element = goog.dom.createDom('div', 'annotorious-annotationlayer');
-  goog.style.setStyle(this.element, 'position', 'relative');  
-  goog.style.setStyle(this.element, 'width', this._div.style.width);
-  goog.style.setStyle(this.element, 'height', this._div.style.height);
+  this.element = map.div; // goog.dom.createDom('div', 'annotorious-annotationlayer');
+  goog.style.setStyle(this.element, 'position', 'relative');
+  // goog.style.setStyle(this.element, 'position', 'relative');  
+  // goog.style.setStyle(this.element, 'width', this._div.style.width);
+  // goog.style.setStyle(this.element, 'height', this._div.style.height);
   
-  /** @private **/
+  /** @private 
   this._secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
   goog.style.setStyle(this._secondaryHint, 'z-index', 9998);
   goog.style.setOpacity(this._secondaryHint, 0); 
   goog.dom.appendChild(this.element, this._secondaryHint);
+  **/
   
   /** @private **/
   this.popup = new annotorious.Popup(this);
@@ -40,7 +42,10 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:'0', height:'0' });
   goog.style.showElement(this._editCanvas, false);
+  goog.style.setStyle(this._editCanvas, 'position', 'absolute');
+  goog.style.setStyle(this._editCanvas, 'top', '0px');
   goog.style.setStyle(this._editCanvas, 'z-index', 9999);
+
   goog.dom.appendChild(this.element, this._editCanvas);  
   
   var self = this,
@@ -55,8 +60,8 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
       };
   
   updateCanvasSize();
-  goog.dom.replaceNode(this.element, this._div);
-  goog.dom.appendChild(this.element, this._div); 
+//   goog.dom.replaceNode(this.element, this._div);
+//   goog.dom.appendChild(this.element, this._div); 
 
   /** @private **/
   this._selector = new annotorious.plugins.selection.RectDragSelector();
@@ -118,9 +123,9 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.activateSelector
 
   var self = this;
   goog.style.showElement(this._editCanvas, true);
-  goog.style.setOpacity(this._secondaryHint, 0.8); 
+  // goog.style.setOpacity(this._secondaryHint, 0.8); 
   window.setTimeout(function() {
-    goog.style.setOpacity(self._secondaryHint, 0);
+    // goog.style.setOpacity(self._secondaryHint, 0);
   }, 2000);
 
   if (callback)
