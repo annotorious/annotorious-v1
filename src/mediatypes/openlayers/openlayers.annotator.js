@@ -14,23 +14,25 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   this._map = map;
   
   /** @private **/
-  this._div = map.div;
+  this.element = map.div;
+  
+  // We need to constrain the dimension of the canvas by the size of the map.
+  // Therefore the map enclosing DIV needs to have position 'absolute' or
+  // 'relative' set!
+  var pos = goog.style.getStyle(this.element, 'position');
+  if (pos != 'absolute' && pos != 'relative')
+    goog.style.setStyle(this.element, 'position', 'relative');
   
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
   
-  this.element = map.div; // goog.dom.createDom('div', 'annotorious-annotationlayer');
-  goog.style.setStyle(this.element, 'position', 'relative');
-  // goog.style.setStyle(this.element, 'position', 'relative');  
-  // goog.style.setStyle(this.element, 'width', this._div.style.width);
-  // goog.style.setStyle(this.element, 'height', this._div.style.height);
-  
+  // TODO re-enable secondary hint
   /** @private 
   this._secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
   goog.style.setStyle(this._secondaryHint, 'z-index', 9998);
   goog.style.setOpacity(this._secondaryHint, 0); 
   goog.dom.appendChild(this.element, this._secondaryHint);
-  **/
+  */
   
   /** @private **/
   this.popup = new annotorious.Popup(this);
@@ -50,18 +52,15 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   
   var self = this,
       updateCanvasSize = function() {
-        var width = parseInt(goog.style.getComputedStyle(self._div, 'width'), 10),
-            height = parseInt(goog.style.getComputedStyle(self._div, 'height'), 10);
+        var width = parseInt(goog.style.getComputedStyle(self.element, 'width'), 10),
+            height = parseInt(goog.style.getComputedStyle(self.element, 'height'), 10);
 
-        // goog.style.setSize(self.element, width, height); 
         goog.style.setSize(self._editCanvas, width, height);
         self._editCanvas.width = width;
         self._editCanvas.height = height;
       };
   
   updateCanvasSize();
-//   goog.dom.replaceNode(this.element, this._div);
-//   goog.dom.appendChild(this.element, this._div); 
 
   /** @private **/
   this._selector = new annotorious.plugins.selection.RectDragSelector();
@@ -92,7 +91,7 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   });
   
   goog.events.listen(this._editCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
-    var offset = goog.style.getClientPosition(self._div);
+    var offset = goog.style.getClientPosition(self.element);
     self._selector.startSelection(event.clientX - offset.x, event.clientY - offset.y);
   });
   
@@ -100,8 +99,8 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
     goog.style.setStyle(self._editCanvas, 'pointer-events', 'none');
 
     var bounds = event.viewportBounds;
-    self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left + self._div.offsetLeft,
-                                                             bounds.bottom + 4 + self._div.offsetTop));
+    self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left /* + self.element.offsetLeft */,
+                                                             bounds.bottom + 4 /* + self.element.offsetTop */));
     self.editor.open();    
   });
 
@@ -157,8 +156,8 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.editAnnotation =
     selector.drawShape(g2d, viewportShape);
 
     var viewportBounds = annotorious.shape.getBoundingRect(viewportShape).geometry;
-    this.editor.setPosition(new annotorious.shape.geom.Point(viewportBounds.x + this._div.offsetLeft,
-                                                             viewportBounds.y + viewportBounds.height + 4 + this._div.offsetTop));
+    this.editor.setPosition(new annotorious.shape.geom.Point(viewportBounds.x + this.element.offsetLeft,
+                                                             viewportBounds.y + viewportBounds.height + 4 + this.element.offsetTop));
     this.editor.open(annotation);   
   }
 }
