@@ -20,11 +20,7 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   this._eventBroker = new annotorious.events.EventBroker();
   
   this.element = goog.dom.createDom('div', 'annotorious-annotationlayer');
-  goog.style.setStyle(this.element, 'position', 'relative');
-  console.log(this._div);
-  // console.log(getComputedStyle(this._div).getPropertyValue('width'));
-  console.log(this._div.currentStyle.width);
-  
+  goog.style.setStyle(this.element, 'position', 'relative');  
   goog.style.setStyle(this.element, 'width', this._div.style.width);
   goog.style.setStyle(this.element, 'height', this._div.style.height);
   
@@ -64,7 +60,7 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
 
   /** @private **/
   this._selector = new annotorious.plugins.selection.RectDragSelector();
-  this._selector.init(this._editCanvas, this); 
+  this._selector.init(this, this._editCanvas); 
     
   /** @private **/
   this._stop_selection_callback = undefined;
