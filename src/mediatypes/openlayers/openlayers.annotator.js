@@ -26,13 +26,11 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
   
-  // TODO re-enable secondary hint
-  /** @private 
+  /** @private **/
   this._secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
   goog.style.setStyle(this._secondaryHint, 'z-index', 9998);
   goog.style.setOpacity(this._secondaryHint, 0); 
   goog.dom.appendChild(this.element, this._secondaryHint);
-  */
   
   /** @private **/
   this.popup = new annotorious.Popup(this);
@@ -122,9 +120,9 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.activateSelector
 
   var self = this;
   goog.style.showElement(this._editCanvas, true);
-  // goog.style.setOpacity(this._secondaryHint, 0.8); 
+  goog.style.setOpacity(this._secondaryHint, 0.8); 
   window.setTimeout(function() {
-    // goog.style.setOpacity(self._secondaryHint, 0);
+    goog.style.setOpacity(self._secondaryHint, 0);
   }, 2000);
 
   if (callback)
