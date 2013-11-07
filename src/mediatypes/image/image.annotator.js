@@ -65,11 +65,10 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
   goog.style.setStyle(this.element, 'display', 'inline-block');
   this._transferStyles(item, this.element);
 
-  var img_bounds = goog.style.getBounds(item);
-  goog.style.setSize(this.element, img_bounds.width, img_bounds.height); 
   goog.dom.replaceNode(this.element, item);
   goog.dom.appendChild(this.element, item);
-  
+
+  var img_bounds = goog.style.getBounds(item);  
   this._viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width:img_bounds.width, height:img_bounds.height });
   if (annotorious.events.ui.hasMouse)
