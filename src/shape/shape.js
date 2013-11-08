@@ -196,12 +196,3 @@ annotorious.shape.transform = function(shape, transformationFn) {
 annotorious.shape.hashCode = function(shape) {
   return JSON.stringify(shape.geometry);
 }
-
-/** API exports **/
-if (!window['annotorious'])
-  window['annotorious'] = {};
-
-if (!window['annotorious']['geometry']) {
-  window['annotorious']['geometry'] = {};
-  window['annotorious']['geometry']['expand'] = annotorious.shape.expand;
-}

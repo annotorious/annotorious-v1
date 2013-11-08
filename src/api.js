@@ -25,6 +25,13 @@ if (!window['annotorious'])
 
 if (!window['annotorious']['plugin'])
   window['annotorious']['plugin'] = {}
+  
+/** Geometry API exports **/
+if (!window['annotorious']['geometry']) {
+  window['annotorious']['geometry'] = {};
+  window['annotorious']['geometry']['expand'] = annotorious.shape.expand;
+  window['annotorious']['geometry']['getBoundingRect'] = annotorious.shape.getBoundingRect;
+}
 
 /** @deprecated **/
 annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;
