@@ -27,7 +27,31 @@ var Annotation = {
     units    : {},
     
     /** @type {Object} the shape geometry **/
-    geometry : {}
+    geometry : {},
+    
+    /* @type {Object} the shape style **/
+    style: {
+      
+      /** @type {string} outline color **/
+      outline: {},
+      
+      /** @type {string} outline color when highlighted **/
+      hi_outline: {},
+      
+      /** @type {string} stroke color **/
+      stroke: {},
+      
+      /** @type {string} stroke color when highlighted **/
+      hi_stroke: {},
+      
+      /** @type {string} fill color **/
+      fill: {},
+      
+      /** @type {string} fill color when highlighted **/
+      hi_fill: {}
+      
+    }
+    
   }]
 
 };
