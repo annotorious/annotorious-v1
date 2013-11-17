@@ -29,7 +29,7 @@ var Annotation = {
     /** @type {Object} the shape geometry **/
     geometry : {},
     
-    /* @type {Object} the shape style **/
+    /** @type {Object} the shape style **/
     style: {
       
       /** @type {string} outline color **/
