@@ -8,13 +8,16 @@ goog.require('annotorious.shape.geom.Rectangle');
  * @param {annotorious.shape.ShapeType} type the shape type
  * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle | annotorious.shape.geom.Polygon} geometry the geometry
  * @param {annotorious.shape.Units=} units geometry measurement units
+ * @param {Object} drawing style of the shape (optional)
  * @constructor
  */
-annotorious.shape.Shape = function(type, geometry, units) {
+annotorious.shape.Shape = function(type, geometry, units, style) {
   this.type = type
   this.geometry = geometry;
   if (units)
     this.units = units;
+  if (style)
+    this.style = style;
 }
 
 /**
@@ -126,7 +129,9 @@ annotorious.shape.getBoundingRect = function(shape) {
     }
     
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, 
-      new annotorious.shape.geom.Rectangle(left, top, right - left, bottom - top));
+      new annotorious.shape.geom.Rectangle(left, top, right - left, bottom - top),
+      false, shape.style
+    );
   }
   
   return undefined;
@@ -156,7 +161,8 @@ annotorious.shape.getCentroid = function(shape) {
 annotorious.shape.expand = function(shape, delta) {
   // TODO for the sake of completeness: implement for RECTANGLE
   return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON,
-    new annotorious.shape.geom.Polygon(annotorious.shape.geom.Polygon.expandPolygon(shape.geometry.points, delta)));
+    new annotorious.shape.geom.Polygon(annotorious.shape.geom.Polygon.expandPolygon(shape.geometry.points, delta)),
+    false, shape.style);
  }
 
 /**
@@ -173,14 +179,18 @@ annotorious.shape.transform = function(shape, transformationFn) {
     var anchor = transformationFn({ x: geom.x, y: geom.y });
     var opposite = transformationFn({ x: geom.x + geom.width, y: geom.y + geom.height });
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE,
-      new annotorious.shape.geom.Rectangle(anchor.x, anchor.y, (opposite.x - anchor.x), (opposite.y - anchor.y)));
+      new annotorious.shape.geom.Rectangle(anchor.x, anchor.y, (opposite.x - anchor.x), (opposite.y - anchor.y)),
+      false, shape.style
+    );
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
     var transformedPoints = [];
     goog.array.forEach(shape.geometry.points, function(pt) {
       transformedPoints.push(transformationFn(pt));
     });
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON,
-      new annotorious.shape.geom.Polygon(transformedPoints));
+      new annotorious.shape.geom.Polygon(transformedPoints),
+      false, shape.style
+    );
   }
 
   return undefined;
