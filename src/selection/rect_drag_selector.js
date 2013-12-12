@@ -255,29 +255,48 @@ annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = fun
  * @param {boolean=} highlight if true, shape will be drawn highlighted
  */
 annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2d, shape, highlight) {
-  var geom, stroke, fill;
+  var geom, stroke, fill, outline;
   
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
-    if (highlight) {
-      g2d.lineWidth = 1.2;
-      stroke = this._HI_STROKE;
-      fill = this._HI_FILL;
+    if ('style' in shape) {
+        if (highlight) {
+          fill = shape.style.hi_fill;
+          stroke = shape.style.hi_stroke;
+          outline = shape.style.hi_outline;
+        } else {
+          fill = shape.style.fill;
+          stroke = shape.style.stroke;
+          outline = shape.style.outline;
+        }
     } else {
-      g2d.lineWidth = 1;
-      stroke = this._STROKE;
-      fill = this._FILL;
+        if (highlight) {
+          fill = this._HI_FILL;
+          stroke = this._HI_STROKE;
+          outline = this._OUTLINE;
+        } else {
+          fill = this._FILL;
+          stroke = this._STROKE;
+          outline = this._OUTLINE;
+        }
     }
+
+    if (highlight) { g2d.lineWidth = 1.2; }
+    else { g2d.lineWidth = 1; }
 
     geom = shape.geometry;
 
     // Outline
-    g2d.strokeStyle = this._OUTLINE;      
-    g2d.strokeRect(geom.x + 0.5, geom.y + 0.5, geom.width + 1, geom.height + 1);
+    if (outline) {
+        g2d.strokeStyle = outline;
+        g2d.strokeRect(geom.x + 0.5, geom.y + 0.5, geom.width + 1, geom.height + 1);
+    }
 
     // Stroke
-    g2d.strokeStyle = stroke;
-    g2d.strokeRect(geom.x + 1.5, geom.y + 1.5, geom.width - 1, geom.height - 1);
- 
+    if (stroke) {
+      g2d.strokeStyle = stroke;
+      g2d.strokeRect(geom.x + 1.5, geom.y + 1.5, geom.width - 1, geom.height - 1);
+    }
+
     // Fill   
     if (fill) {
       g2d.fillStyle = fill;
