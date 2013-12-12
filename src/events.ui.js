@@ -37,6 +37,10 @@ annotorious.events.ui.sanitizeCoordinates = function(event, parent) {
   var points = false;
   var offset = annotorious.dom.getOffset;
   
+  // Dirty hack - Google Maps?
+  event.offsetX = (event.offsetX) ? event.offsetX : false;
+  event.offsetY = (event.offsetY) ? event.offsetY : false;
+  
   if (!event.offsetX || !event.offsetY && event.event_.changedTouches) {
     points = {
       x: event.event_.changedTouches[0].clientX - offset(parent).left,

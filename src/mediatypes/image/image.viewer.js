@@ -56,6 +56,7 @@ annotorious.mediatypes.image.Viewer = function(canvas, annotator) {
             
       var previousAnnotation = self._currentAnnotation;
       self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
+      
       self._eventsEnabled = true;
           
       if (previousAnnotation != self._currentAnnotation) {
@@ -140,12 +141,11 @@ annotorious.mediatypes.image.Viewer.prototype.getAnnotations = function() {
  */
 annotorious.mediatypes.image.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
   this._currentAnnotation = opt_annotation;
-
   if (opt_annotation)
     this._keepHighlighted = true;
   else
     this._annotator.popup.startHideTimer();
-    
+
   this.redraw();
   this._eventsEnabled = true;
 }
@@ -258,7 +258,7 @@ annotorious.mediatypes.image.Viewer.prototype.redraw = function() {
 	if (annotation != self._currentAnnotation)
       self._draw(self._shapes[annotorious.shape.hashCode(annotation.shapes[0])]);
   });
-    
+   
   if (this._currentAnnotation) {
     var shape = this._shapes[annotorious.shape.hashCode(this._currentAnnotation.shapes[0])];
     this._draw(shape, true);

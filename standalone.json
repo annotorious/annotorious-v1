@@ -15,6 +15,7 @@
   "externs": [
     "externs/api.externs.js",
     "externs/openlayers.externs.js",
+    "externs/jquery.externs.js",
     "//json.js",
     "//webkit_console.js"
   ],

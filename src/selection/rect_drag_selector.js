@@ -23,13 +23,13 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function(annotat
   this._STROKE = '#ffffff';
   
   /** @private **/
-  this._FILL = undefined;
+  this._FILL = false;
   
   /** @private **/
   this._HI_STROKE = '#fff000';
   
   /** @private **/
-  this._HI_FILL = undefined;
+  this._HI_FILL = false;
 	
   /** @private **/
   this._canvas = canvas;

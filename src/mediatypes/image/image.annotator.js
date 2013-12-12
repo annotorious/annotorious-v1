@@ -119,8 +119,7 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
   var activeCanvas = (annotorious.events.ui.hasTouch) ? this._editCanvas : this._viewCanvas;
   goog.events.listen(activeCanvas, annotorious.events.ui.EventType.DOWN, function(event) {
     var coords = annotorious.events.ui.sanitizeCoordinates(event, activeCanvas);
-    self._viewer.highlightAnnotation(undefined);
-
+    self._viewer.highlightAnnotation(false);
     if (self._selectionEnabled) {
       goog.style.showElement(self._editCanvas, true);      
       self._currentSelector.startSelection(coords.x, coords.y);
@@ -135,7 +134,7 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
     var bounds = event.viewportBounds;
     self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left + self._image.offsetLeft,
                                                             bounds.bottom + 4 + self._image.offsetTop));
-    self.editor.open(undefined, event);
+    self.editor.open(false, event);
   });
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
@@ -230,7 +229,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.editAnnotation = function(
   // Step 3 - open annotation in editor
   if (selector) {
     goog.style.showElement(this._editCanvas, true);
-    this._viewer.highlightAnnotation(undefined);
+    this._viewer.highlightAnnotation(false);
     
     // TODO make editable - not just draw (selector implementation required)
     var g2d = this._editCanvas.getContext('2d');
