@@ -19,6 +19,8 @@
     <script type="text/javascript" src="http://localhost:9810/compile?id=annotorious"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script type="text/javascript">
+      var map;
+      
       function annotate() {
         var button = document.getElementById('btnAnnotate');
         button.disabled = true;
@@ -35,7 +37,7 @@
           units: "pixels"
         };
 
-        var map = new OpenLayers.Map('map', options);
+        map = new OpenLayers.Map('map', options);
 
         var baseLayer = new OpenLayers.Layer.TMS("Baselayer", "map_muenster/",
 		            { layername: ".", serviceVersion: ".", transitionEffect: "resize", type:"jpg" });
@@ -43,7 +45,7 @@
         map.addLayer(baseLayer);
         map.zoomToMaxExtent();
 	
-	anno.makeAnnotatable(map);
+	      anno.makeAnnotatable(map);
       }
     </script>
     <style>
@@ -72,6 +74,8 @@
 	  
   <body>
     <input type="button" id="btnAnnotate" onclick="annotate()" value="ANNOTATE" />
+    <input type="button" id="btnDestroy" onclick="anno.destroy()" value="DESTROY" />
+    <input type="button" id="btnMakeAnnotatable" onclick="anno.makeAnnotatable(map)" value="MAKE ANNOTATABLE" />
     <div class="container">
       <div id="map"></div>
     </div>

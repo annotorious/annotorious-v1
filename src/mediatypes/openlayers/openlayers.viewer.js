@@ -47,6 +47,10 @@ annotorious.mediatypes.openlayers.Viewer = function(map, annotator) {
   });
 }
 
+annotorious.mediatypes.openlayers.Viewer.prototype.destroy = function() {
+  this._boxesLayer.destroy();
+}
+
 /**
  * Resets the position of the popup, without changing the annotation.
  */

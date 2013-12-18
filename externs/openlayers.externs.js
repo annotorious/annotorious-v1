@@ -15,7 +15,8 @@ var OpenLayers = {
     /** Boxes layer type **/
     Boxes : {  
       addMarker : function() {},
-      removeMarker : function() {}
+      removeMarker : function() {},
+      destroy : function() {}
     }
   },
     

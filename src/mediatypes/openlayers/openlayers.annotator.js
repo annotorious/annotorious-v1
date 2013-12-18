@@ -129,6 +129,11 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.activateSelector
     this._stop_selection_callback = callback;
 }
 
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.destroy = function() {
+  this._viewer.destroy();
+  goog.dom.removeNode(this._secondaryHint);  
+  goog.dom.removeNode(this._editCanvas);  
+}
 
 /**
  * Standard Annotator method: editAnnotation
