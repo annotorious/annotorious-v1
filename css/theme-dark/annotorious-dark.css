@@ -248,6 +248,9 @@
   overflow-y:auto;
   display:block;
   resize:none;
+  -moz-box-shadow:none !important;
+  -webkit-box-shadow:none !important;
+  box-shadow:none !important;
 }
 
 .annotorious-editor-text a:hover {
