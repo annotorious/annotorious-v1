@@ -76,7 +76,7 @@ annotorious.mediatypes.Module.prototype._getSettings = function(item_url) {
 /**
  * @private
  */
-annotorious.mediatypes.Module.prototype._initAnnotator = function(item) {  
+annotorious.mediatypes.Module.prototype._initAnnotator = function(item) {
   var self = this,
       item_src = this.getItemURL(item);
 
@@ -441,7 +441,7 @@ annotorious.mediatypes.Module.prototype.highlightAnnotation = function(annotatio
 /**
  * Lifecycle method: called by Annotorious on module initialization.
  */
-annotorious.mediatypes.Module.prototype.init = function() {
+annotorious.mediatypes.Module.prototype.init = function() {    
   if (this._preLoad)
     goog.array.extend(this._itemsToLoad, this._preLoad()); 
 

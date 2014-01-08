@@ -17,6 +17,9 @@ goog.require('annotorious.mediatypes.openlayers.OpenLayersModule');
  */
 annotorious.Annotorious = function() {
   /** @private **/
+  this._isInitialized = false;
+  
+  /** @private **/
   this._modules = [ new annotorious.mediatypes.image.ImageModule() ];
   
   if (window['OpenLayers'])
@@ -26,20 +29,28 @@ annotorious.Annotorious = function() {
   this._plugins = [];
 
   var self = this;
-  annotorious.dom.addOnLoadHandler(function() { 
-    goog.array.forEach(self._modules, function(module) {
-      module.init();
-    });
+  annotorious.dom.addOnLoadHandler(function() { self._init(); });
+}
 
-    goog.array.forEach(self._plugins, function(plugin) {
-      if (plugin.initPlugin)
-        plugin.initPlugin(self);
+annotorious.Annotorious.prototype._init = function() {
+  if (this._isInitialized)
+    return;
+  
+  var self = this;
+  goog.array.forEach(this._modules, function(module) {
+    module.init();
+  });
+
+  goog.array.forEach(this._plugins, function(plugin) {
+    if (plugin.initPlugin)
+      plugin.initPlugin(self);
         
-      goog.array.forEach(self._modules, function(module) {
-        module.addPlugin(plugin);
-      });
+    goog.array.forEach(self._modules, function(module) {
+      module.addPlugin(plugin);
     });
   });
+  
+  this._isInitialized = true;
 }
 
 /**
@@ -260,6 +271,9 @@ annotorious.Annotorious.prototype.highlightAnnotation = function(annotation) {
  * @param {Object} item the annotatable item
  */
 annotorious.Annotorious.prototype.makeAnnotatable = function(item) {
+  // Be sure to init if the load handler hasn't already taken care of it
+  this._init();
+  
   var module = goog.array.find(this._modules, function(module) {
     return module.supports(item);
   });
