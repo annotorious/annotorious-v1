@@ -22,5 +22,6 @@ Want to help out? There are many ways you can contribute!
 
 ## License
 
-Annotorious is licensed under the terms of the [GNU Lesser General Public License (LGPL)](http://github.com/annotorious/annotorious/blob/master/lgpl-3.0.txt). In plain English, this means you can grab, use and re-distribute Annotorious for free, in commercial or non-commercial projects, with no restrictions whatsoever. __However__: should you modify the code of Annotorious itself, these __modifications__ need to be under the same license. In short: feel free to use Annotorious wherever or however you want. But if you fix a bug, or add a cool feature, be sure to give back to the community.
+Annotorious is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT). In short: Annotorious is delivered 'as is', and you can feel
+free to use it wherever or however you want. Needless to say: if you fix a bug, or add a cool feature, be sure to give back to the community.
 
