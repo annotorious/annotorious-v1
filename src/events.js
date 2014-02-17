@@ -129,6 +129,11 @@ annotorious.events.EventType = {
   /**
    * An existing annotation was updated
    */
-  ANNOTATION_UPDATED: 'onAnnotationUpdated'
+  ANNOTATION_UPDATED: 'onAnnotationUpdated',
+  
+  /**
+   * The annotation editor was opened.  Pass the annotation object if it exists.
+   */
+  ANNOTATION_EDIT: 'onAnnotationEdit'
 
 };
