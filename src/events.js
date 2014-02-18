@@ -134,6 +134,11 @@ annotorious.events.EventType = {
   /**
    * The annotation editor was opened.  Pass the annotation object if it exists.
    */
-  ANNOTATION_EDIT: 'onAnnotationEdit'
+  ANNOTATION_EDITOR_SHOWN: 'onAnnotationEditorShown',
+  
+  /**
+   * The annotation popop was opened.  Pass the annotation object.
+   */
+  ANNOTATION_POPUP_SHOWN: 'onAnnotationPopupShown'
 
 };
