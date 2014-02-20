@@ -115,6 +115,7 @@ annotorious.Editor.prototype.open = function(opt_annotation, opt_event) {
       goog.dom.appendChild(field.el, f);
     }
   });
+  this._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_EDITOR_SHOWN, opt_annotation);
 }
 
 /**
