@@ -175,7 +175,7 @@ annotorious.Popup.prototype.show = function(annotation, xy) {
   
   goog.style.setOpacity(this.element, 0.9);
   goog.style.setStyle(this.element, 'pointer-events', 'auto');
-  this._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_POPUP_SHOWN, annotation);
+  this._annotator.fireEvent(annotorious.events.EventType.POPUP_SHOWN, annotation);
 }
 
 /**

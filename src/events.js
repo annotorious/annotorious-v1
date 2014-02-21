@@ -105,6 +105,16 @@ annotorious.events.EventType = {
    * The current selection was changed
    */
   SELECTION_CHANGED: 'onSelectionChanged',
+  
+  /**
+   * The annotation editor was opened.  Pass the annotation object if it exists.
+   */
+  EDITOR_SHOWN: 'onEditorShown',
+  
+  /**
+   * The annotation popop was opened.  Pass the annotation object.
+   */
+  POPUP_SHOWN: 'onPopupShown',
 
   /**
    * The annotation popup widget is about to hide
@@ -129,16 +139,6 @@ annotorious.events.EventType = {
   /**
    * An existing annotation was updated
    */
-  ANNOTATION_UPDATED: 'onAnnotationUpdated',
-  
-  /**
-   * The annotation editor was opened.  Pass the annotation object if it exists.
-   */
-  ANNOTATION_EDITOR_SHOWN: 'onAnnotationEditorShown',
-  
-  /**
-   * The annotation popop was opened.  Pass the annotation object.
-   */
-  ANNOTATION_POPUP_SHOWN: 'onAnnotationPopupShown'
+  ANNOTATION_UPDATED: 'onAnnotationUpdated'
 
 };
