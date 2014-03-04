@@ -28,8 +28,17 @@ annotorious.mediatypes.openseadragon.OpenSeadragonModule.prototype.newAnnotator 
 
 /** @inheritDoc **/
 annotorious.mediatypes.openseadragon.OpenSeadragonModule.prototype.supports = function(item) {
-  // TODO
-  return false; // (item instanceof OpenLayers.Map);
+  // A hack to identify whether we're dealing with an OpenSeadragon viewer - any better ideas?
+  if (!item.id)
+    return false;
+    
+  if (item.id.indexOf('openseadragon') != 0)
+    return false;
+    
+  if(!item.hasOwnProperty('drawer'))
+    return false;
+    
+  return true;
 } 
 
 

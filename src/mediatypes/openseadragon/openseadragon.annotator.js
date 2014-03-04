@@ -1,10 +1,68 @@
 goog.provide('annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator');
 
-goog.require('annotorious.templates.openseadragon');
-goog.require('annotorious.mediatypes.openseadragon.Viewer');
+/**
+ * The OpenSeadragonAnnotator is responsible for handling annotation functionality
+ * on one OpenSeadragon imagein the page.
+ * @param {Object} osdViewer the OpenSeadragon viewer
+ * @constructor
+ */
+annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer) {
+  /** @private **/
+  this.element = osdViewer['element'];
+    
+  /** @private **/
+  this._eventBroker = new annotorious.events.EventBroker();
+  
+  /** @private **/
+  this.popup = new annotorious.Popup(this);
 
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function() {
+  /** @private **/
+  // this._viewer = new annotorious.mediatypes.openlayers.Viewer(map, this);
 
+  /** @private **/
+  this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
+    { width:'0', height:'0' });
+  goog.style.showElement(this._editCanvas, true);
+  goog.style.setStyle(this._editCanvas, 'position', 'absolute');
+  goog.style.setStyle(this._editCanvas, 'top', '0px');
+  goog.style.setStyle(this._editCanvas, 'z-index', 9999);
+
+  goog.dom.appendChild(this.element, this._editCanvas); 
+  
+  var self = this,
+      updateCanvasSize = function() {
+        var width = parseInt(goog.style.getComputedStyle(self.element, 'width'), 10),
+            height = parseInt(goog.style.getComputedStyle(self.element, 'height'), 10);
+
+        goog.style.setSize(self._editCanvas, width, height);
+        self._editCanvas.width = width;
+        self._editCanvas.height = height;
+      };
+  
+  updateCanvasSize();
+  
+  /** @private **/
+  this._selector = new annotorious.plugins.selection.RectDragSelector();
+  this._selector.init(this, this._editCanvas); 
+  
+  /** Note - this code is duplicate across image, OpenLayers and OpenSeadragon & really needs to go into its own class **/
+  goog.events.listen(this._editCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
+    var offset = goog.style.getClientPosition(self.element);
+    self._selector.startSelection(event.clientX - offset.x, event.clientY - offset.y);
+  });
+  
+  this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
+    goog.style.setStyle(self._editCanvas, 'pointer-events', 'none');
+
+    var bounds = event.viewportBounds;
+    self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left /* + self.element.offsetLeft */,
+                                                             bounds.bottom + 4 /* + self.element.offsetTop */));
+    self.editor.open();    
+  });
+
+  this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function(event) {
+    self.stopSelection();    
+  });
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.showSelectionWidget = function() {

@@ -2,6 +2,8 @@
   <head>
     <title>Annotorious OpenSeadragon Test Page</title>
     <script src="openseadragon/openseadragon.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/theme-dark/annotorious-dark.css" />
+    <script type="text/javascript" src="http://localhost:9810/compile?id=annotorious"></script>
     <script type="text/javascript">
       window.onload = function() {
         var viewer = OpenSeadragon({
@@ -25,6 +27,8 @@
             }]
           }
         });
+        
+        anno.makeAnnotatable(viewer);
       }
     </script>
   </head>

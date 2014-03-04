@@ -7,6 +7,7 @@ goog.require('annotorious.events');
 goog.require('annotorious.mediatypes.Module');
 goog.require('annotorious.mediatypes.image.ImageModule');
 goog.require('annotorious.mediatypes.openlayers.OpenLayersModule');
+goog.require('annotorious.mediatypes.openseadragon.OpenSeadragonModule');
 
 /**
  * The main entrypoint to the application. The Annotorious class is instantiated exactly once,
@@ -24,6 +25,9 @@ annotorious.Annotorious = function() {
   
   if (window['OpenLayers'])
     this._modules.push(new annotorious.mediatypes.openlayers.OpenLayersModule());
+    
+  if (window['OpenSeadragon'])
+    this._modules.push(new annotorious.mediatypes.openseadragon.OpenSeadragonModule());
   
   /** @private **/
   this._plugins = [];
