@@ -26,10 +26,25 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function(annotat
   this._FILL = false;
   
   /** @private **/
+  this._HI_OUTLINE = '#000000';
+
+  /** @private **/
   this._HI_STROKE = '#fff000';
   
   /** @private **/
   this._HI_FILL = false;
+
+  /** @private **/
+  this._OUTLINE_WIDTH = 1;
+
+  /** @private **/
+  this._STROKE_WIDTH = 1;
+
+  /** @private **/
+  this._HI_OUTLINE_WIDTH = 1;
+
+  /** @private **/
+  this._HI_STROKE_WIDTH = 1.2;
 	
   /** @private **/
   this._canvas = canvas;
@@ -75,18 +90,49 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
       var width = self._opposite.x - self._anchor.x;
       var height = self._opposite.y - self._anchor.y;
       
-      self._g2d.strokeStyle = self._OUTLINE;
-      self._g2d.strokeRect(self._anchor.x + 0.5, self._anchor.y + 0.5, width, height);
-      self._g2d.strokeStyle = self._STROKE;
+      if (self._OUTLINE) {
+        self._g2d.strokeStyle = self._OUTLINE;
+        self._g2d.lineWidth = self._OUTLINE_WIDTH;
+        self._g2d.strokeRect(
+          self._anchor.x + self._OUTLINE_WIDTH/2, 
+          self._anchor.y + self._OUTLINE_WIDTH/2, 
+          width - self._OUTLINE_WIDTH, 
+          height - self._OUTLINE_WIDTH
+        );
+      }
+      if (self._STROKE) {
+        self._g2d.strokeStyle = self._STROKE;
+        self._g2d.lineWidth = self._STROKE_WIDTH;
 
-      if (width > 0 && height > 0) {
-        self._g2d.strokeRect(self._anchor.x + 1.5, self._anchor.y + 1.5, width - 2, height - 2);
-      } else if (width > 0 && height < 0) {
-        self._g2d.strokeRect(self._anchor.x + 1.5, self._anchor.y - 0.5, width - 2, height + 2);
-      } else if (width < 0 && height < 0) {
-        self._g2d.strokeRect(self._anchor.x - 0.5, self._anchor.y - 0.5, width + 2, height + 2);
-      } else {
-        self._g2d.strokeRect(self._anchor.x - 0.5, self._anchor.y + 1.5, width + 2, height - 2);
+        if (width > 0 && height > 0) {
+          self._g2d.strokeRect(
+            self._anchor.x + self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
+            self._anchor.y + self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
+            width - self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH, 
+            height - self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH
+          );
+        } else if (width > 0 && height < 0) {
+          self._g2d.strokeRect(
+            self._anchor.x + self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
+            self._anchor.y - self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
+            width - self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH, 
+            height + self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH
+          );
+        } else if (width < 0 && height < 0) {
+          self._g2d.strokeRect(
+            self._anchor.x - self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
+            self._anchor.y - self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
+            width + self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH, 
+            height + self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH
+          );
+        } else {
+          self._g2d.strokeRect(
+            self._anchor.x - self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
+            self._anchor.y + self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
+            width + self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH, 
+            height - self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH
+          );
+        }
       }
     }
   });
@@ -151,20 +197,35 @@ annotorious.plugins.selection.RectDragSelector.prototype.getSupportedShapeType =
  * Sets the properties on this selector.
  */
 annotorious.plugins.selection.RectDragSelector.prototype.setProperties = function(props) {  
-  if (props['outline'])
+  if (props.hasOwnProperty('outline'))
     this._OUTLINE = props['outline'];
 
-  if (props['stroke'])
+  if (props.hasOwnProperty('stroke'))
     this._STROKE = props['stroke'];
  
-  if (props['fill'])
-    this._FILL = props['fill'];  
-    
-  if (props['hi_stroke'])
+  if (props.hasOwnProperty('fill'))
+    this._FILL = props['fill'];
+
+  if (props.hasOwnProperty('hi_outline'))
+    this._HI_OUTLINE = props['hi_outline'];
+
+  if (props.hasOwnProperty('hi_stroke'))
     this._HI_STROKE = props['hi_stroke'];
 
-  if (props['hi_fill'])
+  if (props.hasOwnProperty('hi_fill'))
     this._HI_FILL = props['hi_fill'];
+
+  if (props.hasOwnProperty('outline_width'))
+    this._OUTLINE_WIDTH = props['outline_width'];
+
+  if (props.hasOwnProperty('stroke_width'))
+    this._STROKE_WIDTH = props['stroke_width'];
+
+  if (props.hasOwnProperty('hi_outline_width'))
+    this._HI_OUTLINE_WIDTH = props['hi_outline_width'];
+
+  if (props.hasOwnProperty('hi_stroke_width'))
+    this._HI_STROKE_WIDTH = props['hi_stroke_width'];
 }
 
 /**
@@ -263,44 +324,69 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2
           fill = shape.style.hi_fill;
           stroke = shape.style.hi_stroke;
           outline = shape.style.hi_outline;
+          outline_width = shape.style.hi_outline_width;
+          stroke_width = shape.style.hi_stroke_width;
         } else {
           fill = shape.style.fill;
           stroke = shape.style.stroke;
           outline = shape.style.outline;
+          outline_width = shape.style.outline_width;
+          stroke_width = shape.style.stroke_width;
         }
     } else {
         if (highlight) {
           fill = this._HI_FILL;
           stroke = this._HI_STROKE;
-          outline = this._OUTLINE;
+          outline = this._HI_OUTLINE;
+          outline_width = this._HI_OUTLINE_WIDTH;
+          stroke_width = this._HI_STROKE_WIDTH;
         } else {
           fill = this._FILL;
           stroke = this._STROKE;
           outline = this._OUTLINE;
+          outline_width = this._OUTLINE_WIDTH;
+          stroke_width = this._STROKE_WIDTH;
         }
     }
 
-    if (highlight) { g2d.lineWidth = 1.2; }
-    else { g2d.lineWidth = 1; }
+    g2d.lineJoin = "round";
 
     geom = shape.geometry;
 
     // Outline
     if (outline) {
+        g2d.lineWidth = outline_width;
         g2d.strokeStyle = outline;
-        g2d.strokeRect(geom.x + 0.5, geom.y + 0.5, geom.width + 1, geom.height + 1);
+        g2d.strokeRect(
+          geom.x + outline_width/2, 
+          geom.y + outline_width/2, 
+          geom.width - outline_width, 
+          geom.height - outline_width
+        );
     }
 
     // Stroke
     if (stroke) {
+      g2d.lineWidth = stroke_width;
       g2d.strokeStyle = stroke;
-      g2d.strokeRect(geom.x + 1.5, geom.y + 1.5, geom.width - 1, geom.height - 1);
+      g2d.strokeRect(
+        geom.x + outline_width + stroke_width/2, 
+        geom.y + outline_width + stroke_width/2, 
+        geom.width - outline_width*2 - stroke_width, 
+        geom.height - outline_width*2 - stroke_width
+      );
     }
 
     // Fill   
     if (fill) {
+      g2d.lineWidth = stroke_width;
       g2d.fillStyle = fill;
-      g2d.fillRect(geom.x + 1.5, geom.y + 1.5, geom.width - 1, geom.height - 1);
+      g2d.fillRect(
+        geom.x + outline_width + stroke_width/2, 
+        geom.y + outline_width + stroke_width/2, 
+        geom.width - outline_width*2 - stroke_width, 
+        geom.height - outline_width*2 - stroke_width
+      );
     }
   }
 }
