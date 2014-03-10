@@ -89,51 +89,16 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
       
       var width = self._opposite.x - self._anchor.x;
       var height = self._opposite.y - self._anchor.y;
-      
-      if (self._OUTLINE) {
-        self._g2d.strokeStyle = self._OUTLINE;
-        self._g2d.lineWidth = self._OUTLINE_WIDTH;
-        self._g2d.strokeRect(
-          self._anchor.x + self._OUTLINE_WIDTH/2, 
-          self._anchor.y + self._OUTLINE_WIDTH/2, 
-          width - self._OUTLINE_WIDTH, 
-          height - self._OUTLINE_WIDTH
-        );
-      }
-      if (self._STROKE) {
-        self._g2d.strokeStyle = self._STROKE;
-        self._g2d.lineWidth = self._STROKE_WIDTH;
 
-        if (width > 0 && height > 0) {
-          self._g2d.strokeRect(
-            self._anchor.x + self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
-            self._anchor.y + self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
-            width - self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH, 
-            height - self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH
-          );
-        } else if (width > 0 && height < 0) {
-          self._g2d.strokeRect(
-            self._anchor.x + self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
-            self._anchor.y - self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
-            width - self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH, 
-            height + self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH
-          );
-        } else if (width < 0 && height < 0) {
-          self._g2d.strokeRect(
-            self._anchor.x - self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
-            self._anchor.y - self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
-            width + self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH, 
-            height + self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH
-          );
-        } else {
-          self._g2d.strokeRect(
-            self._anchor.x - self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
-            self._anchor.y + self._OUTLINE_WIDTH + self._STROKE_WIDTH/2, 
-            width + self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH, 
-            height - self._OUTLINE_WIDTH*2 - self._STROKE_WIDTH
-          );
+      self.drawShape(self._g2d, {
+        type: annotorious.shape.ShapeType.RECTANGLE,
+        geometry: {
+          x: width > 0 ? self._anchor.x : self._opposite.x,
+          y: height > 0 ? self._anchor.y : self._opposite.y,
+          width: Math.abs(width),
+          height: Math.abs(height)
         }
-      }
+      });
     }
   });
 
@@ -268,7 +233,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.getShape = function() {
        
     var viewportBounds = this.getViewportBounds();
     var item_anchor = this._annotator.toItemCoordinates({x: viewportBounds.left, y: viewportBounds.top});
-    var item_opposite = this._annotator.toItemCoordinates({x: viewportBounds.right - 1, y: viewportBounds.bottom - 1});
+    var item_opposite = this._annotator.toItemCoordinates({x: viewportBounds.right, y: viewportBounds.bottom});
  
     var rect = new annotorious.shape.geom.Rectangle(
       item_anchor.x,
@@ -316,7 +281,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = fun
  * @param {boolean=} highlight if true, shape will be drawn highlighted
  */
 annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2d, shape, highlight) {
-  var geom, stroke, fill, outline;
+  var geom, stroke, fill, outline, outline_width, stroke_width;
   
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     if ('style' in shape) {
@@ -349,12 +314,11 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2
         }
     }
 
-    g2d.lineJoin = "round";
-
     geom = shape.geometry;
 
     // Outline
     if (outline) {
+        g2d.lineJoin = "round";
         g2d.lineWidth = outline_width;
         g2d.strokeStyle = outline;
         g2d.strokeRect(
@@ -367,6 +331,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2
 
     // Stroke
     if (stroke) {
+      g2d.lineJoin = "miter";
       g2d.lineWidth = stroke_width;
       g2d.strokeStyle = stroke;
       g2d.strokeRect(
@@ -379,6 +344,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2
 
     // Fill   
     if (fill) {
+      g2d.lineJoin = "miter";
       g2d.lineWidth = stroke_width;
       g2d.fillStyle = fill;
       g2d.fillRect(
