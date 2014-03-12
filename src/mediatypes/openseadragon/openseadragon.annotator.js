@@ -9,6 +9,9 @@ goog.provide('annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator');
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer) {
   /** @private **/
   this.element = osdViewer['element'];
+  
+  /** @private **/   
+  this._osdViewer = osdViewer; 
     
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
@@ -98,7 +101,10 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fireEvent 
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
-
+  console.log(this._osdViewport);
+  var viewElementPoint = new OpenSeadragon.Point(itemCoords.x, itemCoords.y);
+  var viewportPoint = this._osdViewport.viewerElementToViewportCoordinates(viewElementPoint); 
+  console.log(viewportPoint);
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getActiveSelector = function() {
@@ -138,5 +144,8 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.stopSelect
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.toItemCoordinates = function(xy) {
-
+	  console.log(this._osdViewer['viewport']);
+  var viewportPoint = new OpenSeadragon.Point(xy.x, xy.y);
+  var viewElementPoint = this._osdViewer['viewport']['viewportToViewerElementCoordinates'](viewportPoint); 
+  return viewElementPoint;
 }
