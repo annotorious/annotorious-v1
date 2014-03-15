@@ -3,12 +3,19 @@ goog.provide('annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator');
 /**
  * The OpenSeadragonAnnotator is responsible for handling annotation functionality
  * on one OpenSeadragon imagein the page.
+ * 
+ * FIXME there is lots of code duplication in here - refactor into a common annotator base class,
+ * shared across image & OpenSeadragon
+ * 
  * @param {Object} osdViewer the OpenSeadragon viewer
  * @constructor
  */
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer) {
   /** @private **/
   this.element = osdViewer['element'];
+  
+  /** The editor for this annotator (public for use by plugins) **/
+  this.editor;
   
   /** @private **/   
   this._osdViewer = osdViewer; 
@@ -47,6 +54,8 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
   /** @private **/
   this._selector = new annotorious.plugins.selection.RectDragSelector();
   this._selector.init(this, this._editCanvas); 
+  
+  this.editor = new annotorious.Editor(this);
   
   /** Note - this code is duplicate across image, OpenLayers and OpenSeadragon & really needs to go into its own class **/
   goog.events.listen(this._editCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
@@ -97,7 +106,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.addSelecto
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fireEvent = function(type, event) {
-  
+  return this._eventBroker.fireEvent(type, event);
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
@@ -144,7 +153,6 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.stopSelect
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.toItemCoordinates = function(xy) {
-	  console.log(this._osdViewer['viewport']);
   var viewportPoint = new OpenSeadragon.Point(xy.x, xy.y);
   var viewElementPoint = this._osdViewer['viewport']['viewportToViewerElementCoordinates'](viewportPoint); 
   return viewElementPoint;
