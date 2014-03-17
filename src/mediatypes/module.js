@@ -488,7 +488,7 @@ annotorious.mediatypes.Module.prototype.setActiveSelector = function(item_url, s
   if (this.annotatesItem(item_url)) {
     var annotator = this._annotators.get(item_url);
     if (annotator)
-      annotator.setActiveSelector(selector);
+      annotator.setCurrentSelector(selector);
   }
 }
 
