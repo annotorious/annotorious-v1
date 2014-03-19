@@ -11,6 +11,8 @@ goog.provide('annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator');
  * @constructor
  */
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer) {
+  annotorious.mediatypes.Annotator.call();
+  
   /** @private **/
   this.element = osdViewer['element'];
   
@@ -76,6 +78,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
     self.stopSelection();    
   });
 }
+goog.inherits(annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator, annotorious.mediatypes.Annotator);
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.showSelectionWidget = function() {
   // Does not have any effect at the moment
@@ -94,7 +97,8 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.editAnnota
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.addAnnotation = function(annotation) {
-
+  console.log('add');
+  this._viewer.addAnnotation(annotation);
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.addHandler = function(type, handler) {
@@ -129,7 +133,8 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getAvailab
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getItem = function() {
-
+  // TODO implement something decent!
+  return {src: "dzi://openseadragon/something"};
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.highlightAnnotation = function(annotation) {

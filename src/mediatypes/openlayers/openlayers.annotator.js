@@ -1,5 +1,6 @@
 goog.provide('annotorious.mediatypes.openlayers.OpenLayersAnnotator');
 
+goog.require('annotorious.mediatypes.Annotator');
 goog.require('annotorious.templates.openlayers');
 goog.require('annotorious.mediatypes.openlayers.Viewer');
 
@@ -10,6 +11,8 @@ goog.require('annotorious.mediatypes.openlayers.Viewer');
  * @constructor
  */
 annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
+  annotorious.mediatypes.Annotator.call();
+  
   /** @private **/
   this._map = map;
   
@@ -106,6 +109,7 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
     self.stopSelection();    
   });
 }
+goog.inherits(annotorious.mediatypes.openlayers.OpenLayersAnnotator, annotorious.mediatypes.Annotator);
 
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.showSelectionWidget = function() {
   // Does not have any effect at the moment
@@ -166,31 +170,10 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.editAnnotation =
 }
 
 /**
- * Standard Annotator method: addAnnotation
- */
-annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.addAnnotation = function(annotation) {
-  this._viewer.addAnnotation(annotation);
-}
-
-/**
- * Standard Annotator method: addHandler
- */
-annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.addHandler = function(type, handler) {
-  this._eventBroker.addHandler(type, handler);  
-}
-
-/**
  * Standard Annotator method: addSelector
  */
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.addSelector = function(selector) {
 
-}
-
-/**
- * Standard Annotator method: fireEvent
- */
-annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.fireEvent = function(type, event) {
-  return this._eventBroker.fireEvent(type, event);
 }
 
 /**
@@ -199,13 +182,6 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.fireEvent = func
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
   var pxCoords = this._map.getViewPortPxFromLonLat(new OpenLayers.LonLat(itemCoords.x, itemCoords.y));
   return { x: pxCoords.x, y: pxCoords.y };
-}
-
-/**
- * Standard Annotator method: getActiveSelector
- */
-annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getActiveSelector = function() {
-  return this._selector;
 }
 
 /**
@@ -228,27 +204,6 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getAvailableSele
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getItem = function() {
   // TODO implement something decent!
   return {src: "map://openlayers/something"};
-}
-
-/**
- * Standard Annotator method: highlightAnnotation
- */
-annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.highlightAnnotation = function(annotation) {
-  this._viewer.highlightAnnotation(annotation);
-}
-
-/**
- * Standard Annotator method: removeAnnotation
- */
-annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.removeAnnotation = function(annotation) {
-  this._viewer.removeAnnotation(annotation);
-}
-
-/**
- * Standard Annotator method: removeHandler
- */
-annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.removeHandler = function(type, handler) {
-  this._eventBroker.removeHandler(type, handler);
 }
 
 /**
