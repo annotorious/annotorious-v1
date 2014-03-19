@@ -4,9 +4,7 @@ goog.provide('annotorious.mediatypes.Annotator');
  * A base class for Annotorious Annotator implementations.
  * @constructor
  */
-annotorious.mediatypes.Annotator = function() { 
-  
-}
+annotorious.mediatypes.Annotator = function() { }
 
 annotorious.mediatypes.Annotator.prototype.addAnnotation = function(annotation) {
   this._viewer.addAnnotation(annotation);

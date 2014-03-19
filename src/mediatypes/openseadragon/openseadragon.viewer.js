@@ -2,8 +2,8 @@ goog.provide('annotorious.mediatypes.openseadragon.Viewer');
 
 goog.require('goog.events.MouseWheelHandler');
 
-annotorious.mediatypes.openseadragon.Viewer = function() {
-  // TODO
+annotorious.mediatypes.openseadragon.Viewer = function(osdViewer) {
+  this._osdViewer = osdViewer;
 }
 
 /**
@@ -11,7 +11,9 @@ annotorious.mediatypes.openseadragon.Viewer = function() {
  * @param {annotorious.Annotation} annotation the annotation
  */
 annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(annotation) {
-
+  var element = document.createElement('div');
+  element.innerHTML = 'DUMMY';
+  this._osdViewer.drawer.addOverlay(element, new OpenSeadragon.Point(0.2, 0.2), OpenSeadragon.OverlayPlacement.CENTER);
 }
 
 /**

@@ -1,5 +1,8 @@
 goog.provide('annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator');
 
+goog.require('annotorious.mediatypes.Annotator');
+goog.require('annotorious.mediatypes.openseadragon.Viewer');
+
 /**
  * The OpenSeadragonAnnotator is responsible for handling annotation functionality
  * on one OpenSeadragon imagein the page.
@@ -29,7 +32,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
   this.popup = new annotorious.Popup(this);
 
   /** @private **/
-  // this._viewer = new annotorious.mediatypes.openlayers.Viewer(map, this);
+  this._viewer = new annotorious.mediatypes.openseadragon.Viewer(osdViewer, this);
 
   /** @private **/
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
@@ -50,6 +53,10 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
         self._editCanvas.width = width;
         self._editCanvas.height = height;
       };
+      
+  /** @private **/
+  this._selector = new annotorious.plugins.selection.RectDragSelector();
+  this._selector.init(this, this._editCanvas); 
   
   updateCanvasSize();
   
@@ -96,32 +103,14 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.editAnnota
 
 }
 
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.addAnnotation = function(annotation) {
-  console.log('add');
-  this._viewer.addAnnotation(annotation);
-}
-
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.addHandler = function(type, handler) {
-
-}
-
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.addSelector = function(selector) {
 
 }
 
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fireEvent = function(type, event) {
-  return this._eventBroker.fireEvent(type, event);
-}
-
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
-  console.log(this._osdViewport);
   var viewElementPoint = new OpenSeadragon.Point(itemCoords.x, itemCoords.y);
   var viewportPoint = this._osdViewport.viewerElementToViewportCoordinates(viewElementPoint); 
   console.log(viewportPoint);
-}
-
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getActiveSelector = function() {
-
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getAnnotations = function() {
@@ -134,19 +123,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getAvailab
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getItem = function() {
   // TODO implement something decent!
-  return {src: "dzi://openseadragon/something"};
-}
-
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.highlightAnnotation = function(annotation) {
-
-}
-
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.removeAnnotation = function(annotation) {
-
-}
-
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.removeHandler = function(type, handler) {
-
+  return { src: "dzi://openseadragon/something" };
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.setActiveSelector = function(selector) {
