@@ -214,24 +214,6 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.setActiveSelecto
 }
 
 /**
- * Standard Annotator method: stopSelection
- * @param {annotorious.Annotation=} original_annotation the original annotation being edited (if any)
- */
-annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.stopSelection = function(original_annotation) {
-   goog.style.showElement(this._editCanvas, false);
-   if (this._stop_selection_callback) {
-     this._stop_selection_callback();
-     delete this._stop_selection_callback;
-   }
-
-   this._selector.stopSelection();
-   
-   // If this was an edit of an annotation (rather than creation of a new one) re-add to viewer!
-   if (original_annotation)
-     this._viewer.addAnnotation(original_annotation);
-}
-
-/**
  * Standard Annotator method: toItemCoordinates
  */
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.toItemCoordinates = function(xy) {

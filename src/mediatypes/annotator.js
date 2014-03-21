@@ -34,6 +34,20 @@ annotorious.mediatypes.Annotator.prototype.removeHandler = function(type, handle
   this._eventBroker.removeHandler(type, handler);
 }
 
+annotorious.mediatypes.Annotator.prototype.stopSelection = function(original_annotation) {
+  goog.style.showElement(this._editCanvas, false);
+  if (this._stop_selection_callback) {
+    this._stop_selection_callback();
+    delete this._stop_selection_callback;
+  }
+
+  this._selector.stopSelection();
+   
+  // If this was an edit of an annotation (rather than creation of a new one) re-add to viewer!
+  if (original_annotation)
+    this._viewer.addAnnotation(original_annotation);
+}
+
 
 
 

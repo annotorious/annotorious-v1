@@ -130,12 +130,8 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.setActiveS
 
 }
 
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.stopSelection = function(original_annotation) {
-
-}
-
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.toItemCoordinates = function(xy) {
   var viewportPoint = new OpenSeadragon.Point(xy.x, xy.y);
-  var viewElementPoint = this._osdViewer['viewport']['viewportToViewerElementCoordinates'](viewportPoint); 
+  var viewElementPoint = this._osdViewer.viewport.windowToViewportCoordinates(viewportPoint); 
   return viewElementPoint;
 }
