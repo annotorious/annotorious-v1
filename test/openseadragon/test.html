@@ -7,7 +7,7 @@
     <script type="text/javascript">
       window.onload = function() {
         var viewer = OpenSeadragon({
-          id: "openseadragon1",
+          id: "openseadragon",
           prefixUrl: "openseadragon/images/",
           showNavigator: false,
           tileSources: {
@@ -31,9 +31,23 @@
         anno.makeAnnotatable(viewer);
       }
     </script>
+    <style>
+      #openseadragon {
+        position:absolute;
+        width:800px;
+        height:600px;
+      } 
+      
+      #add-annotation-button {
+        position:absolute;
+        top:14px;
+        left:155px;
+      }
+    </style>
   </head>
   
   <body>
-    <div id="openseadragon1" style="width: 800px; height: 600px;"></div>
+    <div id="openseadragon"></div>
+    <button id="add-annotation-button" onclick="anno.activateSelector();">Add Annotation</button>
   </body>    
 </html>

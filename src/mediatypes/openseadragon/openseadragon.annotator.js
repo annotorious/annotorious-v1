@@ -29,6 +29,12 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
   this._eventBroker = new annotorious.events.EventBroker();
   
   /** @private **/
+  this._secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
+  goog.style.setStyle(this._secondaryHint, 'z-index', 9998);
+  goog.style.setOpacity(this._secondaryHint, 0); 
+  goog.dom.appendChild(this.element, this._secondaryHint);
+  
+  /** @private **/
   this.popup = new annotorious.Popup(this);
 
   /** @private **/
@@ -37,7 +43,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
   /** @private **/
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:'0', height:'0' });
-  goog.style.showElement(this._editCanvas, true);
+  goog.style.showElement(this._editCanvas, false);
   goog.style.setStyle(this._editCanvas, 'position', 'absolute');
   goog.style.setStyle(this._editCanvas, 'top', '0px');
   goog.style.setStyle(this._editCanvas, 'z-index', 9999);
@@ -96,7 +102,17 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.hideSelect
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.activateSelector = function(callback) {
+  goog.style.setStyle(this._editCanvas, 'pointer-events', 'auto');
 
+  var self = this;
+  goog.style.showElement(this._editCanvas, true);
+  goog.style.setOpacity(this._secondaryHint, 0.8); 
+  window.setTimeout(function() {
+    goog.style.setOpacity(self._secondaryHint, 0);
+  }, 2000);
+
+  if (callback)
+    this._stop_selection_callback = callback;
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.editAnnotation = function(annotation) {

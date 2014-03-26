@@ -27,6 +27,11 @@ annotorious.mediatypes.openseadragon.Viewer = function(osdViewer, annotator) {
     if (self._currentlyHighlightedOverlay)
       self._place_popup();
   });
+
+  this._osdViewer.addHandler('animation', function() {
+    if (self._currentlyHighlightedOverlay)
+      self._place_popup();
+  });
   
   this._osdViewer.addHandler('zoom', function() {
     if (self._currentlyHighlightedOverlay)
@@ -136,6 +141,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(a
     self._popup.startHideTimer();
   });
   
+  this._overlays.push(overlay);
   
   this._osdViewer.drawer.addOverlay(outer, rect);
 }
@@ -145,7 +151,14 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(a
  * @param {annotorious.Annotation} annotation the annotation
  */
 annotorious.mediatypes.openseadragon.Viewer.prototype.removeAnnotation = function(annotation) {
+  var overlay = goog.array.find(this._overlays, function(overlay) {
+    return overlay.annotation == annotation;
+  }); 
 
+  if (overlay) {
+    goog.array.remove(this._overlays, overlay);
+    this._osdViewer.drawer.removeOverlay(overlay.outer);
+  }
 }
 
 /**
