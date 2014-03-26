@@ -232,15 +232,22 @@ annotorious.plugins.selection.RectDragSelector.prototype.getShape = function() {
      (Math.abs(this._opposite.y - this._anchor.y) > 3)) {
        
     var viewportBounds = this.getViewportBounds();
-    var item_anchor = this._annotator.toItemCoordinates({x: viewportBounds.left, y: viewportBounds.top});
-    var item_opposite = this._annotator.toItemCoordinates({x: viewportBounds.right, y: viewportBounds.bottom});
+    // var item_anchor = this._annotator.toItemCoordinates({x: viewportBounds.left, y: viewportBounds.top});
+    // var item_opposite = this._annotator.toItemCoordinates({x: viewportBounds.right, y: viewportBounds.bottom});
  
+    /*
     var rect = new annotorious.shape.geom.Rectangle(
       item_anchor.x,
       item_anchor.y,
       item_opposite.x - item_anchor.x,
       item_opposite.y - item_anchor.y
-    );
+    );*/
+    var rect = this._annotator.toItemCoordinates({
+      x: viewportBounds.left,
+      y: viewportBounds.top,
+      width: viewportBounds.right - viewportBounds.left,
+      height: viewportBounds.bottom - viewportBounds.top
+    });
 
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, rect);
   } else {

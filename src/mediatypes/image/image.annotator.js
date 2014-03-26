@@ -435,8 +435,12 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.stopSelection = function(o
  * @returns the corresponding viewport coordinate
  */
 annotorious.mediatypes.image.ImageAnnotator.prototype.toItemCoordinates = function(xy) {
-  var imgSize = goog.style.getSize(this._image);
-  return { x: xy.x / imgSize.width, y: xy.y / imgSize.height };
+  var imgSize = goog.style.getSize(this._image);  
+  if (xy.width) {
+    return { x: xy.x / imgSize.width, y: xy.y / imgSize.height, width: xy.width / imgSize.width, height: xy.height /imgSize.height }; 
+  } else {
+    return { x: xy.x / imgSize.width, y: xy.y / imgSize.height };
+  }
 }
 
 /** API exports **/

@@ -64,7 +64,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype._place_popup = function() 
   // Popup width & height
   var popup_bounds = goog.style.getBounds(this._popup.element);
 
-  var popup_pos = { y: annotation_bounds.top + annotation_bounds.height + 5 };
+  var popup_pos = { y: annotation_bounds.top + annotation_bounds.height + 12 };
   if (annotation_bounds.left + popup_bounds.width > this._map_bounds.width) {
     goog.dom.classes.addRemove(this._popup.element, 'top-left', 'top-right');
     popup_pos.x = (annotation_bounds.left + annotation_bounds.width) - popup_bounds.width;
