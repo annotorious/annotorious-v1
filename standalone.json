@@ -15,11 +15,12 @@
   "externs": [
     "externs/api.externs.js",
     "externs/openlayers.externs.js",
+    "externs/openseadragon.externs.js",
     "externs/jquery.externs.js",
     "//json.js",
     "//webkit_console.js"
   ],
-  "mode": "RAW",      // "RAW" or "ADVANCED"
+  "mode": "ADVANCED",      // "RAW" or "ADVANCED"
   "level": "DEFAULT",      // "DEFAULT" or "VERBOSE"
   "pretty-print": false,
   "debug": false

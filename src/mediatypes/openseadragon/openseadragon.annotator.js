@@ -17,7 +17,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
   annotorious.mediatypes.Annotator.call();
   
   /** @private **/
-  this.element = osdViewer['element'];
+  this.element = osdViewer.element;
   
   /** The editor for this annotator (public for use by plugins) **/
   this.editor;
