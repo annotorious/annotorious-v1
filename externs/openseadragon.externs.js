@@ -10,7 +10,10 @@ var OpenSeadragon = {
   drawer: {
 	  
 	/** Adds an overlay **/
-    addOverlay: function() {}
+    addOverlay: function() {},
+    
+    /** Removes overlay **/
+    removeOverlay: function() {}
 
   },
  
