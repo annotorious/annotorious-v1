@@ -140,6 +140,18 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(a
   
   this._overlays.push(overlay);
   
+  goog.array.sort(this._overlays, function(a, b) {
+    var shapeA = a.annotation.shapes[0];
+    var shapeB = b.annotation.shapes[0];
+    return annotorious.shape.getSize(shapeB) - annotorious.shape.getSize(shapeA);
+  });
+ 
+  var zIndex = 10000;
+  goog.array.forEach(this._overlays, function(overlay) {
+    goog.style.setStyle(overlay.outer, 'z-index', zIndex);
+    zIndex++;
+  });
+  
   this._osdViewer.drawer.addOverlay(outer, rect);
 }
 
