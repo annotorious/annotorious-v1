@@ -146,7 +146,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fromItemCo
   
   if (viewportOpposite) {
     var windowOpposite = this._osdViewer.viewport.viewportToWindowCoordinates(viewportOpposite);
-    return { x: windowPoint.x, y: windowPoint.y, width: windowOpposite.x - windowPoint.x + 2, height: windowOpposite.y - windowPoint.y + 2 };    
+    return { x: windowPoint.x - this.element.offsetLeft, y: windowPoint.y - this.element.offsetTop, width: windowOpposite.x - windowPoint.x + 2, height: windowOpposite.y - windowPoint.y + 2 };    
   } else {
     return windowPoint;
   }  

@@ -146,6 +146,31 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.addSelector = fu
 
 }
 
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.editAnnotation = function(annotation) {
+  // Step 1 - remove from viewer
+  this._viewer.removeAnnotation(annotation);
+
+  // Step 2 - TODO find a suitable selector for the shape
+  var selector = this._selector;
+
+  // Step 3 - open annotation in editor
+  var self = this;
+  if (selector) {
+    goog.style.showElement(this._editCanvas, true);
+    this._viewer.highlightAnnotation(undefined);
+    
+    // TODO make editable - not just draw (selector implementation required)
+    var g2d = this._editCanvas.getContext('2d');
+    var shape = annotation.shapes[0];
+    var viewportShape = annotorious.shape.transform(shape, function(xy) { return self.fromItemCoordinates(xy); });
+    selector.drawShape(g2d, viewportShape);
+
+    var viewportBounds = annotorious.shape.getBoundingRect(viewportShape).geometry;
+    this.editor.setPosition(new annotorious.shape.geom.Point(viewportBounds.x, viewportBounds.y));
+    this.editor.open(annotation);   
+  }
+}
+
 /**
  * Standard Annotator method: fromItemCoordinates
  */
@@ -156,18 +181,10 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.fromItemCoordina
     false;
     
   if (pxOpposite) {
-    return { x: pxCoords.x, y: pxCoords.y, width: pxOpposite.x - pxCoors.x, height: pxOpposite.y - pxCoors.y };
+    return { x: pxCoords.x, y: pxCoords.y, width: pxOpposite.x - pxCoords.x, height: pxOpposite.y - pxCoords.y };
   } else {
     return { x: pxCoords.x, y: pxCoords.y };
   }
-  /*
-  if (viewportOpposite) {
-    var windowOpposite = this._osdViewer.viewport.viewportToWindowCoordinates(viewportOpposite);
-    return { x: windowPoint.x, y: windowPoint.y, width: windowOpposite.x - windowPoint.x + 2, height: windowOpposite.y - windowPoint.y + 2 };    
-  } else {
-    return windowPoint;
-  }  
-   */
 }
 
 /**

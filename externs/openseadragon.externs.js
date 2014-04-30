@@ -29,8 +29,11 @@ var OpenSeadragon = {
   /** The viewport **/
   viewport: {
 	  
-	/** Function to convert from browser window to OpenSeadragon coordinates **/
-    windowToViewportCoordinates: function() {}
+  	/** Function to convert from browser window to OpenSeadragon coordinates **/
+    windowToViewportCoordinates: function() {}, 
+    
+    /** Function to convert from OpenSeadragon to browser window coordinates **/
+    viewportToWindowCoordinates: function() {}
     
   }
     
