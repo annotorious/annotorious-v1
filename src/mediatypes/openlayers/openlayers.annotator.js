@@ -204,5 +204,14 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.setActiveSelecto
  */
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.toItemCoordinates = function(xy) {
   var itemCoords = this._map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x, xy.y));
-  return { x: itemCoords.lon, y: itemCoords.lat };
+  var opposite = (xy.width) ? new OpenLayers.Pixel(xy.x + xy.width - 2, xy.y + xy.height - 2) : false;
+  
+  if (opposite) {
+	var itemOpposite = this._map.getLonLatFromPixel(opposite);
+	return { x: itemCoords.lon, y: itemOpposite.lat, 
+	          width: itemOpposite.lon - itemCoords.lon,
+	          height: itemCoords.lat - itemOpposite.lat };
+  } else {
+    return { x: itemCoords.lon, y: itemCoords.lat };
+  }
 }

@@ -2,12 +2,18 @@ goog.provide('annotorious.mediatypes.openseadragon.Viewer');
 
 goog.require('goog.events.MouseWheelHandler');
 
+/**
+ * The OpenSeadragon viewer uses the OpenSeadragon overlay API to display annotation shapes.
+ * @param {Object} osdViewer the OpenSeadragon viewer object
+ * @param {annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator} annotator reference to the annotator
+ * @constructor
+ */
 annotorious.mediatypes.openseadragon.Viewer = function(osdViewer, annotator) {
-  /* @private */
+  /** @private **/
   this._osdViewer = osdViewer;
   
   /** @private **/  
-  this._map_bounds = goog.style.getBounds(osdViewer['element']);
+  this._map_bounds = goog.style.getBounds(osdViewer.element);
   
   /** @private **/
   this._popup = annotator.popup;
@@ -23,21 +29,12 @@ annotorious.mediatypes.openseadragon.Viewer = function(osdViewer, annotator) {
   this._lastHoveredOverlay;
   
   var self = this;
-  this._osdViewer.addHandler('pan', function() {
-    if (self._currentlyHighlightedOverlay)
-      self._place_popup();
-  });
 
   this._osdViewer.addHandler('animation', function() {
     if (self._currentlyHighlightedOverlay)
       self._place_popup();
   });
-  
-  this._osdViewer.addHandler('zoom', function() {
-    if (self._currentlyHighlightedOverlay)
-      self._place_popup();
-  });
-  
+    
   annotator.addHandler(annotorious.events.EventType.BEFORE_POPUP_HIDE, function() {
     if (self._lastHoveredOverlay == self._currentlyHighlightedOverlay)
       self._popup.clearHideTimer();
@@ -142,6 +139,18 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(a
   });
   
   this._overlays.push(overlay);
+  
+  goog.array.sort(this._overlays, function(a, b) {
+    var shapeA = a.annotation.shapes[0];
+    var shapeB = b.annotation.shapes[0];
+    return annotorious.shape.getSize(shapeB) - annotorious.shape.getSize(shapeA);
+  });
+ 
+  var zIndex = 10000;
+  goog.array.forEach(this._overlays, function(overlay) {
+    goog.style.setStyle(overlay.outer, 'z-index', zIndex);
+    zIndex++;
+  });
   
   this._osdViewer.drawer.addOverlay(outer, rect);
 }
