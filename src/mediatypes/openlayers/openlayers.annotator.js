@@ -204,20 +204,5 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.setActiveSelecto
  */
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.toItemCoordinates = function(xy) {
   var itemCoords = this._map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x, xy.y));
-  var itemOpposite = (xy.width) ? new 
-
   return { x: itemCoords.lon, y: itemCoords.lat };
-  
-/*
-  var viewportPoint = new OpenSeadragon.Point(xy.x, xy.y);
-  var viewportOpposite = (xy.width) ? new OpenSeadragon.Point(xy.x + xy.width - 2, xy.y + xy.height - 2) : false;
-  var viewElementPoint = this._osdViewer.viewport.windowToViewportCoordinates(viewportPoint); 
-  
-  if (viewportOpposite) {
-    var viewElementOpposite = this._osdViewer.viewport.windowToViewportCoordinates(viewportOpposite);
-    return {x: viewElementPoint.x, y: viewElementPoint.y, width: viewElementOpposite.x - viewElementPoint.x, height: viewElementOpposite.y - viewElementPoint.y};
-  } else {
-    return viewElementPoint;
-  }
- */
 }

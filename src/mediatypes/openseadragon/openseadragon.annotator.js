@@ -114,8 +114,29 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.activateSe
     this._stop_selection_callback = callback;
 }
 
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.addSelector = function(selector) {
+annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.editAnnotation = function(annotation) {
+  // Step 1 - remove from viewer
+  this._viewer.removeAnnotation(annotation);
 
+  // Step 2 - TODO find a suitable selector for the shape
+  var selector = this._selector;
+
+  // Step 3 - open annotation in editor
+  var self = this;
+  if (selector) {
+    goog.style.showElement(this._editCanvas, true);
+    this._viewer.highlightAnnotation(undefined);
+    
+    // TODO make editable - not just draw (selector implementation required)
+    var g2d = this._editCanvas.getContext('2d');
+    var shape = annotation.shapes[0];
+    var viewportShape = annotorious.shape.transform(shape, function(xy) { return self.fromItemCoordinates(xy); });
+    selector.drawShape(g2d, viewportShape);
+
+    var viewportBounds = annotorious.shape.getBoundingRect(viewportShape).geometry;
+    this.editor.setPosition(new annotorious.shape.geom.Point(viewportBounds.x, viewportBounds.y + viewportBounds.height + 4));
+    this.editor.open(annotation);   
+  }
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fromItemCoordinates = function(itemCoords) {

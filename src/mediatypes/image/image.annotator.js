@@ -11,6 +11,7 @@ goog.require('goog.style');
 goog.require('annotorious.Editor');
 goog.require('annotorious.Hint');
 goog.require('annotorious.Popup');
+goog.require('annotorious.mediatypes.Annotator');
 goog.require('annotorious.mediatypes.image.Viewer');
 goog.require('annotorious.plugins.selection.RectDragSelector');
 goog.require('annotorious.templates.image');
@@ -22,6 +23,8 @@ goog.require('annotorious.templates.image');
  * @constructor
  */
 annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
+  annotorious.mediatypes.Annotator.call();
+
   var hint;
   
   /** The container DOM element (DIV) for the annotation layer **/
@@ -143,6 +146,7 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
     self._currentSelector.stopSelection();
   });
 }
+goog.inherits(annotorious.mediatypes.image.ImageAnnotator, annotorious.mediatypes.Annotator);
 
 /**
  * Helper function to transfer relevant styles from the <img> to the annotation layer <div> element.
@@ -177,26 +181,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype._transferStyles = function
 annotorious.mediatypes.image.ImageAnnotator.prototype.activateSelector = function(callback) { }
 
 /**
- * Adds an annotation to this annotator's viewer.
- * @param {annotorious.Annotation} annotation the annotation
- * @param {annotorious.Annotation=} opt_replace optionally, an existing annotation to replace
- */
-annotorious.mediatypes.image.ImageAnnotator.prototype.addAnnotation = function(annotation, opt_replace) {
-  this._viewer.addAnnotation(annotation, opt_replace);
-}
-
-/**
- * Adds a lifecycle event handler to this annotator's Event Broker.
- * @param {annotorious.events.EventType} type the event type
- * @param {Function} handler the handler function
- */
-annotorious.mediatypes.image.ImageAnnotator.prototype.addHandler = function(type, handler) {
-  this._eventBroker.addHandler(type, handler);  
-}
-
-/**
- * Adds a selector.
- * @param {Object} selector the selector object 
+ * Adds a selector
  */
 annotorious.mediatypes.image.ImageAnnotator.prototype.addSelector = function(selector) {
   selector.init(this, this._editCanvas); 
@@ -251,26 +236,17 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.editAnnotation = function(
 }
 
 /**
- * Fire an event on this annotator's Event Broker.
- * @param {annotorious.events.EventType} type the event type
- * @param {Object} event the event object
- */
-annotorious.mediatypes.image.ImageAnnotator.prototype.fireEvent = function(type, event) {
-  return this._eventBroker.fireEvent(type, event);
-}
-
-/**
  * Converts the specified viewport coordinate to the
  * coordinate system used by the annotatable item.
  * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  * @returns the corresponding item coordinate
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.fromItemCoordinates = function(xy) {
+annotorious.mediatypes.image.ImageAnnotator.prototype.fromItemCoordinates = function(xy_wh) {
   var imgSize = goog.style.getSize(this._image);
-  if (xy.width) {
-    return { x: xy.x * imgSize.width, y: xy.y * imgSize.height, width: xy.width * imgSize.width,  height: xy.height * imgSize.height };
+  if (xy_wh.width) {
+    return { x: xy_wh.x * imgSize.width, y: xy_wh.y * imgSize.height, width: xy_wh.width * imgSize.width,  height: xy_wh.height * imgSize.height };
   } else {
-    return { x: xy.x * imgSize.width, y: xy.y * imgSize.height };
+    return { x: xy_wh.x * imgSize.width, y: xy_wh.y * imgSize.height };
   }
 }
 
@@ -352,31 +328,6 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.hideSelectionWidget = func
 }
 
 /**
- * Highlights the specified annotation.
- * @param {annotorious.Annotation} annotation the annotation
- */
-annotorious.mediatypes.image.ImageAnnotator.prototype.highlightAnnotation = function(annotation) {
-  this._viewer.highlightAnnotation(annotation);
-}
-
-/**
- * Removes an annotation from this annotator's viewer.
- * @param {annotorious.Annotation} annotation the annotation
- */
-annotorious.mediatypes.image.ImageAnnotator.prototype.removeAnnotation = function(annotation) {
-  this._viewer.removeAnnotation(annotation);
-}
-
-/**
- * Removes a lifecycle event handler to this annotator's Event Broker.
- * @param {annotorious.events.EventType} type the event type
- * @param {Function} handler the handler function
- */
-annotorious.mediatypes.image.ImageAnnotator.prototype.removeHandler = function(type, handler) {
-  this._eventBroker.removeHandler(type, handler);
-}
-
-/**
  * Sets the active selector for this item to the specified selector.
  * @param {Object} selector the selector object
  */
@@ -438,12 +389,12 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.stopSelection = function(o
  * @param {annotorious.shape.geom.Point} xy the item coordinate
  * @returns the corresponding viewport coordinate
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.toItemCoordinates = function(xy) {
+annotorious.mediatypes.image.ImageAnnotator.prototype.toItemCoordinates = function(xy_wh) {
   var imgSize = goog.style.getSize(this._image);  
-  if (xy.width) {
-    return { x: xy.x / imgSize.width, y: xy.y / imgSize.height, width: xy.width / imgSize.width, height: xy.height /imgSize.height }; 
+  if (xy_wh.width) {
+    return { x: xy_wh.x / imgSize.width, y: xy_wh.y / imgSize.height, width: xy_wh.width / imgSize.width, height: xy_wh.height /imgSize.height }; 
   } else {
-    return { x: xy.x / imgSize.width, y: xy.y / imgSize.height };
+    return { x: xy_wh.x / imgSize.width, y: xy_wh.y / imgSize.height };
   }
 }
 
