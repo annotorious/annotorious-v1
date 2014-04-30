@@ -82,8 +82,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
     goog.style.setStyle(self._editCanvas, 'pointer-events', 'none');
 
     var bounds = event.viewportBounds;
-    self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left /* + self.element.offsetLeft */,
-                                                             bounds.bottom + 4 /* + self.element.offsetTop */));
+    self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left, bounds.bottom + 4));
     self.editor.open();    
   });
 
@@ -115,18 +114,21 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.activateSe
     this._stop_selection_callback = callback;
 }
 
-annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.editAnnotation = function(annotation) {
-
-}
-
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.addSelector = function(selector) {
 
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
-  var viewElementPoint = new OpenSeadragon.Point(itemCoords.x, itemCoords.y);
-  var viewportPoint = this._osdViewport.viewerElementToViewportCoordinates(viewElementPoint); 
-  console.log(viewportPoint);
+  var viewportPoint = new OpenSeadragon.Point(itemCoords.x, itemCoords.y);
+  var viewportOpposite = (itemCoords.width) ? new OpenSeadragon.Point(itemCoords.x + itemCoords.width, itemCoords.y + itemCoords.height) : false; 
+  var windowPoint = this._osdViewer.viewport.viewportToWindowCoordinates(viewportPoint); 
+  
+  if (viewportOpposite) {
+    var windowOpposite = this._osdViewer.viewport.viewportToWindowCoordinates(viewportOpposite);
+    return { x: windowPoint.x, y: windowPoint.y, width: windowOpposite.x - windowPoint.x + 2, height: windowOpposite.y - windowPoint.y + 2 };    
+  } else {
+    return windowPoint;
+  }  
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getAnnotations = function() {

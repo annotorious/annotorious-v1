@@ -176,10 +176,14 @@ annotorious.shape.expand = function(shape, delta) {
 annotorious.shape.transform = function(shape, transformationFn) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     var geom = shape.geometry;
-    var anchor = transformationFn({ x: geom.x, y: geom.y });
-    var opposite = transformationFn({ x: geom.x + geom.width, y: geom.y + geom.height });
+    // var anchor = transformationFn({ x: geom.x, y: geom.y });
+    // var opposite = transformationFn({ x: geom.x + geom.width, y: geom.y + geom.height });
+    var transformed = transformationFn(geom);
+    console.log(transformed);
+    
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE,
-      new annotorious.shape.geom.Rectangle(anchor.x, anchor.y, (opposite.x - anchor.x), (opposite.y - anchor.y)),
+      // new annotorious.shape.geom.Rectangle(anchor.x, anchor.y, (opposite.x - anchor.x), (opposite.y - anchor.y)),
+      transformed,
       false, shape.style
     );
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {

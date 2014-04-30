@@ -140,36 +140,6 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.destroy = functi
 }
 
 /**
- * Standard Annotator method: editAnnotation
- * @suppress {checkTypes}
- */
-annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.editAnnotation = function(annotation) {
-  // Step 1 - remove from viewer
-  this._viewer.removeAnnotation(annotation);
-
-  // Step 2 - TODO find a suitable selector for the shape
-  var selector = this._selector;
-
-  // Step 3 - open annotation in editor
-  var self = this;
-  if (selector) {
-    goog.style.showElement(this._editCanvas, true);
-    this._viewer.highlightAnnotation(undefined);
-    
-    // TODO make editable - not just draw (selector implementation required)
-    var g2d = this._editCanvas.getContext('2d');
-    var shape = annotation.shapes[0];
-    var viewportShape = annotorious.shape.transform(shape, function(xy) { return self.fromItemCoordinates(xy); });
-    selector.drawShape(g2d, viewportShape);
-
-    var viewportBounds = annotorious.shape.getBoundingRect(viewportShape).geometry;
-    this.editor.setPosition(new annotorious.shape.geom.Point(viewportBounds.x + this.element.offsetLeft,
-                                                             viewportBounds.y + viewportBounds.height + 4 + this.element.offsetTop));
-    this.editor.open(annotation);   
-  }
-}
-
-/**
  * Standard Annotator method: addSelector
  */
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.addSelector = function(selector) {
@@ -181,7 +151,23 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.addSelector = fu
  */
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
   var pxCoords = this._map.getViewPortPxFromLonLat(new OpenLayers.LonLat(itemCoords.x, itemCoords.y));
-  return { x: pxCoords.x, y: pxCoords.y };
+  var pxOpposite = (itemCoords.width) ?
+    this._map.getViewPortPxFromLonLat(new OpenLayers.LonLat(itemCoords.x + itemCoords.width, itemCoords.y + itemCoords.height)) : 
+    false;
+    
+  if (pxOpposite) {
+    return { x: pxCoords.x, y: pxCoords.y, width: pxOpposite.x - pxCoors.x, height: pxOpposite.y - pxCoors.y };
+  } else {
+    return { x: pxCoords.x, y: pxCoords.y };
+  }
+  /*
+  if (viewportOpposite) {
+    var windowOpposite = this._osdViewer.viewport.viewportToWindowCoordinates(viewportOpposite);
+    return { x: windowPoint.x, y: windowPoint.y, width: windowOpposite.x - windowPoint.x + 2, height: windowOpposite.y - windowPoint.y + 2 };    
+  } else {
+    return windowPoint;
+  }  
+   */
 }
 
 /**
@@ -218,5 +204,20 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.setActiveSelecto
  */
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.toItemCoordinates = function(xy) {
   var itemCoords = this._map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x, xy.y));
+  var itemOpposite = (xy.width) ? new 
+
   return { x: itemCoords.lon, y: itemCoords.lat };
+  
+/*
+  var viewportPoint = new OpenSeadragon.Point(xy.x, xy.y);
+  var viewportOpposite = (xy.width) ? new OpenSeadragon.Point(xy.x + xy.width - 2, xy.y + xy.height - 2) : false;
+  var viewElementPoint = this._osdViewer.viewport.windowToViewportCoordinates(viewportPoint); 
+  
+  if (viewportOpposite) {
+    var viewElementOpposite = this._osdViewer.viewport.windowToViewportCoordinates(viewportOpposite);
+    return {x: viewElementPoint.x, y: viewElementPoint.y, width: viewElementOpposite.x - viewElementPoint.x, height: viewElementOpposite.y - viewElementPoint.y};
+  } else {
+    return viewElementPoint;
+  }
+ */
 }

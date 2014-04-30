@@ -267,7 +267,11 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.fireEvent = function(type,
  */
 annotorious.mediatypes.image.ImageAnnotator.prototype.fromItemCoordinates = function(xy) {
   var imgSize = goog.style.getSize(this._image);
-  return { x: xy.x * imgSize.width, y: xy.y * imgSize.height };
+  if (xy.width) {
+    return { x: xy.x * imgSize.width, y: xy.y * imgSize.height, width: xy.width * imgSize.width,  height: xy.height * imgSize.height };
+  } else {
+    return { x: xy.x * imgSize.width, y: xy.y * imgSize.height };
+  }
 }
 
 /**
