@@ -163,10 +163,11 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.editAnnotation =
     var g2d = this._editCanvas.getContext('2d');
     var shape = annotation.shapes[0];
     var viewportShape = annotorious.shape.transform(shape, function(xy) { return self.fromItemCoordinates(xy); });
+    console.log(viewportShape);
     selector.drawShape(g2d, viewportShape);
 
     var viewportBounds = annotorious.shape.getBoundingRect(viewportShape).geometry;
-    this.editor.setPosition(new annotorious.shape.geom.Point(viewportBounds.x, viewportBounds.y));
+    this.editor.setPosition(new annotorious.shape.geom.Point(viewportBounds.x, viewportBounds.y + viewportBounds.height));
     this.editor.open(annotation);   
   }
 }
@@ -181,7 +182,7 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.fromItemCoordina
     false;
     
   if (pxOpposite) {
-    return { x: pxCoords.x, y: pxCoords.y, width: pxOpposite.x - pxCoords.x, height: pxOpposite.y - pxCoords.y };
+    return { x: pxCoords.x, y: pxOpposite.y, width: pxOpposite.x - pxCoords.x + 2, height: pxCoords.y - pxOpposite.y + 2};
   } else {
     return { x: pxCoords.x, y: pxCoords.y };
   }
@@ -224,10 +225,13 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.toItemCoordinate
   var opposite = (xy.width) ? new OpenLayers.Pixel(xy.x + xy.width - 2, xy.y + xy.height - 2) : false;
   
   if (opposite) {
-	var itemOpposite = this._map.getLonLatFromPixel(opposite);
-	return { x: itemCoords.lon, y: itemOpposite.lat, 
-	          width: itemOpposite.lon - itemCoords.lon,
-	          height: itemCoords.lat - itemOpposite.lat };
+  	var itemOpposite = this._map.getLonLatFromPixel(opposite);
+	  var foo = { x: itemCoords.lon, y: itemOpposite.lat, 
+	           width: itemOpposite.lon - itemCoords.lon,
+	           height: itemCoords.lat - itemOpposite.lat };
+             
+    console.log(foo);
+    return foo;
   } else {
     return { x: itemCoords.lon, y: itemCoords.lat };
   }
