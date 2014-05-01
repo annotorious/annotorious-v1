@@ -140,13 +140,17 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.editAnnota
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
+  var offset = annotorious.dom.getOffset(this.element); 
+  offset.top += window.pageYOffset;
+  offset.left += window.pageXOffset;
+  
   var viewportPoint = new OpenSeadragon.Point(itemCoords.x, itemCoords.y);
   var viewportOpposite = (itemCoords.width) ? new OpenSeadragon.Point(itemCoords.x + itemCoords.width, itemCoords.y + itemCoords.height) : false; 
   var windowPoint = this._osdViewer.viewport.viewportToWindowCoordinates(viewportPoint); 
-  
+ 
   if (viewportOpposite) {
     var windowOpposite = this._osdViewer.viewport.viewportToWindowCoordinates(viewportOpposite);
-    return { x: windowPoint.x - this.element.offsetLeft, y: windowPoint.y - this.element.offsetTop, width: windowOpposite.x - windowPoint.x + 2, height: windowOpposite.y - windowPoint.y + 2 };    
+    return { x: windowPoint.x - offset.left, y: windowPoint.y - offset.top, width: windowOpposite.x - windowPoint.x + 2, height: windowOpposite.y - windowPoint.y + 2 };    
   } else {
     return windowPoint;
   }  
@@ -181,8 +185,8 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.toItemCoor
   if (viewportOpposite) {
     var viewElementOpposite = this._osdViewer.viewport.windowToViewportCoordinates(viewportOpposite);
     return { x: viewElementPoint.x, y: viewElementPoint.y, 
-              width: viewElementOpposite.x - viewElementPoint.x, 
-              height: viewElementOpposite.y - viewElementPoint.y };
+             width: viewElementOpposite.x - viewElementPoint.x, 
+             height: viewElementOpposite.y - viewElementPoint.y };
   } else {
     return viewElementPoint;
   }
