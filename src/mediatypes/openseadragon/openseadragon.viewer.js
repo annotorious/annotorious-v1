@@ -60,25 +60,28 @@ annotorious.mediatypes.openseadragon.Viewer.prototype._place_popup = function() 
 
   // Popup width & height
   var popup_bounds = goog.style.getBounds(this._popup.element);
+  var popup_pos = { x: annotation_bounds.left, y: annotation_bounds.top + annotation_bounds.height + 12 };
+  goog.dom.classes.addRemove(this._popup.element, 'top-right', 'top-left');
 
-  var popup_pos = { y: annotation_bounds.top + annotation_bounds.height + 12 };
-  if (annotation_bounds.left + popup_bounds.width > this._map_bounds.width) {
-    goog.dom.classes.addRemove(this._popup.element, 'top-left', 'top-right');
-    popup_pos.x = (annotation_bounds.left + annotation_bounds.width) - popup_bounds.width;
-  } else {
-    goog.dom.classes.addRemove(this._popup.element, 'top-right', 'top-left');
-    popup_pos.x = annotation_bounds.left;
-  }
+  // Don't fix position in full-page mode    
+  if (!this._osdViewer.isFullPage()) {
+    if (annotation_bounds.left + popup_bounds.width > this._map_bounds.width) {
+      goog.dom.classes.addRemove(this._popup.element, 'top-left', 'top-right');
+      popup_pos.x = (annotation_bounds.left + annotation_bounds.width) - popup_bounds.width;
+    } else {
+      
+    }
 
-  if (popup_pos.x < 0)
-    popup_pos.x = 0;
+    if (popup_pos.x < 0)
+      popup_pos.x = 0;
 
-  if (popup_pos.x + popup_bounds.width > this._map_bounds.width)
-    popup_pos.x = this._map_bounds.width - popup_bounds.width;
+    if (popup_pos.x + popup_bounds.width > this._map_bounds.width)
+      popup_pos.x = this._map_bounds.width - popup_bounds.width;
      
-  if (popup_pos.y + popup_bounds.height > this._map_bounds.height)
-    popup_pos.y = this._map_bounds.height - popup_bounds.height;
-
+    if (popup_pos.y + popup_bounds.height > this._map_bounds.height)
+      popup_pos.y = this._map_bounds.height - popup_bounds.height;
+  }
+  
   this._popup.setPosition(popup_pos);    
 }
 

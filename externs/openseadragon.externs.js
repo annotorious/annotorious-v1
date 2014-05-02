@@ -35,6 +35,12 @@ var OpenSeadragon = {
     /** Function to convert from OpenSeadragon to browser window coordinates **/
     viewportToWindowCoordinates: function() {}
     
+  },
+  
+  viewer: { 
+    
+    isFullPage: function() {}
+    
   }
     
 }
