@@ -288,9 +288,8 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.getAvailableSelectors = fu
  * Returns the image that this annotator is responsible for.
  * @returns {Object} the image
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.getItem = function() {
-  // TODO include width and height
-  return { src: annotorious.mediatypes.image.ImageAnnotator.getItemURL(this._image) };
+annotorious.mediatypes.image.ImageAnnotator.prototype.getItem = function() { 
+  return { src: annotorious.mediatypes.image.ImageAnnotator.getItemURL(this._image), element: this._image };
 }
 
 /**

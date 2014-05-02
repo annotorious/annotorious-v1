@@ -45,13 +45,12 @@ annotorious.events.EventBroker.prototype.removeHandler = function(type, handler)
  * @param {Object=} opt_event the event object
  * @return {boolean} the 'cancel event' flag
  */
-annotorious.events.EventBroker.prototype.fireEvent = function(type, opt_event) {
+annotorious.events.EventBroker.prototype.fireEvent = function(type, opt_event, opt_extra) {
   var cancelEvent = false;
-
   var handlers = this._handlers[type];
   if (handlers) {
     goog.array.forEach(handlers, function(handler, idx, array) {
-      var retVal = handler(opt_event);
+      var retVal = handler(opt_event, opt_extra);
       if (goog.isDef(retVal) && !retVal)
         cancelEvent = true;
     });

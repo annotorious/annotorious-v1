@@ -14,8 +14,8 @@ annotorious.mediatypes.Annotator.prototype.addHandler = function(type, handler) 
   this._eventBroker.addHandler(type, handler);  
 }
 
-annotorious.mediatypes.Annotator.prototype.fireEvent = function(type, event) {
-  return this._eventBroker.fireEvent(type, event);
+annotorious.mediatypes.Annotator.prototype.fireEvent = function(type, event, opt_extra) {
+  return this._eventBroker.fireEvent(type, event, opt_extra);
 }
 
 annotorious.mediatypes.Annotator.prototype.getActiveSelector = function() {

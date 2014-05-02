@@ -58,9 +58,9 @@ annotorious.Editor = function(annotator) {
     annotator.stopSelection();
 
     if (self._original_annotation)
-      annotator.fireEvent(annotorious.events.EventType.ANNOTATION_UPDATED, annotation);
+      annotator.fireEvent(annotorious.events.EventType.ANNOTATION_UPDATED, annotation, annotator.getItem());
     else
-      annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, annotation);      
+      annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CREATED, annotation, annotator.getItem());      
     self.close();
   });
  
