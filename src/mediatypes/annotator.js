@@ -6,8 +6,8 @@ goog.provide('annotorious.mediatypes.Annotator');
  */
 annotorious.mediatypes.Annotator = function() { }
 
-annotorious.mediatypes.Annotator.prototype.addAnnotation = function(annotation) {
-  this._viewer.addAnnotation(annotation);
+annotorious.mediatypes.Annotator.prototype.addAnnotation = function(annotation, opt_replace) {
+  this._viewer.addAnnotation(annotation, opt_replace);
 }
 
 annotorious.mediatypes.Annotator.prototype.addHandler = function(type, handler) {
