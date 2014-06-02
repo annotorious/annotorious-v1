@@ -192,7 +192,7 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.fromItemCoordina
  * Standard Annotator method: getAnnotations
  */
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getAnnotations = function() {
-
+  return this._viewer.getAnnotations();
 }
 
 /**
