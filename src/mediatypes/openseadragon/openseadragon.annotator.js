@@ -18,6 +18,8 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
   
   /** @private **/
   this.element = osdViewer.element;
+  // Hacky: Normalize the z-index of openseadragon-container
+  goog.style.setStyle(goog.dom.getElementByClass("openseadragon-container"), 'z-index', 0);
   
   /** The editor for this annotator (public for use by plugins) **/
   this.editor;
@@ -30,7 +32,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
   
   /** @private **/
   this._secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
-  goog.style.setStyle(this._secondaryHint, 'z-index', 9998);
+  //goog.style.setStyle(this._secondaryHint, 'z-index', 9998);
   goog.style.setOpacity(this._secondaryHint, 0); 
   goog.dom.appendChild(this.element, this._secondaryHint);
   
@@ -44,9 +46,6 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
   this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
     { width:'0', height:'0' });
   goog.style.showElement(this._editCanvas, false);
-  goog.style.setStyle(this._editCanvas, 'position', 'absolute');
-  goog.style.setStyle(this._editCanvas, 'top', '0px');
-  goog.style.setStyle(this._editCanvas, 'z-index', 9999);
 
   goog.dom.appendChild(this.element, this._editCanvas); 
   

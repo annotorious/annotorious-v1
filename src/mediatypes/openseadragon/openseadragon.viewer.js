@@ -149,7 +149,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(a
     return annotorious.shape.getSize(shapeB) - annotorious.shape.getSize(shapeA);
   });
  
-  var zIndex = 10000;
+  var zIndex = 1;
   goog.array.forEach(this._overlays, function(overlay) {
     goog.style.setStyle(overlay.outer, 'z-index', zIndex);
     zIndex++;
