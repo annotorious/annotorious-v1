@@ -31,6 +31,15 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
   this._eventBroker = new annotorious.events.EventBroker();
   
   /** @private **/
+  this._selectors = [];
+  
+  /** @private **/
+  this._currentSelector;
+  
+  /** @private **/
+  this._selectionEnabled = true;
+  
+  /** @private **/
   this._secondaryHint = goog.soy.renderAsElement(annotorious.templates.openlayers.secondaryHint, {msg: 'Click and Drag'});
   //goog.style.setStyle(this._secondaryHint, 'z-index', 9998);
   goog.style.setOpacity(this._secondaryHint, 0); 
@@ -59,26 +68,20 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
         self._editCanvas.height = height;
       };
       
-  /** @private **/
-  this._selector = new annotorious.plugins.selection.RectDragSelector();
-  this._selector.init(this, this._editCanvas); 
-  
   updateCanvasSize();
   
-  /** @private **/
-  this._selector = new annotorious.plugins.selection.RectDragSelector();
-  this._selector.init(this, this._editCanvas); 
+  var default_selector = new annotorious.plugins.selection.RectDragSelector();
+  default_selector.init(this, this._editCanvas); 
+  this._selectors.push(default_selector);
+  this._currentSelector = default_selector;
   
   this.editor = new annotorious.Editor(this);
   
   /** Note - this code is duplicate across image, OpenLayers and OpenSeadragon & really needs to go into its own class **/
-  goog.events.listen(this._editCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
-    var offset = goog.style.getClientPosition(self.element);
-    self._selector.startSelection(event.clientX - offset.x, event.clientY - offset.y);
-  });
+  this._attachListener(this._editCanvas);
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
-    goog.style.setStyle(self._editCanvas, 'pointer-events', 'none');
+    //goog.style.setStyle(self._editCanvas, 'pointer-events', 'none');
 
     var bounds = event.viewportBounds;
     self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left, bounds.bottom + 4));
@@ -88,6 +91,8 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator = function(osdViewer
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function(event) {
     self.stopSelection();    
   });
+  
+  /** End of possible dupplicated code **/ 
 }
 goog.inherits(annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator, annotorious.mediatypes.Annotator);
 
@@ -118,7 +123,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.editAnnota
   this._viewer.removeAnnotation(annotation);
 
   // Step 2 - TODO find a suitable selector for the shape
-  var selector = this._selector;
+  var selector = this._currentSelector;
 
   // Step 3 - open annotation in editor
   var self = this;
@@ -171,6 +176,15 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getItem = 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.setActiveSelector = function(selector) {
 
 }
+
+/**
+ * Returns the currently active selector.
+ * @returns {Object} the currently active selector
+ */
+annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getActiveSelector = function() {
+  return this._currentSelector;
+}
+
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.toItemCoordinates = function(xy) {
   var offset = annotorious.dom.getOffset(this.element); 
