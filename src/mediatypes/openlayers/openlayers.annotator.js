@@ -64,8 +64,8 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   updateCanvasSize();
 
   /** @private **/
-  this._selector = new annotorious.plugins.selection.RectDragSelector();
-  this._selector.init(this, this._editCanvas); 
+  this._currentSelector = new annotorious.plugins.selection.RectDragSelector();
+  this._currentSelector.init(this, this._editCanvas); 
     
   /** @private **/
   this._stop_selection_callback = undefined;
@@ -93,7 +93,7 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator = function(map) {
   
   goog.events.listen(this._editCanvas, goog.events.EventType.MOUSEDOWN, function(event) {
     var offset = goog.style.getClientPosition(self.element);
-    self._selector.startSelection(event.clientX - offset.x, event.clientY - offset.y);
+    self._currentSelector.startSelection(event.clientX - offset.x, event.clientY - offset.y);
   });
   
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
@@ -151,7 +151,7 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.editAnnotation =
   this._viewer.removeAnnotation(annotation);
 
   // Step 2 - TODO find a suitable selector for the shape
-  var selector = this._selector;
+  var selector = this._currentSelector;
 
   // Step 3 - open annotation in editor
   var self = this;

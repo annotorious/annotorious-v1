@@ -19,7 +19,7 @@ annotorious.mediatypes.Annotator.prototype.fireEvent = function(type, event, opt
 }
 
 annotorious.mediatypes.Annotator.prototype.getActiveSelector = function() {
-  return this._selector;
+  return this._currentSelector;
 }
 
 annotorious.mediatypes.Annotator.prototype.highlightAnnotation = function(annotation) {
