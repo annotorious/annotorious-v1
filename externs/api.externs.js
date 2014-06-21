@@ -34,15 +34,27 @@ var Annotation = {
       
       /** @type {string} outline color **/
       outline: {},
+
+      /** @type {number} outline width **/
+      outline_width: {},
       
       /** @type {string} outline color when highlighted **/
       hi_outline: {},
+
+      /** @type {number} outline width when hightlighted **/
+      hi_outline_width: {},
       
       /** @type {string} stroke color **/
       stroke: {},
-      
+
+      /** @type {number} stroke width **/
+      stroke_width: {},      
+
       /** @type {string} stroke color when highlighted **/
       hi_stroke: {},
+
+      /** @type {number} stroke width when highlighted **/
+      hi_stroke_width: {},      
       
       /** @type {string} fill color **/
       fill: {},
