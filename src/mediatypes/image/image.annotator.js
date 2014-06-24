@@ -120,7 +120,6 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
   }
 
   var activeCanvas = (annotorious.events.ui.hasTouch) ? this._editCanvas : this._viewCanvas;
-  
   this._attachListener(activeCanvas);
 
   this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
