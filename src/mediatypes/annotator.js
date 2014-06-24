@@ -51,15 +51,14 @@ annotorious.mediatypes.Annotator.prototype.stopSelection = function(original_ann
 }
 
 annotorious.mediatypes.Annotator.prototype._attachListener = function(activeCanvas) {
-  console.log('attaching draw handler code to the active canvas');
   var self = this;
   goog.events.listen(activeCanvas, annotorious.events.ui.EventType.DOWN, function(event) {
+    console.log('start selection event');
+    console.log(event);
     var coords = annotorious.events.ui.sanitizeCoordinates(event, activeCanvas);
     self._viewer.highlightAnnotation(false);
 		if (self._selectionEnabled) {
-      console.log('un-hiding the edit canvas');
       goog.style.showElement(self._editCanvas, true);      
-      console.log('starting selection');
       self._currentSelector.startSelection(coords.x, coords.y);
 		} else {
 			var annotations = self._viewer.getAnnotationsAt(coords.x, coords.y);
