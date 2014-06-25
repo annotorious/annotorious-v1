@@ -18,6 +18,8 @@ annotorious.shape.Shape = function(type, geometry, units, style) {
     this.units = units;
   if (style)
     this.style = style;
+  else
+    this.style = {};
 }
 
 /**

@@ -98,7 +98,8 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
           y: height > 0 ? self._anchor.y : self._opposite.y,
           width: Math.abs(width),
           height: Math.abs(height)
-        }
+        },
+        style: {}
       });
     }
   });
@@ -290,36 +291,22 @@ annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = fun
  */
 annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function(g2d, shape, highlight) {
   var geom, stroke, fill, outline, outline_width, stroke_width;
+
+  if (!shape.style) shape.style = {};
   
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
-    if ('style' in shape) {
-        if (highlight) {
-          fill = shape.style.hi_fill;
-          stroke = shape.style.hi_stroke;
-          outline = shape.style.hi_outline;
-          outline_width = shape.style.hi_outline_width;
-          stroke_width = shape.style.hi_stroke_width;
-        } else {
-          fill = shape.style.fill;
-          stroke = shape.style.stroke;
-          outline = shape.style.outline;
-          outline_width = shape.style.outline_width;
-          stroke_width = shape.style.stroke_width;
-        }
+    if (highlight) {
+      fill = shape.style.hi_fill || this._HI_FILL;
+      stroke = shape.style.hi_stroke || this._HI_STROKE;
+      outline = shape.style.hi_outline || this._HI_OUTLINE;
+      outline_width = shape.style.hi_outline_width || this._HI_OUTLINE_WIDTH;
+      stroke_width = shape.style.hi_stroke_width || this._HI_STROKE_WIDTH;
     } else {
-        if (highlight) {
-          fill = this._HI_FILL;
-          stroke = this._HI_STROKE;
-          outline = this._HI_OUTLINE;
-          outline_width = this._HI_OUTLINE_WIDTH;
-          stroke_width = this._HI_STROKE_WIDTH;
-        } else {
-          fill = this._FILL;
-          stroke = this._STROKE;
-          outline = this._OUTLINE;
-          outline_width = this._OUTLINE_WIDTH;
-          stroke_width = this._STROKE_WIDTH;
-        }
+      fill = shape.style.fill || this._FILL;
+      stroke = shape.style.stroke || this._STROKE;
+      outline = shape.style.outline || this._OUTLINE;
+      outline_width = shape.style.outline_width || this._OUTLINE_WIDTH;
+      stroke_width = shape.style.stroke_width || this._STROKE_WIDTH;
     }
 
     geom = shape.geometry;
