@@ -155,7 +155,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(a
     zIndex++;
   });
   
-  this._osdViewer.drawer.addOverlay(outer, rect);
+  this._osdViewer.addOverlay(outer, rect);
 }
 
 /**
@@ -165,11 +165,11 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(a
 annotorious.mediatypes.openseadragon.Viewer.prototype.removeAnnotation = function(annotation) {
   var overlay = goog.array.find(this._overlays, function(overlay) {
     return overlay.annotation == annotation;
-  }); 
+  });
 
   if (overlay) {
     goog.array.remove(this._overlays, overlay);
-    this._osdViewer.drawer.removeOverlay(overlay.outer);
+    this._osdViewer.removeOverlay(overlay.outer);
   }
 }
 
@@ -178,7 +178,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.removeAnnotation = functio
  * @return {Array.<annotorious.Annotation>} the annotations
  */
 annotorious.mediatypes.openseadragon.Viewer.prototype.getAnnotations = function() {
-
+  return this._overlays;
 }
 
 /**
