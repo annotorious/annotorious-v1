@@ -104,6 +104,11 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.hideSelect
   // Does not have any effect at the moment
 }
 
+annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.destroy = function () {
+	this._viewer.destroy();
+	delete this._viewer;
+}
+
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.activateSelector = function(callback) {
   goog.style.setStyle(this._editCanvas, 'pointer-events', 'auto');
 
