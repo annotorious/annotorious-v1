@@ -117,7 +117,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype._updateHighlight = functio
  * Adds an annotation to the viewer.
  * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(annotation) {  
+annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(annotation) {
   var geometry = annotation.shapes[0].geometry;
   var outer = goog.dom.createDom('div', 'annotorious-ol-boxmarker-outer');
   var inner = goog.dom.createDom('div', 'annotorious-ol-boxmarker-inner');
@@ -154,7 +154,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(a
     goog.style.setStyle(overlay.outer, 'z-index', zIndex);
     zIndex++;
   });
-  
+
   this._osdViewer.addOverlay(outer, rect);
 }
 
@@ -188,4 +188,12 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.getAnnotations = function(
  */
 annotorious.mediatypes.openseadragon.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
 
+}
+
+annotorious.mediatypes.openseadragon.Viewer.prototype.destroy = function () {
+ var that = this;
+ goog.array.forEach(this._overlays, function (overlay) {
+   that._osdViewer.removeOverlay(overlay.outer);
+  });
+  this._overlays = [];
 }
