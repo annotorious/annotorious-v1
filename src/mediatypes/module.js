@@ -335,8 +335,10 @@ annotorious.mediatypes.Module.prototype.annotatesItem = function(item_url) {
 annotorious.mediatypes.Module.prototype.destroy = function(opt_item_url) {
   if (opt_item_url) {
     var annotator = this._annotators.get(opt_item_url);
-    if (annotator)
+    if (annotator) {
       annotator.destroy();
+      this._annotators.remove(opt_item_url);
+    }
   } else {
     goog.array.forEach(this._annotators.getValues(), function(annotator) {
       annotator.destroy();
