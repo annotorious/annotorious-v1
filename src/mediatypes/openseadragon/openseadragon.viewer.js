@@ -155,7 +155,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(a
     zIndex++;
   });
 
-  this._osdViewer.addOverlay(outer, rect);
+  this._osdViewer.drawer.addOverlay(outer, rect);
 }
 
 /**
@@ -169,7 +169,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.removeAnnotation = functio
 
   if (overlay) {
     goog.array.remove(this._overlays, overlay);
-    this._osdViewer.removeOverlay(overlay.outer);
+    this._osdViewer.drawer.removeOverlay(overlay.outer);
   }
 }
 
@@ -178,7 +178,10 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.removeAnnotation = functio
  * @return {Array.<annotorious.Annotation>} the annotations
  */
 annotorious.mediatypes.openseadragon.Viewer.prototype.getAnnotations = function() {
-  return this._overlays;
+  return goog.array.map(this._overlays, function(overlay) {  
+	  console.log(overlay);
+	  return overlay.annotation; 
+  });
 }
 
 /**

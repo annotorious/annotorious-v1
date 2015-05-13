@@ -166,7 +166,7 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fromItemCo
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getAnnotations = function() {
-  return this._viewer._overlays;
+  return this._viewer.getAnnotations();
 }
 
 
