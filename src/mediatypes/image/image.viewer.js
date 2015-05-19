@@ -44,6 +44,12 @@ annotorious.mediatypes.image.Viewer = function(canvas, annotator) {
     }
   });
 
+    goog.events.listen(this._canvas, annotorious.events.ui.EventType.DOWN, function(event) {
+      if(self._currentAnnotation !== undefined && self._currentAnnotation != false){
+        self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CLICKED, self._currentAnnotation);
+      }
+  });
+
   annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, function(event) {
     delete self._currentAnnotation;
     self._eventsEnabled = true;
