@@ -138,7 +138,7 @@ annotorious.events.EventType = {
   /**
    * An existing annotation was updated
    */
-  ANNOTATION_UPDATED: 'onAnnotationUpdated'
+  ANNOTATION_UPDATED: 'onAnnotationUpdated',
 
   /**
    * The annotation was clicked.  Pass the annotation object.
