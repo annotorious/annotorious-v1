@@ -185,7 +185,9 @@ annotorious.mediatypes.openlayers.Viewer.prototype.removeAnnotation = function(a
  * @return {Array.<annotorious.Annotation>} the annotations
  */
 annotorious.mediatypes.openlayers.Viewer.prototype.getAnnotations = function() {
-
+  return goog.array.map(this._overlays, function(overlay) {
+    return overlay.annotation;
+  });
 }
 
 /**
