@@ -253,6 +253,19 @@ annotorious.Annotorious.prototype.hideSelectionWidget = function(opt_item_url) {
   }
 }
 
+annotorious.Annotorious.prototype.stopSelection = function(opt_item_url) {
+  if (opt_item_url) {
+    var module = this._getModuleForItemSrc(opt_item_url);
+    if (module)
+      module.stopSelection(opt_item_url);
+  } else {
+    goog.array.forEach(this._modules, function(module) {
+      module.stopSelection();
+    });
+  }
+}
+
+
 /**
  * Highlights the specified annotation.
  * @param {annotorious.Annotation} annotation the annotation

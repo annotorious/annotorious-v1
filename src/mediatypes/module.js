@@ -268,6 +268,18 @@ annotorious.mediatypes.Module.prototype.activateSelector = function(opt_item_url
   }
 }
 
+annotorious.mediatypes.Module.prototype.stopSelection = function(opt_item_url) {
+  if (opt_item_url) {
+    var annotator = this._annotators.get(opt_item_url);
+    if (annotator)
+      annotator.stopSelection();
+  } else {
+    goog.array.forEach(this._annotators.getValues(), function(annotator) {
+      annotator.stopSelection();
+    });
+  }
+}
+
 /**
  * Adds an annotation to an item managed by this module.
  * @param {annotorious.Annotation} annotation the annotation
