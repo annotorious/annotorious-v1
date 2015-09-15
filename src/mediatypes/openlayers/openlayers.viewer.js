@@ -13,15 +13,21 @@ annotorious.mediatypes.openlayers.Viewer = function(map, annotator) {
   /** @private **/
   this._map = map;
 
-  /** @private **/  
+  /** @private **/
+  this._annotator = annotator;
+
+  /** @private **/
   this._map_bounds = goog.style.getBounds(annotator.element);
-      
+
   /** @private **/
   this._popup = annotator.popup;
   goog.style.setStyle(this._popup.element, 'z-index', 99000);
-  
+
   /** @private **/
   this._overlays = [];
+
+  /** @private **/
+  this._shapes = [];
 
   /** @private **/
   this._currentlyHighlightedOverlay;
@@ -150,6 +156,17 @@ annotorious.mediatypes.openlayers.Viewer.prototype.addAnnotation = function(anno
   
   this._overlays.push(overlay);
 
+  // The viewer always operates in pixel coordinates for efficiency reasons
+  var shape = annotation.shapes[0];
+  if (shape.units == annotorious.shape.Units.PIXEL) {
+    this._shapes[annotorious.shape.hashCode(annotation.shapes[0])] = shape;
+  } else {
+    var viewportShape = annotorious.shape.transform(shape, function(xy) {
+      return self._annotator.fromItemCoordinates(xy);
+    });
+    this._shapes[annotorious.shape.hashCode(annotation.shapes[0])] = viewportShape;
+  }
+
   goog.array.sort(this._overlays, function(a, b) {
     var shapeA = a.annotation.shapes[0];
     var shapeB = b.annotation.shapes[0];
@@ -200,5 +217,47 @@ annotorious.mediatypes.openlayers.Viewer.prototype.highlightAnnotation = functio
     // TODO
   } else {
     this._popup.startHideTimer();
-  }  
+  }
+}
+
+/**
+ * Convenience method returing only the top-most annotation at the specified coordinates.
+ * @param {number} px the X coordinate
+ * @param {number} py the Y coordinates
+ */
+annotorious.mediatypes.openlayers.Viewer.prototype.topAnnotationAt = function(px, py) {
+  var annotations = this.getAnnotationsAt(px, py);
+  if (annotations.length > 0) {
+    return annotations[0];
+  } else {
+    return undefined;
+  }
+}
+
+/**
+ * Returns the annotations at the specified X/Y coordinates.
+ * @param {number} px the X coordinate
+ * @param {number} py the Y coordinate
+ * @return {Array.<annotorious.Annotation>} the annotations sorted by size, smallest first
+ */
+annotorious.mediatypes.openlayers.Viewer.prototype.getAnnotationsAt = function(px, py) {
+  // TODO for large numbers of annotations, we can optimize this
+  // using a tree- or grid-like data structure instead of a list
+  var intersectedAnnotations = [];
+
+  var self = this;
+  goog.array.forEach(this._overlays, function(overlay) {
+    var annotation = overlay.annotation;
+    if (annotorious.shape.intersects(self._shapes[annotorious.shape.hashCode(annotation.shapes[0])], px, py)) {
+      intersectedAnnotations.push(annotation);
+    }
+  });
+
+  goog.array.sort(intersectedAnnotations, function(a, b) {
+    var shape_a = self._shapes[annotorious.shape.hashCode(a.shapes[0])];
+    var shape_b = self._shapes[annotorious.shape.hashCode(b.shapes[0])];
+    return annotorious.shape.getSize(shape_a) - annotorious.shape.getSize(shape_b);
+  });
+
+  return intersectedAnnotations;
 }
