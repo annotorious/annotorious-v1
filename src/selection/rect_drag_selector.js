@@ -81,7 +81,6 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
   var canvas = this._canvas;
   
   this._mouseMoveListener = goog.events.listen(this._canvas, annotorious.events.ui.EventType.MOVE, function(event) {
-    console.log(event);
     var points = annotorious.events.ui.sanitizeCoordinates(event, canvas);
     if (self._enabled) {
       self._opposite = { x: points.x, y: points.y };
