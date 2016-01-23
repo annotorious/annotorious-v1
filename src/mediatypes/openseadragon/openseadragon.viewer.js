@@ -50,8 +50,8 @@ annotorious.mediatypes.openseadragon.Viewer = function(osdViewer, annotator) {
     } else {
       self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATION, self._currentlyHighlightedOverlay.annotation);
       self._updateHighlight(self._lastHoveredOverlay, self._currentlyHighlightedOverlay);
-  });
     }
+  });
 }
 
 /**
