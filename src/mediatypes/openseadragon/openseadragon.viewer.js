@@ -155,7 +155,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.addAnnotation = function(a
     zIndex++;
   });
 
-  this._osdViewer.drawer.addOverlay(outer, rect);
+  this._osdViewer.addOverlay(outer, rect);
 }
 
 /**
@@ -169,7 +169,7 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.removeAnnotation = functio
 
   if (overlay) {
     goog.array.remove(this._overlays, overlay);
-    this._osdViewer.drawer.removeOverlay(overlay.outer);
+    this._osdViewer.removeOverlay(overlay.outer);
   }
 }
 
@@ -190,7 +190,21 @@ annotorious.mediatypes.openseadragon.Viewer.prototype.getAnnotations = function(
  * @param {annotorious.Annotation | undefined} opt_annotation the annotation
  */
 annotorious.mediatypes.openseadragon.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
-
+ var that = this;
+ if (opt_annotation) {
+   goog.array.forEach(this._overlays, function(overlay) {
+     if (overlay.annotation == opt_annotation) {
+       if (that._currentlyHighlightedOverlay &&
+            that._currentlyHighlightedOverlay != overlay) {
+         that._updateHighlight(overlay, that._currentlyHighlightedOverlay);
+         } else {
+           that._updateHighlight(overlay);
+       }
+     }
+   });
+   } else {
+     this._popup.startHideTimer();
+ }
 }
 
 annotorious.mediatypes.openseadragon.Viewer.prototype.destroy = function () {
