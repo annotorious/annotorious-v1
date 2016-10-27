@@ -104,7 +104,13 @@ annotorious.events.EventType = {
    * The current selection was changed
    */
   SELECTION_CHANGED: 'onSelectionChanged',
-  
+
+    
+  /**
+   * The annotation editor was opened.  Pass the annotation object if it exists.
+   */
+  BEFORE_EDITOR_SHOWN: 'beforeEditorShown',
+
   /**
    * The annotation editor was opened.  Pass the annotation object if it exists.
    */
