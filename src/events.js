@@ -107,7 +107,7 @@ annotorious.events.EventType = {
 
     
   /**
-   * The annotation editor was opened.  Pass the annotation object if it exists.
+   * The annotation editor is opening.  Pass the annotation object if it exists.
    */
   BEFORE_EDITOR_SHOWN: 'beforeEditorShown',
 
