@@ -1,5 +1,7 @@
 # Annotorious - Image Annotation for the Web
 
+** CURRENTLY UNSUPPORTED **
+
 Annotorious is an Open Source image annotation toolkit written in JavaScript. Online demos are available
 [on our project Website](http://annotorious.github.io).
 
