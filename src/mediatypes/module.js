@@ -318,7 +318,7 @@ annotorious.mediatypes.Module.prototype.removeHandler = function(type) {
   goog.array.forEach(this._annotators.getValues(), function(annotator, idx, array) {
     annotator.removeHandler(type);
   });
-  goog.array.removeIf(this._eventHandlers, function(elem) {
+  goog.array.removeAllIf(this._eventHandlers, function(elem) {
       return elem.type === type;
   });
 }
