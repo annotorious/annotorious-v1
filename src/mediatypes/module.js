@@ -311,16 +311,21 @@ annotorious.mediatypes.Module.prototype.addHandler = function(type, handler) {
 }
 
 /**
- * Removes a lifecycle event handler to this module.
+ * Removes a/all lifecycle event handler/s to this module.
  * @param {annotorious.events.EventType} type the event type
+ * @param {Function} handler the handler function (optional)
  */
-annotorious.mediatypes.Module.prototype.removeHandler = function(type) {
+annotorious.mediatypes.Module.prototype.removeHandler = function(type, handler) {
   goog.array.forEach(this._annotators.getValues(), function(annotator, idx, array) {
-    annotator.removeHandler(type);
+    annotator.removeHandler(type, handler);
   });
-  goog.array.removeAllIf(this._eventHandlers, function(elem) {
-      return elem.type === type;
-  });
+    goog.array.forEach(this._eventHandlers, function(elem, index, array) {
+        if(elem.type === type) {
+            if(!handler || elem.handler === handler) {
+                goog.array.removeAt(array, index);
+            }         
+        }
+    });
 }
 
 /**

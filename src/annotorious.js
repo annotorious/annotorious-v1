@@ -129,10 +129,11 @@ annotorious.Annotorious.prototype.addHandler = function(type, handler) {
 /**
  * Removes an event handler to Annotorious.
  * @param {annotorious.events.EventType} type the event type
+ * @param {Function} handler the handler function
  */
-annotorious.Annotorious.prototype.removeHandler = function(type) {
+annotorious.Annotorious.prototype.removeHandler = function(type, handler) {
   goog.array.forEach(this._modules, function(module) {
-    module.removeHandler(type);
+    module.removeHandler(type, handler);
   });
 }
 
