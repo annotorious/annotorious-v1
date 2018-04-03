@@ -127,6 +127,16 @@ annotorious.Annotorious.prototype.addHandler = function(type, handler) {
 }
 
 /**
+ * Removes an event handler to Annotorious.
+ * @param {annotorious.events.EventType} type the event type
+ */
+annotorious.Annotorious.prototype.removeHandler = function(type) {
+  goog.array.forEach(this._modules, function(module) {
+    module.removeHandler(type);
+  });
+}
+
+/**
  * Adds a plugin to Annotorious.
  * @param {string} plugin_name the plugin name
  * @param {Object} opt_config_options an optional object literal with plugin config options

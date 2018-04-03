@@ -311,6 +311,19 @@ annotorious.mediatypes.Module.prototype.addHandler = function(type, handler) {
 }
 
 /**
+ * Removes a lifecycle event handler to this module.
+ * @param {annotorious.events.EventType} type the event type
+ */
+annotorious.mediatypes.Module.prototype.removeHandler = function(type) {
+  goog.array.forEach(this._annotators.getValues(), function(annotator, idx, array) {
+    annotator.removeHandler(type);
+  });
+  goog.array.removeIf(this._eventHandlers, function(elem) {
+      return elem.type === type;
+  });
+}
+
+/**
  * Adds a plugin to this module.
  * @param {Plugin} plugin the plugin
  */
