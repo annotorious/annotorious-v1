@@ -1,3 +1,10 @@
+To Do:
+1. removeHandler https://github.com/annotorious/annotorious/issues/193
+2. displacement of annotation in chrome
+3. circular annotation - https://github.com/annotorious/annotorious/issues/55
+4. Drawing a polygon using annotorious - update this in gitter openseadragon
+6. Adding custom annotations on OpenSeadragon module
+
 # Annotorious - Image Annotation for the Web
 
 **CURRENTLY UNSUPPORTED**
