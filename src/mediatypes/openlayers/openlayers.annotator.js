@@ -196,6 +196,16 @@ annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getAnnotations =
 }
 
 /**
+ * Returns the annotations at the specified client X/Y coordinates.
+ * @param {number} cx the client X coordinate
+ * @param {number} cy the client Y coordinate
+ * @return {Array.<annotorious.Annotation>} the annotations sorted by size, smallest first
+ */
+annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getAnnotationsAt = function(cx, cy) {
+  return goog.array.clone(this._viewer.getAnnotationsAt(cx, cy));
+}
+
+/**
  * Standard Annotator method: getAvailableSelectors
  */
 annotorious.mediatypes.openlayers.OpenLayersAnnotator.prototype.getAvailableSelectors = function() {
