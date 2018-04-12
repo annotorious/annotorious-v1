@@ -149,7 +149,9 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.editAnnota
 }
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.fromItemCoordinates = function(itemCoords) {
-  var offset = annotorious.dom.getOffset(this.element);
+  var offset = annotorious.dom.getOffset(this.element); 
+  offset.top += window.pageYOffset;
+  offset.left += window.pageXOffset;
   
   var viewportPoint = new OpenSeadragon.Point(itemCoords.x, itemCoords.y);
   var viewportOpposite = (itemCoords.width) ? new OpenSeadragon.Point(itemCoords.x + itemCoords.width, itemCoords.y + itemCoords.height) : false; 
@@ -191,7 +193,9 @@ annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.getActiveS
 
 
 annotorious.mediatypes.openseadragon.OpenSeadragonAnnotator.prototype.toItemCoordinates = function(xy) {
-  var offset = annotorious.dom.getOffset(this.element);
+  var offset = annotorious.dom.getOffset(this.element); 
+  offset.top += window.pageYOffset;
+  offset.left += window.pageXOffset;
   
   var viewportPoint = new OpenSeadragon.Point(xy.x + offset.left, xy.y + offset.top);
   var viewportOpposite = (xy.width) ? new OpenSeadragon.Point(xy.x + offset.left + xy.width - 2, xy.y + offset.top + xy.height - 2) : false;
