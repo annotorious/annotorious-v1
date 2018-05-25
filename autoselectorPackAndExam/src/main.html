@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Main Page </title>
+
+<!-- for Slide -->
+<!-- this plugin needed to use jquery -->
+<script src="js/jssor.slider-27.1.0.min.js" type="text/javascript"></script>
+<script src="js/thumbnail_load.js" type="text/javascript"></script>
+
+<!-- Annotorious Library import  -->
+<link type="text/css" rel="stylesheet" href="css/annotorious.css" />
+<script type="text/javascript" src="js/annotorious.min.js"></script>
+<script type="text/javascript" src="js/annotorious_changeToTagList.js"></script>
+<!-- <script type="text/javascript" src="js/src/annotorious.js"></script>-->
+<!-- plugin -->
+<script type="text/javascript" src="js/auto_selector.js"></script>
+<script type="text/javascript" src="js/polygon_selector.js"></script>
+
+<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="js/annotorious_handelr.js"></script>
+
+<!-- AWS -->
+<!-- <script type="text/javascript" src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> -->
+<script type="text/javascript" src="https://sdk.amazonaws.com/js/aws-sdk-2.241.1.min.js"></script>
+<script type="text/javascript" src="js/aws_Controller.js"></script>
+<script type="text/javascript" src="js/aws_dynamodb_CAID_models.js"></script>
+<script type="text/javascript" src="js/aws_identity.js"></script>
+
+
+<!-- Template CSS,JS -->
+<script type="text/javascript" src="js/ComponentUI.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+		.overflowScroll {
+			overflow-x: scroll;
+			overflow-y: scroll;
+		}
+	</style>
+	<style>
+		body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+	</style>
+	<style>
+		hr {
+			display: block;
+			margin: 0.5em;
+			border-width: 5px;
+			border-color: forestgreen;
+		}
+		/*jssor slider loading skin spin css*/
+		.jssorl-009-spin img {
+			animation-name: jssorl-009-spin;
+			animation-duration: 1.6s;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+		}
+	
+		@keyframes jssorl-009-spin {
+			from { transform: rotate(0deg); }
+			to { transform: rotate(360deg); }
+		}
+	</style>
+
+</head>
+<body id="onBody" class="w3-light-grey w3-content" style="max-width:1600px" onload="">
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+	<div class="w3-container">
+		<a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">
+		<i class="fa fa-remove"></i>
+		</a>
+		<p style="text-align:center">
+		<img src="KookminUniv.png" style="width:45%;" class="w3-round"><br><br>
+		</p>
+		<h4><b>★Kookmin University</b></h4>
+		<h5><b>Department of Computer Science & Fasion Design</b></h5>
+		<h5><b>Bigdata Lab</b></h5>
+		<p class="w3-text-grey">Create page Kookmin Bigdata Lab.</p>
+	</div>
+	<div class="w3-bar-block">
+		<a id="loadAnno" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-th-large fa-fw w3-margin-right"></i>어노테이션</a> 
+		<a id="croppedImage" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user fa-fw w3-margin-right"></i>추출이미지확인</a> 
+		<a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-envelope fa-fw w3-margin-right"></i>CONTACT</a>
+	</div>
+	<div class="w3-panel w3-large">
+		<i class="fa fa-facebook-official w3-hover-opacity"></i>
+		<i class="fa fa-instagram w3-hover-opacity"></i>
+		<i class="fa fa-snapchat w3-hover-opacity"></i>
+	</div>
+</nav>
+<div class="w3-main" style="margin-left:300px">
+
+<header id="ImageAnnotatorBlock">
+<span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()"><i class="fa fa-bars"></i></span>
+<p> Client 선택 </p>
+<select id="setClient" onchange="accessClient();">
+	<option></option>
+	<option> Client_1 </option>
+	<!-- <option> Client_2 </option>
+	<option> Client_3 </option>
+	<option> Client_4 </option> -->
+</select>
+<p>----------------------------------------------------------------<br>
+<div id="thumbnail_block">
+	<div id="thumbnail_area" data-u="slides" style="cursor:default;width:450px;height:100px;overflow:hidden; border: 2px solid gold">
+		<!-- List -->
+	</div>
+</div>
+<p>-----------------------------------------------------------------</p>
+<p> Annotation <input type="button" value="Done" onclick="clickDone();"> </p> 
+
+<div id ="block" class="overflowScroll">
+	<!--<img id="preview" src="Images/clothes/RedPrincessDress.jpg" width="100%" height="100%">/div> -->
+</div>
+<hr>
+</header>
+</body>
+
+<script>	
+$(document).ready(function(){
+    $("#croppedImage").click(function(){
+        location.href = 'croppedPage.html';
+    });
+    $("#loadAnno").click(function(){
+        console.log("어노테이션클릭")
+    })
+});
+</script>
+</html>
+

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible">
+<title>Crop Images View Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript" src="https://sdk.amazonaws.com/js/aws-sdk-2.241.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+
+<!-- Template Import CSS,JS -->
+<script type="text/javascript" src="js/ComponentUI.js"></script>
+<script type="text/javascript" src="js/croppedImageList.js"></script>
+<script type="text/javascript" src="js/aws_identity.js"></script>
+<script type="text/javascript" src="js/aws_Controller.js"></script>
+<script type="text/javascript" src="js/aws_dynamodb_CAID_models.js"></script>
+
+<!-- font and style -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+    hr {
+        display: block;
+        margin: 0.5em;
+        border-width: 5px;
+        border-color: forestgreen;
+    }
+</style>
+<style>
+    div.gallery {
+        margin: 5px;
+        border: 1px solid #ccc;
+        float: left;
+        width: 64px;
+    }
+
+    div.gallery:hover {
+        border: 1px solid #777;
+    }
+        
+    div.gallery img {
+        width: 100%;
+        height: auto;
+    }
+        
+    div.desc {
+        padding: 15px;
+        text-align: center;
+    }
+</style>
+</head>
+
+<body class="w3-light-grey w3-content" style="max-width:1600px" onload="bodyOnLoaded();">
+<span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()"><i class="fa fa-bars"></i></span>
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+	<div class="w3-container">
+	  <a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">
+		<i class="fa fa-remove"></i>
+      </a>
+      <p style="text-align: center">
+      <img src="KookminUniv.png" style="width:45%;" class="w3-round"><br><br>
+      </p>
+      <h4><b>★Kookmin University</b></h4>
+      <h5><b>Department of Computer Science & Fasion Design</b></h5>
+      <h5><b>Bigdata Lab</b></h5>
+	  <p class="w3-text-grey">Create page KimHyunJune.</p>
+	</div>
+	<div class="w3-bar-block">
+	  <a id="loadAnno" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-th-large fa-fw w3-margin-right"></i>어노테이션</a> 
+	  <a id="croppedImage" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user fa-fw w3-margin-right"></i>추출이미지확인</a> 
+	  <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-envelope fa-fw w3-margin-right"></i>CONTACT</a>
+	</div>
+	<div class="w3-panel w3-large">
+	  <i class="fa fa-facebook-official w3-hover-opacity"></i>
+	  <i class="fa fa-instagram w3-hover-opacity"></i>
+	  <i class="fa fa-snapchat w3-hover-opacity"></i>
+	</div>
+</nav>
+
+<div class="w3-main" style="margin-left:300px">
+    <header>
+        <h1> Cropped Grid View Page </h1>
+        <select id="imgSelect" onchange="loadCroppedImages();">
+            <option></option>
+            <!-- Javascript Dynamic Append. -->
+        </select>
+        <hr>
+    </header>
+
+    <header>
+        <div id="gridViewBox"> 
+            <!--<div id="gridViewBox" class="gallery">
+                  <a target="_blank" href="../cropy/img20_check_0.jpg"></a>
+                <img src="../cropy/img20_check_0.jpg" alt="check" width="100%" height="100%">
+            </div>  -->
+        </div>
+    </header>
+</div>
+</body>
+
+<script>
+$(document).ready(function(){
+    $("#croppedImage").click(function(){
+        //location.href = 'croppedPage.html';
+    });
+    $("#loadAnno").click(function(){
+        location.href = 'main.html'
+    })
+});
+</script>
+</html>
