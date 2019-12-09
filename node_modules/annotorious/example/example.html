@@ -1,0 +1,144 @@
+<html>
+  <head>
+    <title>Annotorious Example Page</title>
+    <link rel="stylesheet" href="highlight.js/zenburn.css">
+    <link rel="stylesheet" href="../css/theme-dark/annotorious-dark.css" />
+    <script src="highlight.js/highlight.pack.js"></script>
+    <script src="../annotorious.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+      html, body {
+        background-color:#dfdfdf;
+        min-height:100%;
+        padding:0;
+        margin:0;
+        font-family:"helvetica neue","helvetica","arial","sans-serif";
+        font-size:14px;
+        line-height:22px;
+      }
+
+      h2 {
+        margin-top:40px;
+      }
+
+      a {
+        color:#333;
+      }
+
+      .column {
+        width:60%;
+        min-width:800px;
+        margin:0 auto;
+        padding:10px 40px 80px 40px;
+        background-color:#eaeaea;
+        min-height:100%;
+        border-width:0px 1px;
+        border-style:solid;
+        border-color:#dadada;
+      }
+
+      .image-caption {
+        line-height: normal;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+      }
+    </style>    
+  </head>
+  <body>
+    <div class="column">
+      <h1>Annotorious Demo Page</h1>
+      <p>
+        This is a simple demo page for Annotorious. Hover the mouse over the 
+        image to get started. Use the source code of this example as a guide
+        when annotation-enabling your own pages!
+      </p>
+
+      <h2>Demo Image</h2>
+      <div style="float:right; margin:10px 0px 10px 30px;">
+        <img src="640px-Hallstatt.jpg" class="annotatable">
+        <p class="image-caption">
+          Hallstatt, Austria. By Nick Csakany, 2007. Public Domain. Source:
+          <a href="http://commons.wikimedia.org/wiki/File:Hallstatt_300.jpg">Wikimedia
+          Commons</a>          
+        </p>
+      </div>
+
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
+        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
+        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      </p>
+
+      <h2 style="clear:both;">Getting Started</h2>
+
+      <p>To set up Annotorious on a Web page, add this code to your page head:</p>
+        
+      <pre><code>&lt;link type=&quot;text/css&quot; rel=&quot;stylesheet&quot; href=&quot;css/annotorious.css&quot; /&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;annotorious.min.js&quot;&gt;&lt;/script&gt;</code></pre>
+        
+      <p>Specify which images should be annotatable. There are two ways to do this:</p>  
+        
+      <h3>Option 1: the <code>annotatable</code> CSS class</h3>
+      <p>
+        Add a CSS class called <code>annotatable</code>. On page load, Annotorious will
+        automatically scan your page for images with this class, and make them annotatable.
+        I'd always recommend using this approach, unless your page loads images dynamically, after
+        the page has loaded.
+        <strong>Example:</strong>
+      </p>
+        
+      <pre><code>&lt;img src="example.jpg" class="annotatable" /&gt;</code></pre>
+
+      <h3>Option 2: Using JavaScript</h3>
+      <p>
+        Use the Annotorious JavaScript API to make images annotatable 'manually'.
+        <strong>Example:</strong>
+      </p>
+
+      <pre><code>&lt;script&gt;
+  function init() {
+    anno.makeAnnotatable(document.getElementById('myImage'));
+  }
+&lt;/script&gt;
+...        
+&lt;body onload=&quot;init();&quot;&gt;
+  &lt;img src=&quot;example.jpg&quot; id=&quot;myImage&quot; /&gt;
+&lt;/body&gt;</code></pre>
+
+
+      <h2>And Next?</h2>
+      <p>
+        Once you got Annotorious working, you will likely want to integrate it 
+        more deeply with your Website: control it through your own JavaScript,
+        listen to annotation create/update/delete events, store annotations on
+        a server, etc. <a href="http://github.com/annotorious/annotorious/wiki">Visit
+        the Wiki</a> to learn more about Annotorious' JavaScript
+        API,  how to use plugins, or program your own extensions.
+      </p>
+          
+      <h2>Hot-Linking to the Latest Annotorious Build</h2>
+      <p>
+        Instead of hosting the Annotorious JS &amp; CSS files yourself, you may also
+        hot-link to the latest versions on the Annotorious site:
+      </p>
+
+      <p>
+        <a href="http://annotorious.github.com/latest/annotorious.min.js">http://annotorious.github.com/latest/annotorious.min.js</a><br/>
+        <a href="http://annotorious.github.com/latest/annotorious.css">http://annotorious.github.com/latest/annotorious.css</a>
+      </p>
+    </div>
+  </body>
+</html>
