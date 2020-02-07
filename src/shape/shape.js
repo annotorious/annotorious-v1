@@ -8,12 +8,15 @@ goog.require('annotorious.shape.geom.Rectangle');
  * @param {annotorious.shape.ShapeType} type the shape type
  * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle | annotorious.shape.geom.Polygon} geometry the geometry
  * @param {annotorious.shape.Units=} units geometry measurement units
- * @param {Object} drawing style of the shape (optional)
+ * @param {Object} style style of the shape (optional)
+ * @param {string} mask the The URL of the mask - only if type is 'rect' (optional)
  * @constructor
  */
-annotorious.shape.Shape = function(type, geometry, units, style) {
+annotorious.shape.Shape = function (type, geometry, units, style, mask) {
   this.type = type
   this.geometry = geometry;
+  if (mask && type == annotorious.shape.ShapeType.RECTANGLE)
+    this.mask = mask;
   if (units)
     this.units = units;
   if (style)
@@ -52,7 +55,7 @@ annotorious.shape.Units = {
  * @param {number} py the Y coordinate
  * @return {boolean} true if the point intersects the shape
  */
-annotorious.shape.intersects = function(shape, px, py) {
+annotorious.shape.intersects = function (shape, px, py) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     if (px < shape.geometry.x)
       return false;
@@ -65,16 +68,16 @@ annotorious.shape.intersects = function(shape, px, py) {
 
     if (py > shape.geometry.y + shape.geometry.height)
       return false;
-    
+
     return true;
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
     var points = shape.geometry.points;
     var inside = false;
 
     var j = points.length - 1;
-    for (var i=0; i<points.length; i++) {
-      if ((points[i].y > py) != (points[j].y > py) && 
-          (px < (points[j].x - points[i].x) * (py - points[i].y) / (points[j].y-points[i].y) + points[i].x)) {
+    for (var i = 0; i < points.length; i++) {
+      if ((points[i].y > py) != (points[j].y > py) &&
+        (px < (points[j].x - points[i].x) * (py - points[i].y) / (points[j].y - points[i].y) + points[i].x)) {
         inside = !inside;
       }
       j = i;
@@ -82,7 +85,7 @@ annotorious.shape.intersects = function(shape, px, py) {
 
     return inside;
   }
-    
+
   return false;
 }
 
@@ -91,7 +94,7 @@ annotorious.shape.intersects = function(shape, px, py) {
  * @param {annotorious.shape.Shape} shape the shape
  * @return {number} the size
  */
-annotorious.shape.getSize = function(shape) {
+annotorious.shape.getSize = function (shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     return shape.geometry.width * shape.geometry.height;
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
@@ -105,7 +108,7 @@ annotorious.shape.getSize = function(shape) {
  * @param {annotorious.shape.Shape} shape the shape
  * @return {annotorious.shape.Shape | undefined} the bounding rectangle
  */
-annotorious.shape.getBoundingRect = function(shape) {
+annotorious.shape.getBoundingRect = function (shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     return shape;
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
@@ -116,7 +119,7 @@ annotorious.shape.getBoundingRect = function(shape) {
     var top = points[0].y;
     var bottom = points[0].y;
 
-    for (var i=1; i<points.length; i++) {
+    for (var i = 1; i < points.length; i++) {
       if (points[i].x > right)
         right = points[i].x;
 
@@ -129,13 +132,13 @@ annotorious.shape.getBoundingRect = function(shape) {
       if (points[i].y < top)
         top = points[i].y;
     }
-    
-    return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, 
+
+    return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE,
       new annotorious.shape.geom.Rectangle(left, top, right - left, bottom - top),
       false, shape.style
     );
   }
-  
+
   return undefined;
 }
 
@@ -144,14 +147,14 @@ annotorious.shape.getBoundingRect = function(shape) {
  * @param {annotorious.shape.Shape} shape the shape
  * @returns {annotorious.shape.geom.Point | undefined} the centroid X/Y coordinate
  */
-annotorious.shape.getCentroid = function(shape) {
+annotorious.shape.getCentroid = function (shape) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     var rect = shape.geometry;
     return new annotorious.shape.geom.Point(rect.x + rect.width / 2, rect.y + rect.height / 2);
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
-    return annotorious.shape.geom.Polygon.computeCentroid( shape.geometry.points);
+    return annotorious.shape.geom.Polygon.computeCentroid(shape.geometry.points);
   }
-  
+
   return undefined;
 }
 
@@ -160,12 +163,12 @@ annotorious.shape.getCentroid = function(shape) {
  * @param {annotorious.shape.Shape} shape the shape
  * @param {number} delta the delta 
  */
-annotorious.shape.expand = function(shape, delta) {
+annotorious.shape.expand = function (shape, delta) {
   // TODO for the sake of completeness: implement for RECTANGLE
   return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON,
     new annotorious.shape.geom.Polygon(annotorious.shape.geom.Polygon.expandPolygon(shape.geometry.points, delta)),
     false, shape.style);
- }
+}
 
 /**
  * Transforms a shape from a source coordinate system to a destination coordinate
@@ -175,14 +178,14 @@ annotorious.shape.expand = function(shape, delta) {
  * @param {Function} transformationFn the transformation function
  * @return {annotorious.shape.Shape | undefined} the transformed shape
  */
-annotorious.shape.transform = function(shape, transformationFn) {
+annotorious.shape.transform = function (shape, transformationFn) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     var geom = shape.geometry;
     var transformed = transformationFn(geom);
-    return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, transformed, false, shape.style);
+    return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, transformed, false, shape.style, shape.mask);
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
     var transformedPoints = [];
-    goog.array.forEach(shape.geometry.points, function(pt) {
+    goog.array.forEach(shape.geometry.points, function (pt) {
       transformedPoints.push(transformationFn(pt));
     });
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.POLYGON,
@@ -201,6 +204,6 @@ annotorious.shape.transform = function(shape, transformationFn) {
  * @param {annotorious.shape.Shape} shape the shape
  * @return {string} a 'hashcode' for the shape
  */
-annotorious.shape.hashCode = function(shape) {
+annotorious.shape.hashCode = function (shape) {
   return JSON.stringify(shape.geometry);
 }

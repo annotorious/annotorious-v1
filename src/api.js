@@ -25,7 +25,7 @@ if (!window['annotorious'])
 
 if (!window['annotorious']['plugin'])
   window['annotorious']['plugin'] = {}
-  
+
 /** Geometry API exports **/
 if (!window['annotorious']['geometry']) {
   window['annotorious']['geometry'] = {};
@@ -35,3 +35,7 @@ if (!window['annotorious']['geometry']) {
 
 /** @deprecated **/
 annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorious.prototype.setSelectionEnabled;
+
+/** My API **/
+annotorious.Annotorious.prototype['reload'] = annotorious.Annotorious.prototype.reload;
+annotorious.Annotorious.prototype['addAnnotations'] = annotorious.Annotorious.prototype.addAnnotations;

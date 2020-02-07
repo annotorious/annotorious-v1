@@ -1,145 +1,177 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" href="../../css/theme-dark/annotorious-dark.css" type="text/css" />
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="http://localhost:9810/compile?id=annotorious"></script>
-    <script>
-      $(document).ready(function() {
-        anno.makeAnnotatable(document.getElementById('hallstatt'));
 
-        var annotation = {
-          src: '640px-Hallstatt.jpg',
-          text: 'This is an annotation.',
-          editable: true,
-          shapes: [{
-            type: 'rect',
-            units: 'pixel',
-            geometry: {x: 100, y: 80, width: 60, height: 50}
-          }]
-        };
+<head>
+  <link rel="stylesheet" href="../../css/annotorious.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../../css/theme-dark/annotorious-dark.css" type="text/css" />-->
+  <script src="../jquery-1.10.2.min.js"></script>
+  <script src="http://localhost:9810/compile?id=annotorious"></script>
+  <script>
+    $(document).ready(function () {
+      anno.makeAnnotatable(document.getElementById('hallstatt'));
 
-        anno.addAnnotation(annotation);
-        
-        anno.addHandler('onAnnotationCreated', function(annotation, item) {
-          console.log(item);
-        });
+      var annotation = {
+        src: '640px-Hallstatt.jpg',
+        text: 'This is an annotation.',
+        editable: true,
+        shapes: [{
+          type: 'rect',
+          geometry: { x: 0.2, y: 0.2, width: 0.50, height: 0.5 },
+          /*
+          units: 'pixel',
+          geometry: { x: 100, y: 80, width: 60, height: 50 },
+          */
+          mask: "./image-human-brain_99433-298.jpg",
+          style: {
+            maskTransparency: 0.8
+          }
+        }]
+      };
+
+      anno.addAnnotations([annotation]);
+      anno.addHandler('onAnnotationCreated', function (annotation, item) {
+        console.log("<--- Annotation create --->");
+        //annotation.shapes[0].mask = "./image-human-brain_99433-298.jpg";
+        //anno.reload();
+        console.log(annotation);
+        console.log("<--- Annotation create --->");
       });
-    </script>
-    <style>
-      html, body {
-        background-color: #ededed;
-        padding:0px;
-        margin:0px;
-        font-family: sans-serif;
-        line-height: 160%;
-      }
-      
-      h2 {
-        margin-top:40px;
-      }
-      
-      #content {
-        max-width: 980px;
-        margin:0px auto;
-        padding:10px 30px;
-        background-color: #fff;
-      }
-      
-      .image-caption {
-        line-height: normal;
-        font-weight: bold;
-        font-size: 12px;
-        text-align: center;
-      }
-    </style>
-  </head>
+      anno.addHandler('onAnnotationRemoved', function (annotation) {
+        console.log("<--- Annotation removed --->");
+        console.log(annotation);
+        console.log("<--- Annotation removed --->");
+      });
+      anno.addHandler('onAnnotationUpdated', function (annotation, old) {
+        console.log("<--- Annotation updated --->");
+        console.log(annotation);
+        console.log(old);
+        console.log("<--- Annotation updated --->");
+      });
+      anno.addHandler('onMouseMoveOverItem', function (pixels, event) {
+        $("#showPixel").html("cursor: [x=" + pixels.cursor.x + ", y=" + pixels.cursor.y + "]" + ((pixels.box) ? " box: [x=" + pixels.box.x + ", y=" + pixels.box.y + ", width=" + pixels.box.width + ", height=" + pixels.box.height + "]" : ""))
+      });
+    });
+  </script>
+  <style>
+    html,
+    body {
+      background-color: #ededed;
+      padding: 0px;
+      margin: 0px;
+      font-family: sans-serif;
+      line-height: 160%;
+    }
 
-  <body>
-    <div id="content">
-      <h1>Annotation Test Page</h1>
-      <p>
-        This page serves as a development environment for the Annotorious JavaScript
-        image annotation library. Hover over one of the annotatable images to get started.
-        <strong>NOTE:</strong> make sure the plovr build tool is running! Use
-      </p>
-      <p>
-        <code>java -jar plovr/plovr.jar serve standalone.json</code>
-      </p>
-        to start plovr.
-      </p>
-      
-      <button onclick="anno.reset();">Reset</button>
+    h2 {
+      margin-top: 40px;
+    }
 
-      <h2>Test Images</h2>
-      <div style="float:right; margin:0px 0px 10px 20px;">
-        <img id="hallstatt" src="640px-Hallstatt.jpg" width="60%" style="margin:40px 0px 0px 0px; padding:0px 0px 0px 35px;">
-        <p class="image-caption">
-          Hallstatt, Austria. By Nick Csakany, 2007. Public Domain. Source:
-          <a href="http://commons.wikimedia.org/wiki/File:Hallstatt_300.jpg">Wikimedia
-          Commons</a>          
-        </p>
-      </div>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
-        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
-        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
-        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
-        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
-        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
-        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
-        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
-        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
-        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
-        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
-        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
-        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
-      </p>
-      <div style="float:left; width:371px; margin:0px 20px 10px 0px;">
-        <img id="ptolemy" src="371px-Claudius-Ptolemaeus.jpg" data-original="http://example.com/define-custom-urls-like-so">
-        <p class="image-caption">
-          Medival Ideal Portrait of Ptolemy. Public Domain. Source:
-          <a href="http://commons.wikimedia.org/wiki/File:Claudius_Ptolemaeus.jpg">Wikimedia
+    #content {
+      max-width: 980px;
+      margin: 0px auto;
+      padding: 10px 30px;
+      background-color: #fff;
+    }
+
+    .image-caption {
+      line-height: normal;
+      font-weight: bold;
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="content">
+    <h1>Annotation Test Page</h1>
+    <p>
+      This page serves as a development environment for the Annotorious JavaScript
+      image annotation library. Hover over one of the annotatable images to get started.
+      <strong>NOTE:</strong> make sure the plovr build tool is running! Use
+    </p>
+    <p>
+      <code>java -jar plovr/plovr.jar serve standalone.json</code>
+    </p>
+    to start plovr.
+    </p>
+
+    <button onclick="anno.reset();">Reset</button>
+    <button onclick="anno.reload();">Reload</button>
+
+    <h2>Test Images</h2>
+    <div style="float:right; margin:0px 0px 10px 20px;">
+      <img id="hallstatt" class="annotatable" src="640px-Hallstatt.jpg" width="60%"
+        style="margin:40px 0px 0px 0px; padding:0px 0px 0px 35px;">
+      <p id="showPixel" class="image-caption">cursor: [x=0, y=0]</p>
+      <p class="image-caption">
+        Hallstatt, Austria. By Nick Csakany, 2007. Public Domain. Source:
+        <a href="http://commons.wikimedia.org/wiki/File:Hallstatt_300.jpg">Wikimedia
           Commons</a>
-        </p>
-      </div>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
-        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
-        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
-        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
-        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
-        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
-        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
-        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
-        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
-        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
-        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
-        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
-        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius 
-        diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer 
-        vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
-        velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
-        rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
       </p>
-      <p style="clear:both;"></p>
-      <div style="float:left; clear:both; text-align:center; margin:0px 20px 10px 0px;">
-        <img id="map" src="630px-Ptolemaic-Map.jpg" class="annotatable"/>
-        <p class="image-caption">
-          Ptolemaic Map, 16th century. Public Domain. Source:
-          <a href="http://commons.wikimedia.org/wiki/File:PtolemaicMap.jpg">Wikimedia
-          Commons</a>
-        </p>
-      </div>
-      <p>
-        <strong>This image is not supposed to be annotatable!</strong>
-      </p>
-      <p style="clear:both;"></p>
     </div>
-  </body>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius
+      diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer
+      vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+      velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+      rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius
+      diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer
+      vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+      velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+      rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius
+      diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer
+      vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+      velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+      rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+    </p>
+    <div style="float:left; width:371px; margin:0px 20px 10px 0px;">
+      <img id="ptolemy" src="371px-Claudius-Ptolemaeus.jpg"
+        data-original="http://example.com/define-custom-urls-like-so">
+      <p class="image-caption">
+        Medival Ideal Portrait of Ptolemy. Public Domain. Source:
+        <a href="http://commons.wikimedia.org/wiki/File:Claudius_Ptolemaeus.jpg">Wikimedia
+          Commons</a>
+      </p>
+    </div>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius
+      diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer
+      vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+      velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+      rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius
+      diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer
+      vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+      velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+      rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius
+      diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer
+      vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+      velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+      rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius
+      diam posuere quam molestie vestibulum. Vestibulum non volutpat elit. Integer
+      vitae felis eget magna rutrum sagittis. Nulla facilisi. Praesent a consectetur
+      velit. Cras eget nibh est, eu imperdiet mauris. Nulla quis justo urna. Sed eu
+      rutrum mauris. Integer aliquet nulla sit amet ante mollis pellentesque.
+    </p>
+    <p style="clear:both;"></p>
+    <div style="float:left; clear:both; text-align:center; margin:0px 20px 10px 0px;">
+      <img id="map" src="630px-Ptolemaic-Map.jpg" class="annotatable" />
+      <p class="image-caption">
+        Ptolemaic Map, 16th century. Public Domain. Source:
+        <a href="http://commons.wikimedia.org/wiki/File:PtolemaicMap.jpg">Wikimedia
+          Commons</a>
+      </p>
+    </div>
+    <p>
+      <strong>This image is not supposed to be annotatable!</strong>
+    </p>
+    <p style="clear:both;"></p>
+  </div>
+</body>
+
 </html>

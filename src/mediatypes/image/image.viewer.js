@@ -7,10 +7,10 @@ goog.provide('annotorious.mediatypes.image.Viewer');
  * @param {annotorious.mediatypes.image.ImageAnnotator} annotator reference to the annotator
  * @constructor
  */
-annotorious.mediatypes.image.Viewer = function(canvas, annotator) {
+annotorious.mediatypes.image.Viewer = function (canvas, annotator) {
   /** @private **/
   this._canvas = canvas;
-  
+
   /** @private **/
   this._annotator = annotator;
 
@@ -35,42 +35,47 @@ annotorious.mediatypes.image.Viewer = function(canvas, annotator) {
   /** @private **/
   this._keepHighlighted = false;
 
-  var self = this; 
-  goog.events.listen(this._canvas, annotorious.events.ui.EventType.MOVE, function(event) {
+  var self = this;
+  var image = this._annotator.getItem().element;
+  goog.events.listen(this._canvas, annotorious.events.ui.EventType.MOVE, function (event) {
     if (self._eventsEnabled) {
       self._onMouseMove(event);
     } else {
       self._cachedMouseEvent = event;
     }
+
+    var cX = parseInt((image.naturalWidth * event.offsetX) / event.target.width);
+    var cY = parseInt((image.naturalHeight * event.offsetY) / event.target.height);
+    self._annotator.fireEvent(annotorious.events.EventType.MOUSE_MOVE_ANNOTATABLE_ITEM, { "cursor": { x: cX, y: cY } }, event);
   });
 
-    goog.events.listen(this._canvas, annotorious.events.ui.EventType.DOWN, function(event) {
-      if(self._currentAnnotation !== undefined && self._currentAnnotation != false){
-        self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CLICKED, self._currentAnnotation);
-      }
+  goog.events.listen(this._canvas, annotorious.events.ui.EventType.DOWN, function (event) {
+    if (self._currentAnnotation !== undefined && self._currentAnnotation != false) {
+      self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CLICKED, self._currentAnnotation);
+    }
   });
 
-  annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, function(event) {
+  annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, function (event) {
     delete self._currentAnnotation;
     self._eventsEnabled = true;
   });
 
-  annotator.addHandler(annotorious.events.EventType.BEFORE_POPUP_HIDE, function() {
+  annotator.addHandler(annotorious.events.EventType.BEFORE_POPUP_HIDE, function () {
     if (!self._eventsEnabled && self._cachedMouseEvent) {
       var mouseX = self._cachedMouseEvent.offsetX;
       var mouseY = self._cachedMouseEvent.offsetY;
-            
+
       var previousAnnotation = self._currentAnnotation;
       self._currentAnnotation = self.topAnnotationAt(mouseX, mouseY);
-      
+
       self._eventsEnabled = true;
-          
+
       if (previousAnnotation != self._currentAnnotation) {
         // Annotation under mouse has changed in the mean time - redraw
         self.redraw();
         self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATION,
           { annotation: previousAnnotation, mouseEvent: self._cachedMouseEvent });
-  
+
         self._annotator.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATION,
           { annotation: self._currentAnnotation, mouseEvent: self._cachedMouseEvent });
       } else {
@@ -92,26 +97,27 @@ annotorious.mediatypes.image.Viewer = function(canvas, annotator) {
  * @param {annotorious.Annotation} annotation the annotation
  * @param {annotorious.Annotation=} opt_replace optionally, an existing annotation to replace
  */
-annotorious.mediatypes.image.Viewer.prototype.addAnnotation = function(annotation, opt_replace) {
+annotorious.mediatypes.image.Viewer.prototype.addAnnotation = function (annotation, opt_replace) {
   // Remove opt_replace, if specified
   if (opt_replace) {
     if (opt_replace == this._currentAnnotation)
       delete this._currentAnnotation;
-   
-      goog.array.remove(this._annotations, opt_replace);
-      delete this._shapes[annotorious.shape.hashCode(opt_replace.shapes[0])];
+
+    goog.array.remove(this._annotations, opt_replace);
+    delete this._shapes[annotorious.shape.hashCode(opt_replace.shapes[0])];
   }
 
+  if (this._shapes[annotorious.shape.hashCode(annotation.shapes[0])]) return; //The new annotation has shapes exactly equals other annotation. Not insert if not delete old annotation.
   this._annotations.push(annotation);
-  
+
   // The viewer always operates in pixel coordinates for efficiency reasons
   var shape = annotation.shapes[0];
   if (shape.units == annotorious.shape.Units.PIXEL) {
-    this._shapes[annotorious.shape.hashCode(annotation.shapes[0])] = shape;     
+    this._shapes[annotorious.shape.hashCode(annotation.shapes[0])] = shape;
   } else {
     var self = this;
-    var viewportShape = annotorious.shape.transform(shape, function(xy) {
-      return self._annotator.fromItemCoordinates(xy); 
+    var viewportShape = annotorious.shape.transform(shape, function (xy) {
+      return self._annotator.fromItemCoordinates(xy);
     });
     this._shapes[annotorious.shape.hashCode(annotation.shapes[0])] = viewportShape;
   }
@@ -123,10 +129,10 @@ annotorious.mediatypes.image.Viewer.prototype.addAnnotation = function(annotatio
  * Removes an annotation from the viewer.
  * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.mediatypes.image.Viewer.prototype.removeAnnotation = function(annotation) {
+annotorious.mediatypes.image.Viewer.prototype.removeAnnotation = function (annotation) {
   if (annotation == this._currentAnnotation)
     delete this._currentAnnotation;
-   
+
   goog.array.remove(this._annotations, annotation);
   delete this._shapes[annotorious.shape.hashCode(annotation.shapes[0])];
   this.redraw();
@@ -136,8 +142,8 @@ annotorious.mediatypes.image.Viewer.prototype.removeAnnotation = function(annota
  * Returns all annotations in this viewer.
  * @return {Array.<annotorious.Annotation>} the annotations
  */
-annotorious.mediatypes.image.Viewer.prototype.getAnnotations = function() {
-  return goog.array.clone(this._annotations) 
+annotorious.mediatypes.image.Viewer.prototype.getAnnotations = function () {
+  return goog.array.clone(this._annotations)
 }
 
 /**
@@ -145,7 +151,7 @@ annotorious.mediatypes.image.Viewer.prototype.getAnnotations = function() {
  * word...) all, if no annotation is passed to the method.
  * @param {annotorious.Annotation | undefined} opt_annotation the annotation
  */
-annotorious.mediatypes.image.Viewer.prototype.highlightAnnotation = function(opt_annotation) {
+annotorious.mediatypes.image.Viewer.prototype.highlightAnnotation = function (opt_annotation) {
   this._currentAnnotation = opt_annotation;
   if (opt_annotation)
     this._keepHighlighted = true;
@@ -160,7 +166,7 @@ annotorious.mediatypes.image.Viewer.prototype.highlightAnnotation = function(opt
  * Returns the currently highlighted annotation (or 'undefined' if none).
  * @returns {Object} the currently highlighted annotation
  */
-annotorious.mediatypes.image.Viewer.prototype.getHighlightedAnnotation = function() {
+annotorious.mediatypes.image.Viewer.prototype.getHighlightedAnnotation = function () {
   return this._currentAnnotation;
 }
 
@@ -169,7 +175,7 @@ annotorious.mediatypes.image.Viewer.prototype.getHighlightedAnnotation = functio
  * @param {number} px the X coordinate
  * @param {number} py the Y coordinates
  */
-annotorious.mediatypes.image.Viewer.prototype.topAnnotationAt = function(px, py) {
+annotorious.mediatypes.image.Viewer.prototype.topAnnotationAt = function (px, py) {
   var annotations = this.getAnnotationsAt(px, py);
   if (annotations.length > 0) {
     return annotations[0];
@@ -184,33 +190,33 @@ annotorious.mediatypes.image.Viewer.prototype.topAnnotationAt = function(px, py)
  * @param {number} py the Y coordinate
  * @return {Array.<annotorious.Annotation>} the annotations sorted by size, smallest first
  */
-annotorious.mediatypes.image.Viewer.prototype.getAnnotationsAt = function(px, py) {
+annotorious.mediatypes.image.Viewer.prototype.getAnnotationsAt = function (px, py) {
   // TODO for large numbers of annotations, we can optimize this
   // using a tree- or grid-like data structure instead of a list
   var intersectedAnnotations = [];
 
   var self = this;
-  goog.array.forEach(this._annotations, function(annotation) {
+  goog.array.forEach(this._annotations, function (annotation) {
     if (annotorious.shape.intersects(self._shapes[annotorious.shape.hashCode(annotation.shapes[0])], px, py)) {
       intersectedAnnotations.push(annotation);
     }
   });
 
-  goog.array.sort(intersectedAnnotations, function(a, b) {
+  goog.array.sort(intersectedAnnotations, function (a, b) {
     var shape_a = self._shapes[annotorious.shape.hashCode(a.shapes[0])];
     var shape_b = self._shapes[annotorious.shape.hashCode(b.shapes[0])];
-    return  annotorious.shape.getSize(shape_a) - annotorious.shape.getSize(shape_b);
+    return annotorious.shape.getSize(shape_a) - annotorious.shape.getSize(shape_b);
   });
-  
+
   return intersectedAnnotations;
 }
 
 /**
  * @private
  */
-annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function(event) {
+annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function (event) {
   var topAnnotation = this.topAnnotationAt(event.offsetX, event.offsetY);
-    
+
   // TODO remove code duplication
 
   var self = this;
@@ -222,7 +228,7 @@ annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function(event) {
       this._currentAnnotation = topAnnotation;
       this.redraw();
       this._annotator.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATION,
-        { annotation: this._currentAnnotation, mouseEvent: event });   
+        { annotation: this._currentAnnotation, mouseEvent: event });
     } else if (this._currentAnnotation != topAnnotation) {
       // Mouse changed from one annotation to another one
       this._eventsEnabled = false;
@@ -242,10 +248,10 @@ annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function(event) {
  * @param {boolean=} highlight set true to highlight the shape
  * @private
  */
-annotorious.mediatypes.image.Viewer.prototype._draw = function(shape, highlight) {
-  var selector = goog.array.find(this._annotator.getAvailableSelectors(), function(selector) {
+annotorious.mediatypes.image.Viewer.prototype._draw = function (shape, highlight) {
+  var selector = goog.array.find(this._annotator.getAvailableSelectors(), function (selector) {
     return selector.getSupportedShapeType() == shape.type;
-  });  
+  });
 
   if (selector)
     selector.drawShape(this._g2d, shape, highlight);
@@ -256,15 +262,15 @@ annotorious.mediatypes.image.Viewer.prototype._draw = function(shape, highlight)
 /**
  * @private
  */
-annotorious.mediatypes.image.Viewer.prototype.redraw = function() {
+annotorious.mediatypes.image.Viewer.prototype.redraw = function () {
   this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
   var self = this;
-  goog.array.forEach(this._annotations, function(annotation) {
-	if (annotation != self._currentAnnotation)
+  goog.array.forEach(this._annotations, function (annotation) {
+    if (annotation != self._currentAnnotation)
       self._draw(self._shapes[annotorious.shape.hashCode(annotation.shapes[0])]);
   });
-   
+
   if (this._currentAnnotation) {
     var shape = this._shapes[annotorious.shape.hashCode(this._currentAnnotation.shapes[0])];
     this._draw(shape, true);
