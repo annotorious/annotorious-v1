@@ -23,7 +23,7 @@
           */
           mask: "./image-human-brain_99433-298.jpg",
           style: {
-            maskTransparency: 0.8
+            //maskTransparency: 0.8
           }
         }]
       };
@@ -31,7 +31,7 @@
       anno.addAnnotations([annotation]);
       anno.addHandler('onAnnotationCreated', function (annotation, item) {
         console.log("<--- Annotation create --->");
-        //annotation.shapes[0].mask = "./image-human-brain_99433-298.jpg";
+        //annotation.setMask("./image-human-brain_99433-298.jpg");
         //anno.reload();
         console.log(annotation);
         console.log("<--- Annotation create --->");
@@ -51,6 +51,27 @@
         $("#showPixel").html("cursor: [x=" + pixels.cursor.x + ", y=" + pixels.cursor.y + "]" + ((pixels.box) ? " box: [x=" + pixels.box.x + ", y=" + pixels.box.y + ", width=" + pixels.box.width + ", height=" + pixels.box.height + "]" : ""))
       });
     });
+
+    var properties = {
+      displayMessage: "Annotate", //the message to display as hint
+
+      shapeStyle: { //global style [OPTIONAL]
+
+        outline: '#ff0000', //outline color for annotation and selection shapes [OPTIONAL]
+        outlineWidth: 2, //outline width for annotation and selection shapes [1-12] [OPTIONAL]
+
+        hiOutline: '#ffff00', // outline color for highlighted annotation shapes [OPTIONAL]
+        hiOutlineWidth: 3, // outline width for highlighted annotation shapes [1-12] [OPTIONAL]
+
+        stroke: '#ff3399', // stroke color for annotation and selection shapes [OPTIONAL]
+        strokeWidth: 4, // stroke width for annotation and selection shapes [1-12] [OPTIONAL]
+
+        hiStroke: '#006600', // stroke color for highlighted annotation shapes [OPTIONAL]
+        hiStrokeWidth: 6.2,  //stroke width for highlighted annotation shapes [1-12] [OPTIONAL]
+
+        maskTransparency: 1 //transparency for annotation mask [0-1] [OPTIONAL]
+      }
+    };
   </script>
   <style>
     html,
@@ -98,6 +119,14 @@
 
     <button onclick="anno.reset();">Reset</button>
     <button onclick="anno.reload();">Reload</button>
+
+    <br />
+    <button onclick="anno.setProperties(properties);">Set properties</button>
+    <button
+      onclick="anno.setProperties({displayMessage: undefined, shapeStyle: { stroke: '#ffffff', strokeWidth: undefined}});">Set
+      other
+      properties</button>
+    <button onclick="anno.reload(true);">Remove properties</button>
 
     <h2>Test Images</h2>
     <div style="float:right; margin:0px 0px 10px 20px;">

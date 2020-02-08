@@ -71,8 +71,10 @@ var Annotation = {
       /** @type {number} transparency for annotation mask [0-1] **/
       maskTransparency: {}
     }
+  }],
 
-  }]
+  /** @type {Function} called for set mask on the shape **/
+  setMask: function (mask, shapeIdx) { }
 };
 
 /**

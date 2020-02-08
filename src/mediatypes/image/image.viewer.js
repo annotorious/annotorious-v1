@@ -112,10 +112,13 @@ annotorious.mediatypes.image.Viewer.prototype.addAnnotation = function (annotati
 
   // The viewer always operates in pixel coordinates for efficiency reasons
   var shape = annotation.shapes[0];
+  var self = this;
   if (shape.units == annotorious.shape.Units.PIXEL) {
+    annotation.shapes[0] = annotorious.shape.transform(shape, function (xy) { // convert the pixel units to fraction for responsive images when the image resized
+      return self._annotator.toItemCoordinates(xy);
+    });
     this._shapes[annotorious.shape.hashCode(annotation.shapes[0])] = shape;
   } else {
-    var self = this;
     var viewportShape = annotorious.shape.transform(shape, function (xy) {
       return self._annotator.fromItemCoordinates(xy);
     });

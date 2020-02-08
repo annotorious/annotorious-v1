@@ -56,7 +56,7 @@ annotorious.Annotorious.prototype._init = function () {
 
   /**
    * Each time the window is resized, it reloads the annotations - for responsive images
-   * The image must have the 'annotatable' class, the shapes geometry not in pixels
+   * The image must have the 'annotatable' class
    */
   goog.events.listen(window, goog.events.EventType.RESIZE, function (event) {
     self.reload();
@@ -358,17 +358,19 @@ annotorious.Annotorious.prototype.removeAnnotation = function (annotation) {
 }
 
 /**
- * Resets annotation functionality on this page and reload the annotations. Images with the 'annotatable'
+ * Reload the annotations. Images with the 'annotatable'
  * CSS class will have been re-initialized (i.e. they will be annotatable, with
  * a fresh annotator).
+ * @param {bool} removeProperties if true, reset the properties
  */
-annotorious.Annotorious.prototype.reload = function () {
+annotorious.Annotorious.prototype.reload = function (removeProperties) {
   goog.array.forEach(this._modules, function (module) {
-    var annota = module.getAnnotations();
+    var annotations = module.getAnnotations();
+    if (removeProperties) module.removeProperties();
     module.destroy();
     module.init();
-    goog.array.forEach(annota, function (element) {
-      module.addAnnotation(element);
+    goog.array.forEach(annotations, function (annotation) {
+      module.addAnnotation(annotation);
     });
   });
 }
@@ -381,6 +383,7 @@ annotorious.Annotorious.prototype.reload = function () {
  */
 annotorious.Annotorious.prototype.reset = function (annotation) {
   goog.array.forEach(this._modules, function (module) {
+    module.removeProperties();
     module.destroy();
     module.init();
   });
@@ -399,13 +402,7 @@ annotorious.Annotorious.prototype.setActiveSelector = function (item_url, select
 
 /**
  * Sets system-wide properties. The 'props' object is a key/value hash and
- * supports the following properties:
- *
- * outline: outline color for annotation and selection shapes 
- * stroke: stroke color for annotation and selection shapes
- * fill: fill color for annotation and selection shapes
- * hiStroke: stroke color for highlighted annotation shapes
- * hiFill: fill color for highlighted annotation shapes
+ * supports the following properties: [show Readme.md]
  * 
  * @param {Object} props the properties object
  */

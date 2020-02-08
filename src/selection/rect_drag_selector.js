@@ -16,38 +16,6 @@ annotorious.plugins.selection.RectDragSelector = function () { }
  * @param {Object} annotator reference to the annotator
  */
 annotorious.plugins.selection.RectDragSelector.prototype.init = function (annotator, canvas) {
-  /** @private **/
-  this._OUTLINE = '#000000';
-
-  /** @private **/
-  this._STROKE = '#ffffff';
-
-  /** @private **/
-  this._FILL = false;
-
-  /** @private **/
-  this._HI_OUTLINE = '#000000';
-
-  /** @private **/
-  this._HI_STROKE = '#fff000';
-
-  /** @private **/
-  this._HI_FILL = false;
-
-  /** @private **/
-  this._OUTLINE_WIDTH = 1;
-
-  /** @private **/
-  this._STROKE_WIDTH = 1;
-
-  /** @private **/
-  this._HI_OUTLINE_WIDTH = 1;
-
-  /** @private **/
-  this._HI_STROKE_WIDTH = 1.2;
-
-  /** @private **/
-  this._MASK_TRANSPARENCY = 0.5;
 
   /** @private **/
   this._canvas = canvas;
@@ -72,6 +40,24 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function (annota
 
   /** @private **/
   this._mouseUpListener;
+
+  /** @private **/
+  this._properties = {
+    outline: '#000000',
+    outlineWidth: 1,
+    hiOutline: '#000000',
+    hiOutlineWidth: 1,
+    stroke: '#ffffff',
+    strokeWidth: 1,
+    hiStroke: '#fff000',
+    hiStrokeWidth: 1.2,
+    fill: undefined,
+    hiFill: undefined,
+    maskTransparency: 0.8
+  }
+
+  /** @private **/
+  this._defaultProperties = Object.assign({}, this._properties);
 }
 
 /**
@@ -174,39 +160,55 @@ annotorious.plugins.selection.RectDragSelector.prototype.getSupportedShapeType =
  * Sets the properties on this selector.
  */
 annotorious.plugins.selection.RectDragSelector.prototype.setProperties = function (props) {
-  if (props.hasOwnProperty('outline'))
-    this._OUTLINE = props['outline'];
+  if (!(props instanceof Object) || Object.keys(props).length === 0) {
+    this._properties = Object.assign({}, this._defaultProperties);
+    return;
+  }
 
-  if (props.hasOwnProperty('stroke'))
-    this._STROKE = props['stroke'];
-
-  if (props.hasOwnProperty('fill'))
-    this._FILL = props['fill'];
-
-  if (props.hasOwnProperty('hiOutline'))
-    this._HI_OUTLINE = props['hiOutline'];
-
-  if (props.hasOwnProperty('hiStroke'))
-    this._HI_STROKE = props['hiStroke'];
-
-  if (props.hasOwnProperty('hiFill'))
-    this._HI_FILL = props['hiFill'];
-
-  if (props.hasOwnProperty('outlineWidth'))
-    this._OUTLINE_WIDTH = props['outlineWidth'];
-
-  if (props.hasOwnProperty('strokeWidth'))
-    this._STROKE_WIDTH = props['strokeWidth'];
-
-  if (props.hasOwnProperty('hiOutlineWidth'))
-    this._HI_OUTLINE_WIDTH = props['hiOutlineWidth'];
-
-  if (props.hasOwnProperty('hiStrokeWidth'))
-    this._HI_STROKE_WIDTH = props['hiStrokeWidth'];
-
-  if (props.hasOwnProperty('maskTransparency'))
-    this._MASK_TRANSPARENCY = props['maskTransparency'];
-
+  if (props.hasOwnProperty('outline')) {
+    if (props['outline']) this._properties.outline = props['outline'];
+    else this._properties.outline = this._defaultProperties.outline;
+  }
+  if (props.hasOwnProperty('outlineWidth')) {
+    if (props['outlineWidth']) this._properties.outlineWidth = props['outlineWidth'];
+    else this._properties.outlineWidth = this._defaultProperties.outlineWidth;
+  }
+  if (props.hasOwnProperty('hiOutline')) {
+    if (props['hiOutline']) this._properties.hiOutline = props['hiOutline'];
+    else this._properties.hiOutline = this._defaultProperties.hiOutline;
+  }
+  if (props.hasOwnProperty('hiOutlineWidth')) {
+    if (props['hiOutlineWidth']) this._properties.hiOutlineWidth = props['hiOutlineWidth'];
+    else this._properties.hiOutlineWidth = this._defaultProperties.hiOutlineWidth;
+  }
+  if (props.hasOwnProperty('stroke')) {
+    if (props['stroke']) this._properties.stroke = props['stroke'];
+    else this._properties.stroke = this._defaultProperties.stroke;
+  }
+  if (props.hasOwnProperty('strokeWidth')) {
+    if (props['strokeWidth']) this._properties.strokeWidth = props['strokeWidth'];
+    else this._properties.strokeWidth = this._defaultProperties.strokeWidth;
+  }
+  if (props.hasOwnProperty('hiStroke')) {
+    if (props['hiStroke']) this._properties.hiStroke = props['hiStroke'];
+    else this._properties.hiStroke = this._defaultProperties.hiStroke;
+  }
+  if (props.hasOwnProperty('hiStrokeWidth')) {
+    if (props['hiStrokeWidth']) this._properties.hiStrokeWidth = props['hiStrokeWidth'];
+    else this._properties.hiStrokeWidth = this._defaultProperties.hiStrokeWidth;
+  }
+  if (props.hasOwnProperty('fill')) {
+    if (props['fill']) this._properties.fill = props['fill'];
+    else this._properties.fill = this._defaultProperties.fill;
+  }
+  if (props.hasOwnProperty('hiFill')) {
+    if (props['hiFill']) this._properties.hiFill = props['hiFill'];
+    else this._properties.hiFill = this._defaultProperties.hiFill;
+  }
+  if (props.hasOwnProperty('maskTransparency')) {
+    if (props['maskTransparency']) this._properties.maskTransparency = props['maskTransparency'];
+    else this._properties.maskTransparency = this._defaultProperties.maskTransparency;
+  }
 }
 
 /**
@@ -311,17 +313,17 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
 
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
     if (highlight) {
-      fill = shape.style.hiFill || this._HI_FILL;
-      stroke = shape.style.hiStroke || this._HI_STROKE;
-      outline = shape.style.hiOutline || this._HI_OUTLINE;
-      outlineWidth = shape.style.hiOutlineWidth || this._HI_OUTLINE_WIDTH;
-      strokeWidth = shape.style.hiStrokeWidth || this._HI_STROKE_WIDTH;
+      fill = shape.style.hiFill || this._properties.hiFill;
+      stroke = shape.style.hiStroke || this._properties.hiStroke;
+      outline = shape.style.hiOutline || this._properties.hiOutline;
+      outlineWidth = shape.style.hiOutlineWidth || this._properties.hiOutlineWidth;
+      strokeWidth = shape.style.hiStrokeWidth || this._properties.hiStrokeWidth;
     } else {
-      fill = shape.style.fill || this._FILL;
-      stroke = shape.style.stroke || this._STROKE;
-      outline = shape.style.outline || this._OUTLINE;
-      outlineWidth = shape.style.outlineWidth || this._OUTLINE_WIDTH;
-      strokeWidth = shape.style.strokeWidth || this._STROKE_WIDTH;
+      fill = shape.style.fill || this._properties.fill;
+      stroke = shape.style.stroke || this._properties.stroke;
+      outline = shape.style.outline || this._properties.outline;
+      outlineWidth = shape.style.outlineWidth || this._properties.outlineWidth;
+      strokeWidth = shape.style.strokeWidth || this._properties.strokeWidth;
     }
 
     geom = shape.geometry;
@@ -343,8 +345,9 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
         }
         shape["_loadedMask"].image.src = shape.mask;
       }
-      g2d.globalAlpha = shape.style.maskTransparency || this._MASK_TRANSPARENCY;
+      g2d.globalAlpha = shape.style.maskTransparency || this._properties.maskTransparency;
       g2d.drawImage(shape["_loadedMask"].image, geom.x, geom.y, geom.width, geom.height);
+      geom = { x: geom.x - strokeWidth - outlineWidth, y: geom.y - strokeWidth - outlineWidth, width: geom.width + strokeWidth + outlineWidth, height: geom.height + strokeWidth + outlineWidth };
     }
 
     g2d.globalAlpha = 1;
