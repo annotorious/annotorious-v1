@@ -61,9 +61,9 @@ Ability to insert an image inside a annotation with shapes rect.
 
 Ability to reload the annotations, the image must have the `annotatable` class.
 
-    ```
-    anno.reload(); 
-    ```
+```
+anno.reload(); 
+```
 
 If you want to reload the annotations and remove the properties use: `anno.reload(true);`.
 
