@@ -69,12 +69,15 @@ var Annotation = {
       hiFill: {},
 
       /** @type {number} transparency for annotation mask [0-1] **/
-      maskTransparency: {}
+      maskTransparency: {},
+
+      /** @type {boolean} flag indicating whether the mask border is shown **/
+      maskBorder: {}
     }
   }],
 
   /** @type {Function} called for set mask on the shape **/
-  setMask: function (mask, shapeIdx) { }
+  setMask: function (mask, shapeIdx, transparency, border) { }
 };
 
 /**

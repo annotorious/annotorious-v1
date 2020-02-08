@@ -53,7 +53,8 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function (annota
     hiStrokeWidth: 1.2,
     fill: undefined,
     hiFill: undefined,
-    maskTransparency: 0.8
+    maskTransparency: 0.8,
+    maskBorder: true
   }
 
   /** @private **/
@@ -209,6 +210,10 @@ annotorious.plugins.selection.RectDragSelector.prototype.setProperties = functio
     if (props['maskTransparency']) this._properties.maskTransparency = props['maskTransparency'];
     else this._properties.maskTransparency = this._defaultProperties.maskTransparency;
   }
+  if (props.hasOwnProperty('maskBorder')) {
+    if (props['maskBorder']) this._properties.maskBorder = props['maskBorder'];
+    else this._properties.maskBorder = this._defaultProperties.maskBorder;
+  }
 }
 
 /**
@@ -345,9 +350,12 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
         }
         shape["_loadedMask"].image.src = shape.mask;
       }
-      g2d.globalAlpha = shape.style.maskTransparency || this._properties.maskTransparency;
-      g2d.drawImage(shape["_loadedMask"].image, geom.x, geom.y, geom.width, geom.height);
-      geom = { x: geom.x - strokeWidth - outlineWidth, y: geom.y - strokeWidth - outlineWidth, width: geom.width + strokeWidth + outlineWidth, height: geom.height + strokeWidth + outlineWidth };
+      if (shape["_loadedMask"].image) {
+        g2d.globalAlpha = shape.style.maskTransparency || this._properties.maskTransparency;
+        g2d.drawImage(shape["_loadedMask"].image, geom.x, geom.y, geom.width, geom.height);
+        if ((shape.style.maskBorder != undefined && !shape.style.maskBorder) || (shape.style.maskBorder == undefined && !this._properties.maskBorder)) return;
+        geom = { x: geom.x - strokeWidth - outlineWidth, y: geom.y - strokeWidth - outlineWidth, width: geom.width + strokeWidth + outlineWidth, height: geom.height + strokeWidth + outlineWidth };
+      }
     }
 
     g2d.globalAlpha = 1;

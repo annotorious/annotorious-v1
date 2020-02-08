@@ -43,12 +43,15 @@ Ability to insert an image inside a annotation with shapes rect.
         mask: "http://www.example.com/mymask.jpg",
 
         style: { //style [OPTIONAL]
-            maskTransparency: 0.8 //transparency for annotation mask [0-1] [OPTIONAL]
+            maskTransparency: 0.8, //transparency for annotation mask [0-1] [OPTIONAL]
+            maskBorder: true //if false, not show the mask border [OPTIONAL]
         }
     }]
     ```
 
-- set *Mask* dynamically 
+- set *Mask* dynamically - setMask(mask, shapeIdx, transparency, border);
+
+    [**mask**: the URL of the mask, **shapeIdx**: index of shapes (default: 0), **transparency** transparency of mask [0-1][default: 0.8], **border** flag indicating whether the mask border is shown [default: true]]
 
     ```
     anno.addHandler('onAnnotationCreated', function (annotation) {
@@ -139,9 +142,8 @@ var myAnnotation = {
         }
     }],
 
-    /** Function to set mask on the shape dinamically [mask: the URL of the mask, shapeIdx: index of shapes (default: 0)] **/
-    setMask: function (mask, shapeIdx) { } 
-}
+    setMask(mask, shapeIdx, transparency, border) //function to set mask on the shape dinamically
+
 ```
 
 ### Properties
@@ -177,7 +179,8 @@ anno.setProperties({
         fill: undefined, //fill color for annotation and selection shapes
         hiFill: undefined, //fill color for highlighted annotation shapes
 
-        maskTransparency: 0.8 //transparency for annotation mask [0-1] 
+        maskTransparency: 0.8, //transparency for annotation mask [0-1] 
+        maskBorder: true //if false, not show the mask border 
     }
 });
 ```

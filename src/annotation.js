@@ -23,9 +23,13 @@ annotorious.Annotation = function (src, text, shape, created_at) {
  * Set mask on the shape
  * @param {string} mask the URL of the mask - only if type is 'rect' 
  * @param {number} shapeIdx the index of shape to set the mask [default: 0] (optional)
+ * @param {number} transparency transparency for annotation mask [0-1] [default: 0.8] (optional)
+ * @param {boolean} border if false, not show the mask border [default: true] (optional)
  */
-annotorious.Annotation.prototype.setMask = function (mask, shapeIdx) {
+annotorious.Annotation.prototype.setMask = function (mask, shapeIdx, transparency, border) {
   if (!shapeIdx || this.shapes.length >= shapeIdx) shapeIdx = 0;
   if (this.shapes[shapeIdx].type != annotorious.shape.ShapeType.RECTANGLE) console.log('WARNING: impossible to set mask in shape ' + this.shapes[shapeIdx].type);
   else this.shapes[shapeIdx].mask = mask;
+  if (transparency) this.shapes[shapeIdx].style.maskTransparency = transparency;
+  if (border != undefined) this.shapes[shapeIdx].style.maskBorder = border;
 }
