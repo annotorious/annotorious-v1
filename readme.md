@@ -17,6 +17,7 @@ If you require support, get in touch [via our mailing list](https://groups.googl
 ### Functionality
 * *Mask:* Added the ability to insert an image inside a annotation with shapes rect.
 * *ColorMode:* Ability to draw custom shape without make an annotation. The drawn pixels coordinate are returned when the mouse is released.
+* *SelectEditor:* Added the ability to use a select inside the editor. (Dropdown menu)
 
 ### Changes
 * Added the ability to reload the annotations.
@@ -57,6 +58,7 @@ Ability to insert an image inside a annotation with shapes rect.
     - **shapeIdx**: index of shapes (default: 0)
     - **transparency** transparency of mask [0-1](default: 0.8)
     - **border** flag indicating whether the mask border is shown (default: true)
+    <br/>
 
     ```
     anno.addHandler('onAnnotationCreated', function (annotation) {
@@ -70,9 +72,9 @@ Ability to insert an image inside a annotation with shapes rect.
 Ability to draw custom shape without make an annotation. The last drawn pixels coordinate are returned when the mouse is released on `onDrawnPixels` event. 
 
 Mode of save the drawn pixels:
-* *permanent*: pixels are saved until `anno.reset()` or `anno.reload()`.
-* *active*: pixels are saved as long as *ColorMode* is enabled.
-* *release*: the pixels are not saved, they are deleted when the mouse is released.
+* **permanent**: pixels are saved until `anno.reset()` or `anno.reload()`.
+* **active**: pixels are saved as long as *ColorMode* is enabled.
+* **release**: the pixels are not saved, they are deleted when the mouse is released.
 
 - set *ColorMode* in the properties
 
@@ -92,9 +94,11 @@ Mode of save the drawn pixels:
 - set *ColorMode* using the function
     
     ```
-    anno.setColorMode(true, true, 'release', '#E74C3C', 1); // ENABLE - insideAnno, mode, color and strokeWidth are OPTIONAL
+    // ENABLE - insideAnno, mode, color and strokeWidth are OPTIONAL
+    anno.setColorMode(true, true, 'release', '#E74C3C', 1); 
    
-    anno.setColorMode(false); // DISABLE
+    // DISABLE
+    anno.setColorMode(false); 
     ```
 
 - Get drawn pixels
@@ -105,6 +109,43 @@ Mode of save the drawn pixels:
         event.drawnPixels; //array of last drawn pixels {x, y}
         event.annotation; //the annotation on which it was drawn inside (only if the 'insideAnno' property is enabled)
     });
+    ```
+
+### SelectEditor - anno.useSelectEditor(*enabled*, *options*, *emptyOption*, *customLabel*);
+
+Ability to use a select, with custom options, inside the editor. (Dropdown menu)
+
+- define custom options
+
+    ```
+    var selectOptions = [
+        {
+          id: 1, //the annotation text id [OPTIONAL]
+          value: 'My annotation' //the annotation text
+        },
+      ];
+    ```
+    
+- set *SelectEditor* in the properties
+
+    ```
+    anno.setProperties({        
+        selectEditor: {
+            /* DEFAULT VALUES */   
+            enabled: false, //if true, enable the select editor
+            options: undefined, //the options of select, use format of 'selectOptions' variable 
+            emptyOption: false, //if true, enable the empty select option [OPTIONAL]
+            customLabel: "<--- Select one option --->" //the custom first label if not use empty options [OPTIONAL]
+        }
+      });
+    ```
+
+- set *SelectEditor* using the function
+    
+    ```
+    anno.useSelectEditor(true, selectOptions, false, "Select one"); // ENABLE - emptyOption and customLabel are OPTIONAL
+
+    anno.useSelectEditor(false); // DISABLE
     ```
 
 ### Reload the annotations - anno.reload(*removeProperties*); 
@@ -131,7 +172,7 @@ If you want to reload the annotations and remove the properties use: `anno.reloa
 
     ```
     anno.addHandler('onAnnotationUpdated', function (annotation, old_value) { 
-        console.log(old_value);  // {text: "My annotation"}
+        console.log(old_value);  // {text: "My annotation", textId: "1"}
     });
     ```
 
@@ -155,7 +196,8 @@ var myAnnotation = {
     src : 'http://www.example.com/myimage.jpg', //the URL of the image where the annotation should go    
     context: '', //source URL of the HTML document containing the annotated object [OPTIONAL]
 
-    text : 'My annotation', //the annotation text
+    text : 'My annotation', //the annotation text 
+    textId : 1, //the annotation text id [OPTIONAL]
     editable: true, //if false, there will be no delete icon in the annotation popup. Make annotation 'read-only' [OPTIONAL]
 
     created_at: 1579909408935, //the timestamp of annotation creation [OPTIONAL]
@@ -211,6 +253,22 @@ anno.setProperties({
     hideAnnotations: false, //if true, hides existing annotations on all 
 
     outputUnits: 'fraction', //measurement units used for the output geometry ['pixel', 'fraction'] [pixels are relative to the original image size]    
+
+    colorMode: {
+        enabled: false, //if true, enable the colorMode
+        insideAnno: false, //if true, is possible draw only inside the annotations         
+        mode: "active", // mode of save the drawn pixels ["permanent", "active", "release"] 
+        color: "#2ECC71", //color of pixels 
+        strokeWidth: 2, //stroke width of pixels [1-12]
+    },
+
+    selectEditor: { 
+        enabled: false, //if true, enable the select editor
+        options: undefined, //the options of select, use format of 'selectOptions' variable [only required if is enabled]
+        emptyOption: false, //if true, enable the empty select option 
+        customLabel: "<--- Select one option --->" //the custom first label if not use empty options 
+    },
+
     shapeStyle: { //global style 
         outline: '#000000', //outline color for annotation and selection shapes 
         outlineWidth: 1, //outline width for annotation and selection shapes [1-12] 

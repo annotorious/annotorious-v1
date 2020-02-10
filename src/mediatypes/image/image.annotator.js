@@ -341,6 +341,10 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function (
   if (props.hasOwnProperty("colorMode"))
     this._viewer.setColorMode(props["colorMode"]);
 
+  /** SelectEditor **/
+  if (props.hasOwnProperty("selectEditor"))
+    this.editor.setSelectEditor(props["selectEditor"]);
+
   /** ShapeStyle **/
   if (props.hasOwnProperty("shapeStyle")) {
     goog.array.forEach(this._selectors, function (selector) {

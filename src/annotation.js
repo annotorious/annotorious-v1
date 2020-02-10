@@ -8,11 +8,13 @@ goog.require('annotorious.shape');
  * @param {string} text the annotation text
  * @param {annotorious.shape.Shape} shape the annotated fragment shape
  * @param {Date} created_at the timestamp of annotation creation [OPTIONAL]
+ * @param {number} textId the id of text
  * @constructor
  */
-annotorious.Annotation = function (src, text, shape, created_at) {
+annotorious.Annotation = function (src, text, shape, created_at, textId) {
   this.src = src;
   this.text = text;
+  this.textId = textId;
   this.shapes = [shape];
   this.created_at = created_at || Date.now();
   this['context'] = document.URL; // Prevents dead code removal  

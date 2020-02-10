@@ -14,6 +14,9 @@ var Annotation = {
   /** @type {string} annotation text **/
   text: {},
 
+  /** @type {integer} annotation text id **/
+  textId: {},
+
   /** @type {boolean} flag indicating whether the anntotation is edit-/deletable **/
   editable: {},
 

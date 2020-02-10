@@ -433,6 +433,24 @@ annotorious.Annotorious.prototype.setColorMode = function (enabled, insideAnno, 
 }
 
 /**
+ * Enables (or disables) the ability to show the select editor
+ * @param {boolean} enabled true to enable the select editor
+ * @param {Array[Object]} options the options of select
+ * @param {boolean} emptyOption true to enable the empty select option
+ * @param {string} customLabel the custom first label if not use empty options
+ */
+annotorious.Annotorious.prototype.useSelectEditor = function (enabled, options, emptyOption, customLabel) {
+  this.setProperties({
+    "selectEditor": {
+      "enabled": enabled,
+      "options": options,
+      "emptyOption": emptyOption,
+      "customLabel": customLabel
+    }
+  });
+}
+
+/**
  * Enables (or disables) the ability to create new annotations on an annotatable item.
  * @param {boolean} enabled if true, new annotations can be created
  *

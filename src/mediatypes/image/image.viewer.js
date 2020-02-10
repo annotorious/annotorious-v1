@@ -315,7 +315,12 @@ annotorious.mediatypes.image.Viewer.prototype.redraw = function () {
 
 /**
  * Enable or Disable colorMode
- * @param {Object} colorMode {enabled:bool, color:string, permanent:bool, strokeWidth:integer} if is enabled, color of pixels, if store the pixels, stroke width of pixels [1-12]
+ * @param {Object} colorMode {enabled: false, insideAnno: false, mode: "active", color: "#2ECC71", strokeWidth: 2}
+ * - enabled if true, enable the colorMode
+ * - insideAnno if true, is possible draw only inside the annotations
+ * - mode mode of save the drawn pixels 
+ * - color color of pixels
+ * - strokeWidth stroke width of pixels [1-12] 
  */
 annotorious.mediatypes.image.Viewer.prototype.setColorMode = function (colorMode) {
   if (!(colorMode instanceof Object) || Object.keys(colorMode).length === 0) {
