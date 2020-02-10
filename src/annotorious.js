@@ -413,6 +413,26 @@ annotorious.Annotorious.prototype.setProperties = function (props) {
 }
 
 /**
+ * Ability to draw custom shape without make an annotation.The drawn pixels coordinate are returned when the mouse is released.
+ * @param {boolean} enabled if true, enable the colorMode
+ * @param {boolean} insideAnno if true, is possible draw only inside the annotations
+ * @param {string} mode mode of save the drawn pixels 
+ * @param {string} color color of pixels
+ * @param {integer} strokeWidth stroke width of pixels [1-12]
+ */
+annotorious.Annotorious.prototype.setColorMode = function (enabled, insideAnno, mode, color, strokeWidth) {
+  this.setProperties({
+    "colorMode": {
+      "enabled": enabled,
+      "insideAnno": insideAnno,
+      "mode": mode,
+      "color": color,
+      "strokeWidth": strokeWidth
+    }
+  });
+}
+
+/**
  * Enables (or disables) the ability to create new annotations on an annotatable item.
  * @param {boolean} enabled if true, new annotations can be created
  *

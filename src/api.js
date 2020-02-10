@@ -39,3 +39,4 @@ annotorious.Annotorious.prototype['setSelectionEnabled'] = annotorious.Annotorio
 /** My API **/
 annotorious.Annotorious.prototype['reload'] = annotorious.Annotorious.prototype.reload;
 annotorious.Annotorious.prototype['addAnnotations'] = annotorious.Annotorious.prototype.addAnnotations;
+annotorious.Annotorious.prototype['setColorMode'] = annotorious.Annotorious.prototype.setColorMode;

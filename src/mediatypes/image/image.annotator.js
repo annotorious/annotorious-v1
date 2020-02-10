@@ -55,6 +55,9 @@ annotorious.mediatypes.image.ImageAnnotator = function (item, opt_popup) {
   this._displayMessage = undefined;
 
   /** @private **/
+  this.outputUnits = annotorious.shape.Units.FRACTION;
+
+  /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
 
   /** @private **/
@@ -200,8 +203,13 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.editAnnotation = function 
 
   // Step 2 - find a suitable selector for the shape
   var selector = goog.array.find(this._selectors, function (selector) {
-    return selector.getSupportedShapeType() == annotation.shapes[0].type;
+    var types = selector.getSupportedShapeType();
+    return Array.isArray(types) ? goog.array.indexOf(types, annotation.shapes[0].type) != -1 : types == annotation.shapes[0].type;
   });
+
+  var shape = annotation.shapes[0];
+  var self = this;
+  var viewportShape = (shape.units == annotorious.shape.Units.PIXEL) ? annotorious.shape.transform(shape, function (xy) { return self.fromItemPixelCoordinates(xy); }) : annotorious.shape.transform(shape, function (xy) { return self.fromItemCoordinates(xy); });
 
   // Step 3 - open annotation in editor
   if (selector) {
@@ -210,36 +218,14 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.editAnnotation = function 
 
     // TODO make editable - not just draw (selector implementation required)
     var g2d = this._editCanvas.getContext('2d');
-    var shape = annotation.shapes[0];
-
-    var self = this;
-    var viewportShape = (shape.units == 'pixel') ? shape : annotorious.shape.transform(shape, function (xy) { return self.fromItemCoordinates(xy); });
     selector.drawShape(g2d, viewportShape);
   }
 
-  var bounds = annotorious.shape.getBoundingRect(annotation.shapes[0]).geometry;
-  var anchor = (annotation.shapes[0].units == 'pixel') ?
-    new annotorious.shape.geom.Point(bounds.x, bounds.y + bounds.height) :
-    this.fromItemCoordinates(new annotorious.shape.geom.Point(bounds.x, bounds.y + bounds.height));
-
+  var bounds = annotorious.shape.getBoundingRect(viewportShape).geometry;
+  var anchor = new annotorious.shape.geom.Point(bounds.x, bounds.y + bounds.height);
   this.editor.setPosition(new annotorious.shape.geom.Point(anchor.x + this._image.offsetLeft,
     anchor.y + 4 + this._image.offsetTop));
   this.editor.open(annotation);
-}
-
-/**
- * Converts the specified viewport coordinate to the
- * coordinate system used by the annotatable item.
- * @param {annotorious.shape.geom.Point} xy the viewport coordinate
- * @returns the corresponding item coordinate
- */
-annotorious.mediatypes.image.ImageAnnotator.prototype.fromItemCoordinates = function (xy_wh) {
-  var imgSize = goog.style.getSize(this._image);
-  if (xy_wh.width) {
-    return { x: xy_wh.x * imgSize.width, y: xy_wh.y * imgSize.height, width: xy_wh.width * imgSize.width, height: xy_wh.height * imgSize.height };
-  } else {
-    return { x: xy_wh.x * imgSize.width, y: xy_wh.y * imgSize.height };
-  }
 }
 
 /**
@@ -347,6 +333,14 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function (
     }
   }
 
+  /** Output Shape Units **/
+  if (props.hasOwnProperty("outputUnits"))
+    this.outputUnits = (props["outputUnits"] == annotorious.shape.Units.PIXEL) ? annotorious.shape.Units.PIXEL : annotorious.shape.Units.FRACTION;
+
+  /** Color Mode **/
+  if (props.hasOwnProperty("colorMode"))
+    this._viewer.setColorMode(props["colorMode"]);
+
   /** ShapeStyle **/
   if (props.hasOwnProperty("shapeStyle")) {
     goog.array.forEach(this._selectors, function (selector) {
@@ -388,18 +382,67 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.stopSelection = function (
 }
 
 /**
- * Converts the specified coordinate from the
- * coordinate system used by the annotatable item to viewport coordinates.
- * @param {annotorious.shape.geom.Point} xy the item coordinate
- * @returns the corresponding viewport coordinate
+ * Converts the geometry 'fraction' coordinate to the coordinate used by system.
+ * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle} xy_wh the geometry 'fraction' coordinate
+ * @returns the corresponding coordinate used by system
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype.fromItemCoordinates = function (xy_wh) {
+  var imgSize = goog.style.getSize(this._image);
+  var systemPixel = { x: xy_wh.x * imgSize.width, y: xy_wh.y * imgSize.height };
+  if (xy_wh.width) {
+    systemPixel.width = xy_wh.width * imgSize.width;
+    systemPixel.height = xy_wh.height * imgSize.height;
+  }
+  return systemPixel;
+}
+
+/**
+ * Converts the geometry 'pixel' coordinate to the coordinate used by system.
+ * [pixels are relative to the original image size]     
+ * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle} xy_wh the geometry 'pixel' coordinate
+ * @returns the corresponding coordinate used by system
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype.fromItemPixelCoordinates = function (xy_wh) {
+  var imgSize = goog.style.getSize(this._image);
+
+  var systemPixel = { x: parseInt((xy_wh.x / this._image.naturalWidth) * imgSize.width), y: parseInt((xy_wh.y / this._image.naturalHeight) * imgSize.height) };
+  if (xy_wh.width) {
+    systemPixel.width = parseInt((xy_wh.width / this._image.naturalWidth) * imgSize.width);
+    systemPixel.height = parseInt((xy_wh.height / this._image.naturalHeight) * imgSize.height);
+  }
+
+  return systemPixel;
+}
+
+/**
+ * Converts the specified coordinate used by system to geometry 'fraction' coordinate
+ * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle} xy_wh the system coordinate
+ * @returns the corresponding geometry 'fraction' coordinate
  */
 annotorious.mediatypes.image.ImageAnnotator.prototype.toItemCoordinates = function (xy_wh) {
   var imgSize = goog.style.getSize(this._image);
+  var newGeo = { x: xy_wh.x / imgSize.width, y: xy_wh.y / imgSize.height };
   if (xy_wh.width) {
-    return { x: xy_wh.x / imgSize.width, y: xy_wh.y / imgSize.height, width: xy_wh.width / imgSize.width, height: xy_wh.height / imgSize.height };
-  } else {
-    return { x: xy_wh.x / imgSize.width, y: xy_wh.y / imgSize.height };
+    newGeo.width = xy_wh.width / imgSize.width;
+    newGeo.height = xy_wh.height / imgSize.height;
   }
+  return newGeo;
+}
+
+/**
+ * Converts the specified coordinate used by system to geometry 'pixel' coordinate
+ * [pixels are relative to the original image size]     
+ * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle} xy_wh the system coordinate
+ * @returns the corresponding geometry 'pixel' coordinate
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype.toItemPixelCoordinates = function (xy_wh) {
+  var imgSize = goog.style.getSize(this._image);
+  var newGeo = { x: parseInt((xy_wh.x * this._image.naturalWidth) / imgSize.width), y: parseInt((xy_wh.y * this._image.naturalHeight) / imgSize.height) };
+  if (xy_wh.width) {
+    newGeo.width = parseInt((xy_wh.width * this._image.naturalWidth) / imgSize.width);
+    newGeo.height = parseInt((xy_wh.height * this._image.naturalHeight) / imgSize.height);
+  }
+  return newGeo;
 }
 
 /** API exports **/

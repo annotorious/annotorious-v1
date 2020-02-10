@@ -17,10 +17,6 @@
         shapes: [{
           type: 'rect',
           geometry: { x: 0.2, y: 0.2, width: 0.50, height: 0.5 },
-          /*
-          units: 'pixel',
-          geometry: { x: 100, y: 80, width: 60, height: 50 },
-          */
           mask: "./image-human-brain_99433-298.jpg",
           style: {
             //maskTransparency: 0.8,
@@ -28,8 +24,23 @@
           }
         }]
       };
+      var annotation2 = {
+        src: '640px-Hallstatt.jpg',
+        text: 'This is an annotation.',
+        editable: true,
+        shapes: [{
+          type: 'rect',
+          geometry: { x: 50, y: 50, width: 100, height: 100 },
+          units: 'pixel'
+        }]
+      };
 
-      anno.addAnnotations([annotation]);
+      anno.addAnnotations([annotation, annotation2]);
+      anno.addHandler('onDrawnPixels', function (event) {
+        console.log("<--- DrawnPixels --->");
+        console.log(event);
+        console.log("<--- DrawnPixels --->");
+      });
       anno.addHandler('onAnnotationCreated', function (annotation, item) {
         console.log("<--- Annotation create --->");
         //annotation.setMask("./image-human-brain_99433-298.jpg", 0, 0.5, false);
@@ -55,7 +66,7 @@
 
     var properties = {
       displayMessage: "Annotate", //the message to display as hint [OPTIONAL]
-
+      outputUnits: "pixel", // measurement units used for the output geometry ['pixel', 'fraction'] [pixels are relative to the original image size] [OPTIONAL]     
       shapeStyle: { //global style [OPTIONAL]
 
         outline: '#ff0000', //outline color for annotation and selection shapes [OPTIONAL]
@@ -73,7 +84,7 @@
         maskTransparency: 1, //transparency for annotation mask [0-1] [OPTIONAL]
         maskBorder: true  //if false, not show the mask border [OPTIONAL]
       }
-    };
+    };   
   </script>
   <style>
     html,
@@ -129,6 +140,10 @@
       other
       properties</button>
     <button onclick="anno.reload(true);">Remove properties</button>
+
+    <br />
+    <button onclick="anno.setColorMode(true, true, 'release', '#E74C3C');">Enable colorMode</button>
+    <button onclick="anno.setColorMode(false);">Disable colorMode</button>
 
     <h2>Test Images</h2>
     <div style="float:right; margin:0px 0px 10px 20px;">

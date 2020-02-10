@@ -86,6 +86,11 @@ annotorious.events.EventType = {
   MOUSE_OVER_ANNOTATION: 'onMouseOverAnnotation',
 
   /** 
+   * The mouse entered an annotation and draw pixel (drawPixel Mode) 
+   */
+  DRAWN_PIXELS: 'onDrawnPixels',
+
+  /** 
    * The mouse moved out of an annotation
    */
   MOUSE_OUT_OF_ANNOTATION: 'onMouseOutOfAnnotation',

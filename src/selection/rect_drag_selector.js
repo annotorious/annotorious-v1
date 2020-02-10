@@ -55,7 +55,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function (annota
     hiFill: undefined,
     maskTransparency: 0.8,
     maskBorder: true
-  }
+  };
 
   /** @private **/
   this._defaultProperties = Object.assign({}, this._properties);
@@ -68,7 +68,6 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function (annota
 annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = function (startPoint) {
   var self = this;
   var canvas = this._canvas;
-  var image = this._annotator.getItem().element;
 
   this._mouseMoveListener = goog.events.listen(this._canvas, annotorious.events.ui.EventType.MOVE, function (event) {
     var points = annotorious.events.ui.sanitizeCoordinates(event, canvas);
@@ -80,13 +79,9 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
       var width = self._opposite.x - self._anchor.x;
       var height = self._opposite.y - self._anchor.y;
 
-      var cX = parseInt((image.naturalWidth * event.offsetX) / event.target.width);
-      var cY = parseInt((image.naturalHeight * event.offsetY) / event.target.height);
-      var aX = parseInt((image.naturalWidth * self._anchor.x) / event.target.width);
-      var aY = parseInt((image.naturalHeight * self._anchor.y) / event.target.height);
-      var aW = Math.abs(cX - aX);
-      var aH = Math.abs(cY - aY);
-      self._annotator.fireEvent(annotorious.events.EventType.MOUSE_MOVE_ANNOTATABLE_ITEM, { "cursor": { x: cX, y: cY }, "box": { x: aX, y: aY, width: aW, height: aH } }, event);
+      var pixCurs = self._annotator.toItemPixelCoordinates(points);
+      var pixBox = self._annotator.toItemPixelCoordinates({ x: self._anchor.x, y: self._anchor.y, width: width, height: height });
+      self._annotator.fireEvent(annotorious.events.EventType.MOUSE_MOVE_ANNOTATABLE_ITEM, { "cursor": pixCurs, "box": pixBox }, event);
 
       self.drawShape(self._g2d, {
         type: annotorious.shape.ShapeType.RECTANGLE,
@@ -149,12 +144,10 @@ annotorious.plugins.selection.RectDragSelector.prototype.getName = function () {
 /**
  * Selector API method: returns the supported shape type.
  *
- * TODO support for multiple shape types?
- *
  * @return the supported shape type
  */
 annotorious.plugins.selection.RectDragSelector.prototype.getSupportedShapeType = function () {
-  return annotorious.shape.ShapeType.RECTANGLE;
+  return [annotorious.shape.ShapeType.RECTANGLE, annotorious.shape.ShapeType.POINT];
 }
 
 /**
@@ -166,54 +159,42 @@ annotorious.plugins.selection.RectDragSelector.prototype.setProperties = functio
     return;
   }
 
-  if (props.hasOwnProperty('outline')) {
-    if (props['outline']) this._properties.outline = props['outline'];
-    else this._properties.outline = this._defaultProperties.outline;
-  }
-  if (props.hasOwnProperty('outlineWidth')) {
-    if (props['outlineWidth']) this._properties.outlineWidth = props['outlineWidth'];
-    else this._properties.outlineWidth = this._defaultProperties.outlineWidth;
-  }
-  if (props.hasOwnProperty('hiOutline')) {
-    if (props['hiOutline']) this._properties.hiOutline = props['hiOutline'];
-    else this._properties.hiOutline = this._defaultProperties.hiOutline;
-  }
-  if (props.hasOwnProperty('hiOutlineWidth')) {
-    if (props['hiOutlineWidth']) this._properties.hiOutlineWidth = props['hiOutlineWidth'];
-    else this._properties.hiOutlineWidth = this._defaultProperties.hiOutlineWidth;
-  }
-  if (props.hasOwnProperty('stroke')) {
-    if (props['stroke']) this._properties.stroke = props['stroke'];
-    else this._properties.stroke = this._defaultProperties.stroke;
-  }
-  if (props.hasOwnProperty('strokeWidth')) {
-    if (props['strokeWidth']) this._properties.strokeWidth = props['strokeWidth'];
-    else this._properties.strokeWidth = this._defaultProperties.strokeWidth;
-  }
-  if (props.hasOwnProperty('hiStroke')) {
-    if (props['hiStroke']) this._properties.hiStroke = props['hiStroke'];
-    else this._properties.hiStroke = this._defaultProperties.hiStroke;
-  }
-  if (props.hasOwnProperty('hiStrokeWidth')) {
-    if (props['hiStrokeWidth']) this._properties.hiStrokeWidth = props['hiStrokeWidth'];
-    else this._properties.hiStrokeWidth = this._defaultProperties.hiStrokeWidth;
-  }
-  if (props.hasOwnProperty('fill')) {
-    if (props['fill']) this._properties.fill = props['fill'];
-    else this._properties.fill = this._defaultProperties.fill;
-  }
-  if (props.hasOwnProperty('hiFill')) {
-    if (props['hiFill']) this._properties.hiFill = props['hiFill'];
-    else this._properties.hiFill = this._defaultProperties.hiFill;
-  }
-  if (props.hasOwnProperty('maskTransparency')) {
-    if (props['maskTransparency']) this._properties.maskTransparency = props['maskTransparency'];
-    else this._properties.maskTransparency = this._defaultProperties.maskTransparency;
-  }
-  if (props.hasOwnProperty('maskBorder')) {
-    if (props['maskBorder']) this._properties.maskBorder = props['maskBorder'];
-    else this._properties.maskBorder = this._defaultProperties.maskBorder;
-  }
+  if (props.hasOwnProperty('outline'))
+    this._properties.outline = (props['outline']) ? props['outline'] : this._properties.outline = this._defaultProperties.outline;
+
+  if (props.hasOwnProperty('outlineWidth'))
+    this._properties.outlineWidth = (props['outlineWidth']) ? props['outlineWidth'] : this._defaultProperties.outlineWidth;
+
+  if (props.hasOwnProperty('hiOutline'))
+    this._properties.hiOutline = (props['hiOutline']) ? props['hiOutline'] : this._defaultProperties.hiOutline;
+
+  if (props.hasOwnProperty('hiOutlineWidth'))
+    this._properties.hiOutlineWidth = (props['hiOutlineWidth']) ? props['hiOutlineWidth'] : this._defaultProperties.hiOutlineWidth;
+
+  if (props.hasOwnProperty('stroke'))
+    this._properties.stroke = (props['stroke']) ? props['stroke'] : this._defaultProperties.stroke;
+
+  if (props.hasOwnProperty('strokeWidth'))
+    this._properties.strokeWidth = (props['strokeWidth']) ? props['strokeWidth'] : this._defaultProperties.strokeWidth;
+
+  if (props.hasOwnProperty('hiStroke'))
+    this._properties.hiStroke = (props['hiStroke']) ? props['hiStroke'] : this._defaultProperties.hiStroke;
+
+  if (props.hasOwnProperty('hiStrokeWidth'))
+    this._properties.hiStrokeWidth = (props['hiStrokeWidth']) ? props['hiStrokeWidth'] : this._defaultProperties.hiStrokeWidth;
+
+  if (props.hasOwnProperty('fill'))
+    this._properties.fill = (props['fill']) ? props['fill'] : this._defaultProperties.fill;
+
+  if (props.hasOwnProperty('hiFill'))
+    this._properties.hiFill = (props['hiFill']) ? props['hiFill'] : this._defaultProperties.hiFill;
+
+  if (props.hasOwnProperty('maskTransparency'))
+    this._properties.maskTransparency = (props['maskTransparency']) ? props['maskTransparency'] : this._defaultProperties.maskTransparency;
+
+  if (props.hasOwnProperty('maskBorder'))
+    this._properties.maskBorder = (typeof props['maskBorder'] === "boolean") ? props['maskBorder'] : this._defaultProperties.maskBorder;
+
 }
 
 /**
@@ -256,17 +237,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.getShape = function () 
     (Math.abs(this._opposite.y - this._anchor.y) > 3)) {
 
     var viewportBounds = this.getViewportBounds();
-    // var item_anchor = this._annotator.toItemCoordinates({x: viewportBounds.left, y: viewportBounds.top});
-    // var item_opposite = this._annotator.toItemCoordinates({x: viewportBounds.right, y: viewportBounds.bottom});
-
-    /*
-    var rect = new annotorious.shape.geom.Rectangle(
-      item_anchor.x,
-      item_anchor.y,
-      item_opposite.x - item_anchor.x,
-      item_opposite.y - item_anchor.y
-    );*/
-    var rect = this._annotator.toItemCoordinates({
+    var rect = this._annotator.toItemCoordinates({ // conversion to fraction 
       x: viewportBounds.left,
       y: viewportBounds.top,
       width: viewportBounds.right - viewportBounds.left,
@@ -312,7 +283,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.getViewportBounds = fun
  * @param {boolean=} highlight if true, shape will be drawn highlighted
  */
 annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g2d, shape, highlight) {
-  var geom, stroke, fill, outline, outlineWidth, strokeWidth;
+  var geom = shape.geometry, stroke, fill, outline, outlineWidth, strokeWidth;
 
   if (!shape.style) shape.style = {};
 
@@ -330,8 +301,6 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
       outlineWidth = shape.style.outlineWidth || this._properties.outlineWidth;
       strokeWidth = shape.style.strokeWidth || this._properties.strokeWidth;
     }
-
-    geom = shape.geometry;
 
     //annotation has a mask
     if (shape.mask) {
@@ -360,30 +329,26 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
 
     g2d.globalAlpha = 1;
     // Outline
-    if (outline) {
-      g2d.lineJoin = "round";
-      g2d.lineWidth = outlineWidth;
-      g2d.strokeStyle = outline;
-      g2d.strokeRect(
-        geom.x + outlineWidth / 2,
-        geom.y + outlineWidth / 2,
-        geom.width - outlineWidth,
-        geom.height - outlineWidth
-      );
-    }
+    g2d.lineJoin = "round";
+    g2d.lineWidth = outlineWidth;
+    g2d.strokeStyle = outline;
+    g2d.strokeRect(
+      geom.x + outlineWidth / 2,
+      geom.y + outlineWidth / 2,
+      geom.width - outlineWidth,
+      geom.height - outlineWidth
+    );
 
-    // Stroke
-    if (stroke) {
-      g2d.lineJoin = "miter";
-      g2d.lineWidth = strokeWidth;
-      g2d.strokeStyle = stroke;
-      g2d.strokeRect(
-        geom.x + outlineWidth + strokeWidth / 2,
-        geom.y + outlineWidth + strokeWidth / 2,
-        geom.width - outlineWidth * 2 - strokeWidth,
-        geom.height - outlineWidth * 2 - strokeWidth
-      );
-    }
+    // Stroke    
+    g2d.lineJoin = "miter";
+    g2d.lineWidth = strokeWidth;
+    g2d.strokeStyle = stroke;
+    g2d.strokeRect(
+      geom.x + outlineWidth + strokeWidth / 2,
+      geom.y + outlineWidth + strokeWidth / 2,
+      geom.width - outlineWidth * 2 - strokeWidth,
+      geom.height - outlineWidth * 2 - strokeWidth
+    );
 
     // Fill   
     if (fill) {
@@ -397,5 +362,15 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
         geom.height - outlineWidth * 2 - strokeWidth
       );
     }
+    return;
+  }
+
+  if (shape.type == annotorious.shape.ShapeType.POINT) {
+    fill = shape.style.fill || this._properties.fill;
+    strokeWidth = shape.style.strokeWidth || this._properties.strokeWidth;
+    g2d.beginPath();
+    g2d.fillStyle = fill;
+    g2d.arc(geom.x, geom.y, strokeWidth, 0, strokeWidth * Math.PI, false);
+    g2d.fill();
   }
 }
