@@ -20,7 +20,7 @@ If you require support, get in touch [via our mailing list](https://groups.googl
 * *SelectEditor:* Added the ability to use a select inside the editor. (Dropdown menu)
 * *CursorAxes:* Added the ability to show cursor axes inside the image.
 * *ArrowMode:* Added the ability to annotate with draw arrow shape. (Arrow selector)
-* *Fancy Box:* Added ('Fancy Box Selector')[https://annotorious.github.io/demos/fancybox-preview.html] plugin integration.
+* *Fancy Box:* Added ['Fancy Box Selector'](https://annotorious.github.io/demos/fancybox-preview.html) plugin integration.
 * *ExtraFields:* Added the ability to add many fields to the annotation GUI widget from properties.
 
 ### Changes
@@ -234,7 +234,7 @@ Ability to annotate with draw arrow shape. (Arrow selector)
 
 ### Fancy Box - anno.useFrancyBox(*enabled*);
 
-Added ('Fancy Box Selector')[https://annotorious.github.io/demos/fancybox-preview.html] plugin integration.
+Added ['Fancy Box Selector'](https://annotorious.github.io/demos/fancybox-preview.html) plugin integration.
 
 - set *Fancy Box* in the properties
 
@@ -339,7 +339,7 @@ var myAnnotation = {
 
     shapes : [{ //the annotation shape    
     
-        type : 'rect', //the shape type ['rect', 'arrow', 'polygon'] for enable 'polygon' shape show the [official page](https://annotorious.github.io/demos.html)
+        type : 'rect', //the shape type ['rect', 'arrow', 'polygon'] for enable 'polygon' shape show the official page
         mask : 'http://www.example.com/mymask.jpg', //the URL of the mask - only if type is 'rect' [OPTIONAL]
         geometry : { x : 0.1, y: 0.1, width : 0.4, height: 0.3 } //the shape geometry (relative coordinates)
         
@@ -436,7 +436,7 @@ anno.setProperties({
     },
 
     popup: { //properties for popup GUI widget
-        extraFields: undefined //add many fields to the annotation editor GUI widget. Show 'ExtraFields' section for more
+        extraFields: undefined //add many fields to the annotation popup GUI widget. Show 'ExtraFields' section for more
     },
 
     shapeStyle: { //global style 
