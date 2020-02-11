@@ -59,6 +59,9 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function (annota
 
   /** @private **/
   this._defaultProperties = Object.assign({}, this._properties);
+
+  /** @private **/
+  this._useFrancyBox = false;
 }
 
 /**
@@ -71,29 +74,44 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
 
   this._mouseMoveListener = goog.events.listen(this._canvas, annotorious.events.ui.EventType.MOVE, function (event) {
     var points = annotorious.events.ui.sanitizeCoordinates(event, canvas);
-    if (self._enabled) {
-      self._opposite = { x: points.x, y: points.y };
+    if (!self._enabled) return;
+    self._opposite = { x: points.x, y: points.y };
 
-      self._g2d.clearRect(0, 0, canvas.width, canvas.height);
+    self._g2d.clearRect(0, 0, canvas.width, canvas.height);
 
-      var width = self._opposite.x - self._anchor.x;
-      var height = self._opposite.y - self._anchor.y;
+    var width = self._opposite.x - self._anchor.x;
+    var height = self._opposite.y - self._anchor.y;
 
-      var pixCurs = self._annotator.toItemPixelCoordinates(points);
-      var pixBox = self._annotator.toItemPixelCoordinates({ x: self._anchor.x, y: self._anchor.y, width: width, height: height });
-      self._annotator.fireEvent(annotorious.events.EventType.MOUSE_MOVE_ANNOTATABLE_ITEM, { "cursor": pixCurs, "box": pixBox }, event);
+    var pixCurs = self._annotator.toItemPixelCoordinates(points);
+    var pixBox = self._annotator.toItemPixelCoordinates({ x: self._anchor.x, y: self._anchor.y, width: width, height: height });
+    self._annotator.fireEvent(annotorious.events.EventType.MOUSE_MOVE_ANNOTATABLE_ITEM, { "cursor": pixCurs, "box": pixBox }, event);
 
-      self.drawShape(self._g2d, {
-        type: annotorious.shape.ShapeType.RECTANGLE,
-        geometry: {
-          x: width > 0 ? self._anchor.x : self._opposite.x,
-          y: height > 0 ? self._anchor.y : self._opposite.y,
-          width: Math.abs(width),
-          height: Math.abs(height)
-        },
-        style: {}
-      });
+    if (self._useFrancyBox) {
+      var vb = self.getViewportBounds();
+      height = Math.abs(height);
+      width = Math.abs(width);
+
+      self._g2d.lineWidth = self._g2d.lineWidth = self._properties.strokeWidth;
+      self._g2d.strokeStyle = self._properties.stroke;
+      self._g2d.fillStyle = 'rgba(0,0,0,0.45)';
+      self._g2d.fillRect(0, 0, self._canvas.width, vb.top);
+      self._g2d.fillRect(vb.right, vb.top, (self._canvas.width - vb.right), height);
+      self._g2d.fillRect(0, vb.bottom, self._canvas.width, (self._canvas.height - vb.bottom));
+      self._g2d.fillRect(0, vb.top, vb.left, height);
+      self._g2d.strokeRect(vb.left + 0.5, vb.top + 0.5, width, height);
+      return;
     }
+
+    self.drawShape(self._g2d, {
+      type: annotorious.shape.ShapeType.RECTANGLE,
+      geometry: {
+        x: width > 0 ? self._anchor.x : self._opposite.x,
+        y: height > 0 ? self._anchor.y : self._opposite.y,
+        width: Math.abs(width),
+        height: Math.abs(height)
+      },
+      style: {}
+    });
   });
 
   this._mouseUpListener = goog.events.listen(canvas, annotorious.events.ui.EventType.UP, function (event) {
@@ -148,6 +166,14 @@ annotorious.plugins.selection.RectDragSelector.prototype.getName = function () {
  */
 annotorious.plugins.selection.RectDragSelector.prototype.getSupportedShapeType = function () {
   return [annotorious.shape.ShapeType.RECTANGLE, annotorious.shape.ShapeType.POINT];
+}
+
+/**
+ * Set the Francy Box Selector
+ * @param {Boolean} enabled true if enable the Francy Box Selector
+ */
+annotorious.plugins.selection.RectDragSelector.prototype.setFrancyBox = function (enabled) {
+  this._useFrancyBox = enabled;
 }
 
 /**

@@ -62,21 +62,20 @@ annotorious.plugins.selection.ArrowDragSelector.prototype._attachListeners = fun
   var canvas = this._canvas;
 
   this._mouseMoveListener = goog.events.listen(this._canvas, annotorious.events.ui.EventType.MOVE, function (event) {
-    if (self._enabled) {
-      var points = annotorious.events.ui.sanitizeCoordinates(event, canvas);
-      self._arrowHead = new annotorious.shape.geom.Point(points.x, points.y);
+    if (!self._enabled) return;
+    var points = annotorious.events.ui.sanitizeCoordinates(event, canvas);
+    self._arrowHead = new annotorious.shape.geom.Point(points.x, points.y);
 
-      self._g2d.clearRect(0, 0, canvas.width, canvas.height);
+    self._g2d.clearRect(0, 0, canvas.width, canvas.height);
 
-      var pixCurs = self._annotator.toItemPixelCoordinates(points);
-      self._annotator.fireEvent(annotorious.events.EventType.MOUSE_MOVE_ANNOTATABLE_ITEM, { "cursor": pixCurs }, event);
+    var pixCurs = self._annotator.toItemPixelCoordinates(points);
+    self._annotator.fireEvent(annotorious.events.EventType.MOUSE_MOVE_ANNOTATABLE_ITEM, { "cursor": pixCurs }, event);
 
-      self.drawShape(self._g2d, {
-        type: annotorious.shape.ShapeType.ARROW,
-        geometry: new annotorious.shape.geom.Arrow(self._arrowTail, self._arrowHead),
-        style: {}
-      });
-    }
+    self.drawShape(self._g2d, {
+      type: annotorious.shape.ShapeType.ARROW,
+      geometry: new annotorious.shape.geom.Arrow(self._arrowTail, self._arrowHead),
+      style: {}
+    });
   });
 
   this._mouseUpListener = goog.events.listen(canvas, annotorious.events.ui.EventType.UP, function (event) {

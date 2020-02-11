@@ -479,6 +479,16 @@ annotorious.Annotorious.prototype.setArrowMode = function (enabled) {
 }
 
 /**
+ * Enables (or disables) the ability to use Francy Box Selector
+ * @param {boolean} enabled true to enable the Francy Box Selector
+ */
+annotorious.Annotorious.prototype.useFrancyBox = function (enabled) {
+  this.setProperties({
+    "francyBox": enabled
+  });
+}
+
+/**
  * Enables (or disables) the ability to create new annotations on an annotatable item.
  * @param {boolean} enabled if true, new annotations can be created
  *

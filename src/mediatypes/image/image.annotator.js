@@ -370,7 +370,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function (
     this._showCursorAxes(props["cursorAxes"]);
 
   /** Arrow Mode **/
-  if (props["arrowMode"])
+  if (props.hasOwnProperty("arrowMode"))
     this._setDrawArrowMode(props["arrowMode"]);
 
   /** Editor Properties **/
@@ -380,6 +380,14 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function (
   /** Popup Properties **/
   if (props.hasOwnProperty("popup"))
     this.popup.setProperties(props["popup"]);
+
+  /** Fancy Box Selector **/
+  if (props.hasOwnProperty("francyBox")) {
+    var default_selector = goog.array.find(this._selectors, function (sel) {
+      return sel.getName() == "rect_drag";
+    });
+    default_selector.setFrancyBox(props["francyBox"]);
+  }
 
   /** Shape Style **/
   if (props.hasOwnProperty("shapeStyle")) {

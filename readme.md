@@ -20,6 +20,7 @@ If you require support, get in touch [via our mailing list](https://groups.googl
 * *SelectEditor:* Added the ability to use a select inside the editor. (Dropdown menu)
 * *CursorAxes:* Added the ability to show cursor axes inside the image.
 * *ArrowMode:* Added the ability to annotate with draw arrow shape. (Arrow selector)
+* *Fancy Box:* Added ('Fancy Box Selector')[https://annotorious.github.io/demos/fancybox-preview.html] plugin integration.
 * *ExtraFields:* Added the ability to add many fields to the annotation GUI widget from properties.
 
 ### Changes
@@ -231,6 +232,29 @@ Ability to annotate with draw arrow shape. (Arrow selector)
     }]
     ```
 
+### Fancy Box - anno.useFrancyBox(*enabled*);
+
+Added ('Fancy Box Selector')[https://annotorious.github.io/demos/fancybox-preview.html] plugin integration.
+
+- set *Fancy Box* in the properties
+
+    ```
+    anno.setProperties({ 
+        /* DEFAULT VALUES */           
+        francyBox: false, //if true, enable the Fancy Box Selector
+    });
+    ```
+
+- set *Fancy Box* using the function
+
+    ```
+    // ENABLE
+    anno.useFrancyBox(true); 
+
+    // DISABLE
+    anno.useFrancyBox(false); 
+    ```
+
 ### ExtraFields
 
 Ability to add many fields to the annotation GUI widget from properties. A field can be either an (HTML) string, or a function that takes an Annotation as argument and returns an (HTML) string or a DOM element.
@@ -387,8 +411,10 @@ anno.setProperties({
         strokeWidth: 2 //stroke width of axes [1-12]        
     },
 
-    arrowMode: false, //if true, enable the arrowMode      
-    
+    arrowMode: false, //if true, enable the arrowMode     
+
+    francyBox: false, //if true, enable the Fancy Box Selector
+
     editor: { //properties for editor GUI widget
         enterText: true, //if false, not show the textarea or select for enter text
         saveReadOnly: false, // if true, the new annotation is 'read-only' (the users can't delete or edit the new annotation - does not apply to edited annotations)
