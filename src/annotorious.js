@@ -451,6 +451,24 @@ annotorious.Annotorious.prototype.useSelectEditor = function (enabled, options, 
 }
 
 /**
+ * Enables (or disables) the ability to show the cursor axes
+ * @param {boolean} enabled true to enable the cursors axes 
+ * @param {boolean} dash true if draw dashed line
+ * @param {string} color color of axes
+ * @param {integer} strokeWidth stroke width of axes [1-12]
+ */
+annotorious.Annotorious.prototype.showCursorAxes = function (enabled, dash, color, strokeWidth) {
+  this.setProperties({
+    "cursorAxes": {
+      "enabled": enabled,
+      "dash": dash,
+      "color": color,
+      "strokeWidth": strokeWidth
+    }
+  });
+}
+
+/**
  * Enables (or disables) the ability to create new annotations on an annotatable item.
  * @param {boolean} enabled if true, new annotations can be created
  *

@@ -69,6 +69,17 @@ annotorious.mediatypes.image.ImageAnnotator = function (item, opt_popup) {
   /** @private **/
   this._selectionEnabled = true;
 
+  /** @private **/
+  this._cursorAxes = {
+    enabled: false,
+    dash: false,
+    color: "#ffffff",
+    strokeWidth: 2
+  };
+
+  /** @private **/
+  this._defaultCursorAxes = Object.assign({}, this._cursorAxes);
+
   this.element = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(this.element, 'position', 'relative');
   goog.style.setStyle(this.element, 'display', 'inline-block');
@@ -78,6 +89,11 @@ annotorious.mediatypes.image.ImageAnnotator = function (item, opt_popup) {
   goog.dom.appendChild(this.element, item);
 
   var img_bounds = goog.style.getBounds(item);
+
+  this._cursorCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
+    { width: img_bounds.width, height: img_bounds.height });
+  goog.dom.appendChild(this.element, this._cursorCanvas);
+
   this._viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
     { width: img_bounds.width, height: img_bounds.height });
   if (annotorious.events.ui.hasMouse)
@@ -106,7 +122,6 @@ annotorious.mediatypes.image.ImageAnnotator = function (item, opt_popup) {
   this._hint = new annotorious.Hint(this, this.element);
 
   var self = this;
-
   if (annotorious.events.ui.hasMouse) {
     goog.events.listen(this.element, annotorious.events.ui.EventType.OVER, function (event) {
       var relatedTarget = event.relatedTarget;
@@ -345,6 +360,9 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function (
   if (props.hasOwnProperty("selectEditor"))
     this.editor.setSelectEditor(props["selectEditor"]);
 
+  /** CursorAxes **/
+  if (props.hasOwnProperty("cursorAxes"))
+    this._showCursorAxes(props["cursorAxes"]);
 
   /** EditorStyle **/
   if (props.hasOwnProperty("editorStyle"))
@@ -452,6 +470,61 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.toItemPixelCoordinates = f
     newGeo.height = parseInt((xy_wh.height * this._image.naturalHeight) / imgSize.height);
   }
   return newGeo;
+}
+
+
+/**
+ * Enable or Disable show cursor axes
+ * @param {Object} cursorAxes {enabled:bool, dash:bool, color:string, strokeWidth:int} if is enabled, if draw dashed line, color of axes, stroke width of axes
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype._showCursorAxes = function (cursorAxes) {
+  if (!(cursorAxes instanceof Object) || Object.keys(cursorAxes).length === 0) this._cursorAxes = Object.assign({ _listener: this._cursorAxes._listener }, this._defaultCursorAxes);
+  else {
+    if (cursorAxes.hasOwnProperty('enabled'))
+      this._cursorAxes.enabled = cursorAxes['enabled'] || this._defaultCursorAxes.enabled;
+    if (cursorAxes.hasOwnProperty('dash'))
+      this._cursorAxes.dash = cursorAxes['dash'] || this._defaultCursorAxes.dash;
+    if (cursorAxes.hasOwnProperty('color'))
+      this._cursorAxes.color = cursorAxes['color'] || this._defaultCursorAxes.color;
+    if (cursorAxes.hasOwnProperty('strokeWidth'))
+      this._cursorAxes.strokeWidth = cursorAxes['strokeWidth'] || this._defaultCursorAxes.strokeWidth;
+  }
+
+  if (this._cursorAxes.enabled) {
+    if (!this._cursorAxes._listener) {
+      var self = this;
+      var g2d = this._cursorCanvas.getContext('2d');
+      var axesListener = function (event) {
+        var coords = annotorious.events.ui.sanitizeCoordinates(event, self._activeCanvas);
+        g2d.clearRect(0, 0, g2d.canvas.width, g2d.canvas.height);
+        if (self._cursorAxes.dash) g2d.setLineDash([5, 3]); /*dashes are 5px and spaces are 3px */
+        else {
+          g2d.setLineDash([]);
+          g2d.lineCap = 'square';
+        }
+        g2d.strokeStyle = self._cursorAxes.color;
+        g2d.lineWidth = self._cursorAxes.strokeWidth;
+
+        g2d.beginPath();
+        g2d.moveTo(0, coords.y);
+        g2d.lineTo(g2d.canvas.width, coords.y);
+        g2d.moveTo(coords.x, 0);
+        g2d.lineTo(coords.x, g2d.canvas.height);
+        g2d.stroke();
+      };
+      this._cursorAxes._listener = [];
+      this._cursorAxes._listener[0] = goog.events.listen(this._viewCanvas, annotorious.events.ui.EventType.MOVE, axesListener);
+      this._cursorAxes._listener[1] = goog.events.listen(this._editCanvas, annotorious.events.ui.EventType.MOVE, axesListener);
+    }
+  }
+  else if (this._cursorAxes._listener) {
+    goog.array.forEach(this._cursorAxes._listener, function (listener) {
+      goog.events.unlistenByKey(listener);
+    });
+    var g2d = this._cursorCanvas.getContext('2d');
+    g2d.clearRect(0, 0, g2d.canvas.width, g2d.canvas.height);
+    delete this._cursorAxes._listener;
+  }
 }
 
 /** API exports **/

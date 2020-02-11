@@ -41,3 +41,4 @@ annotorious.Annotorious.prototype['reload'] = annotorious.Annotorious.prototype.
 annotorious.Annotorious.prototype['addAnnotations'] = annotorious.Annotorious.prototype.addAnnotations;
 annotorious.Annotorious.prototype['setColorMode'] = annotorious.Annotorious.prototype.setColorMode;
 annotorious.Annotorious.prototype['useSelectEditor'] = annotorious.Annotorious.prototype.useSelectEditor;
+annotorious.Annotorious.prototype['showCursorAxes'] = annotorious.Annotorious.prototype.showCursorAxes;

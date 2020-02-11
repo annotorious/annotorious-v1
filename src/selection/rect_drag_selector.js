@@ -160,37 +160,37 @@ annotorious.plugins.selection.RectDragSelector.prototype.setProperties = functio
   }
 
   if (props.hasOwnProperty('outline'))
-    this._properties.outline = (props['outline']) ? props['outline'] : this._properties.outline = this._defaultProperties.outline;
+    this._properties.outline = props['outline'] || this._defaultProperties.outline;
 
   if (props.hasOwnProperty('outlineWidth'))
-    this._properties.outlineWidth = (props['outlineWidth']) ? props['outlineWidth'] : this._defaultProperties.outlineWidth;
+    this._properties.outlineWidth = props['outlineWidth'] || this._defaultProperties.outlineWidth;
 
   if (props.hasOwnProperty('hiOutline'))
-    this._properties.hiOutline = (props['hiOutline']) ? props['hiOutline'] : this._defaultProperties.hiOutline;
+    this._properties.hiOutline = props['hiOutline'] || this._defaultProperties.hiOutline;
 
   if (props.hasOwnProperty('hiOutlineWidth'))
-    this._properties.hiOutlineWidth = (props['hiOutlineWidth']) ? props['hiOutlineWidth'] : this._defaultProperties.hiOutlineWidth;
+    this._properties.hiOutlineWidth = props['hiOutlineWidth'] || this._defaultProperties.hiOutlineWidth;
 
   if (props.hasOwnProperty('stroke'))
-    this._properties.stroke = (props['stroke']) ? props['stroke'] : this._defaultProperties.stroke;
+    this._properties.stroke = props['stroke'] || this._defaultProperties.stroke;
 
   if (props.hasOwnProperty('strokeWidth'))
-    this._properties.strokeWidth = (props['strokeWidth']) ? props['strokeWidth'] : this._defaultProperties.strokeWidth;
+    this._properties.strokeWidth = props['strokeWidth'] || this._defaultProperties.strokeWidth;
 
   if (props.hasOwnProperty('hiStroke'))
-    this._properties.hiStroke = (props['hiStroke']) ? props['hiStroke'] : this._defaultProperties.hiStroke;
+    this._properties.hiStroke = props['hiStroke'] || this._defaultProperties.hiStroke;
 
   if (props.hasOwnProperty('hiStrokeWidth'))
-    this._properties.hiStrokeWidth = (props['hiStrokeWidth']) ? props['hiStrokeWidth'] : this._defaultProperties.hiStrokeWidth;
+    this._properties.hiStrokeWidth = props['hiStrokeWidth'] || this._defaultProperties.hiStrokeWidth;
 
   if (props.hasOwnProperty('fill'))
-    this._properties.fill = (props['fill']) ? props['fill'] : this._defaultProperties.fill;
+    this._properties.fill = props['fill'] || this._defaultProperties.fill;
 
   if (props.hasOwnProperty('hiFill'))
-    this._properties.hiFill = (props['hiFill']) ? props['hiFill'] : this._defaultProperties.hiFill;
+    this._properties.hiFill = props['hiFill'] || this._defaultProperties.hiFill;
 
   if (props.hasOwnProperty('maskTransparency'))
-    this._properties.maskTransparency = (props['maskTransparency']) ? props['maskTransparency'] : this._defaultProperties.maskTransparency;
+    this._properties.maskTransparency = props['maskTransparency'] || this._defaultProperties.maskTransparency;
 
   if (props.hasOwnProperty('maskBorder'))
     this._properties.maskBorder = (typeof props['maskBorder'] === "boolean") ? props['maskBorder'] : this._defaultProperties.maskBorder;

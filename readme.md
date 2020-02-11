@@ -18,6 +18,7 @@ If you require support, get in touch [via our mailing list](https://groups.googl
 * *Mask:* Added the ability to insert an image inside a annotation with shapes rect.
 * *ColorMode:* Ability to draw custom shape without make an annotation. The drawn pixels coordinate are returned when the mouse is released.
 * *SelectEditor:* Added the ability to use a select inside the editor. (Dropdown menu)
+* *CursorAxes:* Added the ability to show cursor axes inside the image.
 * *ExtraFields:* Added the ability to add many fields to the annotation GUI widget from properties.
 
 ### Changes
@@ -89,7 +90,7 @@ Modalities of save the drawn pixels:
             color: "#2ECC71", //color of pixels [OPTIONAL]
             strokeWidth: 2, //stroke width of pixels [1-12] [OPTIONAL]
         }
-      });
+    });
     ```
 
 - set *ColorMode* using the function
@@ -124,7 +125,7 @@ Ability to use a select, with custom options, inside the editor. (Dropdown menu)
           id: 1, //the annotation text id [OPTIONAL]
           value: 'My annotation' //the annotation text
         },
-      ];
+    ];
     ```
     
 - set *SelectEditor* in the properties
@@ -138,7 +139,7 @@ Ability to use a select, with custom options, inside the editor. (Dropdown menu)
             emptyOption: false, //if true, enable the empty select option [OPTIONAL]
             customLabel: "<--- Select one option --->" //the custom first label if not use empty options [OPTIONAL]
         }
-      });
+    });
     ```
 
 - set *SelectEditor* using the function
@@ -149,6 +150,34 @@ Ability to use a select, with custom options, inside the editor. (Dropdown menu)
 
     // DISABLE
     anno.useSelectEditor(false); 
+    ```
+
+### CursorAxes - anno.showCursorAxes(*enabled*, *dash*, *color*, *strokeWidth*);
+
+Ability to show cursor axes inside the image.
+
+- set *CursorAxes* in the properties
+
+    ```
+    anno.setProperties({        
+        cursorAxes: {
+            /* DEFAULT VALUES */    
+            enabled: false, //if true, enable the cursor axes 
+            dash: false, //if true, draw dashed stroke [OPTIONAL]
+            color: "#ffffff", //color of cursor axes [OPTIONAL]
+            strokeWidth: 2 //stroke width of axes [1-12] [OPTIONAL]            
+        }
+    });
+    ```
+
+- set *CursorAxes* using the function
+    
+    ```
+    // ENABLE - dash, color and strokeWidth are OPTIONAL
+    anno.showCursorAxes(true, true, '#E74C3C', 2); 
+   
+    // DISABLE
+    anno.showCursorAxes(false); 
     ```
 
 ### ExtraFields
@@ -286,6 +315,13 @@ anno.setProperties({
         options: undefined, //the options of select, use format of 'selectOptions' variable [only required if is enabled]
         emptyOption: false, //if true, enable the empty select option 
         customLabel: "<--- Select one option --->" //the custom first label if not use empty options 
+    },
+
+    cursorAxes: { 
+        enabled: false, //if true, enable the cursor axes 
+        dash: false, //if true, draw dashed stroke 
+        color: "#ffffff", //color of cursor axes 
+        strokeWidth: 2 //stroke width of axes [1-12]        
     },
 
     editorStyle: { //style of editor 
