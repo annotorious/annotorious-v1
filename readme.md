@@ -15,13 +15,13 @@ If you require support, get in touch [via our mailing list](https://groups.googl
 ## My Contribution
 
 ### Functionality
-* *Mask:* Added the ability to insert an image inside a annotation with shapes rect.
-* *ColorMode:* Added the ability to draw custom shape without make an annotation. The drawn pixels coordinate are returned when the mouse is released.
-* *SelectEditor:* Added the ability to use a select inside the editor. (Dropdown menu)
-* *CursorAxes:* Added the ability to show cursor axes inside the image.
-* *ArrowMode:* Added the ability to annotate with draw arrow shape. (Arrow selector)
-* *Fancy Box:* Added ['Fancy Box Selector'](https://annotorious.github.io/demos/fancybox-preview.html) plugin integration.
-* *ExtraFields:* Added the ability to add many fields to the annotation GUI widget from properties.
+* [Mask](#mask): Added the ability to insert an image inside a annotation with shapes rect.
+* [ColorMode](#colormode): Added the ability to draw custom shape without make an annotation. The drawn pixels coordinate are returned when the mouse is released.
+* [SelectEditor](#selectedior): Added the ability to use a select inside the editor. (Dropdown menu)
+* [CursorAxes](#cursoraxes): Added the ability to show cursor axes inside the image.
+* [ArrowMode](#arrowmode): Added the ability to annotate with draw arrow shape. (Arrow selector)
+* [Fancy Box](#francy-box): Added ['Fancy Box Selector'](https://annotorious.github.io/demos/fancybox-preview.html) plugin integration.
+* [ExtraFields](#extrafields): Added the ability to add many fields to the annotation GUI widget from properties.
 
 ### Changes
 * Added the ability to reload the annotations.
@@ -73,9 +73,11 @@ Ability to insert an image inside a annotation with shapes rect.
     });
     ```
 
-### ColorMode - anno.setColorMode(*enabled*, *insideAnno*, *mode*, *color*, *strokeWidth*);
+### ColorMode
 
 Ability to draw custom shape without make an annotation. The last drawn pixels coordinate are returned when the mouse is released on `onDrawnPixels` event. 
+
+**`anno.setColorMode(*enabled*, *insideAnno*, *mode*, *color*, *strokeWidth*);`**
 
 Modalities of save the drawn pixels:
 - **permanent**: pixels are saved until `anno.reset()` or `anno.reload()`.
@@ -117,9 +119,11 @@ Modalities of save the drawn pixels:
     });
     ```
 
-### SelectEditor - anno.useSelectEditor(*enabled*, *options*, *emptyOption*, *customLabel*);
+### SelectEditor 
 
 Ability to use a select, with custom options, inside the editor. (Dropdown menu)
+
+**`anno.useSelectEditor(*enabled*, *options*, *emptyOption*, *customLabel*);`**
 
 - define custom options
 
@@ -156,9 +160,11 @@ Ability to use a select, with custom options, inside the editor. (Dropdown menu)
     anno.useSelectEditor(false); 
     ```
 
-### CursorAxes - anno.showCursorAxes(*enabled*, *dash*, *color*, *strokeWidth*);
+### CursorAxes
 
 Ability to show cursor axes inside the image.
+
+**`anno.showCursorAxes(*enabled*, *dash*, *color*, *strokeWidth*);`**
 
 - set *CursorAxes* in the properties
 
@@ -184,9 +190,11 @@ Ability to show cursor axes inside the image.
     anno.showCursorAxes(false); 
     ```
 
-### ArrowMode - anno.setArrowMode(*enabled*);
+### ArrowMode
 
 Ability to annotate with draw arrow shape. (Arrow selector)
+
+**` anno.setArrowMode(*enabled*); `**
 
 - set *ArrowMode* in the properties
 
@@ -232,9 +240,11 @@ Ability to annotate with draw arrow shape. (Arrow selector)
     }]
     ```
 
-### Fancy Box - anno.useFrancyBox(*enabled*);
+### Fancy Box 
 
 Added ['Fancy Box Selector'](https://annotorious.github.io/demos/fancybox-preview.html) plugin integration.
+
+**` anno.useFrancyBox(*enabled*); `**
 
 - set *Fancy Box* in the properties
 
@@ -283,9 +293,11 @@ Ability to add many fields to the annotation GUI widget from properties. A field
       });
     ```
 
-### Reload the annotations - anno.reload(*removeProperties*); 
+### Reload the annotations
 
 Ability to reload the annotations, the image must have the `annotatable` class.
+
+**` anno.reload(*removeProperties*); `**
 
 ```
 anno.reload(); 
