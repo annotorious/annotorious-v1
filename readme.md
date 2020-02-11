@@ -17,19 +17,19 @@ If you require support, get in touch [via our mailing list](https://groups.googl
 ### Functionality
 * [Mask](#mask): Added the ability to insert an image inside a annotation with shapes rect.
 * [ColorMode](#colormode): Added the ability to draw custom shape without make an annotation. The drawn pixels coordinate are returned when the mouse is released.
-* [SelectEditor](#selectedior): Added the ability to use a select inside the editor. (Dropdown menu)
+* [SelectEditor](#selecteditor): Added the ability to use a select inside the editor. (Dropdown menu)
 * [CursorAxes](#cursoraxes): Added the ability to show cursor axes inside the image.
 * [ArrowMode](#arrowmode): Added the ability to annotate with draw arrow shape. (Arrow selector)
-* [Fancy Box](#francy-box): Added ['Fancy Box Selector'](https://annotorious.github.io/demos/fancybox-preview.html) plugin integration.
+* [Fancy Box](#fancy-box): Added ['Fancy Box Selector'](https://annotorious.github.io/demos/fancybox-preview.html) plugin integration.
 * [ExtraFields](#extrafields): Added the ability to add many fields to the annotation GUI widget from properties.
 
 ### Changes
-* Added the ability to reload the annotations.
-* Added the `onMouseMoveOverItem` event - fired when the mouse enters an annotatable item.
-* Added an old annotation text inside the event `onAnnotationUpdated`, when editing the annotation. 
-* Added the ability to insert more new annotation to an item on the page.
-* Added attributes in to the "annotation" variable.
-* Added more properties for editing style and functionality on runtime.
+* Added the ability to [reload the annotations](#reload-the-annotations).
+* Added the `onMouseMoveOverItem` [event](#events) - fired when the mouse enters an annotatable item.
+* Added an old annotation text inside the [event](#events) `onAnnotationUpdated`, when editing the annotation. 
+* Added the ability to insert [more new annotation](#add-multiple-annotations) to an item on the page.
+* Added attributes in to the ["annotation" variable](#annotation-variable).
+* Added more [properties](#properties) for editing style and functionality on runtime.
 * Added the ability to set the measurement units used for the output geometry ['pixel', 'fraction'].
 * Added the ability to custom the editor.
 * Fixed bug:
@@ -244,14 +244,14 @@ Ability to annotate with draw arrow shape. (Arrow selector)
 
 Added ['Fancy Box Selector'](https://annotorious.github.io/demos/fancybox-preview.html) plugin integration.
 
-**` anno.useFrancyBox(*enabled*); `**
+**` anno.useFancyBox(*enabled*); `**
 
 - set *Fancy Box* in the properties
 
     ```
     anno.setProperties({ 
         /* DEFAULT VALUES */           
-        francyBox: false, //if true, enable the Fancy Box Selector
+        fancyBox: false, //if true, enable the Fancy Box Selector
     });
     ```
 
@@ -259,10 +259,10 @@ Added ['Fancy Box Selector'](https://annotorious.github.io/demos/fancybox-previe
 
     ```
     // ENABLE
-    anno.useFrancyBox(true); 
+    anno.useFancyBox(true); 
 
     // DISABLE
-    anno.useFrancyBox(false); 
+    anno.useFancyBox(false); 
     ```
 
 ### ExtraFields
@@ -425,7 +425,7 @@ anno.setProperties({
 
     arrowMode: false, //if true, enable the arrowMode     
 
-    francyBox: false, //if true, enable the Fancy Box Selector
+    fancyBox: false, //if true, enable the Fancy Box Selector
 
     editor: { //properties for editor GUI widget
         enterText: true, //if false, not show the textarea or select for enter text
