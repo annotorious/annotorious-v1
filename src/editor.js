@@ -63,7 +63,8 @@ annotorious.Editor = function (annotator) {
         className: "annotorious-editor-button annotorious-editor-button-cancel" //className of abort button
       }
     },
-    extraFields: undefined
+    extraFields: undefined,
+    enterText: true
   };
 
   /** @private **/
@@ -78,7 +79,7 @@ annotorious.Editor = function (annotator) {
 
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function (event) {
     event.preventDefault();
-    if (self._useSelect && self._select.options[0].disabled && (self._select.selectedIndex == 0 || !self._select.value)) return; //Not is possible set empty text.
+    if (!self._properties.enterText && self._useSelect && self._select.options[0].disabled && (self._select.selectedIndex == 0 || !self._select.value)) return; //Not is possible set empty text.
 
     var oldText = (self._original_annotation) ? { "text": self._original_annotation.text, "textId": self._original_annotation.textId } : undefined;
 
@@ -132,12 +133,20 @@ annotorious.Editor.prototype.open = function (opt_annotation, opt_event) {
 
   goog.style.showElement(this.element, true);
   if (!this._useSelect) {
-    if (opt_annotation) this._textarea.setValue(opt_annotation.text);
-    this._textarea.getElement().focus();
+    if (!this._properties.enterText) this._textarea.addClassName("d-none");
+    else {
+      this._textarea.removeClassName("d-none");
+      if (opt_annotation) this._textarea.setValue(opt_annotation.text);
+      this._textarea.getElement().focus();
+    }
   }
   else {
-    if (opt_annotation && this._select.innerHTML.indexOf('value="' + opt_annotation.text + '"') > -1) this._select.value = opt_annotation.text;
-    else this._select.options[0].selected = true;
+    if (!this._properties.enterText) this._select.classList.add("d-none");
+    else {
+      this._select.classList.remove("d-none");
+      if (opt_annotation && this._select.innerHTML.indexOf('value="' + opt_annotation.text + '"') > -1) this._select.value = opt_annotation.text;
+      else this._select.options[0].selected = true;
+    }
   }
 
   // Update extra fields (if any)
@@ -232,9 +241,10 @@ annotorious.Editor.prototype.setProperties = function (props) {
       }
     }
     if (props.hasOwnProperty('extraFields')) this._properties.extraFields = props["extraFields"];
+    if (props.hasOwnProperty('enterText')) this._properties.enterText = (typeof props['enterText'] === "boolean") ? props['enterText'] : this._defaultProperties.enterText;
   }
 
-  //Apply the properties
+  //Apply the properties    
   this._textarea.getElement().placeholder = this._properties.textarea.placeholder;
   this._textarea.getElement().className = this._properties.textarea.className;
   this._btnSave.innerHTML = this._properties.buttons.save.text;

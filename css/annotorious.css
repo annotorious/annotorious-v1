@@ -132,7 +132,8 @@
 }
 
 .annotorious-popup-button:hover {
-  background-color:transparent;
+  background-color:transparent;  
+  cursor: pointer;
 }
 
 .annotorious-popup-button-active {

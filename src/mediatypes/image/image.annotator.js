@@ -14,6 +14,7 @@ goog.require('annotorious.Popup');
 goog.require('annotorious.mediatypes.Annotator');
 goog.require('annotorious.mediatypes.image.Viewer');
 goog.require('annotorious.plugins.selection.RectDragSelector');
+goog.require('annotorious.plugins.selection.ArrowDragSelector');
 goog.require('annotorious.templates.image');
 
 /**
@@ -113,8 +114,8 @@ annotorious.mediatypes.image.ImageAnnotator = function (item, opt_popup) {
     this.popup = new annotorious.Popup(this);
 
   var default_selector = new annotorious.plugins.selection.RectDragSelector();
-  default_selector.init(this, this._editCanvas);
-  this._selectors.push(default_selector);
+  this.addSelector(default_selector);
+  this.addSelector(new annotorious.plugins.selection.ArrowDragSelector());
   this._currentSelector = default_selector;
 
   this.editor = new annotorious.Editor(this);
@@ -322,14 +323,18 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.hideSelectionWidget = func
 /**
  * Sets the active selector for this item to the specified selector.
  * @param {Object} selector the selector object
+ * @return {Boolean} true if the selector was found
  */
 annotorious.mediatypes.image.ImageAnnotator.prototype.setCurrentSelector = function (selector) {
   this._currentSelector = goog.array.find(this._selectors, function (sel) {
     return sel.getName() == selector;
   });
 
-  if (!this._currentSelector)
+  if (!this._currentSelector) {
     console.log('WARNING: selector "' + selector + '" not available');
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -356,19 +361,23 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function (
   if (props.hasOwnProperty("colorMode"))
     this._viewer.setColorMode(props["colorMode"]);
 
-  /** SelectEditor **/
+  /** Select Editor **/
   if (props.hasOwnProperty("selectEditor"))
     this.editor.setSelectEditor(props["selectEditor"]);
 
-  /** CursorAxes **/
+  /** Cursor Axes **/
   if (props.hasOwnProperty("cursorAxes"))
     this._showCursorAxes(props["cursorAxes"]);
 
-  /** EditorStyle **/
+  /** Arrow Mode **/
+  if (props["arrowMode"])
+    this._setDrawArrowMode(props["arrowMode"]);
+
+  /** Editor Style **/
   if (props.hasOwnProperty("editorStyle"))
     this.editor.setProperties(props["editorStyle"]);
 
-  /** ShapeStyle **/
+  /** Shape Style **/
   if (props.hasOwnProperty("shapeStyle")) {
     goog.array.forEach(this._selectors, function (selector) {
       selector.setProperties(props["shapeStyle"]);
@@ -525,6 +534,15 @@ annotorious.mediatypes.image.ImageAnnotator.prototype._showCursorAxes = function
     g2d.clearRect(0, 0, g2d.canvas.width, g2d.canvas.height);
     delete this._cursorAxes._listener;
   }
+}
+
+/**
+ * Enable or Disable drawArrowMode 
+ * @param {boolean} enabled 
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype._setDrawArrowMode = function (enabled) {
+  if (enabled) this.setCurrentSelector('arrow_drag')
+  else this.setCurrentSelector('rect_drag');
 }
 
 /** API exports **/

@@ -32,7 +32,8 @@ annotorious.shape.Shape = function (type, geometry, units, style, mask) {
 annotorious.shape.ShapeType = {
   POINT: 'point',
   RECTANGLE: 'rect',
-  POLYGON: 'polygon'
+  POLYGON: 'polygon',
+  ARROW: 'arrow'
 }
 
 /**
@@ -56,17 +57,19 @@ annotorious.shape.Units = {
  * @return {boolean} true if the point intersects the shape
  */
 annotorious.shape.intersects = function (shape, px, py) {
-  if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
-    if (px < shape.geometry.x)
+  if (shape.type == annotorious.shape.ShapeType.RECTANGLE || shape.type == annotorious.shape.ShapeType.ARROW) {
+    var geometry = (shape.type == annotorious.shape.ShapeType.ARROW) ? annotorious.shape.geom.Arrow.getRectangle(shape.geometry) : shape.geometry;
+
+    if (px < geometry.x)
       return false;
 
-    if (py < shape.geometry.y)
+    if (py < geometry.y)
       return false;
 
-    if (px > shape.geometry.x + shape.geometry.width)
+    if (px > geometry.x + geometry.width)
       return false;
 
-    if (py > shape.geometry.y + shape.geometry.height)
+    if (py > geometry.y + geometry.height)
       return false;
 
     return true;
@@ -95,8 +98,9 @@ annotorious.shape.intersects = function (shape, px, py) {
  * @return {number} the size
  */
 annotorious.shape.getSize = function (shape) {
-  if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
-    return shape.geometry.width * shape.geometry.height;
+  if (shape.type == annotorious.shape.ShapeType.RECTANGLE || shape.type == annotorious.shape.ShapeType.ARROW) {
+    var geometry = (shape.type == annotorious.shape.ShapeType.ARROW) ? annotorious.shape.geom.Arrow.getRectangle(shape.geometry) : shape.geometry;
+    return geometry.width * geometry.height;
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
     return Math.abs(annotorious.shape.geom.Polygon.computeArea(shape.geometry.points));
   }
@@ -135,6 +139,11 @@ annotorious.shape.getBoundingRect = function (shape) {
 
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE,
       new annotorious.shape.geom.Rectangle(left, top, right - left, bottom - top),
+      false, shape.style
+    );
+  } else if (shape.type == annotorious.shape.ShapeType.ARROW) {
+    return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE,
+      annotorious.shape.geom.Arrow.getRectangle(shape.geometry),
       false, shape.style
     );
   }
@@ -192,7 +201,13 @@ annotorious.shape.transform = function (shape, transformationFn) {
       new annotorious.shape.geom.Polygon(transformedPoints),
       false, shape.style
     );
-  }
+  } else if (shape.type == annotorious.shape.ShapeType.ARROW) return new annotorious.shape.Shape(
+    annotorious.shape.ShapeType.ARROW,
+    new annotorious.shape.geom.Arrow(
+      transformationFn(shape.geometry.arrowTail),
+      transformationFn(shape.geometry.arrowHead)
+    ), false, shape.style
+  );
 
   return undefined;
 }

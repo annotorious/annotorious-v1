@@ -169,6 +169,10 @@
   transition-delay:0;
 }
 
+.annotorious-popup-button:hover{    
+  cursor: pointer;
+}
+
 .annotorious-popup-button-delete:hover {
   background-color:transparent;
   background:url(DarkSprite.png) no-repeat;

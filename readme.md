@@ -16,9 +16,10 @@ If you require support, get in touch [via our mailing list](https://groups.googl
 
 ### Functionality
 * *Mask:* Added the ability to insert an image inside a annotation with shapes rect.
-* *ColorMode:* Ability to draw custom shape without make an annotation. The drawn pixels coordinate are returned when the mouse is released.
+* *ColorMode:* Added the ability to draw custom shape without make an annotation. The drawn pixels coordinate are returned when the mouse is released.
 * *SelectEditor:* Added the ability to use a select inside the editor. (Dropdown menu)
 * *CursorAxes:* Added the ability to show cursor axes inside the image.
+* *ArrowMode:* Added the ability to annotate with draw arrow shape. (Arrow selector)
 * *ExtraFields:* Added the ability to add many fields to the annotation GUI widget from properties.
 
 ### Changes
@@ -28,6 +29,8 @@ If you require support, get in touch [via our mailing list](https://groups.googl
 * Added the ability to insert more new annotation to an item on the page.
 * Added attributes in to the "annotation" variable.
 * Added more properties for editing style and functionality on runtime.
+* Added the ability to set the measurement units used for the output geometry ['pixel', 'fraction'].
+* Added the ability to custom the editor.
 * Fixed bug:
     - resizing the image: now the annotations are resized with the image. (The image must have the `annotatable` class).
     - add new annotation: if the new annotation forms are exactly the same as the other annotation forms, the new annotation is not inserted.
@@ -180,6 +183,54 @@ Ability to show cursor axes inside the image.
     anno.showCursorAxes(false); 
     ```
 
+### ArrowMode - anno.setArrowMode(*enabled*);
+
+Ability to annotate with draw arrow shape. (Arrow selector)
+
+- set *ArrowMode* in the properties
+
+    ```
+    anno.setProperties({ 
+        /* DEFAULT VALUES */           
+        arrowMode: false, //if true, enable the arrowMode   
+        shapeStyle: { // set style            
+            arrowStroke: '#ffffff', // stroke color for arrow shape
+            arrowStrokeWidth: 2, // stroke width for arrow shape [1-12] 
+            hiArrowStroke: '#fff000', // stroke color for arrow shape 
+            hiArrowStrokeWidth: 2.2  //stroke width for arrow shape [1-12] 
+        }
+    });
+    ```
+
+- set *ArrowMode* using the function
+
+    ```
+    // ENABLE
+    anno.setArrowMode(true); 
+
+    // DISABLE
+    anno.setArrowMode(false); 
+    ```
+
+- set *arrow* shape on annotation variable
+
+    ```
+    shapes: [{
+        type: 'arrow',
+        geometry: { //the shape geometry (relative coordinates) [you can also use the coordinates in pixels]
+            arrowTail: { x: 0.20 y: 0.74 }, // coordinate of arrow tail
+            arrowHead: { x: 0.77 y: 0.66 } // coordinate of arrowhead
+        },
+
+        style: { //style [OPTIONAL]
+            arrowStroke: '#ffffff', // stroke color for arrow shape
+            arrowStrokeWidth: 2, // stroke width for arrow shape [1-12] 
+            hiArrowStroke: '#fff000', // stroke color for arrow shape 
+            hiArrowStrokeWidth: 2.2  //stroke width for arrow shape [1-12] 
+        }
+    }]
+    ```
+
 ### ExtraFields
 
 Ability to add many fields to the annotation GUI widget from properties. A field can be either an (HTML) string, or a function that takes an Annotation as argument and returns an (HTML) string or a DOM element.
@@ -252,7 +303,7 @@ var myAnnotation = {
 
     shapes : [{ //the annotation shape    
     
-        type : 'rect', //the shape type ['rect', 'point', 'polygon']
+        type : 'rect', //the shape type ['rect', 'arrow', 'polygon'] for enable 'polygon' shape show the [official page](https://annotorious.github.io/demos.html)
         mask : 'http://www.example.com/mymask.jpg', //the URL of the mask - only if type is 'rect' [OPTIONAL]
         geometry : { x : 0.1, y: 0.1, width : 0.4, height: 0.3 } //the shape geometry (relative coordinates)
         
@@ -324,7 +375,10 @@ anno.setProperties({
         strokeWidth: 2 //stroke width of axes [1-12]        
     },
 
+    arrowMode: false, //if true, enable the arrowMode      
+    
     editorStyle: { //style of editor 
+        enterText: true, //if false, not show the textarea or select for enter text
         textarea: {
             placeholder: "Add a Comment...", //placeholder of textarea
             className: "annotorious-editor-text" //class of textarea
@@ -359,7 +413,12 @@ anno.setProperties({
         hiFill: undefined, //fill color for highlighted annotation shapes
 
         maskTransparency: 0.8, //transparency for annotation mask [0-1] 
-        maskBorder: true //if false, not show the mask border 
+        maskBorder: true, //if false, not show the mask border 
+
+        arrowStroke: '#ffffff', // stroke color for arrow shape
+        arrowStrokeWidth: 2, // stroke width for arrow shape [1-12] 
+        hiArrowStroke: '#fff000', // stroke color for arrow shape 
+        hiArrowStrokeWidth: 2.2  //stroke width for arrow shape [1-12] 
     }
 });
 ```

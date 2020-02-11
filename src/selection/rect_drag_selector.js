@@ -245,9 +245,8 @@ annotorious.plugins.selection.RectDragSelector.prototype.getShape = function () 
     });
 
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, rect);
-  } else {
-    return undefined;
   }
+  return undefined;
 }
 
 /**
@@ -322,12 +321,12 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
       if (shape["_loadedMask"].image) {
         g2d.globalAlpha = shape.style.maskTransparency || this._properties.maskTransparency;
         g2d.drawImage(shape["_loadedMask"].image, geom.x, geom.y, geom.width, geom.height);
+        g2d.globalAlpha = 1;
         if ((shape.style.maskBorder != undefined && !shape.style.maskBorder) || (shape.style.maskBorder == undefined && !this._properties.maskBorder)) return;
         geom = { x: geom.x - strokeWidth - outlineWidth, y: geom.y - strokeWidth - outlineWidth, width: geom.width + strokeWidth + outlineWidth, height: geom.height + strokeWidth + outlineWidth };
       }
     }
 
-    g2d.globalAlpha = 1;
     // Outline
     g2d.lineJoin = "round";
     g2d.lineWidth = outlineWidth;

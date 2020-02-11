@@ -469,6 +469,16 @@ annotorious.Annotorious.prototype.showCursorAxes = function (enabled, dash, colo
 }
 
 /**
+ * Enables (or disables) the ability to draw arrow shape
+ * @param {boolean} enabled true to enable the arrow mode
+ */
+annotorious.Annotorious.prototype.setArrowMode = function (enabled) {
+  this.setProperties({
+    "arrowMode": enabled
+  });
+}
+
+/**
  * Enables (or disables) the ability to create new annotations on an annotatable item.
  * @param {boolean} enabled if true, new annotations can be created
  *

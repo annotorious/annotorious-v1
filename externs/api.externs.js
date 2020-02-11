@@ -108,6 +108,17 @@ var Polygon = {
 }
 
 /**
+ * Annotation shape type: Arrow
+ */
+var Arrow = {
+
+  arrowTail: {},
+
+  arrowHead: {}
+
+}
+
+/**
  * Annotorious Plugin interface.
  */
 var AnnotoriousPlugin = {
