@@ -235,11 +235,23 @@ Ability to annotate with draw arrow shape. (Arrow selector)
 
 Ability to add many fields to the annotation GUI widget from properties. A field can be either an (HTML) string, or a function that takes an Annotation as argument and returns an (HTML) string or a DOM element.
 
-- set *ExtraFields* for editor
+- set *ExtraFields* for editor GUI widget
 
     ```
     anno.setProperties({    
-        editorStyle: {   
+        editor: {   
+            extraFields: [
+                "<div id='myId' class='myClass'> MyExtraField </div>", //a field (HTML) string
+            ]
+        }
+      });
+    ```
+
+- set *ExtraFields* for popup GUI widget
+
+    ```
+    anno.setProperties({    
+        popup: {   
             extraFields: [
                 "<div id='myId' class='myClass'> MyExtraField </div>", //a field (HTML) string
             ]
@@ -377,8 +389,9 @@ anno.setProperties({
 
     arrowMode: false, //if true, enable the arrowMode      
     
-    editorStyle: { //style of editor 
+    editor: { //properties for editor GUI widget
         enterText: true, //if false, not show the textarea or select for enter text
+        saveReadOnly: false, // if true, the new annotation is 'read-only' (the users can't delete or edit the new annotation - does not apply to edited annotations)
         textarea: {
             placeholder: "Add a Comment...", //placeholder of textarea
             className: "annotorious-editor-text" //class of textarea
@@ -394,6 +407,10 @@ anno.setProperties({
             }
         }, 
         extraFields: undefined //add many fields to the annotation editor GUI widget. Show 'ExtraFields' section for more details           
+    },
+
+    popup: { //properties for popup GUI widget
+        extraFields: undefined //add many fields to the annotation editor GUI widget. Show 'ExtraFields' section for more
     },
 
     shapeStyle: { //global style 

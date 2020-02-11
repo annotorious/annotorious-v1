@@ -49,6 +49,8 @@ annotorious.Editor = function (annotator) {
 
   /** @private **/
   this._properties = {
+    enterText: true,
+    saveReadOnly: false,
     textarea: {
       placeholder: "Add a Comment...", //placeholder of textarea
       className: "annotorious-editor-text" //className of textarea
@@ -63,8 +65,7 @@ annotorious.Editor = function (annotator) {
         className: "annotorious-editor-button annotorious-editor-button-cancel" //className of abort button
       }
     },
-    extraFields: undefined,
-    enterText: true
+    extraFields: undefined
   };
 
   /** @private **/
@@ -202,6 +203,7 @@ annotorious.Editor.prototype.getAnnotation = function () {
         undefined,
         textId
       );
+    this._current_annotation.editable = !this._properties.saveReadOnly;
   }
 
   return this._current_annotation;
@@ -214,6 +216,9 @@ annotorious.Editor.prototype.setProperties = function (props) {
   // TODO streamline this code -> remember: if set the property such as `undefined` or empty object (for the objects), then set the default value.
   if (!(props instanceof Object) || Object.keys(props).length === 0) this._properties = JSON.parse(JSON.stringify(this._defaultProperties));
   else {
+    if (props.hasOwnProperty('enterText')) this._properties.enterText = (typeof props['enterText'] === "boolean") ? props['enterText'] : this._defaultProperties.enterText;
+    if (props.hasOwnProperty('saveReadOnly')) this._properties.saveReadOnly = props["saveReadOnly"] || this._defaultProperties.saveReadOnly;
+
     if (props.hasOwnProperty('textarea')) {
       if (!(props['textarea'] instanceof Object) || Object.keys(props['textarea']).length === 0) this._properties.textarea = Object.assign({}, this._defaultProperties.textarea);
       else {
@@ -241,7 +246,6 @@ annotorious.Editor.prototype.setProperties = function (props) {
       }
     }
     if (props.hasOwnProperty('extraFields')) this._properties.extraFields = props["extraFields"];
-    if (props.hasOwnProperty('enterText')) this._properties.enterText = (typeof props['enterText'] === "boolean") ? props['enterText'] : this._defaultProperties.enterText;
   }
 
   //Apply the properties    

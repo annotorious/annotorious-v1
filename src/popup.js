@@ -10,12 +10,12 @@ goog.require('goog.style');
  * @param {Object} annotator reference to the annotator
  * @constructor
  */
-annotorious.Popup = function(annotator) {
+annotorious.Popup = function (annotator) {
   this.element = goog.soy.renderAsElement(annotorious.templates.popup);
 
   /** @private **/
-  this._annotator = annotator;  
-    
+  this._annotator = annotator;
+
   /** @private **/
   this._currentAnnotation;
 
@@ -24,10 +24,10 @@ annotorious.Popup = function(annotator) {
 
   /** @private **/
   this._buttons = goog.dom.query('.annotorious-popup-buttons', this.element)[0];
-  
+
   /** @private **/
   this._popupHideTimer;
-  
+
   /** @private **/
   this._buttonHideTimer;
 
@@ -37,33 +37,41 @@ annotorious.Popup = function(annotator) {
   /** @private **/
   this._extraFields = [];
 
+  /** @private **/
+  this._properties = {
+    extraFields: undefined
+  };
+
+  /** @private **/
+  this._defaultProperties = JSON.parse(JSON.stringify(this._properties));
+
   var btnEdit = goog.dom.query('.annotorious-popup-button-edit', this._buttons)[0];
   var btnDelete = goog.dom.query('.annotorious-popup-button-delete', this._buttons)[0];
 
-  var self = this;  
-  goog.events.listen(btnEdit, goog.events.EventType.MOUSEOVER, function(event) {
+  var self = this;
+  goog.events.listen(btnEdit, goog.events.EventType.MOUSEOVER, function (event) {
     goog.dom.classes.add(btnEdit, 'annotorious-popup-button-active');
   });
 
-  goog.events.listen(btnEdit, goog.events.EventType.MOUSEOUT, function() {
+  goog.events.listen(btnEdit, goog.events.EventType.MOUSEOUT, function () {
     goog.dom.classes.remove(btnEdit, 'annotorious-popup-button-active');
   });
 
-  goog.events.listen(btnEdit, goog.events.EventType.CLICK, function(event) {
+  goog.events.listen(btnEdit, goog.events.EventType.CLICK, function (event) {
     goog.style.setOpacity(self.element, 0);
     goog.style.setStyle(self.element, 'pointer-events', 'none');
-    annotator.editAnnotation(self._currentAnnotation); 
+    annotator.editAnnotation(self._currentAnnotation);
   });
 
-  goog.events.listen(btnDelete, goog.events.EventType.MOUSEOVER, function(event) {
+  goog.events.listen(btnDelete, goog.events.EventType.MOUSEOVER, function (event) {
     goog.dom.classes.add(btnDelete, 'annotorious-popup-button-active');
   });
-  
-  goog.events.listen(btnDelete, goog.events.EventType.MOUSEOUT, function() {
+
+  goog.events.listen(btnDelete, goog.events.EventType.MOUSEOUT, function () {
     goog.dom.classes.remove(btnDelete, 'annotorious-popup-button-active');
   });
 
-  goog.events.listen(btnDelete, goog.events.EventType.CLICK, function(event) {
+  goog.events.listen(btnDelete, goog.events.EventType.CLICK, function (event) {
     var cancelEvent = annotator.fireEvent(annotorious.events.EventType.BEFORE_ANNOTATION_REMOVED, self._currentAnnotation);
     if (!cancelEvent) {
       goog.style.setOpacity(self.element, 0);
@@ -73,24 +81,24 @@ annotorious.Popup = function(annotator) {
     }
   });
 
-  if (annotorious.events.ui.hasMouse) {  
-    goog.events.listen(this.element, goog.events.EventType.MOUSEOVER, function(event) {
+  if (annotorious.events.ui.hasMouse) {
+    goog.events.listen(this.element, goog.events.EventType.MOUSEOVER, function (event) {
       window.clearTimeout(self._buttonHideTimer);
       if (goog.style.getStyle(self._buttons, 'opacity') < 0.9)
         goog.style.setOpacity(self._buttons, 0.9);
       self.clearHideTimer();
     });
-  
-    goog.events.listen(this.element, goog.events.EventType.MOUSEOUT, function(event) {
+
+    goog.events.listen(this.element, goog.events.EventType.MOUSEOUT, function (event) {
       goog.style.setOpacity(self._buttons, 0);
       self.startHideTimer();
     });
 
-    annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, function(event) {
+    annotator.addHandler(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM, function (event) {
       self.startHideTimer();
     });
   }
-    
+
   goog.style.setOpacity(this._buttons, 0);
   goog.style.setOpacity(this.element, 0);
   goog.style.setStyle(this.element, 'pointer-events', 'none');
@@ -103,13 +111,13 @@ annotorious.Popup = function(annotator) {
  * a DOM element.
  * @param {string | Function} field the field
  */
-annotorious.Popup.prototype.addField = function(field) {
+annotorious.Popup.prototype.addField = function (field) {
   var fieldEl = goog.dom.createDom('div', 'annotorious-popup-field');
-  
-  if (goog.isString(field))  {
+
+  if (goog.isString(field)) {
     fieldEl.innerHTML = field;
   } else if (goog.isFunction(field)) {
-    this._extraFields.push({el: fieldEl, fn: field});
+    this._extraFields.push({ el: fieldEl, fn: field });
   } else if (goog.dom.isElement(field)) {
     goog.dom.appendChild(fieldEl, field);
   }
@@ -120,11 +128,11 @@ annotorious.Popup.prototype.addField = function(field) {
 /**
  * Start the popup hide timer.
  */
-annotorious.Popup.prototype.startHideTimer = function() {
+annotorious.Popup.prototype.startHideTimer = function () {
   this._cancelHide = false;
   if (!this._popupHideTimer) {
     var self = this;
-    this._popupHideTimer = window.setTimeout(function() {
+    this._popupHideTimer = window.setTimeout(function () {
       self._annotator.fireEvent(annotorious.events.EventType.BEFORE_POPUP_HIDE, self);
       if (!self._cancelHide) {
         goog.style.setOpacity(self.element, 0.0);
@@ -139,7 +147,7 @@ annotorious.Popup.prototype.startHideTimer = function() {
 /**
  * Clear the popup hide timer.
  */
-annotorious.Popup.prototype.clearHideTimer = function() {
+annotorious.Popup.prototype.clearHideTimer = function () {
   this._cancelHide = true;
   if (this._popupHideTimer) {
     window.clearTimeout(this._popupHideTimer);
@@ -152,7 +160,7 @@ annotorious.Popup.prototype.clearHideTimer = function() {
  * @param {annotorious.Annotation} annotation the annotation
  * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  */
-annotorious.Popup.prototype.show = function(annotation, xy) {
+annotorious.Popup.prototype.show = function (annotation, xy) {
   this.clearHideTimer();
 
   if (xy)
@@ -163,16 +171,16 @@ annotorious.Popup.prototype.show = function(annotation, xy) {
 
   if (this._buttonHideTimer)
     window.clearTimeout(this._buttonHideTimer);
-      
+
   goog.style.setOpacity(this._buttons, 0.9);
 
   if (annotorious.events.ui.hasMouse) {
     var self = this;
-    this._buttonHideTimer = window.setTimeout(function() {
+    this._buttonHideTimer = window.setTimeout(function () {
       goog.style.setOpacity(self._buttons, 0);
     }, 1000);
   }
-  
+
   goog.style.setOpacity(this.element, 0.9);
   goog.style.setStyle(this.element, 'pointer-events', 'auto');
   this._annotator.fireEvent(annotorious.events.EventType.POPUP_SHOWN, this._currentAnnotation);
@@ -182,7 +190,7 @@ annotorious.Popup.prototype.show = function(annotation, xy) {
  * Set the position of the popup.
  * @param {annotorious.shape.geom.Point} xy the viewport coordinate
  */
-annotorious.Popup.prototype.setPosition = function(xy) {
+annotorious.Popup.prototype.setPosition = function (xy) {
   goog.style.setPosition(this.element, new goog.math.Coordinate(xy.x, xy.y));
 }
 
@@ -190,7 +198,7 @@ annotorious.Popup.prototype.setPosition = function(xy) {
  * Set the annotation for the popup.
  * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.Popup.prototype.setAnnotation = function(annotation) {
+annotorious.Popup.prototype.setAnnotation = function (annotation) {
   this._currentAnnotation = annotation;
   if (annotation.text)
     this._text.innerHTML = annotation.text.replace(/\n/g, '<br/>');
@@ -201,17 +209,37 @@ annotorious.Popup.prototype.setAnnotation = function(annotation) {
     goog.style.showElement(this._buttons, false);
   else
     goog.style.showElement(this._buttons, true);
-  
+
   // Update extra fields (if any)
-  goog.array.forEach(this._extraFields, function(field) {
+  goog.array.forEach(this._extraFields, function (field) {
     var f = field.fn(annotation);
-    if (goog.isString(f))  {
+    if (goog.isString(f)) {
       field.el.innerHTML = f;
     } else if (goog.dom.isElement(f)) {
       goog.dom.removeChildren(field.el);
       goog.dom.appendChild(field.el, f);
     }
   });
+}
+
+/**
+ * Sets the properties on this popup.
+ */
+annotorious.Popup.prototype.setProperties = function (props) {
+  if (!(props instanceof Object) || Object.keys(props).length === 0) this._properties = JSON.parse(JSON.stringify(this._defaultProperties));
+  else {
+    if (props.hasOwnProperty('extraFields')) this._properties.extraFields = props["extraFields"];
+  }
+
+  //Apply the properties    
+  var container = goog.dom.query('.annotorious-popup-field', this.element)[0];
+  if (container) container.remove();
+  if (this._properties.extraFields && Array.isArray(this._properties.extraFields)) {
+    var self = this;
+    goog.array.forEach(this._properties.extraFields, function (field) {
+      self.addField(field);
+    });
+  }
 }
 
 /** API exports **/

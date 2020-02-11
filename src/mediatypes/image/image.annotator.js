@@ -373,9 +373,13 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function (
   if (props["arrowMode"])
     this._setDrawArrowMode(props["arrowMode"]);
 
-  /** Editor Style **/
-  if (props.hasOwnProperty("editorStyle"))
-    this.editor.setProperties(props["editorStyle"]);
+  /** Editor Properties **/
+  if (props.hasOwnProperty("editor"))
+    this.editor.setProperties(props["editor"]);
+
+  /** Popup Properties **/
+  if (props.hasOwnProperty("popup"))
+    this.popup.setProperties(props["popup"]);
 
   /** Shape Style **/
   if (props.hasOwnProperty("shapeStyle")) {
