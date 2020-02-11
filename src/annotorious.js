@@ -479,12 +479,12 @@ annotorious.Annotorious.prototype.setArrowMode = function (enabled) {
 }
 
 /**
- * Enables (or disables) the ability to use Francy Box Selector
- * @param {boolean} enabled true to enable the Francy Box Selector
+ * Enables (or disables) the ability to use Fancy Box Selector
+ * @param {boolean} enabled true to enable the Fancy Box Selector
  */
-annotorious.Annotorious.prototype.useFrancyBox = function (enabled) {
+annotorious.Annotorious.prototype.useFancyBox = function (enabled) {
   this.setProperties({
-    "francyBox": enabled
+    "fancyBox": enabled
   });
 }
 

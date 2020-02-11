@@ -382,11 +382,11 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function (
     this.popup.setProperties(props["popup"]);
 
   /** Fancy Box Selector **/
-  if (props.hasOwnProperty("francyBox")) {
+  if (props.hasOwnProperty("fancyBox")) {
     var default_selector = goog.array.find(this._selectors, function (sel) {
       return sel.getName() == "rect_drag";
     });
-    default_selector.setFrancyBox(props["francyBox"]);
+    default_selector.setFancyBox(props["fancyBox"]);
   }
 
   /** Shape Style **/

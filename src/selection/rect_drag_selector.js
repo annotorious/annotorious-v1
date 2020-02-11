@@ -61,7 +61,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.init = function (annota
   this._defaultProperties = Object.assign({}, this._properties);
 
   /** @private **/
-  this._useFrancyBox = false;
+  this._useFancyBox = false;
 }
 
 /**
@@ -86,7 +86,7 @@ annotorious.plugins.selection.RectDragSelector.prototype._attachListeners = func
     var pixBox = self._annotator.toItemPixelCoordinates({ x: self._anchor.x, y: self._anchor.y, width: width, height: height });
     self._annotator.fireEvent(annotorious.events.EventType.MOUSE_MOVE_ANNOTATABLE_ITEM, { "cursor": pixCurs, "box": pixBox }, event);
 
-    if (self._useFrancyBox) {
+    if (self._useFancyBox) {
       var vb = self.getViewportBounds();
       height = Math.abs(height);
       width = Math.abs(width);
@@ -169,11 +169,11 @@ annotorious.plugins.selection.RectDragSelector.prototype.getSupportedShapeType =
 }
 
 /**
- * Set the Francy Box Selector
- * @param {Boolean} enabled true if enable the Francy Box Selector
+ * Set the Fancy Box Selector
+ * @param {Boolean} enabled true if enable the Fancy Box Selector
  */
-annotorious.plugins.selection.RectDragSelector.prototype.setFrancyBox = function (enabled) {
-  this._useFrancyBox = enabled;
+annotorious.plugins.selection.RectDragSelector.prototype.setFancyBox = function (enabled) {
+  this._useFancyBox = enabled;
 }
 
 /**
