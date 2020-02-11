@@ -47,6 +47,28 @@ annotorious.Editor = function (annotator) {
   /** @private **/
   this._useSelect = false;
 
+  /** @private **/
+  this._properties = {
+    textarea: {
+      placeholder: "Add a Comment...", //placeholder of textarea
+      className: "annotorious-editor-text" //className of textarea
+    },
+    buttons: {
+      save: {
+        text: "Save", //text of save button
+        className: "annotorious-editor-button annotorious-editor-button-save" //className of save button
+      },
+      abort: {
+        text: "Cancel",//text of abort button
+        className: "annotorious-editor-button annotorious-editor-button-cancel" //className of abort button
+      }
+    },
+    extraFields: undefined
+  };
+
+  /** @private **/
+  this._defaultProperties = JSON.parse(JSON.stringify(this._properties));
+
   var self = this;
   goog.events.listen(this._btnCancel, goog.events.EventType.CLICK, function (event) {
     event.preventDefault();
@@ -174,6 +196,60 @@ annotorious.Editor.prototype.getAnnotation = function () {
   }
 
   return this._current_annotation;
+}
+
+/**
+ * Sets the properties on this editor.
+ */
+annotorious.Editor.prototype.setProperties = function (props) {
+  // TODO streamline this code -> remember: if set the property such as `undefined` or empty object (for the objects), then set the default value.
+  if (!(props instanceof Object) || Object.keys(props).length === 0) this._properties = JSON.parse(JSON.stringify(this._defaultProperties));
+  else {
+    if (props.hasOwnProperty('textarea')) {
+      if (!(props['textarea'] instanceof Object) || Object.keys(props['textarea']).length === 0) this._properties.textarea = Object.assign({}, this._defaultProperties.textarea);
+      else {
+        if (props['textarea'].hasOwnProperty('placeholder')) this._properties.textarea.placeholder = props['textarea']['placeholder'] || this._defaultProperties.textarea.placeholder;
+        if (props['textarea'].hasOwnProperty('className')) this._properties.textarea.className = props['textarea']['className'] || this._defaultProperties.textarea.className;
+      }
+    }
+    if (props.hasOwnProperty('buttons')) {
+      if (!(props['buttons'] instanceof Object) || Object.keys(props['buttons']).length === 0) this._properties.buttons = JSON.parse(JSON.stringify(this._defaultProperties.buttons));
+      else {
+        if (props['buttons'].hasOwnProperty('save')) {
+          if (!(props['buttons']['save'] instanceof Object) || Object.keys(props['buttons']['save']).length === 0) this._properties.buttons.save = Object.assign({}, this._defaultProperties.buttons.save);
+          else {
+            if (props['buttons']['save'].hasOwnProperty('text')) this._properties.buttons.save.text = props['buttons']['save']['text'] || this._defaultProperties.buttons.save.text;
+            if (props['buttons']['save'].hasOwnProperty('className')) this._properties.buttons.save.className = props['buttons']['save']['className'] || this._defaultProperties.buttons.save.className;
+          }
+        }
+        if (props['buttons'].hasOwnProperty('abort')) {
+          if (!(props['buttons']['abort'] instanceof Object) || Object.keys(props['buttons']['abort']).length === 0) this._properties.buttons.abort = Object.assign({}, this._defaultProperties.buttons.abort);
+          else {
+            if (props['buttons']['abort'].hasOwnProperty('text')) this._properties.buttons.abort.text = props['buttons']['abort']['text'] || this._defaultProperties.buttons.abort.text;
+            if (props['buttons']['abort'].hasOwnProperty('className')) this._properties.buttons.abort.className = props['buttons']['abort']['className'] || this._defaultProperties.buttons.abort.className;
+          }
+        }
+      }
+    }
+    if (props.hasOwnProperty('extraFields')) this._properties.extraFields = props["extraFields"];
+  }
+
+  //Apply the properties
+  this._textarea.getElement().placeholder = this._properties.textarea.placeholder;
+  this._textarea.getElement().className = this._properties.textarea.className;
+  this._btnSave.innerHTML = this._properties.buttons.save.text;
+  this._btnSave.className = this._properties.buttons.save.className;
+  this._btnCancel.innerHTML = this._properties.buttons.abort.text;
+  this._btnCancel.className = this._properties.buttons.abort.className;
+
+  var container = goog.dom.query('.annotorious-editor-field', this.element)[0];
+  if (container) container.remove();
+  if (this._properties.extraFields && Array.isArray(this._properties.extraFields)) {
+    var self = this;
+    goog.array.forEach(this._properties.extraFields, function (field) {
+      self.addField(field);
+    });
+  }
 }
 
 /** 

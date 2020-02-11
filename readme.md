@@ -18,6 +18,7 @@ If you require support, get in touch [via our mailing list](https://groups.googl
 * *Mask:* Added the ability to insert an image inside a annotation with shapes rect.
 * *ColorMode:* Ability to draw custom shape without make an annotation. The drawn pixels coordinate are returned when the mouse is released.
 * *SelectEditor:* Added the ability to use a select inside the editor. (Dropdown menu)
+* *ExtraFields:* Added the ability to add many fields to the annotation GUI widget from properties.
 
 ### Changes
 * Added the ability to reload the annotations.
@@ -71,10 +72,10 @@ Ability to insert an image inside a annotation with shapes rect.
 
 Ability to draw custom shape without make an annotation. The last drawn pixels coordinate are returned when the mouse is released on `onDrawnPixels` event. 
 
-Mode of save the drawn pixels:
-* **permanent**: pixels are saved until `anno.reset()` or `anno.reload()`.
-* **active**: pixels are saved as long as *ColorMode* is enabled.
-* **release**: the pixels are not saved, they are deleted when the mouse is released.
+Modalities of save the drawn pixels:
+- **permanent**: pixels are saved until `anno.reset()` or `anno.reload()`.
+- **active**: pixels are saved as long as *ColorMode* is enabled.
+- **release**: the pixels are not saved, they are deleted when the mouse is released.
 
 - set *ColorMode* in the properties
 
@@ -143,9 +144,27 @@ Ability to use a select, with custom options, inside the editor. (Dropdown menu)
 - set *SelectEditor* using the function
     
     ```
-    anno.useSelectEditor(true, selectOptions, false, "Select one"); // ENABLE - emptyOption and customLabel are OPTIONAL
+    // ENABLE - emptyOption and customLabel are OPTIONAL
+    anno.useSelectEditor(true, selectOptions, false, "Select one"); 
 
-    anno.useSelectEditor(false); // DISABLE
+    // DISABLE
+    anno.useSelectEditor(false); 
+    ```
+
+### ExtraFields
+
+Ability to add many fields to the annotation GUI widget from properties. A field can be either an (HTML) string, or a function that takes an Annotation as argument and returns an (HTML) string or a DOM element.
+
+- set *ExtraFields* for editor
+
+    ```
+    anno.setProperties({    
+        editorStyle: {   
+            extraFields: [
+                "<div id='myId' class='myClass'> MyExtraField </div>", //a field (HTML) string
+            ]
+        }
+      });
     ```
 
 ### Reload the annotations - anno.reload(*removeProperties*); 
@@ -267,6 +286,24 @@ anno.setProperties({
         options: undefined, //the options of select, use format of 'selectOptions' variable [only required if is enabled]
         emptyOption: false, //if true, enable the empty select option 
         customLabel: "<--- Select one option --->" //the custom first label if not use empty options 
+    },
+
+    editorStyle: { //style of editor 
+        textarea: {
+            placeholder: "Add a Comment...", //placeholder of textarea
+            className: "annotorious-editor-text" //class of textarea
+        },
+        buttons: {
+            save: {
+                text: "Save", //text of save button
+                className: "annotorious-editor-button annotorious-editor-button-save" //class of save button
+            },
+            abort: {
+                text: "Cancel", //text of abort button
+                className: "annotorious-editor-button annotorious-editor-button-cancel" //class of abort button
+            }
+        }, 
+        extraFields: undefined //add many fields to the annotation editor GUI widget. Show 'ExtraFields' section for more details           
     },
 
     shapeStyle: { //global style 
