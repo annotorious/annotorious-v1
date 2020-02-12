@@ -14,6 +14,7 @@ goog.require('annotorious.Popup');
 goog.require('annotorious.mediatypes.Annotator');
 goog.require('annotorious.mediatypes.image.Viewer');
 goog.require('annotorious.plugins.selection.RectDragSelector');
+goog.require('annotorious.plugins.selection.ArrowDragSelector');
 goog.require('annotorious.templates.image');
 
 /**
@@ -22,14 +23,14 @@ goog.require('annotorious.templates.image');
  * @param {annotorious.Popup=} opt_popup a popup implementation to use instead of the default one
  * @constructor
  */
-annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
+annotorious.mediatypes.image.ImageAnnotator = function (item, opt_popup) {
   annotorious.mediatypes.Annotator.call();
 
   var hint;
-  
+
   /** The container DOM element (DIV) for the annotation layer **/
   this.element;
-  
+
   /** The editor for this annotator (public for use by plugins) **/
   this.editor;
 
@@ -41,27 +42,44 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
 
   /** @private **/
   this._original_bufferspace = { padding: item.style.padding, margin: item.style.margin }
-  
+
   /** @private **/
   this._viewer;
-  
+
   /** @private **/
   this._editCanvas;
-  
+
   /** @private **/
   this._hint;
-  
+
+  /** @private **/
+  this._displayMessage = undefined;
+
+  /** @private **/
+  this.outputUnits = annotorious.shape.Units.FRACTION;
+
   /** @private **/
   this._eventBroker = new annotorious.events.EventBroker();
 
   /** @private **/
   this._selectors = [];
-  
+
   /** @private **/
   this._currentSelector;
 
   /** @private **/
   this._selectionEnabled = true;
+
+  /** @private **/
+  this._cursorAxes = {
+    enabled: false,
+    dash: false,
+    color: "#ffffff",
+    strokeWidth: 2
+  };
+
+  /** @private **/
+  this._defaultCursorAxes = Object.assign({}, this._cursorAxes);
 
   this.element = goog.dom.createDom('div', 'annotorious-annotationlayer');
   goog.style.setStyle(this.element, 'position', 'relative');
@@ -71,18 +89,23 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
   goog.dom.replaceNode(this.element, item);
   goog.dom.appendChild(this.element, item);
 
-  var img_bounds = goog.style.getBounds(item);  
+  var img_bounds = goog.style.getBounds(item);
+
+  this._cursorCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
+    { width: img_bounds.width, height: img_bounds.height });
+  goog.dom.appendChild(this.element, this._cursorCanvas);
+
   this._viewCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
-    { width:img_bounds.width, height:img_bounds.height });
+    { width: img_bounds.width, height: img_bounds.height });
   if (annotorious.events.ui.hasMouse)
     goog.dom.classes.add(this._viewCanvas, 'annotorious-item-unfocus');
-  goog.dom.appendChild(this.element, this._viewCanvas);   
+  goog.dom.appendChild(this.element, this._viewCanvas);
 
-  this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas, 
-    { width:img_bounds.width, height:img_bounds.height });
+  this._editCanvas = goog.soy.renderAsElement(annotorious.templates.image.canvas,
+    { width: img_bounds.width, height: img_bounds.height });
 
   if (annotorious.events.ui.hasMouse)
-    goog.style.showElement(this._editCanvas, false); 
+    goog.style.showElement(this._editCanvas, false);
   goog.dom.appendChild(this.element, this._editCanvas);
 
   if (opt_popup)
@@ -91,26 +114,25 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
     this.popup = new annotorious.Popup(this);
 
   var default_selector = new annotorious.plugins.selection.RectDragSelector();
-  default_selector.init(this, this._editCanvas); 
-  this._selectors.push(default_selector);
+  this.addSelector(default_selector);
+  this.addSelector(new annotorious.plugins.selection.ArrowDragSelector());
   this._currentSelector = default_selector;
 
   this.editor = new annotorious.Editor(this);
-  this._viewer = new annotorious.mediatypes.image.Viewer(this._viewCanvas, this); 
+  this._viewer = new annotorious.mediatypes.image.Viewer(this._viewCanvas, this);
   this._hint = new annotorious.Hint(this, this.element);
-  
-  var self = this;
 
+  var self = this;
   if (annotorious.events.ui.hasMouse) {
-    goog.events.listen(this.element, annotorious.events.ui.EventType.OVER, function(event) {
+    goog.events.listen(this.element, annotorious.events.ui.EventType.OVER, function (event) {
       var relatedTarget = event.relatedTarget;
       if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
         self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OVER_ANNOTATABLE_ITEM);
         goog.dom.classes.addRemove(self._viewCanvas, 'annotorious-item-unfocus', 'annotorious-item-focus');
       }
     });
-  
-    goog.events.listen(this.element, annotorious.events.ui.EventType.OUT, function(event) {
+
+    goog.events.listen(this.element, annotorious.events.ui.EventType.OUT, function (event) {
       var relatedTarget = event.relatedTarget;
       if (!relatedTarget || !goog.dom.contains(self.element, relatedTarget)) {
         self._eventBroker.fireEvent(annotorious.events.EventType.MOUSE_OUT_OF_ANNOTATABLE_ITEM);
@@ -122,14 +144,14 @@ annotorious.mediatypes.image.ImageAnnotator = function(item, opt_popup) {
   var activeCanvas = (annotorious.events.ui.hasTouch) ? this._editCanvas : this._viewCanvas;
   this._attachListener(activeCanvas);
 
-  this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function(event) {
+  this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_COMPLETED, function (event) {
     var bounds = event.viewportBounds;
     self.editor.setPosition(new annotorious.shape.geom.Point(bounds.left + self._image.offsetLeft,
-                                                            bounds.bottom + 4 + self._image.offsetTop));
+      bounds.bottom + 4 + self._image.offsetTop));
     self.editor.open(false, event);
   });
-  
-  this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function() {
+
+  this._eventBroker.addHandler(annotorious.events.EventType.SELECTION_CANCELED, function () {
     if (annotorious.events.ui.hasMouse)
       goog.style.showElement(self._editCanvas, false);
     self._currentSelector.stopSelection();
@@ -141,16 +163,16 @@ goog.inherits(annotorious.mediatypes.image.ImageAnnotator, annotorious.mediatype
  * Helper function to transfer relevant styles from the <img> to the annotation layer <div> element.
  * @private
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype._transferStyles = function(image, annotationLayer) {
-  var transferMargin = function(direction, value) {
-    goog.style.setStyle(annotationLayer, 'margin-' + direction, value + 'px'); 
+annotorious.mediatypes.image.ImageAnnotator.prototype._transferStyles = function (image, annotationLayer) {
+  var transferMargin = function (direction, value) {
+    goog.style.setStyle(annotationLayer, 'margin-' + direction, value + 'px');
     goog.style.setStyle(image, 'margin-' + direction, 0);
     goog.style.setStyle(image, 'padding-' + direction, 0);
   }
 
   var margin = goog.style.getMarginBox(image);
   var padding = goog.style.getPaddingBox(image);
-  
+
   if (margin.top != 0 || padding.top != 0)
     transferMargin('top', margin.top + padding.top);
 
@@ -159,7 +181,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype._transferStyles = function
 
   if (margin.bottom != 0 || padding.bottom != 0)
     transferMargin('bottom', margin.bottom + padding.bottom);
- 
+
   if (margin.left != 0 || padding.left != 0)
     transferMargin('left', margin.left + padding.left);
 }
@@ -167,20 +189,20 @@ annotorious.mediatypes.image.ImageAnnotator.prototype._transferStyles = function
 /**
  * NOT NEEDED/SUPPORTED on ImageAnnotator.
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.activateSelector = function(callback) { }
+annotorious.mediatypes.image.ImageAnnotator.prototype.activateSelector = function (callback) { }
 
 /**
  * Adds a selector
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.addSelector = function(selector) {
-  selector.init(this, this._editCanvas); 
+annotorious.mediatypes.image.ImageAnnotator.prototype.addSelector = function (selector) {
+  selector.init(this, this._editCanvas);
   this._selectors.push(selector);
 }
 
 /**
  * Destroys this annotator instance.
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.destroy = function() {
+annotorious.mediatypes.image.ImageAnnotator.prototype.destroy = function () {
   var img = this._image;
   img.style.margin = this._original_bufferspace.margin;
   img.style.padding = this._original_bufferspace.padding;
@@ -191,59 +213,42 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.destroy = function() {
  * Edits the specified existing annotation.
  * @param {annotorious.Annotation} annotation the annotation
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.editAnnotation = function(annotation) {
+annotorious.mediatypes.image.ImageAnnotator.prototype.editAnnotation = function (annotation) {
   // Step 1 - remove from viewer
   this._viewer.removeAnnotation(annotation);
-  
+
   // Step 2 - find a suitable selector for the shape
-  var selector = goog.array.find(this._selectors, function(selector) {
-    return selector.getSupportedShapeType() == annotation.shapes[0].type;
+  var selector = goog.array.find(this._selectors, function (selector) {
+    var types = selector.getSupportedShapeType();
+    return Array.isArray(types) ? goog.array.indexOf(types, annotation.shapes[0].type) != -1 : types == annotation.shapes[0].type;
   });
-  
+
+  var shape = annotation.shapes[0];
+  var self = this;
+  var viewportShape = (shape.units == annotorious.shape.Units.PIXEL) ? annotorious.shape.transform(shape, function (xy) { return self.fromItemPixelCoordinates(xy); }) : annotorious.shape.transform(shape, function (xy) { return self.fromItemCoordinates(xy); });
+
   // Step 3 - open annotation in editor
   if (selector) {
     goog.style.showElement(this._editCanvas, true);
     this._viewer.highlightAnnotation(false);
-    
+
     // TODO make editable - not just draw (selector implementation required)
     var g2d = this._editCanvas.getContext('2d');
-    var shape = annotation.shapes[0];
-    
-    var self = this;
-    var viewportShape = (shape.units == 'pixel') ? shape : annotorious.shape.transform(shape, function(xy) { return self.fromItemCoordinates(xy); }) ;
     selector.drawShape(g2d, viewportShape);
   }
-  
-  var bounds = annotorious.shape.getBoundingRect(annotation.shapes[0]).geometry;
-  var anchor = (annotation.shapes[0].units == 'pixel') ?
-    new annotorious.shape.geom.Point(bounds.x, bounds.y + bounds.height) :
-    this.fromItemCoordinates(new annotorious.shape.geom.Point(bounds.x, bounds.y + bounds.height));   
-  
-  this.editor.setPosition(new annotorious.shape.geom.Point(anchor.x + this._image.offsetLeft,
-                                                           anchor.y + 4 + this._image.offsetTop));
-  this.editor.open(annotation);  
-}
 
-/**
- * Converts the specified viewport coordinate to the
- * coordinate system used by the annotatable item.
- * @param {annotorious.shape.geom.Point} xy the viewport coordinate
- * @returns the corresponding item coordinate
- */
-annotorious.mediatypes.image.ImageAnnotator.prototype.fromItemCoordinates = function(xy_wh) {
-  var imgSize = goog.style.getSize(this._image);
-  if (xy_wh.width) {
-    return { x: xy_wh.x * imgSize.width, y: xy_wh.y * imgSize.height, width: xy_wh.width * imgSize.width,  height: xy_wh.height * imgSize.height };
-  } else {
-    return { x: xy_wh.x * imgSize.width, y: xy_wh.y * imgSize.height };
-  }
+  var bounds = annotorious.shape.getBoundingRect(viewportShape).geometry;
+  var anchor = new annotorious.shape.geom.Point(bounds.x, bounds.y + bounds.height);
+  this.editor.setPosition(new annotorious.shape.geom.Point(anchor.x + this._image.offsetLeft,
+    anchor.y + 4 + this._image.offsetTop));
+  this.editor.open(annotation);
 }
 
 /**
  * Returns the currently active selector.
  * @returns {Object} the currently active selector
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.getActiveSelector = function() {
+annotorious.mediatypes.image.ImageAnnotator.prototype.getActiveSelector = function () {
   return this._currentSelector;
 }
 
@@ -251,7 +256,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.getActiveSelector = functi
  * Returns all annotations on the annotatable media.
  * @returns {Array.<annotorious.Annotation>} the annotations
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.getAnnotations = function() {
+annotorious.mediatypes.image.ImageAnnotator.prototype.getAnnotations = function () {
   return this._viewer.getAnnotations();
 }
 
@@ -261,7 +266,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.getAnnotations = function(
  * @param {number} cy the client Y coordinate
  * @return {Array.<annotorious.Annotation>} the annotations sorted by size, smallest first
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.getAnnotationsAt = function(cx, cy) {
+annotorious.mediatypes.image.ImageAnnotator.prototype.getAnnotationsAt = function (cx, cy) {
   return goog.array.clone(this._viewer.getAnnotationsAt(cx, cy));
 }
 
@@ -269,7 +274,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.getAnnotationsAt = functio
  * Returns the available selectors for this item.
  * @returns {Array.<Object>} the list of selectors
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.getAvailableSelectors = function() {
+annotorious.mediatypes.image.ImageAnnotator.prototype.getAvailableSelectors = function () {
   return this._selectors;
 }
 
@@ -277,7 +282,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.getAvailableSelectors = fu
  * Returns the image that this annotator is responsible for.
  * @returns {Object} the image
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.getItem = function() { 
+annotorious.mediatypes.image.ImageAnnotator.prototype.getItem = function () {
   return { src: annotorious.mediatypes.image.ImageAnnotator.getItemURL(this._image), element: this._image };
 }
 
@@ -289,7 +294,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.getItem = function() {
  * @param {Element} item the image DOM element
  * @return {string} the URL
  */
-annotorious.mediatypes.image.ImageAnnotator.getItemURL = function(item) {
+annotorious.mediatypes.image.ImageAnnotator.getItemURL = function (item) {
   var src = item.getAttribute('data-original');
   if (src)
     return src;
@@ -300,14 +305,14 @@ annotorious.mediatypes.image.ImageAnnotator.getItemURL = function(item) {
 /**
  * Hides annotations (and all other Annotorious elements).
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.hideAnnotations = function() {
+annotorious.mediatypes.image.ImageAnnotator.prototype.hideAnnotations = function () {
   goog.style.showElement(this._viewCanvas, false);
 }
 
 /**
  * Hides the selection widget, thus preventing users from creating new annotations.
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.hideSelectionWidget = function() {
+annotorious.mediatypes.image.ImageAnnotator.prototype.hideSelectionWidget = function () {
   this._selectionEnabled = false;
   if (this._hint) {
     this._hint.destroy();
@@ -318,14 +323,18 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.hideSelectionWidget = func
 /**
  * Sets the active selector for this item to the specified selector.
  * @param {Object} selector the selector object
+ * @return {Boolean} true if the selector was found
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.setCurrentSelector = function(selector) {
-  this._currentSelector = goog.array.find(this._selectors, function(sel) {
+annotorious.mediatypes.image.ImageAnnotator.prototype.setCurrentSelector = function (selector) {
+  this._currentSelector = goog.array.find(this._selectors, function (sel) {
     return sel.getName() == selector;
   });
 
-  if (!this._currentSelector)
-    console.log('WARNING: selector "' + selector + '" not available'); 
+  if (!this._currentSelector) {
+    console.log('WARNING: selector "' + selector + '" not available');
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -333,57 +342,219 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setCurrentSelector = funct
  * affecting the selectors).
  * @param {Object} props the properties object
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function(props) {
-  goog.array.forEach(this._selectors, function(selector) {
-    selector.setProperties(props);
-  });
-  this._viewer.redraw();
+annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function (props) {
+
+  /** DisplayMessage **/
+  if (props.hasOwnProperty("displayMessage")) {
+    this._displayMessage = props["displayMessage"];
+    if (this._selectionEnabled) {
+      this.hideSelectionWidget();
+      this.showSelectionWidget();
+    }
+  }
+
+  /** Output Shape Units **/
+  if (props.hasOwnProperty("outputUnits"))
+    this.outputUnits = (props["outputUnits"] == annotorious.shape.Units.PIXEL) ? annotorious.shape.Units.PIXEL : annotorious.shape.Units.FRACTION;
+
+  /** Color Mode **/
+  if (props.hasOwnProperty("colorMode"))
+    this._viewer.setColorMode(props["colorMode"]);
+
+  /** Select Editor **/
+  if (props.hasOwnProperty("selectEditor"))
+    this.editor.setSelectEditor(props["selectEditor"]);
+
+  /** Cursor Axes **/
+  if (props.hasOwnProperty("cursorAxes"))
+    this._showCursorAxes(props["cursorAxes"]);
+
+  /** Arrow Mode **/
+  if (props.hasOwnProperty("arrowMode"))
+    this._setDrawArrowMode(props["arrowMode"]);
+
+  /** Editor Properties **/
+  if (props.hasOwnProperty("editor"))
+    this.editor.setProperties(props["editor"]);
+
+  /** Popup Properties **/
+  if (props.hasOwnProperty("popup"))
+    this.popup.setProperties(props["popup"]);
+
+  /** Fancy Box Selector **/
+  if (props.hasOwnProperty("fancyBox")) {
+    var default_selector = goog.array.find(this._selectors, function (sel) {
+      return sel.getName() == "rect_drag";
+    });
+    default_selector.setFancyBox(props["fancyBox"]);
+  }
+
+  /** Shape Style **/
+  if (props.hasOwnProperty("shapeStyle")) {
+    goog.array.forEach(this._selectors, function (selector) {
+      selector.setProperties(props["shapeStyle"]);
+    });
+    this._viewer.redraw();
+  }
 }
 
 /**
  * Shows annotations (and all other Annotorious elements).
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.showAnnotations = function() {
+annotorious.mediatypes.image.ImageAnnotator.prototype.showAnnotations = function () {
   goog.style.showElement(this._viewCanvas, true);
 }
 
 /**
  * Shows the selection widget, thus enabling users to create new annotations.
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.showSelectionWidget = function() {
-  this._selectionEnabled = true;  
+annotorious.mediatypes.image.ImageAnnotator.prototype.showSelectionWidget = function () {
+  this._selectionEnabled = true;
   if (!this._hint)
-    this._hint = new annotorious.Hint(this, this.element);
+    this._hint = new annotorious.Hint(this, this.element, this._displayMessage);
 }
 
 /**
  * Stops the selection (if any).
  * @param {annotorious.Annotation=} opt_original_annotation the original annotation being edited (if any)
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.stopSelection = function(opt_original_annotation) {
-   if (annotorious.events.ui.hasMouse)
-     goog.style.showElement(this._editCanvas, false);
+annotorious.mediatypes.image.ImageAnnotator.prototype.stopSelection = function (opt_original_annotation) {
+  if (annotorious.events.ui.hasMouse)
+    goog.style.showElement(this._editCanvas, false);
 
-   this._currentSelector.stopSelection();
-   
-   // If this was an edit of an annotation (rather than creation of a new one) re-add to viewer!
-   if (opt_original_annotation)
-     this._viewer.addAnnotation(opt_original_annotation);
+  this._currentSelector.stopSelection();
+
+  // If this was an edit of an annotation (rather than creation of a new one) re-add to viewer!
+  if (opt_original_annotation)
+    this._viewer.addAnnotation(opt_original_annotation);
 }
 
 /**
- * Converts the specified coordinate from the
- * coordinate system used by the annotatable item to viewport coordinates.
- * @param {annotorious.shape.geom.Point} xy the item coordinate
- * @returns the corresponding viewport coordinate
+ * Converts the geometry 'fraction' coordinate to the coordinate used by system.
+ * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle} xy_wh the geometry 'fraction' coordinate
+ * @returns the corresponding coordinate used by system
  */
-annotorious.mediatypes.image.ImageAnnotator.prototype.toItemCoordinates = function(xy_wh) {
-  var imgSize = goog.style.getSize(this._image);  
+annotorious.mediatypes.image.ImageAnnotator.prototype.fromItemCoordinates = function (xy_wh) {
+  var imgSize = goog.style.getSize(this._image);
+  var systemPixel = { x: xy_wh.x * imgSize.width, y: xy_wh.y * imgSize.height };
   if (xy_wh.width) {
-    return { x: xy_wh.x / imgSize.width, y: xy_wh.y / imgSize.height, width: xy_wh.width / imgSize.width, height: xy_wh.height /imgSize.height }; 
-  } else {
-    return { x: xy_wh.x / imgSize.width, y: xy_wh.y / imgSize.height };
+    systemPixel.width = xy_wh.width * imgSize.width;
+    systemPixel.height = xy_wh.height * imgSize.height;
   }
+  return systemPixel;
+}
+
+/**
+ * Converts the geometry 'pixel' coordinate to the coordinate used by system.
+ * [pixels are relative to the original image size]     
+ * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle} xy_wh the geometry 'pixel' coordinate
+ * @returns the corresponding coordinate used by system
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype.fromItemPixelCoordinates = function (xy_wh) {
+  var imgSize = goog.style.getSize(this._image);
+
+  var systemPixel = { x: parseInt((xy_wh.x / this._image.naturalWidth) * imgSize.width), y: parseInt((xy_wh.y / this._image.naturalHeight) * imgSize.height) };
+  if (xy_wh.width) {
+    systemPixel.width = parseInt((xy_wh.width / this._image.naturalWidth) * imgSize.width);
+    systemPixel.height = parseInt((xy_wh.height / this._image.naturalHeight) * imgSize.height);
+  }
+
+  return systemPixel;
+}
+
+/**
+ * Converts the specified coordinate used by system to geometry 'fraction' coordinate
+ * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle} xy_wh the system coordinate
+ * @returns the corresponding geometry 'fraction' coordinate
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype.toItemCoordinates = function (xy_wh) {
+  var imgSize = goog.style.getSize(this._image);
+  var newGeo = { x: xy_wh.x / imgSize.width, y: xy_wh.y / imgSize.height };
+  if (xy_wh.width) {
+    newGeo.width = xy_wh.width / imgSize.width;
+    newGeo.height = xy_wh.height / imgSize.height;
+  }
+  return newGeo;
+}
+
+/**
+ * Converts the specified coordinate used by system to geometry 'pixel' coordinate
+ * [pixels are relative to the original image size]     
+ * @param {annotorious.shape.geom.Point | annotorious.shape.geom.Rectangle} xy_wh the system coordinate
+ * @returns the corresponding geometry 'pixel' coordinate
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype.toItemPixelCoordinates = function (xy_wh) {
+  var imgSize = goog.style.getSize(this._image);
+  var newGeo = { x: parseInt((xy_wh.x * this._image.naturalWidth) / imgSize.width), y: parseInt((xy_wh.y * this._image.naturalHeight) / imgSize.height) };
+  if (xy_wh.width) {
+    newGeo.width = parseInt((xy_wh.width * this._image.naturalWidth) / imgSize.width);
+    newGeo.height = parseInt((xy_wh.height * this._image.naturalHeight) / imgSize.height);
+  }
+  return newGeo;
+}
+
+
+/**
+ * Enable or Disable show cursor axes
+ * @param {Object} cursorAxes {enabled:bool, dash:bool, color:string, strokeWidth:int} if is enabled, if draw dashed line, color of axes, stroke width of axes
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype._showCursorAxes = function (cursorAxes) {
+  if (!(cursorAxes instanceof Object) || Object.keys(cursorAxes).length === 0) this._cursorAxes = Object.assign({ _listener: this._cursorAxes._listener }, this._defaultCursorAxes);
+  else {
+    if (cursorAxes.hasOwnProperty('enabled'))
+      this._cursorAxes.enabled = cursorAxes['enabled'] || this._defaultCursorAxes.enabled;
+    if (cursorAxes.hasOwnProperty('dash'))
+      this._cursorAxes.dash = cursorAxes['dash'] || this._defaultCursorAxes.dash;
+    if (cursorAxes.hasOwnProperty('color'))
+      this._cursorAxes.color = cursorAxes['color'] || this._defaultCursorAxes.color;
+    if (cursorAxes.hasOwnProperty('strokeWidth'))
+      this._cursorAxes.strokeWidth = cursorAxes['strokeWidth'] || this._defaultCursorAxes.strokeWidth;
+  }
+
+  if (this._cursorAxes.enabled) {
+    if (!this._cursorAxes._listener) {
+      var self = this;
+      var g2d = this._cursorCanvas.getContext('2d');
+      var axesListener = function (event) {
+        var coords = annotorious.events.ui.sanitizeCoordinates(event, self._activeCanvas);
+        g2d.clearRect(0, 0, g2d.canvas.width, g2d.canvas.height);
+        if (self._cursorAxes.dash) g2d.setLineDash([5, 3]); /*dashes are 5px and spaces are 3px */
+        else {
+          g2d.setLineDash([]);
+          g2d.lineCap = 'square';
+        }
+        g2d.strokeStyle = self._cursorAxes.color;
+        g2d.lineWidth = self._cursorAxes.strokeWidth;
+
+        g2d.beginPath();
+        g2d.moveTo(0, coords.y);
+        g2d.lineTo(g2d.canvas.width, coords.y);
+        g2d.moveTo(coords.x, 0);
+        g2d.lineTo(coords.x, g2d.canvas.height);
+        g2d.stroke();
+      };
+      this._cursorAxes._listener = [];
+      this._cursorAxes._listener[0] = goog.events.listen(this._viewCanvas, annotorious.events.ui.EventType.MOVE, axesListener);
+      this._cursorAxes._listener[1] = goog.events.listen(this._editCanvas, annotorious.events.ui.EventType.MOVE, axesListener);
+    }
+  }
+  else if (this._cursorAxes._listener) {
+    goog.array.forEach(this._cursorAxes._listener, function (listener) {
+      goog.events.unlistenByKey(listener);
+    });
+    var g2d = this._cursorCanvas.getContext('2d');
+    g2d.clearRect(0, 0, g2d.canvas.width, g2d.canvas.height);
+    delete this._cursorAxes._listener;
+  }
+}
+
+/**
+ * Enable or Disable drawArrowMode 
+ * @param {boolean} enabled 
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype._setDrawArrowMode = function (enabled) {
+  if (enabled) this.setCurrentSelector('arrow_drag')
+  else this.setCurrentSelector('rect_drag');
 }
 
 /** API exports **/

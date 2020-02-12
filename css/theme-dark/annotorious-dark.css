@@ -169,6 +169,10 @@
   transition-delay:0;
 }
 
+.annotorious-popup-button:hover{    
+  cursor: pointer;
+}
+
 .annotorious-popup-button-delete:hover {
   background-color:transparent;
   background:url(DarkSprite.png) no-repeat;
@@ -236,7 +240,7 @@
   line-height:150%;
   margin:10px 0px 4px 0px;
   padding:0px 10px;
-  min-height:50px;
+  height:auto;
   width:100%;
   min-width:200px;
   outline:none;
@@ -342,4 +346,8 @@
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   -khtml-border-radius: 5px;
+}
+
+.d-none{
+  display: none !important;
 }

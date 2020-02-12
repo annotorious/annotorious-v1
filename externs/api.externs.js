@@ -3,69 +3,84 @@
 /**
  * Annotorious annotation interface.
  */
-var Annotation = {  
+var Annotation = {
 
   /** @type {string} source URL of the annotated object (e.g. image) **/
-  src : {},
-  
+  src: {},
+
   /** @type {string} source URL of the HTML document containing the annotated object **/
-  context : {},
-  
+  context: {},
+
   /** @type {string} annotation text **/
-  text  : {},
+  text: {},
+
+  /** @type {integer} annotation text id **/
+  textId: {},
 
   /** @type {boolean} flag indicating whether the anntotation is edit-/deletable **/
-  editable : {},
-  
+  editable: {},
+
+  /** @type {Date} the timestamp of creation **/
+  created_at: {},
+
   /** @type {Object} the annotation shape **/
-  shapes : [{
-  
+  shapes: [{
+
     /** @type {string} the annotation shape type (e.g. rect, point, polygon) **/
-    type     : {},
+    type: {},
 
     /** @type {string} measurement units used for the geometry (e.g. 'pixel', 'fraction') **/
-    units    : {},
-    
+    units: {},
+
     /** @type {Object} the shape geometry **/
-    geometry : {},
-    
+    geometry: {},
+
+    /** @type {string} the annotation mask url - only if type is 'rect' **/
+    mask: {},
+
     /** @type {Object} the shape style **/
     style: {
-      
+
       /** @type {string} outline color **/
       outline: {},
 
       /** @type {number} outline width **/
-      outline_width: {},
-      
+      outlineWidth: {},
+
       /** @type {string} outline color when highlighted **/
-      hi_outline: {},
+      hiOutline: {},
 
       /** @type {number} outline width when hightlighted **/
-      hi_outline_width: {},
-      
+      hiOutlineWidth: {},
+
       /** @type {string} stroke color **/
       stroke: {},
 
       /** @type {number} stroke width **/
-      stroke_width: {},      
+      strokeWidth: {},
 
       /** @type {string} stroke color when highlighted **/
-      hi_stroke: {},
+      hiStroke: {},
 
       /** @type {number} stroke width when highlighted **/
-      hi_stroke_width: {},      
-      
+      hiStrokeWidth: {},
+
       /** @type {string} fill color **/
       fill: {},
-      
-      /** @type {string} fill color when highlighted **/
-      hi_fill: {}
-      
-    }
-    
-  }]
 
+      /** @type {string} fill color when highlighted **/
+      hiFill: {},
+
+      /** @type {number} transparency for annotation mask [0-1] **/
+      maskTransparency: {},
+
+      /** @type {boolean} flag indicating whether the mask border is shown **/
+      maskBorder: {}
+    }
+  }],
+
+  /** @type {Function} called for set mask on the shape **/
+  setMask: function (mask, shapeIdx, transparency, border) { }
 };
 
 /**
@@ -73,13 +88,13 @@ var Annotation = {
  */
 var Rectangle = {
 
-  x : {},
+  x: {},
 
-  y : {},
+  y: {},
 
-  width : {},
+  width: {},
 
-  height : {}
+  height: {}
 
 }
 
@@ -88,7 +103,18 @@ var Rectangle = {
  */
 var Polygon = {
 
-  points : {}
+  points: {}
+
+}
+
+/**
+ * Annotation shape type: Arrow
+ */
+var Arrow = {
+
+  arrowTail: {},
+
+  arrowHead: {}
 
 }
 
@@ -98,11 +124,11 @@ var Polygon = {
 var AnnotoriousPlugin = {
 
   /** @type {Function} called on plugin initialization **/
-  initPlugin : function(anno) {},
+  initPlugin: function (anno) { },
 
   /** @type {Function} called on initialization of a Popup element **/
-  onInitAnnotator : function(annotator) {}
-  
+  onInitAnnotator: function (annotator) { }
+
 };
 
 /**
@@ -111,13 +137,13 @@ var AnnotoriousPlugin = {
 var Annotator = {
 
   /** @type {Element} the annotator DOM element **/
-  element : {},
+  element: {},
 
   /** @type {Object} the popup used by this annotator **/
-  popup : {},
+  popup: {},
 
   /** @type {Object} the editor used by this annotator **/
-  editor : {}
+  editor: {}
 
 };
 
@@ -126,21 +152,21 @@ var Annotator = {
  */
 var Selector = {
 
-  init : function() {},
+  init: function () { },
 
-  getName : function() {},
+  getName: function () { },
 
-  getSupportedShapeType : function() {},
+  getSupportedShapeType: function () { },
 
-  startSelection : function() {},
+  startSelection: function () { },
 
-  stopSelection : function() {},
+  stopSelection: function () { },
 
-  getShape : function() {},
+  getShape: function () { },
 
-  getViewportBounds : function() {},
+  getViewportBounds: function () { },
 
-  drawShape : function() {}
+  drawShape: function () { }
 
 }
 
@@ -149,11 +175,11 @@ var Selector = {
  */
 var SelectionEvent = {
 
-  mouseEvent : {},
+  mouseEvent: {},
 
-  shape : {},
+  shape: {},
 
-  viewportBounds : {}
+  viewportBounds: {}
 
 }
 
@@ -162,14 +188,14 @@ var SelectionEvent = {
  */
 var Popup = {
 
-  startHideTimer : function() {},
+  startHideTimer: function () { },
 
-  clearHideTimer : function() {},
+  clearHideTimer: function () { },
 
-  show : function() {},
+  show: function () { },
 
-  setPosition : function() {},
+  setPosition: function () { },
 
-  setAnnotation : function() {}
- 
+  setAnnotation: function () { }
+
 }

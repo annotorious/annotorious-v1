@@ -132,7 +132,8 @@
 }
 
 .annotorious-popup-button:hover {
-  background-color:transparent;
+  background-color:transparent;  
+  cursor: pointer;
 }
 
 .annotorious-popup-button-active {
@@ -187,10 +188,8 @@
   line-height: normal;
   background-color:#fff;
   width:240px;
-  height:50px;
+  height:auto;
   outline:none;
-  font-family:Verdana, Arial;
-  font-size:11px;
   padding:4px;
   margin:0px;  
   color:#000;
@@ -282,4 +281,8 @@ canvas.hidden {
 html.hasTouch .annotator-viewer li .annotator-controls, 
 html.hasTouch .annotator-viewer li .annotator-controls {
   opacity: 1;
+}
+
+.d-none{
+  display: none !important;
 }
