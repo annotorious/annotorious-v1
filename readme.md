@@ -340,6 +340,8 @@ var myAnnotation = {
 
     /* COMPLETE ATTRIBUTES */
     
+    id: undefined, //id assignable to annotation
+
     src : 'http://www.example.com/myimage.jpg', //the URL of the image where the annotation should go    
     context: '', //source URL of the HTML document containing the annotated object [OPTIONAL]
 
@@ -351,7 +353,7 @@ var myAnnotation = {
 
     shapes : [{ //the annotation shape    
     
-        type : 'rect', //the shape type ['rect', 'arrow', 'polygon'] for enable 'polygon' shape show the official page
+        type : 'rect', //the shape type ['rect', 'point', 'arrow', 'polygon'] for enable 'polygon' shape show the official page
         mask : 'http://www.example.com/mymask.jpg', //the URL of the mask - only if type is 'rect' [OPTIONAL]
         geometry : { x : 0.1, y: 0.1, width : 0.4, height: 0.3 } //the shape geometry (relative coordinates)
         

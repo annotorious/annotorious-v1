@@ -5,6 +5,9 @@
  */
 var Annotation = {
 
+  /** @type {integer} annotation id **/
+  id: {},
+
   /** @type {string} source URL of the annotated object (e.g. image) **/
   src: {},
 

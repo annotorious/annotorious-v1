@@ -9,9 +9,11 @@ goog.require('annotorious.shape');
  * @param {annotorious.shape.Shape} shape the annotated fragment shape
  * @param {Date} created_at the timestamp of annotation creation [OPTIONAL]
  * @param {number} textId the id of text
+ * @param {number} id the id of annotation
  * @constructor
  */
-annotorious.Annotation = function (src, text, shape, created_at, textId) {
+annotorious.Annotation = function (src, text, shape, created_at, textId, id) {
+  this.id = id;
   this.src = src;
   this.text = text;
   this.textId = textId;

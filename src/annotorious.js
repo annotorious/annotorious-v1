@@ -117,10 +117,18 @@ annotorious.Annotorious.prototype.activateSelector = function (opt_item_url_or_c
  * @param {annotorious.Annotation} opt_replace optionally, an existing annotation to replace
  */
 annotorious.Annotorious.prototype.addAnnotation = function (annotation, opt_replace) {
-  annotation.src = annotorious.dom.toAbsoluteURL(annotation.src);
-  var module = this._getModuleForItemSrc(annotation.src);
+  var newAnnotation = new annotorious.Annotation(
+    annotorious.dom.toAbsoluteURL(annotation.src),
+    annotation.text,
+    annotation.shapes[0],
+    annotation.created_at,
+    annotation.textId,
+    annotation.id
+  );
+  newAnnotation.editable = annotation.editable;
+  var module = this._getModuleForItemSrc(newAnnotation.src);
   if (module)
-    module.addAnnotation(annotation, opt_replace);
+    module.addAnnotation(newAnnotation, opt_replace);
 }
 
 /**

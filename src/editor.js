@@ -80,7 +80,7 @@ annotorious.Editor = function (annotator) {
 
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function (event) {
     event.preventDefault();
-    if (!self._properties.enterText && self._useSelect && self._select.options[0].disabled && (self._select.selectedIndex == 0 || !self._select.value)) return; //Not is possible set empty text.
+    if (!self._properties.enterText || (self._useSelect && self._select.options[0].disabled && (self._select.selectedIndex == 0 || !self._select.value))) return; //Not is possible set empty text.
 
     var oldText = (self._original_annotation) ? { "text": self._original_annotation.text, "textId": self._original_annotation.textId } : undefined;
 
@@ -271,9 +271,11 @@ annotorious.Editor.prototype.setProperties = function (props) {
  * @param {Object} selectEditor {enabled:bool, options:array[Object], emptyOption:bool, customLabel:string} if is enabled, options of select, true to enable the empty select option, the custom first label if not use empty options
  */
 annotorious.Editor.prototype.setSelectEditor = function (selectEditor) {
-  this._useSelect = (selectEditor && selectEditor instanceof Object && selectEditor["enabled"] && Array.isArray(selectEditor["options"])) ? true : false;
+  var optionIsArray = false;
+  this._useSelect = (selectEditor && selectEditor instanceof Object && selectEditor["enabled"] && (optionIsArray = Array.isArray(selectEditor["options"]))) ? true : false;
 
   if (!this._useSelect) {
+    if (!optionIsArray) console.log('WARNING: invalid option format');
     this._textarea.removeClassName("d-none");
     if (this._select) {
       this._select.remove();

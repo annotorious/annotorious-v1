@@ -534,7 +534,7 @@ annotorious.mediatypes.Module.prototype._saveProperties = function (props, cache
   if (props instanceof Object && Object.keys(props).length !== 0) {
     goog.array.forEach(Object.keys(props), function (key) {
       if (props[key] instanceof Object) {
-        if (!cachedProperties.hasOwnProperty(key) || !cachedProperties[key]) cachedProperties[key] = {};
+        if (!cachedProperties.hasOwnProperty(key) || !cachedProperties[key]) cachedProperties[key] = (props[key] instanceof Array) ? [] : {};
         self._saveProperties(props[key], cachedProperties[key]);
       }
       else cachedProperties[key] = props[key];
