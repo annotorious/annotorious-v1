@@ -5,6 +5,8 @@
 Annotorious is an Open Source image annotation toolkit written in JavaScript. Online demos are available
 [on our project Website](https://annotorious.github.io).
 
+Are you looking for toolkit written in jQuery to annotate an image by dragging and dropping annotations? Check out [this project](https://github.com/AntoninoBonanno/DragDropAnnotate).
+
 ## Getting Started
 
 Instructions on getting started using Annotorious on your own Web pages are [on the project Website](https://annotorious.github.io/getting-started.html) or
