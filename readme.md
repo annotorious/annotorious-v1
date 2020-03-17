@@ -1,4 +1,4 @@
-# Annotorious - Image Annotation for the Web
+# Annotorious - Image Annotation for the Web (custom)
 
 **CURRENTLY UNSUPPORTED**
 
