@@ -1,8 +1,5 @@
 ## Annotorious is dead - long live Annotorious!
 
-**!! THIS VERSION OF ANNOTORIOUS IS NO LONGER MAINTAINED !!**
+I'm rebooting this project. The old version hasn't been maintained for years and is hopelessly outdated. I started a complete, modernized rewrite at <https://github.com/recogito/annotorious>
 
-Please check out <https://github.com/recogito/annotorious> for ongoing work on Annotorious v2.
-
-If you are looking for a ready-made solution for collaborative online document annotation, and not just a JavaScript library: please check out our award-winning project [Recogito](https://recogito.pelagios.org) instead. Free. Open source. Batteries included.
 
