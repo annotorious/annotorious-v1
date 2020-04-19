@@ -1,4 +1,4 @@
-# Annotorious - Image Annotation for the Web
+## Annotorious is dead - long live Annotorious!
 
 **!! THIS VERSION OF ANNOTORIOUS IS NO LONGER MAINTAINED !!**
 
