@@ -578,6 +578,17 @@ annotorious.mediatypes.Module.prototype.showAnnotations = function (opt_item_url
 }
 
 /**
+ * Retrieves all annotations that intersect the centroid of an annotation
+ * @param {annotorious.Annotation} annotation annotation from which to retrieve the centroid
+ * @param {String} type filter by shape type
+ * @return {Array.<annotorious.Annotation>} the annotations sorted by size, smallest first
+ */
+annotorious.mediatypes.Module.prototype.getIntersectedAnnotations = function (annotation, type) {
+  var annotator = this._annotators.get(annotation.src);
+  return (annotator) ? annotator.getIntersectedAnnotations(annotation, type) : [];
+}
+
+/**
  * Shows the selection widget, thus enabling users to create new annotations.
  * The selection widget can be made visible on a specific item or all.
  * @param {string} opt_item_url the URL of the item on which to show the selection widget 

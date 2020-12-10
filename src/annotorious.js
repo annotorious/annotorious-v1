@@ -497,6 +497,17 @@ annotorious.Annotorious.prototype.useFancyBox = function (enabled) {
 }
 
 /**
+ * Retrieves all annotations that intersect the centroid of an annotation
+ * @param {annotorious.Annotation} annotation annotation from which to retrieve the centroid
+ * @param {String} type filter by shape type
+ * @return {Array.<annotorious.Annotation>} the annotations sorted by size, smallest first
+ */
+annotorious.Annotorious.prototype.getIntersectedAnnotations = function (annotation, type) {
+  var module = this._getModuleForItemSrc(annotorious.dom.toAbsoluteURL(annotation.src));
+  return (module) ? module.getIntersectedAnnotations(annotation, type) : [];
+}
+
+/**
  * Enables (or disables) the ability to create new annotations on an annotatable item.
  * @param {boolean} enabled if true, new annotations can be created
  *

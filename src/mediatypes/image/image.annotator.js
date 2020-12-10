@@ -359,7 +359,7 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.setProperties = function (
   /** Output Shape Units **/
   if (props.hasOwnProperty("outputUnits"))
     this.outputUnits = (props["outputUnits"] == annotorious.shape.Units.PIXEL) ? annotorious.shape.Units.PIXEL : annotorious.shape.Units.FRACTION;
-  console.log(props);
+
   /** Draw Only Inside Rect Annotation **/
   if (props.hasOwnProperty("drawInsideRectAnno"))
     this._drawInsideRectAnno = props["drawInsideRectAnno"];

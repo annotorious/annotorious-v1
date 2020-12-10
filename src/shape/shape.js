@@ -157,8 +157,8 @@ annotorious.shape.getBoundingRect = function (shape) {
  * @returns {annotorious.shape.geom.Point | undefined} the centroid X/Y coordinate
  */
 annotorious.shape.getCentroid = function (shape) {
-  if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
-    var rect = shape.geometry;
+  if (shape.type == annotorious.shape.ShapeType.RECTANGLE || shape.type == annotorious.shape.ShapeType.ARROW) {
+    var rect = (shape.type == annotorious.shape.ShapeType.ARROW) ? annotorious.shape.geom.Arrow.getRectangle(shape.geometry) : shape.geometry;
     return new annotorious.shape.geom.Point(rect.x + rect.width / 2, rect.y + rect.height / 2);
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
     return annotorious.shape.geom.Polygon.computeCentroid(shape.geometry.points);

@@ -10,6 +10,26 @@ annotorious.mediatypes.Annotator.prototype.addAnnotation = function (annotation,
   this._viewer.addAnnotation(annotation, opt_replace);
 }
 
+/**
+ * Retrieves all annotations that intersect the centroid of an annotation
+ * @param {annotorious.Annotation} annotation annotation from which to retrieve the centroid
+ * @param {String} type filter by shape type 
+ * @return {Array.<annotorious.Annotation>} the annotations sorted by size, smallest first
+ */
+annotorious.mediatypes.Annotator.prototype.getIntersectedAnnotations = function (annotation, type) {
+  var self = this;
+  var shape = (annotation.shapes[0].units == annotorious.shape.Units.PIXEL) ? annotorious.shape.transform(annotation.shapes[0], function (xy) { return self.fromItemPixelCoordinates(xy); }) :
+    annotorious.shape.transform(annotation.shapes[0], function (xy) { return self.fromItemCoordinates(xy); });
+
+  var point = annotorious.shape.getCentroid(shape);
+  var annotations = this.getAnnotationsAt(point.x, point.y);
+
+  return annotations.filter(function (annota) {
+    var notSelfAnno = annotorious.shape.hashCode(annota.shapes[0]) != annotorious.shape.hashCode(annotation.shapes[0]);
+    return notSelfAnno && (!type || annota.shapes[0].type == type);
+  });
+}
+
 annotorious.mediatypes.Annotator.prototype.addHandler = function (type, handler) {
   this._eventBroker.addHandler(type, handler);
 }

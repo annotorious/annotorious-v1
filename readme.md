@@ -1,20 +1,63 @@
 # Annotorious - Image Annotation for the Web (custom)
 
-**CURRENTLY UNSUPPORTED**
+This library is a custom version of the [Annotorious library](https://github.com/annotorious/annotorious) (currently deprecated / dead). Show the new [Annotorious library](https://github.com/recogito/annotorious). 
 
-Annotorious is an Open Source image annotation toolkit written in JavaScript. Online demos are available
-[on our project Website](https://annotorious.github.io).
+Annotorious is an Open Source image annotation toolkit written in JavaScript. It allows you to add drawing, commenting and labeling capabilities to your web page images with a few lines of code.
 
 Are you looking for toolkit written in jQuery to annotate an image by dragging and dropping annotations? Check out [this project](https://github.com/AntoninoBonanno/DragDropAnnotate).
 
 ## Getting Started
 
-Instructions on getting started using Annotorious on your own Web pages are [on the project Website](https://annotorious.github.io/getting-started.html) or
-[on the Wiki](https://github.com/annotorious/annotorious/wiki/Getting-Started). Instructions on using it as a plugin to the
-[Annotator](http://okfnlabs.org/projects/annotator/) Web annotation system are [here](http://annotorious.github.io/plug-outs/okfn-annotator.html).
-If you require support, get in touch [via our mailing list](https://groups.google.com/forum/#!forum/annotorious).
+Instructions on getting started using Original Annotorious library [on the Wiki](https://github.com/annotorious/annotorious/wiki/Getting-Started). 
+Instructions on using it as a plugin to the [Annotator](http://okfnlabs.org/projects/annotator/) Web annotation system are [here](http://annotorious.github.io/plug-outs/okfn-annotator.html).
 
-## My Contribution
+## How Do I Add Annotorious to My Web Page?
+
+* Unzip the contents of the package on your server
+* Link the __Annotorious CSS file__ into the &lt;head&gt; of your Web pages
+* Link the __Annotorious JavaScript__ file into the &lt;head&gt; of your Web pages
+
+Example:
+
+```
+    <head>
+      <link rel="stylesheet" type="text/css" href="css/annotorious.css" />
+      <script type="text/javascript" src="annotorious.min.js"></script>
+    </head>
+```
+
+## How Do I Enable Annotation for an Image on My Page?
+
+Once you have linked Annotorious into your Web page, you need to tell it which images should be annotatable.
+There are two ways you can do this:
+
+__Option 1.__ Add a CSS class called ``annotatable`` to the image. This is the easiest way to add annotation functionality, and I'd always recommend using this approach unless your page loads images dynamically via JavaScript, after the page has loaded.
+
+Example:
+
+```
+<html>
+    <head>
+    <link rel="stylesheet" type="text/css" href="css/annotorious.css" />
+    <script type="text/javascript" src="annotorious.min.js"></script>
+    </head>
+    
+    <body>
+    <img src="example.jpg" class="annotatable" />
+    </body>
+</html>
+```
+
+__Option 2:__ Annotation-enable your images via JavaScript API, using ``anno.makeAnnotatable(img);`` You can use
+this approach if your page loads images dynamically via JavaScript.
+
+# JavaScript API
+
+Annotorious provides a JavaScript API you can use to get, add or remove annotations, and hook into the Annotorious event lifecycle. All functionality is exposed via the global _anno_ object. The _anno_ object has the following methods
+
+**Show [JavaScript-API.md](https://github.com/AntoninoBonanno/annotorious/blob/master/JavaScript-API.md) for more details**
+
+## My Contribution (Extended JavaScript API)
 
 ### Functionality
 * [Mask](#mask): Added the ability to insert an image inside a annotation with shapes rect.
@@ -24,6 +67,7 @@ If you require support, get in touch [via our mailing list](https://groups.googl
 * [ArrowMode](#arrowmode): Added the ability to annotate with draw arrow shape. (Arrow selector)
 * [Fancy Box](#fancy-box): Added ['Fancy Box Selector'](https://annotorious.github.io/demos/fancybox-preview.html) plugin integration.
 * [ExtraFields](#extrafields): Added the ability to add many fields to the annotation GUI widget from properties.
+* [IntersectedAnnotations](#intersectedAnnotations): Added the ability to retrieves all annotations that intersect the centroid of an annotation.
 
 ### Changes
 * Added the ability to [reload the annotations](#reload-the-annotations).
@@ -295,6 +339,28 @@ Ability to add many fields to the annotation GUI widget from properties. A field
       });
     ```
 
+### IntersectedAnnotations
+
+Ability to retrieves all annotations that intersect the centroid of an annotation.
+
+**` anno.getIntersectedAnnotations(*annotation*, *shapeType*); `**
+
+Function parameters:
+- **annotation**: an annotation. The centroid is calculated from the shapes[0] of this variable.
+- **shapeType**: if you want to filter the results by shape type; Default `undefined`, possible values: ['rect', 'point', 'arrow', 'polygon']
+
+The function return an array of the intersect annotations sorted by size, smallest first.
+
+Example of use:
+```
+anno.addHandler('onAnnotationCreated', function (annotation, item) {
+    var intersectedAnnotations = anno.getIntersectedAnnotations(annotation);
+    var intersectedFilteredAnnotations = anno.getIntersectedAnnotations(annotation, 'rect');
+
+    console.log(intersectedAnnotations, intersectedFilteredAnnotations);
+});
+```
+
 ### Reload the annotations
 
 Ability to reload the annotations, the image must have the `annotatable` class.
@@ -482,6 +548,16 @@ anno.setProperties({
     }
 });
 ```
+
+## Test Library
+
+Run `java -jar plovr/plovr.jar serve standalone.json` command on root directory project
+
+Open test\image\index.html
+
+## Build library
+
+Run `java -jar plovr/plovr.jar build standalone.json > annotorious.min.js` command on root directory of project, then the file **annotorious.min.js** will be generated.
 
 ## License
 

@@ -43,4 +43,5 @@ annotorious.Annotorious.prototype['setColorMode'] = annotorious.Annotorious.prot
 annotorious.Annotorious.prototype['useSelectEditor'] = annotorious.Annotorious.prototype.useSelectEditor;
 annotorious.Annotorious.prototype['showCursorAxes'] = annotorious.Annotorious.prototype.showCursorAxes;
 annotorious.Annotorious.prototype['setArrowMode'] = annotorious.Annotorious.prototype.setArrowMode;
-annotorious.Annotorious.prototype['useFancyBox'] = annotorious.Annotorious.prototype.useFancyBox; 
+annotorious.Annotorious.prototype['useFancyBox'] = annotorious.Annotorious.prototype.useFancyBox;
+annotorious.Annotorious.prototype['getIntersectedAnnotations'] = annotorious.Annotorious.prototype.getIntersectedAnnotations; 
