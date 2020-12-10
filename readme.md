@@ -404,6 +404,7 @@ anno.setProperties({
     hideAnnotations: false, //if true, hides existing annotations on all 
 
     outputUnits: 'fraction', //measurement units used for the output geometry ['pixel', 'fraction'] [pixels are relative to the original image size]    
+    drawInsideRectAnno: false, //if true, new annotations can only be made within annotations with 'rect' shape
 
     colorMode: {
         enabled: false, //if true, enable the colorMode

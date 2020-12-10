@@ -57,13 +57,13 @@ annotorious.plugins.selection.ArrowDragSelector.prototype.init = function (annot
  * Attaches MOUSEUP and MOUSEMOVE listeners to the editing canvas. 
  * @private
  */
-annotorious.plugins.selection.ArrowDragSelector.prototype._attachListeners = function (startPoint) {
+annotorious.plugins.selection.ArrowDragSelector.prototype._attachListeners = function (startPoint, limitShape) {
   var self = this;
   var canvas = this._canvas;
 
   this._mouseMoveListener = goog.events.listen(this._canvas, annotorious.events.ui.EventType.MOVE, function (event) {
-    if (!self._enabled) return;
     var points = annotorious.events.ui.sanitizeCoordinates(event, canvas);
+    if (!self._enabled || (limitShape && !annotorious.shape.intersects(limitShape, points.x, points.y))) return;
     self._arrowHead = new annotorious.shape.geom.Point(points.x, points.y);
 
     self._g2d.clearRect(0, 0, canvas.width, canvas.height);
@@ -157,14 +157,15 @@ annotorious.plugins.selection.ArrowDragSelector.prototype.setProperties = functi
  * Selector API method: starts the selection at the specified coordinates.
  * @param {number} x the X coordinate
  * @param {number} y the Y coordinate
+ * @param {annotorious.shape.Shape | undefined} limitShape the shape of limit draw
  */
-annotorious.plugins.selection.ArrowDragSelector.prototype.startSelection = function (x, y) {
+annotorious.plugins.selection.ArrowDragSelector.prototype.startSelection = function (x, y, limitShape) {
   var startPoint = {
     x: x,
     y: y
   };
   this._enabled = true;
-  this._attachListeners(startPoint);
+  this._attachListeners(startPoint, limitShape);
   this._arrowTail = new annotorious.shape.geom.Point(x, y);
   this._annotator.fireEvent(annotorious.events.EventType.SELECTION_STARTED, {
     offsetX: x, offsetY: y

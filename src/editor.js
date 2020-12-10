@@ -80,7 +80,7 @@ annotorious.Editor = function (annotator) {
 
   goog.events.listen(this._btnSave, goog.events.EventType.CLICK, function (event) {
     event.preventDefault();
-    if (!self._properties.enterText || (self._useSelect && self._select.options[0].disabled && (self._select.selectedIndex == 0 || !self._select.value))) return; //Not is possible set empty text.
+    if (self._useSelect && self._select.options[0].disabled && (self._select.selectedIndex == 0 || !self._select.value)) return; //Not is possible set empty text.
 
     var oldText = (self._original_annotation) ? { "text": self._original_annotation.text, "textId": self._original_annotation.textId } : undefined;
 
@@ -192,7 +192,7 @@ annotorious.Editor.prototype.getAnnotation = function () {
   var textId = (this._useSelect) ? this._select.options[this._select.selectedIndex].getAttribute("valueid") : undefined;
 
   if (this._current_annotation) {
-    this._current_annotation.text = sanitized;
+    this._current_annotation.text = self._properties.enterText ? sanitized : undefined;
     this._current_annotation.textId = textId;
   } else {
     this._current_annotation =

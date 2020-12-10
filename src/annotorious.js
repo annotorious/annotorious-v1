@@ -56,7 +56,7 @@ annotorious.Annotorious.prototype._init = function () {
 
   /**
    * Each time the window is resized, it reloads the annotations - for responsive images
-   * The image must have the 'annotatable' class
+   * The image must have the 'annotatable' class
    */
   goog.events.listen(window, goog.events.EventType.RESIZE, function (event) {
     self.reload();

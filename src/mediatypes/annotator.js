@@ -61,11 +61,22 @@ annotorious.mediatypes.Annotator.prototype._attachListener = function (activeCan
     //console.log(event);
     var coords = annotorious.events.ui.sanitizeCoordinates(event, activeCanvas);
     self._viewer.highlightAnnotation(false);
+
+    var annotations = undefined;
     if (self._selectionEnabled) {
+
+      if (self._drawInsideRectAnno) {
+        annotations = self._viewer.getAnnotationsAt(coords.x, coords.y);
+        if (!annotations.length) return;
+        annotations = annotations.filter(function (anno) {
+          return anno.shapes[0].type == annotorious.shape.ShapeType.RECTANGLE;
+        });
+        if (!annotations.length) return;
+      }
       goog.style.showElement(self._editCanvas, true);
-      self._currentSelector.startSelection(coords.x, coords.y);
+      self._currentSelector.startSelection(coords.x, coords.y, annotations ? self._viewer.getSystemShape(annotations[0]) : undefined);
     } else {
-      var annotations = self._viewer.getAnnotationsAt(coords.x, coords.y);
+      annotations = self._viewer.getAnnotationsAt(coords.x, coords.y);
       if (annotations.length > 0)
         self._viewer.highlightAnnotation(annotations[0]);
     }

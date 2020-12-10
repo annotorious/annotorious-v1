@@ -106,6 +106,14 @@ annotorious.mediatypes.image.Viewer = function (canvas, annotator) {
 }
 
 /**
+ * Returns the shape of an annotation used by the system
+ * @param {annotorious.Annotation} annotation the annotation
+ */
+annotorious.mediatypes.image.Viewer.prototype.getSystemShape = function (annotation) {
+  return this._shapes[annotorious.shape.hashCode(annotation.shapes[0])]
+}
+
+/**
  * Adds an annotation to the viewer.
  * @param {annotorious.Annotation} annotation the annotation
  * @param {annotorious.Annotation=} opt_replace optionally, an existing annotation to replace
@@ -120,7 +128,7 @@ annotorious.mediatypes.image.Viewer.prototype.addAnnotation = function (annotati
     delete this._shapes[annotorious.shape.hashCode(opt_replace.shapes[0])];
   }
 
-  if (this._shapes[annotorious.shape.hashCode(annotation.shapes[0])]) return; //The new annotation has shapes exactly equals other annotation. Not insert if not delete old annotation.
+  if (this.getSystemShape(annotation)) return; //The new annotation has shapes exactly equals other annotation. Not insert if not delete old annotation.
   this._annotations.push(annotation);
 
   // The viewer always operates in pixel coordinates for efficiency reasons
