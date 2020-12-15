@@ -78,7 +78,31 @@ var Annotation = {
       maskTransparency: {},
 
       /** @type {boolean} flag indicating whether the mask border is shown **/
-      maskBorder: {}
+      maskBorder: {},
+
+      /** @type {string} stroke color for arrow shape **/
+      arrowStroke: {},
+
+      /** @type {number} stroke width for arrow shape [1-12]  **/
+      arrowStrokeWidth: {},
+
+      /** @type {string} stroke color when highlighted for arrow shape  **/
+      hiArrowStroke: {},
+
+      /** @type {number} stroke width when highlighted for arrow shape [1-12]  **/
+      hiArrowStrokeWidth: {},
+
+      /** @type {string} color to highlight the tail of the arrow shape **/
+      highlightTail: {},
+
+      /** @type {number} arrow tail highlight radius **/
+      hiTailRadius: {},
+
+      /** @type {string} color to highlight the head of the arrow shape **/
+      highlightHead: {},
+
+      /** @type {number} arrow head highlight radius **/
+      hiHeadRadius: {}
     }
   }],
 

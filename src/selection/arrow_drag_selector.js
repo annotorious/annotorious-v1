@@ -46,7 +46,11 @@ annotorious.plugins.selection.ArrowDragSelector.prototype.init = function (annot
     arrowStroke: '#ffffff',
     arrowStrokeWidth: 2,
     hiArrowStroke: '#fff000',
-    hiArrowStrokeWidth: 2.2
+    hiArrowStrokeWidth: 2.2,
+    highlightTail: undefined,
+    hiTailRadius: 5,
+    highlightHead: undefined,
+    hiHeadRadius: 5
   };
 
   /** @private **/
@@ -151,6 +155,19 @@ annotorious.plugins.selection.ArrowDragSelector.prototype.setProperties = functi
 
   if (props.hasOwnProperty('hiArrowStrokeWidth'))
     this._properties.hiArrowStrokeWidth = props['hiArrowStrokeWidth'] || this._defaultProperties.hiArrowStrokeWidth;
+
+  if (props.hasOwnProperty('highlightTail'))
+    this._properties.highlightTail = props['highlightTail'] || this._defaultProperties.highlightTail;
+
+  if (props.hasOwnProperty('hiTailRadius'))
+    this._properties.hiTailRadius = props['hiTailRadius'] || this._defaultProperties.hiTailRadius;
+
+  if (props.hasOwnProperty('highlightHead'))
+    this._properties.highlightHead = props['highlightHead'] || this._defaultProperties.highlightHead;
+
+  if (props.hasOwnProperty('hiHeadRadius'))
+    this._properties.hiHeadRadius = props['hiHeadRadius'] || this._defaultProperties.hiHeadRadius;
+
 }
 
 /**
@@ -286,6 +303,19 @@ annotorious.plugins.selection.ArrowDragSelector.prototype.drawShape = function (
     g2d.lineTo(botx, boty);
     g2d.lineTo(topx, topy);
     g2d.fill();
+
+    if (shape.style.highlightTail || this._properties.highlightTail) {
+      g2d.beginPath();
+      g2d.arc(geom.arrowTail.x, geom.arrowTail.y, (shape.style.hiTailRadius || this._properties.hiTailRadius), 0, 2 * Math.PI, false);
+      g2d.fillStyle = shape.style.highlightTail || this._properties.highlightTail;
+      g2d.fill();
+    }
+    if (shape.style.highlightHead || this._properties.highlightHead) {
+      g2d.beginPath();
+      g2d.arc(geom.arrowHead.x, geom.arrowHead.y, (shape.style.hiHeadRadius || this._properties.hiHeadRadius), 0, 2 * Math.PI, false);
+      g2d.fillStyle = shape.style.highlightHead || this._properties.highlightHead;
+      g2d.fill();
+    }
 
     g2d.restore();
   }

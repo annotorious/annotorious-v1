@@ -253,6 +253,11 @@ Ability to annotate with draw arrow shape. (Arrow selector)
             arrowStrokeWidth: 2, // stroke width for arrow shape [1-12] 
             hiArrowStroke: '#fff000', // stroke color for arrow shape 
             hiArrowStrokeWidth: 2.2  //stroke width for arrow shape [1-12] 
+
+            highlightTail: undefined, //color to highlight the tail of the arrow shape (draw a circle on the tail) [es "rgba(0, 0, 255, 0.7)"] 
+            hiTailRadius: 5, // arrow tail highlight radius 
+            highlightHead: undefined, //color to highlight the head of the arrow shape (draw a circle on the head) [es "rgba(0, 0, 255, 0.7)"] 
+            hiHeadRadius: 5 // arrow head highlight radius 
         }
     });
     ```
@@ -282,6 +287,11 @@ Ability to annotate with draw arrow shape. (Arrow selector)
             arrowStrokeWidth: 2, // stroke width for arrow shape [1-12] 
             hiArrowStroke: '#fff000', // stroke color for arrow shape 
             hiArrowStrokeWidth: 2.2  //stroke width for arrow shape [1-12] 
+
+            highlightTail: undefined, //color to highlight the tail of the arrow shape (draw a circle on the tail) [es "rgba(0, 0, 255, 0.7)"] 
+            hiTailRadius: 5, // arrow tail highlight radius 
+            highlightHead: undefined, //color to highlight the head of the arrow shape (draw a circle on the head) [es "rgba(0, 0, 255, 0.7)"] 
+            hiHeadRadius: 5 // arrow head highlight radius 
         }
     }]
     ```
@@ -444,8 +454,19 @@ var myAnnotation = {
             fill: undefined, //fill color for annotation and selection shapes [OPTIONAL]
             hiFill: undefined, //fill color for highlighted annotation shapes [OPTIONAL]
                         
-            maskTransparency: 0.8 //transparency for annotation mask [0-1] [OPTIONAL]
-        }
+            maskTransparency: 0.8, //transparency for annotation mask [0-1] [OPTIONAL]
+            maskBorder: true,  //if false, not show the mask border [OPTIONAL]
+
+            arrowStroke: '#ffffff', // stroke color for arrow shape [OPTIONAL]
+            arrowStrokeWidth: 2, // stroke width for arrow shape [1-12] [OPTIONAL]
+            hiArrowStroke: '#fff000', // stroke color for arrow shape [OPTIONAL]
+            hiArrowStrokeWidth: 2.2  //stroke width for arrow shape [1-12] [OPTIONAL]
+
+            highlightTail: undefined, //color to highlight the tail of the arrow shape (draw a circle on the tail) [OPTIONAL]
+            hiTailRadius: 5, // arrow tail highlight radius [OPTIONAL]
+            highlightHead: undefined, //color to highlight the head of the arrow shape (draw a circle on the head) [OPTIONAL]
+            hiHeadRadius: 5 // arrow head highlight radius [OPTIONAL]
+         }
     }],
 
     setMask(mask, shapeIdx, transparency, border) //function to set mask dinamically on the shape 
@@ -545,6 +566,11 @@ anno.setProperties({
         arrowStrokeWidth: 2, // stroke width for arrow shape [1-12] 
         hiArrowStroke: '#fff000', // stroke color for arrow shape 
         hiArrowStrokeWidth: 2.2  //stroke width for arrow shape [1-12] 
+
+        highlightTail: undefined, //you can set a color to highlight the tail of the arrow shape (draw a circle on the tail)
+        hiTailRadius: 5, // arrow tail highlight radius
+        highlightHead: undefined, //you can set a color to highlight the head of the arrow shape (draw a circle on the head)
+        hiHeadRadius: 5 // arrow head highlight radius 
     }
 });
 ```

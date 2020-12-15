@@ -117,6 +117,15 @@ annotorious.Annotorious.prototype.activateSelector = function (opt_item_url_or_c
  * @param {annotorious.Annotation} opt_replace optionally, an existing annotation to replace
  */
 annotorious.Annotorious.prototype.addAnnotation = function (annotation, opt_replace) {
+  if (!annotation.src) {
+    console.error("Error: The src attribute is required for identification the image associated to annotation. See the documentation for more details.", annotation);
+    return;
+  }
+  if (!annotation.shapes) {
+    console.error("Error: The shapes attribute is required and must necessarily include the type and geometry field. See the documentation for more details.", annotation);
+    return;
+  }
+
   var newAnnotation = new annotorious.Annotation(
     annotorious.dom.toAbsoluteURL(annotation.src),
     annotation.text,
