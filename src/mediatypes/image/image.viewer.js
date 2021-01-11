@@ -62,6 +62,14 @@ annotorious.mediatypes.image.Viewer = function (canvas, annotator) {
   });
 
   goog.events.listen(this._canvas, annotorious.events.ui.EventType.DOWN, function (event) {
+    if (self._moveAnnotation) {
+      self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_MOVED, self._moveAnnotation);
+      self._moveAnnotation = undefined;
+    }
+    if (self._rotateAnnotation) {
+      self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_ROTATED, self._rotateAnnotation);
+      self._rotateAnnotation = undefined;
+    }
     if (self._colorMode.enabled) self._colorMode._mouseClick = true;
     if (self._currentAnnotation !== undefined && self._currentAnnotation != false) {
       self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CLICKED, self._currentAnnotation);
@@ -169,6 +177,24 @@ annotorious.mediatypes.image.Viewer.prototype.removeAnnotation = function (annot
 }
 
 /**
+ * Move an annotation from the viewer.
+ * @param {annotorious.Annotation} annotation the annotation
+ */
+annotorious.mediatypes.image.Viewer.prototype.moveAnnotation = function (annotation) {
+  this._moveAnnotation = annotation;
+  this._rotateAnnotation = undefined;
+}
+
+/**
+ * Move an annotation from the viewer.
+ * @param {annotorious.Annotation} annotation the annotation
+ */
+annotorious.mediatypes.image.Viewer.prototype.rotateAnnotation = function (annotation) {
+  this._rotateAnnotation = annotation;
+  this._moveAnnotation = undefined;
+}
+
+/**
  * Returns all annotations in this viewer.
  * @return {Array.<annotorious.Annotation>} the annotations
  */
@@ -245,6 +271,31 @@ annotorious.mediatypes.image.Viewer.prototype.getAnnotationsAt = function (px, p
  * @private
  */
 annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function (event, pixCurs) {
+  if (this._moveAnnotation || this._rotateAnnotation) {
+    this._currentAnnotation = this._moveAnnotation || this._rotateAnnotation;
+    this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
+
+    var self = this;
+    goog.array.forEach(this._annotations, function (annotation) {
+      if (annotation != self._currentAnnotation)
+        self._draw(self._shapes[annotorious.shape.hashCode(annotation.shapes[0])]);
+    });
+
+    if (this._currentAnnotation) {
+      var shape = this._shapes[annotorious.shape.hashCode(this._currentAnnotation.shapes[0])];
+      var selector = goog.array.find(this._annotator.getAvailableSelectors(), function (selector) {
+        var types = selector.getSupportedShapeType();
+        return Array.isArray(types) ? goog.array.indexOf(types, shape.type) != -1 : types == shape.type;
+      });
+
+      if (selector) {
+        if (this._moveAnnotation) selector.moveShape(this._g2d, shape, event.offsetX, event.offsetY);
+        else selector.rotateShape(this._g2d, shape, event.offsetX, event.offsetY);
+      } else console.log('WARNING unsupported shape type: ' + shape.type);
+    }
+    return;
+  }
+
   var topAnnotation = this.topAnnotationAt(event.offsetX, event.offsetY);
   if (topAnnotation) this._keepHighlighted = this._keepHighlighted && (topAnnotation == this._currentAnnotation);
 
@@ -307,7 +358,7 @@ annotorious.mediatypes.image.Viewer.prototype.redraw = function () {
       self._draw(self._shapes[annotorious.shape.hashCode(annotation.shapes[0])]);
   });
 
-  if (this._currentAnnotation) {
+  if (this._currentAnnotation && !this._moveAnnotation && !this._rotateAnnotation) {
     var shape = this._shapes[annotorious.shape.hashCode(this._currentAnnotation.shapes[0])];
     this._draw(shape, true);
     var bbox = annotorious.shape.getBoundingRect(shape).geometry;

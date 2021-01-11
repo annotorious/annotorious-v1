@@ -23,6 +23,12 @@ var Annotation = {
   /** @type {boolean} flag indicating whether the anntotation is edit-/deletable **/
   editable: {},
 
+  /** @type {boolean} flag indicating whether the anntotation is movable **/
+  movable: {},
+
+  /** @type {boolean} flag indicating whether the anntotation is rotable **/
+  rotable: {},
+
   /** @type {Date} the timestamp of creation **/
   created_at: {},
 

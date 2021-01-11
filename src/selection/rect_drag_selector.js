@@ -400,3 +400,31 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
     g2d.fill();
   }
 }
+
+/**
+ * Move the rectangle to the new point as the center
+ * @param {Object} g2d graphics context
+ * @param {annotorious.shape.Shape} shape the shape to draw
+ * @param {number} x the X coordinate
+ * @param {number} y the Y coordinate
+ */
+annotorious.plugins.selection.RectDragSelector.prototype.moveShape = function (g2d, shape, x, y) {
+  var point = new annotorious.shape.geom.Point(x, y);
+  var geom = shape.geometry;
+
+  if (shape.type != annotorious.shape.ShapeType.RECTANGLE) return;
+  geom.x = point.x - geom.width / 2;
+  geom.y = point.y - geom.height / 2;
+  this.drawShape(g2d, shape);
+}
+
+/**
+ * Rotate the rectangle by calculating the angle based on the new point and the center of the rectangle
+ * @param {Object} g2d graphics context
+ * @param {annotorious.shape.Shape} shape the shape to draw
+ * @param {number} x the X coordinate
+ * @param {number} y the Y coordinate
+ */
+annotorious.plugins.selection.RectDragSelector.prototype.rotateShape = function (g2d, shape, x, y) {
+  console.error("Features to implement")
+}

@@ -159,6 +159,15 @@ annotorious.events.EventType = {
   /**
    * The annotation was clicked.  Pass the annotation object.
    */
-  ANNOTATION_CLICKED: 'onAnnotationClicked'
+  ANNOTATION_CLICKED: 'onAnnotationClicked',
 
+  /**
+   * The annotation was moved.  Pass the annotation object.
+   */
+  ANNOTATION_MOVED: 'onAnnotationMoved',
+
+  /**
+   * The annotation was rotated.  Pass the annotation object.
+   */
+  ANNOTATION_ROTATED: 'onAnnotationRotated'
 };

@@ -248,6 +248,22 @@ annotorious.mediatypes.image.ImageAnnotator.prototype.editAnnotation = function 
 }
 
 /**
+ * Move the specified existing annotation.
+ * @param {annotorious.Annotation} annotation the annotation
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype.moveAnnotation = function (annotation) {
+  this._viewer.moveAnnotation(annotation);
+}
+
+/**
+ * Rotate the specified existing annotation.
+ * @param {annotorious.Annotation} annotation the annotation
+ */
+annotorious.mediatypes.image.ImageAnnotator.prototype.rotateAnnotation = function (annotation) {
+  this._viewer.rotateAnnotation(annotation);
+}
+
+/**
  * Returns the currently active selector.
  * @returns {Object} the currently active selector
  */

@@ -47,6 +47,8 @@ annotorious.Popup = function (annotator) {
 
   var btnEdit = goog.dom.query('.annotorious-popup-button-edit', this._buttons)[0];
   var btnDelete = goog.dom.query('.annotorious-popup-button-delete', this._buttons)[0];
+  this._btnMove = goog.dom.query('.annotorious-popup-button-move', this._buttons)[0];
+  this._btnRotate = goog.dom.query('.annotorious-popup-button-rotate', this._buttons)[0];
 
   var self = this;
   goog.events.listen(btnEdit, goog.events.EventType.MOUSEOVER, function (event) {
@@ -79,6 +81,34 @@ annotorious.Popup = function (annotator) {
       annotator.removeAnnotation(self._currentAnnotation);
       annotator.fireEvent(annotorious.events.EventType.ANNOTATION_REMOVED, self._currentAnnotation);
     }
+  });
+
+  goog.events.listen(self._btnMove, goog.events.EventType.MOUSEOVER, function (event) {
+    goog.dom.classes.add(self._btnMove, 'annotorious-popup-button-active');
+  });
+
+  goog.events.listen(self._btnMove, goog.events.EventType.MOUSEOUT, function () {
+    goog.dom.classes.remove(self._btnMove, 'annotorious-popup-button-active');
+  });
+
+  goog.events.listen(self._btnMove, goog.events.EventType.CLICK, function (event) {
+    goog.style.setOpacity(self.element, 0);
+    goog.style.setStyle(self.element, 'pointer-events', 'none');
+    annotator.moveAnnotation(self._currentAnnotation);
+  });
+
+  goog.events.listen(self._btnRotate, goog.events.EventType.MOUSEOVER, function (event) {
+    goog.dom.classes.add(self._btnRotate, 'annotorious-popup-button-active');
+  });
+
+  goog.events.listen(self._btnRotate, goog.events.EventType.MOUSEOUT, function () {
+    goog.dom.classes.remove(self._btnRotate, 'annotorious-popup-button-active');
+  });
+
+  goog.events.listen(self._btnRotate, goog.events.EventType.CLICK, function (event) {
+    goog.style.setOpacity(self.element, 0);
+    goog.style.setStyle(self.element, 'pointer-events', 'none');
+    annotator.rotateAnnotation(self._currentAnnotation);
   });
 
   if (annotorious.events.ui.hasMouse) {
@@ -209,6 +239,16 @@ annotorious.Popup.prototype.setAnnotation = function (annotation) {
     goog.style.showElement(this._buttons, false);
   else
     goog.style.showElement(this._buttons, true);
+
+  if (('movable' in annotation) && annotation.movable == false)
+    goog.style.showElement(this._btnMove, false);
+  else
+    goog.style.showElement(this._btnMove, true);
+
+  if (('rotable' in annotation) && annotation.rotable == false)
+    goog.style.showElement(this._btnRotate, false);
+  else
+    goog.style.showElement(this._btnRotate, true);
 
   // Update extra fields (if any)
   goog.array.forEach(this._extraFields, function (field) {

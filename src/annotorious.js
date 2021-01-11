@@ -135,6 +135,8 @@ annotorious.Annotorious.prototype.addAnnotation = function (annotation, opt_repl
     annotation.id
   );
   newAnnotation.editable = annotation.editable;
+  newAnnotation.movable = annotation.movable;
+  newAnnotation.rotable = annotation.rotable;
   var module = this._getModuleForItemSrc(newAnnotation.src);
   if (module)
     module.addAnnotation(newAnnotation, opt_replace);

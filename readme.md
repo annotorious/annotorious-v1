@@ -78,6 +78,8 @@ Annotorious provides a JavaScript API you can use to get, add or remove annotati
 * Added more [properties](#properties) for editing style and functionality on runtime.
 * Added the ability to set the measurement units used for the output geometry ['pixel', 'fraction'].
 * Added the ability to custom the editor.
+* Added the ability to move the annotations. The `onAnnotationMoved` [event](#events) - fired when the annotation was moved.
+* Added the ability to rotate the annotations. The `onAnnotationRotated` [event](#events) - fired when the annotation was rotated.
 * Fixed bug:
     - resizing the image: now the annotations are resized with the image. (The image must have the `annotatable` class).
     - add new annotation: if the new annotation forms are exactly the same as the other annotation forms, the new annotation is not inserted.
@@ -401,6 +403,22 @@ If you want to reload the annotations and remove the properties use: `anno.reloa
     });
     ```
 
+* Added the `onAnnotationMoved` event, fired when the annotation was moved. Return the annotation moved.
+
+    ```
+    anno.addHandler('onAnnotationMoved', function (annotation) {
+        console.log(annotation); 
+    });
+    ```
+
+* Added the `onAnnotationRotated` event, fired when the annotation was rotated. Return the annotation rotated.
+
+    ```
+    anno.addHandler('onAnnotationRotated', function (annotation) {
+        console.log(annotation); 
+    });
+    ```
+
 ### Add Multiple Annotations
 
 Added the ability to insert more new annotation to an item on the page. The function accepts an array of annotations.
@@ -426,6 +444,9 @@ var myAnnotation = {
     text : 'My annotation', //the annotation text 
     textId : 1, //the annotation text id [OPTIONAL]
     editable: true, //if false, there will be no delete icon in the annotation popup. Make annotation 'read-only' [OPTIONAL]
+
+    movable: true, //if false, there will be no move icon in the annotation popup. Make annotation not movable [OPTIONAL]
+    rotable: true, //if false, there will be no rotate icon in the annotation popup. Make annotation not rotable [OPTIONAL]
 
     created_at: 1579909408935, //the timestamp of annotation creation [OPTIONAL]
 

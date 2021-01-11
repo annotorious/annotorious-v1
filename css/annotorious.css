@@ -92,7 +92,7 @@
 .annotorious-popup-buttons {
   float:right;
   margin:0px 0px 1px 10px;
-  height:16px;
+  height:auto;
   
   -moz-transition-property: opacity;
   -moz-transition-duration: 1s;
@@ -138,6 +138,22 @@
 
 .annotorious-popup-button-active {
   opacity:0.9;
+}
+
+.annotorious-popup-button-move {
+  background:url(move.png);
+  width:16px;
+  height:16px;
+  text-indent:100px;
+  overflow:hidden;
+}
+
+.annotorious-popup-button-rotate {
+  background:url(rotate.png);
+  width:16px;
+  height:16px;
+  text-indent:100px;
+  overflow:hidden;
 }
 
 .annotorious-popup-button-edit {

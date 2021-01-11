@@ -197,6 +197,22 @@
   background-position:0 -99px;
 }
 
+.annotorious-popup-button-move {
+  background:url(move.png);
+  width:16px;
+  height:16px;
+  text-indent:100px;
+  overflow:hidden;
+}
+
+.annotorious-popup-button-rotate {
+  background:url(rotate.png);
+  width:16px;
+  height:16px;
+  text-indent:100px;
+  overflow:hidden;
+}
+
 .annotorious-popup-field {
   margin:0px;
   padding:6px;
