@@ -62,14 +62,35 @@ annotorious.mediatypes.image.Viewer = function (canvas, annotator) {
   });
 
   goog.events.listen(this._canvas, annotorious.events.ui.EventType.DOWN, function (event) {
-    if (self._moveAnnotation) {
-      self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_MOVED, self._moveAnnotation);
-      self._moveAnnotation = undefined;
+    if (self._moveAnnotation || self._rotateAnnotation) {
+      var newAnnotation, newShape;
+
+      if (self._moveAnnotation) {
+        newAnnotation = Object.assign({}, self._moveAnnotation.annotation);
+        newShape = self._moveAnnotation.newShape;
+      } else {
+        newAnnotation = Object.assign({}, self._rotateAnnotation.annotation);
+        newShape = self._rotateAnnotation.newShape;
+      }
+
+      var shape = newAnnotation.shapes[0];
+      if (shape.units == annotorious.shape.Units.PIXEL) {
+        newAnnotation.shapes[0] = annotorious.shape.transform(newShape, function (xy) { return self._annotator.toItemPixelCoordinates(xy); });
+      } else {
+        newAnnotation.shapes[0] = annotorious.shape.transform(newShape, function (xy) { return self._annotator.toItemCoordinates(xy); });
+      }
+      self.addAnnotation(this._currentAnnotation, newAnnotation);
+
+      if (self._moveAnnotation) {
+        self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_MOVED, newAnnotation);
+        self._moveAnnotation = undefined;
+      }
+      if (self._rotateAnnotation) {
+        self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_ROTATED, newAnnotation);
+        self._rotateAnnotation = undefined;
+      }
     }
-    if (self._rotateAnnotation) {
-      self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_ROTATED, self._rotateAnnotation);
-      self._rotateAnnotation = undefined;
-    }
+
     if (self._colorMode.enabled) self._colorMode._mouseClick = true;
     if (self._currentAnnotation !== undefined && self._currentAnnotation != false) {
       self._annotator.fireEvent(annotorious.events.EventType.ANNOTATION_CLICKED, self._currentAnnotation);
@@ -134,6 +155,8 @@ annotorious.mediatypes.image.Viewer.prototype.addAnnotation = function (annotati
 
     goog.array.remove(this._annotations, opt_replace);
     delete this._shapes[annotorious.shape.hashCode(opt_replace.shapes[0])];
+
+    annotation = annotation || opt_replace;
   }
 
   if (this.getSystemShape(annotation)) return; //The new annotation has shapes exactly equals other annotation. Not insert if not delete old annotation.
@@ -181,7 +204,7 @@ annotorious.mediatypes.image.Viewer.prototype.removeAnnotation = function (annot
  * @param {annotorious.Annotation} annotation the annotation
  */
 annotorious.mediatypes.image.Viewer.prototype.moveAnnotation = function (annotation) {
-  this._moveAnnotation = annotation;
+  this._moveAnnotation = { annotation: annotation };
   this._rotateAnnotation = undefined;
 }
 
@@ -190,7 +213,7 @@ annotorious.mediatypes.image.Viewer.prototype.moveAnnotation = function (annotat
  * @param {annotorious.Annotation} annotation the annotation
  */
 annotorious.mediatypes.image.Viewer.prototype.rotateAnnotation = function (annotation) {
-  this._rotateAnnotation = annotation;
+  this._rotateAnnotation = { annotation: annotation };
   this._moveAnnotation = undefined;
 }
 
@@ -272,7 +295,8 @@ annotorious.mediatypes.image.Viewer.prototype.getAnnotationsAt = function (px, p
  */
 annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function (event, pixCurs) {
   if (this._moveAnnotation || this._rotateAnnotation) {
-    this._currentAnnotation = this._moveAnnotation || this._rotateAnnotation;
+    this._currentAnnotation = this._moveAnnotation ? this._moveAnnotation.annotation : this._rotateAnnotation.annotation;
+
     this._g2d.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
     var self = this;
@@ -288,9 +312,10 @@ annotorious.mediatypes.image.Viewer.prototype._onMouseMove = function (event, pi
         return Array.isArray(types) ? goog.array.indexOf(types, shape.type) != -1 : types == shape.type;
       });
 
+
       if (selector) {
-        if (this._moveAnnotation) selector.moveShape(this._g2d, shape, event.offsetX, event.offsetY);
-        else selector.rotateShape(this._g2d, shape, event.offsetX, event.offsetY);
+        if (this._moveAnnotation) this._moveAnnotation.newShape = selector.moveShape(this._g2d, shape, event.offsetX, event.offsetY);
+        else this._rotateAnnotation.newShape = selector.rotateShape(this._g2d, shape, event.offsetX, event.offsetY);
       } else console.log('WARNING unsupported shape type: ' + shape.type);
     }
     return;

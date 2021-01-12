@@ -189,8 +189,11 @@ annotorious.shape.expand = function (shape, delta) {
  */
 annotorious.shape.transform = function (shape, transformationFn) {
   if (shape.type == annotorious.shape.ShapeType.RECTANGLE) {
+
     var geom = shape.geometry;
     var transformed = transformationFn(geom);
+    transformed.rotation = geom.rotation;
+
     return new annotorious.shape.Shape(annotorious.shape.ShapeType.RECTANGLE, transformed, false, shape.style, shape.mask);
   } else if (shape.type == annotorious.shape.ShapeType.POLYGON) {
     var transformedPoints = [];

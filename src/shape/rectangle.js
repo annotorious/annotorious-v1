@@ -8,7 +8,7 @@ goog.provide('annotorious.shape.geom.Rectangle');
  * @param {number} height the rectangle height
  * @constructor
  */
-annotorious.shape.geom.Rectangle = function(x, y, width, height) {
+annotorious.shape.geom.Rectangle = function (x, y, width, height) {
   if (width > 0) {
     this.x = x;
     this.width = width;
@@ -24,5 +24,7 @@ annotorious.shape.geom.Rectangle = function(x, y, width, height) {
     this.y = y + height;
     this.height = -height;
   }
+
+  this.rotation = 0;
 }
 

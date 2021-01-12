@@ -127,7 +127,9 @@ var Rectangle = {
 
   width: {},
 
-  height: {}
+  height: {},
+
+  rotation: {}
 
 }
 

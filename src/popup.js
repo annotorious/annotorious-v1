@@ -240,15 +240,17 @@ annotorious.Popup.prototype.setAnnotation = function (annotation) {
   else
     goog.style.showElement(this._buttons, true);
 
-  if (('movable' in annotation) && annotation.movable == false)
+  if (annotation.shapes[0].type != annotorious.shape.ShapeType.RECTANGLE ||
+    ('movable' in annotation) && annotation.movable == false) {
     goog.style.showElement(this._btnMove, false);
-  else
-    goog.style.showElement(this._btnMove, true);
+  }
+  else goog.style.showElement(this._btnMove, true);
 
-  if (('rotable' in annotation) && annotation.rotable == false)
+  if (annotation.shapes[0].type != annotorious.shape.ShapeType.RECTANGLE ||
+    ('rotable' in annotation) && annotation.rotable == false) {
     goog.style.showElement(this._btnRotate, false);
-  else
-    goog.style.showElement(this._btnRotate, true);
+  }
+  else goog.style.showElement(this._btnRotate, true);
 
   // Update extra fields (if any)
   goog.array.forEach(this._extraFields, function (field) {

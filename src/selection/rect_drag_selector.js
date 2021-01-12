@@ -328,6 +328,17 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
       strokeWidth = shape.style.strokeWidth || this._properties.strokeWidth;
     }
 
+
+    var tempGeom = Object.assign({}, geom);
+    if (geom.rotation != undefined && (!shape.mask || (shape.mask && shape.hasOwnProperty("_loadedMask")))) {
+      g2d.save();
+      g2d.beginPath();
+
+      //g2d.translate((this._canvas.width / 2), (this._canvas.height / 2));
+      g2d.translate((geom.x + geom.width / 2), (geom.y + geom.height / 2));
+      g2d.rotate(geom.rotation * Math.PI / 180);
+    }
+
     //annotation has a mask
     if (shape.mask) {
       if (!shape.hasOwnProperty("_loadedMask") || shape["_loadedMask"].url != shape.mask) {
@@ -347,11 +358,21 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
       }
       if (shape["_loadedMask"].image) {
         g2d.globalAlpha = shape.style.maskTransparency || this._properties.maskTransparency;
-        g2d.drawImage(shape["_loadedMask"].image, geom.x, geom.y, geom.width, geom.height);
+        if (geom.rotation != undefined) g2d.drawImage(shape["_loadedMask"].image, -geom.x, -geom.y, geom.width, geom.height);
+        else g2d.drawImage(shape["_loadedMask"].image, geom.x, geom.y, geom.width, geom.height);
         g2d.globalAlpha = 1;
+
         if ((shape.style.maskBorder != undefined && !shape.style.maskBorder) || (shape.style.maskBorder == undefined && !this._properties.maskBorder)) return;
-        geom = { x: geom.x - strokeWidth - outlineWidth, y: geom.y - strokeWidth - outlineWidth, width: geom.width + strokeWidth + outlineWidth, height: geom.height + strokeWidth + outlineWidth };
+
+        if (geom.rotation != undefined) geom = { x: geom.x + strokeWidth + outlineWidth, y: geom.y + strokeWidth + outlineWidth, width: geom.width + strokeWidth + outlineWidth, height: geom.height + strokeWidth + outlineWidth, rotation: geom.rotation };
+        else geom = { x: geom.x - strokeWidth - outlineWidth, y: geom.y - strokeWidth - outlineWidth, width: geom.width + strokeWidth + outlineWidth, height: geom.height + strokeWidth + outlineWidth, rotation: geom.rotation };
       }
+    }
+
+    if (geom.rotation != undefined && (!shape.mask || (shape.mask && shape.hasOwnProperty("_loadedMask")))) {
+      var tempGeom = Object.assign({}, geom);
+      geom.x *= -1;
+      geom.y *= -1;
     }
 
     // Outline
@@ -388,6 +409,13 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
         geom.height - outlineWidth * 2 - strokeWidth
       );
     }
+
+    if (geom.rotation != undefined) {
+      g2d.restore();
+      geom.x = tempGeom.x;
+      geom.y = tempGeom.y;
+    }
+
     return;
   }
 
@@ -409,13 +437,15 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
  * @param {number} y the Y coordinate
  */
 annotorious.plugins.selection.RectDragSelector.prototype.moveShape = function (g2d, shape, x, y) {
-  var point = new annotorious.shape.geom.Point(x, y);
-  var geom = shape.geometry;
-
   if (shape.type != annotorious.shape.ShapeType.RECTANGLE) return;
-  geom.x = point.x - geom.width / 2;
-  geom.y = point.y - geom.height / 2;
+
+  var point = new annotorious.shape.geom.Point(x, y);
+  var geo = shape.geometry;
+  geo.x = point.x - geo.width / 2;
+  geo.y = point.y - geo.height / 2;
+
   this.drawShape(g2d, shape);
+  return shape;
 }
 
 /**
@@ -426,5 +456,16 @@ annotorious.plugins.selection.RectDragSelector.prototype.moveShape = function (g
  * @param {number} y the Y coordinate
  */
 annotorious.plugins.selection.RectDragSelector.prototype.rotateShape = function (g2d, shape, x, y) {
-  console.error("Features to implement")
+  if (shape.type != annotorious.shape.ShapeType.RECTANGLE) return;
+
+  var coordinate = new annotorious.shape.geom.Point(x, y);
+  var geom = shape.geometry;
+  var center = new annotorious.shape.geom.Point((geom.x + (geom.width / 2)), (geom.y + (geom.height / 2)));
+
+  var rotation = Math.atan2(coordinate.y - center.y, coordinate.x - center.x) * 180 / Math.PI;
+  geom.rotation = rotation;
+
+  this.drawShape(g2d, shape);
+
+  return shape;
 }
