@@ -39,7 +39,9 @@ annotorious.Popup = function (annotator) {
 
   /** @private **/
   this._properties = {
-    extraFields: undefined
+    extraFields: undefined,
+    showMoveButton: true,
+    showRotateButton: true
   };
 
   /** @private **/
@@ -240,14 +242,14 @@ annotorious.Popup.prototype.setAnnotation = function (annotation) {
   else
     goog.style.showElement(this._buttons, true);
 
-  if (annotation.shapes[0].type != annotorious.shape.ShapeType.RECTANGLE ||
-    ('movable' in annotation) && annotation.movable == false) {
+  if (!this._properties.showMoveButton || (annotation.shapes[0].type != annotorious.shape.ShapeType.RECTANGLE ||
+    ('movable' in annotation) && annotation.movable == false)) {
     goog.style.showElement(this._btnMove, false);
   }
   else goog.style.showElement(this._btnMove, true);
 
-  if (annotation.shapes[0].type != annotorious.shape.ShapeType.RECTANGLE ||
-    ('rotable' in annotation) && annotation.rotable == false) {
+  if (!this._properties.showRotateButton || (annotation.shapes[0].type != annotorious.shape.ShapeType.RECTANGLE ||
+    ('rotable' in annotation) && annotation.rotable == false)) {
     goog.style.showElement(this._btnRotate, false);
   }
   else goog.style.showElement(this._btnRotate, true);
@@ -271,6 +273,8 @@ annotorious.Popup.prototype.setProperties = function (props) {
   if (!(props instanceof Object) || Object.keys(props).length === 0) this._properties = JSON.parse(JSON.stringify(this._defaultProperties));
   else {
     if (props.hasOwnProperty('extraFields')) this._properties.extraFields = props["extraFields"];
+    if (props.hasOwnProperty('showMoveButton')) this._properties.showMoveButton = props["showMoveButton"];
+    if (props.hasOwnProperty('showRotateButton')) this._properties.showRotateButton = props["showRotateButton"];
   }
 
   //Apply the properties    

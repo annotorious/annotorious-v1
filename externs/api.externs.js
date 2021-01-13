@@ -129,6 +129,7 @@ var Rectangle = {
 
   height: {},
 
+  /** @type {number} Rotation of the annotation with respect to the x-axis (degrees). [OPTIONAL - default is 0] **/
   rotation: {}
 
 }

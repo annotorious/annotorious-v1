@@ -334,8 +334,7 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
       g2d.save();
       g2d.beginPath();
 
-      //g2d.translate((this._canvas.width / 2), (this._canvas.height / 2));
-      g2d.translate((geom.x + geom.width / 2), (geom.y + geom.height / 2));
+      g2d.translate((geom.x + (geom.width / 2)), (geom.y + (geom.height / 2)));
       g2d.rotate(geom.rotation * Math.PI / 180);
     }
 
@@ -358,13 +357,13 @@ annotorious.plugins.selection.RectDragSelector.prototype.drawShape = function (g
       }
       if (shape["_loadedMask"].image) {
         g2d.globalAlpha = shape.style.maskTransparency || this._properties.maskTransparency;
-        if (geom.rotation != undefined) g2d.drawImage(shape["_loadedMask"].image, -geom.x, -geom.y, geom.width, geom.height);
+        if (geom.rotation != undefined) g2d.drawImage(shape["_loadedMask"].image, -(geom.width / 2), -(geom.height / 2), geom.width, geom.height);
         else g2d.drawImage(shape["_loadedMask"].image, geom.x, geom.y, geom.width, geom.height);
         g2d.globalAlpha = 1;
 
         if ((shape.style.maskBorder != undefined && !shape.style.maskBorder) || (shape.style.maskBorder == undefined && !this._properties.maskBorder)) return;
 
-        if (geom.rotation != undefined) geom = { x: geom.x + strokeWidth + outlineWidth, y: geom.y + strokeWidth + outlineWidth, width: geom.width + strokeWidth + outlineWidth, height: geom.height + strokeWidth + outlineWidth, rotation: geom.rotation };
+        if (geom.rotation != undefined) geom = { x: (geom.width / 2) + strokeWidth + outlineWidth, y: (geom.height / 2) + strokeWidth + outlineWidth, width: geom.width + strokeWidth + outlineWidth, height: geom.height + strokeWidth + outlineWidth, rotation: geom.rotation };
         else geom = { x: geom.x - strokeWidth - outlineWidth, y: geom.y - strokeWidth - outlineWidth, width: geom.width + strokeWidth + outlineWidth, height: geom.height + strokeWidth + outlineWidth, rotation: geom.rotation };
       }
     }

@@ -454,7 +454,13 @@ var myAnnotation = {
     
         type : 'rect', //the shape type ['rect', 'point', 'arrow', 'polygon'] for enable 'polygon' shape show the official page
         mask : 'http://www.example.com/mymask.jpg', //the URL of the mask - only if type is 'rect' [OPTIONAL]
-        geometry : { x : 0.1, y: 0.1, width : 0.4, height: 0.3 } //the shape geometry (relative coordinates)
+        geometry : { //the shape geometry (relative coordinates)
+            x : 0.1, 
+            y: 0.1, 
+            width : 0.4, 
+            height: 0.3,
+            rotation: 0 // Rotation of the annotation with respect to the x-axis (degrees). [OPTIONAL - default is 0]
+        } 
         
         //geometry : { x : 10, y: 10, width : 40, height: 60 } //the shape geometry (pixel coordinates relative to the original image size)    
         units: 'fraction', //measurement units used for the geometry ['pixel', 'fraction'] [OPTIONAL - only required for pixel coordinates] 
@@ -561,7 +567,9 @@ anno.setProperties({
     },
 
     popup: { //properties for popup GUI widget
-        extraFields: undefined //add many fields to the annotation popup GUI widget. Show 'ExtraFields' section for more
+        extraFields: undefined, //add many fields to the annotation popup GUI widget. Show 'ExtraFields' section for more
+        showMoveButton: true, //if false, not show the move button
+        showRotateButton: true //if false, not show the rotate button
     },
 
     shapeStyle: { //global style 
